@@ -1,0 +1,289 @@
+General evaluation
+
+  i15.01.pc
+    Exact recall = 0.9986
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7887
+    MSE.recommend = 0.9933
+    Pearson.recommend = 0.4067
+    Setup time = 0.1532
+    Speed = 0.2879
+
+  u15.01.pc
+    Exact recall = 0.9961
+    Hudup recall = 1.0000
+    MAE.recommend = 0.8229
+    MSE.recommend = 1.0813
+    Pearson.recommend = 0.1422
+    Setup time = 0.1268
+    Speed = 0.3489
+
+
+Dataset evaluation
+
+  Dataset "1"
+    i15.01.pc
+      Exact recall = 0.9985
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7943
+      MSE.recommend = 0.9979
+      Pearson.recommend = 0.3995
+      Setup time = 0.2810
+      Speed = 0.2948
+    u15.01.pc
+      Exact recall = 0.9969
+      Hudup recall = 1.0000
+      MAE.recommend = 0.8226
+      MSE.recommend = 1.0776
+      Pearson.recommend = 0.1498
+      Setup time = 0.1250
+      Speed = 0.3499
+
+  Dataset "2"
+    i15.01.pc
+      Exact recall = 0.9982
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7787
+      MSE.recommend = 0.9745
+      Pearson.recommend = 0.3910
+      Setup time = 0.1410
+      Speed = 0.2811
+    u15.01.pc
+      Exact recall = 0.9953
+      Hudup recall = 1.0000
+      MAE.recommend = 0.8128
+      MSE.recommend = 1.0629
+      Pearson.recommend = 0.1590
+      Setup time = 0.1410
+      Speed = 0.3633
+
+  Dataset "3"
+    i15.01.pc
+      Exact recall = 0.9991
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7871
+      MSE.recommend = 0.9935
+      Pearson.recommend = 0.4093
+      Setup time = 0.1250
+      Speed = 0.2839
+    u15.01.pc
+      Exact recall = 0.9962
+      Hudup recall = 1.0000
+      MAE.recommend = 0.8231
+      MSE.recommend = 1.0775
+      Pearson.recommend = 0.1278
+      Setup time = 0.1160
+      Speed = 0.3644
+
+  Dataset "4"
+    i15.01.pc
+      Exact recall = 0.9985
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7958
+      MSE.recommend = 1.0062
+      Pearson.recommend = 0.3903
+      Setup time = 0.1100
+      Speed = 0.2814
+    u15.01.pc
+      Exact recall = 0.9963
+      Hudup recall = 1.0000
+      MAE.recommend = 0.8250
+      MSE.recommend = 1.0831
+      Pearson.recommend = 0.1509
+      Setup time = 0.1250
+      Speed = 0.3433
+
+  Dataset "5"
+    i15.01.pc
+      Exact recall = 0.9985
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7877
+      MSE.recommend = 0.9944
+      Pearson.recommend = 0.4434
+      Setup time = 0.1090
+      Speed = 0.2980
+    u15.01.pc
+      Exact recall = 0.9959
+      Hudup recall = 1.0000
+      MAE.recommend = 0.8310
+      MSE.recommend = 1.1053
+      Pearson.recommend = 0.1233
+      Setup time = 0.1270
+      Speed = 0.3236
+
+
+Exact recall evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.9985
+    Dataset "2" got 0.9982
+    Dataset "3" got 0.9991
+    Dataset "4" got 0.9985
+    Dataset "5" got 0.9985
+
+  u15.01.pc
+    Dataset "1" got 0.9969
+    Dataset "2" got 0.9953
+    Dataset "3" got 0.9962
+    Dataset "4" got 0.9963
+    Dataset "5" got 0.9959
+
+
+Hudup recall evaluation
+
+  i15.01.pc
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  u15.01.pc
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+MAE.recommend evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.7943
+    Dataset "2" got 0.7787
+    Dataset "3" got 0.7871
+    Dataset "4" got 0.7958
+    Dataset "5" got 0.7877
+
+  u15.01.pc
+    Dataset "1" got 0.8226
+    Dataset "2" got 0.8128
+    Dataset "3" got 0.8231
+    Dataset "4" got 0.8250
+    Dataset "5" got 0.8310
+
+
+MSE.recommend evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.9979
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9935
+    Dataset "4" got 1.0062
+    Dataset "5" got 0.9944
+
+  u15.01.pc
+    Dataset "1" got 1.0776
+    Dataset "2" got 1.0629
+    Dataset "3" got 1.0775
+    Dataset "4" got 1.0831
+    Dataset "5" got 1.1053
+
+
+Pearson.recommend evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.3995
+    Dataset "2" got 0.3910
+    Dataset "3" got 0.4093
+    Dataset "4" got 0.3903
+    Dataset "5" got 0.4434
+
+  u15.01.pc
+    Dataset "1" got 0.1498
+    Dataset "2" got 0.1590
+    Dataset "3" got 0.1278
+    Dataset "4" got 0.1509
+    Dataset "5" got 0.1233
+
+
+Setup time evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.2810
+    Dataset "2" got 0.1410
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1100
+    Dataset "5" got 0.1090
+
+  u15.01.pc
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1410
+    Dataset "3" got 0.1160
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1270
+
+
+Speed evaluation
+
+  i15.01.pc
+    Dataset "1" got 0.2948
+    Dataset "2" got 0.2811
+    Dataset "3" got 0.2839
+    Dataset "4" got 0.2814
+    Dataset "5" got 0.2980
+
+  u15.01.pc
+    Dataset "1" got 0.3499
+    Dataset "2" got 0.3633
+    Dataset "3" got 0.3644
+    Dataset "4" got 0.3433
+    Dataset "5" got 0.3236
+
+
+Algorithm parameters
+
+  i15.01.pc
+    msd_fraction=false
+    measure=pc
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+
+  u15.01.pc
+    msd_fraction=false
+    measure=pc
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  i15.01.pc
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u15.01.pc
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+
+Note
+  Dataset "1" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.1-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.1-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.1-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.1-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.1-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 527.50MB, Free memory = 408.67MB, Max memory = 910.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "e:\todo\test"

@@ -1,0 +1,351 @@
+General evaluation
+
+  u20.01.coco
+    Exact recall = 0.9994
+    Hudup recall = 0.9983
+    MAE.recommend = 0.7499
+    MSE.recommend = 0.9166
+    Precision.recommend = 0.0378
+    R.recommend = 0.2790
+    Recall.recommend = 0.9077
+    Setup time = 0.0850
+    Speed = 1.2062
+
+  u21.01.nnms
+    Exact recall = 0.9996
+    Hudup recall = 0.9985
+    MAE.recommend = 0.7489
+    MSE.recommend = 0.9149
+    Precision.recommend = 0.0380
+    R.recommend = 0.2553
+    Recall.recommend = 0.9024
+    Setup time = 0.0492
+    Speed = 1.1055
+
+
+Dataset evaluation
+
+  Dataset "1"
+    u20.01.coco
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7513
+      MSE.recommend = 0.9191
+      Precision.recommend = 0.0375
+      R.recommend = 0.2740
+      Recall.recommend = 0.9058
+      Setup time = 0.2390
+      Speed = 1.6232
+    u21.01.nnms
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7496
+      MSE.recommend = 0.9149
+      Precision.recommend = 0.0376
+      R.recommend = 0.2503
+      Recall.recommend = 0.9000
+      Setup time = 0.0270
+      Speed = 1.3524
+
+  Dataset "2"
+    u20.01.coco
+      Exact recall = 0.9989
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7519
+      MSE.recommend = 0.9219
+      Precision.recommend = 0.0372
+      R.recommend = 0.2806
+      Recall.recommend = 0.9060
+      Setup time = 0.0560
+      Speed = 1.2722
+    u21.01.nnms
+      Exact recall = 0.9989
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7514
+      MSE.recommend = 0.9225
+      Precision.recommend = 0.0373
+      R.recommend = 0.2524
+      Recall.recommend = 0.9022
+      Setup time = 0.0470
+      Speed = 1.0586
+
+  Dataset "3"
+    u20.01.coco
+      Exact recall = 0.9979
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7458
+      MSE.recommend = 0.9111
+      Precision.recommend = 0.0384
+      R.recommend = 0.2830
+      Recall.recommend = 0.9076
+      Setup time = 0.0460
+      Speed = 1.2258
+    u21.01.nnms
+      Exact recall = 0.9989
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7437
+      MSE.recommend = 0.9055
+      Precision.recommend = 0.0386
+      R.recommend = 0.2628
+      Recall.recommend = 0.9035
+      Setup time = 0.0470
+      Speed = 1.0183
+
+  Dataset "4"
+    u20.01.coco
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7515
+      MSE.recommend = 0.9153
+      Precision.recommend = 0.0380
+      R.recommend = 0.2844
+      Recall.recommend = 0.9072
+      Setup time = 0.0430
+      Speed = 0.8943
+    u21.01.nnms
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7510
+      MSE.recommend = 0.9166
+      Precision.recommend = 0.0381
+      R.recommend = 0.2575
+      Recall.recommend = 0.9025
+      Setup time = 0.0470
+      Speed = 1.0514
+
+  Dataset "5"
+    u20.01.coco
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7490
+      MSE.recommend = 0.9154
+      Precision.recommend = 0.0381
+      R.recommend = 0.2730
+      Recall.recommend = 0.9118
+      Setup time = 0.0410
+      Speed = 1.0155
+    u21.01.nnms
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7488
+      MSE.recommend = 0.9152
+      Precision.recommend = 0.0383
+      R.recommend = 0.2537
+      Recall.recommend = 0.9039
+      Setup time = 0.0780
+      Speed = 1.0469
+
+
+Exact recall evaluation
+
+  u20.01.coco
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.9989
+    Dataset "3" got 0.9979
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  u21.01.nnms
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.9989
+    Dataset "3" got 0.9989
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+Hudup recall evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.9989
+    Dataset "2" got 0.9979
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9989
+    Dataset "5" got 0.9989
+
+  u21.01.nnms
+    Dataset "1" got 0.9989
+    Dataset "2" got 0.9979
+    Dataset "3" got 0.9979
+    Dataset "4" got 0.9989
+    Dataset "5" got 0.9989
+
+
+MAE.recommend evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.7513
+    Dataset "2" got 0.7519
+    Dataset "3" got 0.7458
+    Dataset "4" got 0.7515
+    Dataset "5" got 0.7490
+
+  u21.01.nnms
+    Dataset "1" got 0.7496
+    Dataset "2" got 0.7514
+    Dataset "3" got 0.7437
+    Dataset "4" got 0.7510
+    Dataset "5" got 0.7488
+
+
+MSE.recommend evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.9191
+    Dataset "2" got 0.9219
+    Dataset "3" got 0.9111
+    Dataset "4" got 0.9153
+    Dataset "5" got 0.9154
+
+  u21.01.nnms
+    Dataset "1" got 0.9149
+    Dataset "2" got 0.9225
+    Dataset "3" got 0.9055
+    Dataset "4" got 0.9166
+    Dataset "5" got 0.9152
+
+
+Precision.recommend evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.0375
+    Dataset "2" got 0.0372
+    Dataset "3" got 0.0384
+    Dataset "4" got 0.0380
+    Dataset "5" got 0.0381
+
+  u21.01.nnms
+    Dataset "1" got 0.0376
+    Dataset "2" got 0.0373
+    Dataset "3" got 0.0386
+    Dataset "4" got 0.0381
+    Dataset "5" got 0.0383
+
+
+R.recommend evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.2740
+    Dataset "2" got 0.2806
+    Dataset "3" got 0.2830
+    Dataset "4" got 0.2844
+    Dataset "5" got 0.2730
+
+  u21.01.nnms
+    Dataset "1" got 0.2503
+    Dataset "2" got 0.2524
+    Dataset "3" got 0.2628
+    Dataset "4" got 0.2575
+    Dataset "5" got 0.2537
+
+
+Recall.recommend evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.9058
+    Dataset "2" got 0.9060
+    Dataset "3" got 0.9076
+    Dataset "4" got 0.9072
+    Dataset "5" got 0.9118
+
+  u21.01.nnms
+    Dataset "1" got 0.9000
+    Dataset "2" got 0.9022
+    Dataset "3" got 0.9035
+    Dataset "4" got 0.9025
+    Dataset "5" got 0.9039
+
+
+Setup time evaluation
+
+  u20.01.coco
+    Dataset "1" got 0.2390
+    Dataset "2" got 0.0560
+    Dataset "3" got 0.0460
+    Dataset "4" got 0.0430
+    Dataset "5" got 0.0410
+
+  u21.01.nnms
+    Dataset "1" got 0.0270
+    Dataset "2" got 0.0470
+    Dataset "3" got 0.0470
+    Dataset "4" got 0.0470
+    Dataset "5" got 0.0780
+
+
+Speed evaluation
+
+  u20.01.coco
+    Dataset "1" got 1.6232
+    Dataset "2" got 1.2722
+    Dataset "3" got 1.2258
+    Dataset "4" got 0.8943
+    Dataset "5" got 1.0155
+
+  u21.01.nnms
+    Dataset "1" got 1.3524
+    Dataset "2" got 1.0586
+    Dataset "3" got 1.0183
+    Dataset "4" got 1.0514
+    Dataset "5" got 1.0469
+
+
+Algorithm parameters
+
+  u20.01.coco
+    msd_fraction=false
+    delay_unsetup=false
+    measure=coco
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+
+  u21.01.nnms
+    msd_fraction=false
+    delay_unsetup=false
+    measure=mmns
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  u20.01.coco
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  u21.01.nnms
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Dataset "1" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 574.50MB, Free memory = 454.32MB, Max memory = 910.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "e:\todo\test"

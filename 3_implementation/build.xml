@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="Hudup" basedir="." default="compile">
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	
+	<property name="working.home" value="working"/>
+	<property name="archive.home" value="${working.home}/archive"/>
+	<property name="bin.home" value="bin"/>
+	<property name="datasets.home" value="datasets"/>
+	<property name="db.home" value="${working.home}/db"/>
+	<property name="docs.home" value="docs"/>
+	<property name="lib.home" value="lib"/>
+	<property name="kb.home" value="${working.home}/kb"/>
+	<property name="plugins.home" value="plugins"/>
+	<property name="src.home" value="src"/>
+	<property name="temp.home" value="${working.home}/temp"/>
+	<property name="tools.home" value="tools"/>
+
+	<property name="doctype" value="*.txt, *.pdf, *.doc, *.docx"/>
+	<property name="product" value="sim"/>
+	<property name="version" value="v1"/>
+
+
+	<!--
+	Function: Creating and maintaining a mathematical and statistical library that is accurate requires a greater degree of communication than might be the case for other components.
+	Affected packages, classes: net.rem.em.NewtonGEM, net.rem.regression.RMAbstract
+	Referred jars:
+	Source: https://commons.apache.org/proper/commons-math/
+	Vendor: Apache
+	Archive: newtech-research/data-structure-alg/commons-math, newtech-research/prog-language/java/apache-commons/commons-math
+	Version: 3.5 build 2015
+	Status: using
+	Note:
+	-->
+	<property name="commons-math3.jar" value="${lib.home}/commons-math3-3.5.jar"/>
+
+
+	<!--
+	Function: The main goal of the project was the construction of an environment that serve, on the one hand, as a benchwork for the investigation of new methods and algorithms of probabilistic reasoning and, on the other hand, as a tool for the implementation of Bayesian expert systems. In Sim project, Elvira is used to build Bayesian network.
+	Affected packages, classes:
+	net.hudup.alg.cf.bnet, net.hudup.logistic.inference
+	net.hudup.alg.cf.bnet.BnetCF2, net.hudup.alg.cf.bnet.BnetClusteredCF, net.hudup.alg.cf.bnet.BnetBinaryCF, net.hudup.alg.cf.bnet.BnetBinaryClusteredCF, net.hudup.alg.cf.bnet.BnetDistributedCF
+	net.hudup.logistic.inference.BnetLearner2, net.hudup.logistic.inference.BnetBinaryLearner, net.hudup.logistic.inference.BnetBinaryUtil, net.hudup.logistic.inference.BnetDistributedLearner
+	Referred jars:
+	Source: http://www.ia.uned.es/~elvira/index-en.html
+	Vendor: CICYT (a Spanish research agency)
+	Archive: newtech-research/bayesian-network/ELVIRA
+	Version: 2 build 2005
+	Status: using
+	Note: This jar file was included in hudup-runtime-lib.jar
+	<property name="elvira.jar" value="${lib.home}/elvira2-2005.jar"/>
+	-->
+
+
+	<!--
+	Function: The runtime library for Hudup framework.
+	Affected packages, classes: Over all Sim project.
+	Referred jars:
+	Source: http://www.locnguyen.net/st/products/hudup
+	Vendor: Loc Nguyen
+	Archive: working/projects/hudup-ext/3_implementation
+	Version: 12 build 2019.09.16
+	Status: using
+	Note:
+	-->
+	<property name="hudup-runtime-lib.jar" value="${lib.home}/hudup-runtime-lib.jar"/>
+
+
+	<!--
+	Function: Building Bayesian network.
+	Affected packages, classes: net.hudup.logistic.inference.BnetBinaryGraph, net.hudup.logistic.inference.BnetBinaryGraphHybrid
+	Referred jars:
+	Source: http://www.cs.cmu.edu/~javabayes
+	Vendor: Fabio Gagliardi Cozman (fgcozman@usp.br, http://www.cs.cmu.edu/~fgcozman/home.html)
+	Archive: newtech-research/database-storagesystem/dbms/derby, newtech-research/prog-language/java/persistence/jdbc/derby
+	Version: 0.347 build 2001
+	Status: using
+	Note:
+	-->
+	<property name="javabayes.jar" value="${lib.home}/javabayes-0.347.jar"/>
+
+
+	<!--
+	Function: Jayes is a Bayesian Network Library for Java. It has initially been created as my bachelor's thesis and it's goal is to provide highly efficient Bayesian Networks algorithms to the open souce community.
+	Affected packages, classes: net.bayescf.bnet.FactoryImpl
+	Referred jars:
+	Source: https://github.com/kutschkem/Jayes
+	Vendor: Michael Kutschke
+	Archive: newtech-research/bayesian-network/JAYES
+	Version: 2.6.0 build 2012
+	Status: using
+	Note:
+	-->
+	<property name="jayes.jar" value="${lib.home}/org.eclipse.recommenders.jayes-2.6.0-158.jar"/>
+	<property name="jayes-io.jar" value="${lib.home}/org.eclipse.recommenders.jayes.io-2.6.0-158"/>
+
+
+	<!--
+	Function: Weka is a collection of machine learning algorithms for data mining tasks. It contains tools for data preparation, classification, regression, clustering, association rules mining, and visualization.
+	Affected packages, classes: net.hudup.logistic.mining.Clusterer
+	Referred jars:
+	Source: https://www.cs.waikato.ac.nz/~ml/weka
+	Vendor: Machine Learning Group - The University of Waikato (https://www.cs.waikato.ac.nz/~ml/people.html)
+	Archive: newtech-research/data-mining-analyzing/soft-tool/WEKA
+	Version: 3.6.9 build 2013
+	Status: using
+	Note:
+	-->
+	<property name="weka.jar" value="${lib.home}/weka-3.6.9.jar"/>
+
+
+	<!--
+	List of classes and packages which use libraries:
+	
+	net.bayescf.bnet.FactoryImpl: jayes.jar, jayes-io.jar
+	
+	net.rem.em.NewtonGEM: commons-math3.jar
+	net.rem.regression.RMAbstract: commons-math3.jar
+	
+	net.hudup.alg.cf.bnet.BnetCF2: elvira.jar
+	net.hudup.alg.cf.bnet.BnetClusteredCF: elvira.jar
+	net.hudup.alg.cf.bnet.BnetBinaryCF: elvira.jar
+	net.hudup.alg.cf.bnet.BnetBinaryClusteredCF: elvira.jar
+	net.hudup.alg.cf.bnet.BnetDistributedCF: elvira.jar
+	net.hudup.logistic.inference.BnetLearner: elvira.jar
+	net.hudup.logistic.inference.BnetBinaryLearner: elvira.jar
+	net.hudup.logistic.inference.BnetBinaryUtil: elvira.jar
+	net.hudup.logistic.inference.BnetDistributedLearner: elvira.jar
+	
+	net.hudup.logistic.inference.BnetBinaryGraph: javabayes.jar
+	net.hudup.logistic.inference.BnetBinaryGraphHybrid: javabayes.jar
+	net.hudup.logistic.mining.Clusterer: weka.jar
+	-->
+	
+	
+	<path id="build.class.path">
+		<pathelement path="${bin.home}"/>
+		<fileset dir="${lib.home}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+
+	<target name="compile" description="Compile source code">
+		<mkdir dir="${bin.home}"/>
+
+		<javac srcdir="${src.home}" destdir="${bin.home}"
+				debug="on" includeAntRuntime="false">
+				
+			<include name="**/*.java"/>
+			<classpath refid="build.class.path"/>
+		</javac>
+    
+		<copy todir="${bin.home}">
+			<fileset dir="${src.home}" excludes="**/*.java"/>
+		</copy>
+	</target>
+
+
+	<target name="clean-archive" description="Clean binary code and temporary files in ${archive.home} directory">
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}"/>
+		</delete>
+	</target>
+
+
+	<target name="clean-working" description="Clean binary code and temporary files in ${working.home} directory">
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${working.home}"/>
+		</delete>
+	</target>
+
+
+	<target name="clean" description="Clean binary code and temporary files in ${bin.home} directory and ${working.home} directory">
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${bin.home}" includes="**"/>
+		</delete>
+		
+		<antcall target="clean-working" />
+	</target>
+
+
+	<target name="docs" depends="compile" description="Generating javadoc to folder ${docs.home}/api">
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${docs.home}/api" includes="**"/>
+		</delete>
+
+		<javadoc destdir="${docs.home}/api"
+			classpathref="build.class.path"
+			sourcepath="${src.home}"
+			excludepackagenames="net.hudup.alg.cf.test.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+		</javadoc>
+	</target>
+
+
+	<target name="docs-zip" depends="compile" description="Generating and compressing javadoc to folder ${archive.home}">
+		<antcall target="clean-archive" />
+
+		<javadoc destdir="${archive.home}"
+			classpathref="build.class.path"
+			sourcepath="${src.home}"
+			excludepackagenames="net.hudup.alg.cf.test.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+		</javadoc>
+
+		<zip destfile="${archive.home}/${product}-${version}-doc.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-doc.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="all-in-one" depends="compile" description="Zip whole framework">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<zip destfile="${archive.home}/${product}-${version}-all-in-one.zip" basedir="." 
+			includes="${bin.home}/**, 
+				${datasets.home}/**, 
+				${docs.home}/**, 
+				${lib.home}/**, 
+				${plugins.home}/**, 
+				${src.home}/**, 
+				${tools.home}/**, *" 
+			excludes="${working.home}">
+		</zip>
+	</target>
+
+
+	<target name="setup-in-one" depends="compile" description="Create framework setup">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<zip destfile="${archive.home}/${product}-${version}-setup-in-one.zip" basedir="." 
+			includes="${bin.home}/**, 
+				${datasets.home}/**, 
+				${docs.home}/**, 
+				${lib.home}/**, 
+				${plugins.home}/**, 
+				${tools.home}/**, *" 
+			excludes="${working.home}">
+		</zip>
+	</target>
+
+
+	<target name="jar-bayescf" depends="compile" description="Create collaborative filtering based on Bayesian network package">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+		
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-bayescf.jar">
+	    		<fileset dir="${bin.home}" includes="net/bayescf/**"/>
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="${jayes.jar}, ${jayes-io.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+
+				<manifest>
+					<attribute name="Main-Class" value="net.bayescf.alg.cf.bnet.BnetCF"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-bayescf.jar">
+	    		<fileset dir="${bin.home}" includes="net/bayescf/**"/>
+
+				<manifest>
+					<attribute name="Main-Class" value="net.bayescf.alg.cf.bnet.BnetCF"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, evaluator*.*, *.script"/>
+		</copy>
+		
+		<zip destfile="${archive.home}/${product}-${version}-bayescf.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-bayescf.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-hudup" depends="compile" description="Create Hudup extension package">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-hudup.jar">
+	    		<fileset dir="${bin.home}" includes="net/hudup/**"/>
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="${elvira.jar}, ${javabayes.jar}, ${weka.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.hudup.Starter"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-hudup.jar">
+	    		<fileset dir="${bin.home}" includes="net/hudup/**"/>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.hudup.Starter"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, sim*.*, evaluator*.*, server*.*, listener*.*, balancer*.*, toolkit*.*, starter*.*, *.script"/>
+		</copy>
+
+		<zip destfile="${archive.home}/${product}-${version}-hudup.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-hudup.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-rem" depends="compile" description="Create REM package">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-rem.jar">
+	    		<fileset dir="${bin.home}" includes="net/rem/**"/>
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="${commons-math3.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.rem.regression.evaluate.RegressionEvaluator"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-rem.jar">
+	    		<fileset dir="${bin.home}" includes="net/rem/**"/>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.rem.regression.evaluate.RegressionEvaluator"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, rem*.*, *.script"/>
+		</copy>
+
+		<zip destfile="${archive.home}/${product}-${version}-rem.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-rem.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-all" depends="compile" description="Create all packages">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+		
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}.jar">
+	    		<fileset dir="${bin.home}"/>
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="*.jar, *.zip"/>
+						</zips>
+					</archives>
+	    		</restrict>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.hudup.Starter"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}.jar">
+	    		<fileset dir="${bin.home}"/>
+
+				<manifest>
+					<attribute name="Main-Class" value="net.hudup.Starter"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+		
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, *.bat, *.sh, *.script" excludes="build.*"/>
+		</copy>
+		
+		<zip destfile="${archive.home}/${product}-${version}.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-all-src" depends="compile" description="Packing all sources">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+		
+		<if>
+		<equals arg1="${include-runtime-lib-src}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-src.jar">
+	    		<fileset dir="${src.home}"/>
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}/src" includes="*.jar, *.zip"/>
+						</zips>
+					</archives>
+	    		</restrict>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib-src}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib-src" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-src.jar">
+	    		<fileset dir="${src.home}"/>
+			</jar>
+		</else>
+		</if>
+		
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, *.bat, *.sh, *.xml, *.script"/>
+		</copy>
+		
+		<zip destfile="${archive.home}/${product}-${version}-src.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-src.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-runtime-lib" depends="compile" description="Create runtime library">
+		<mkdir dir="${archive.home}"/>
+
+		<jar destfile="${archive.home}/${product}-runtime-lib.jar" update="true">
+    		<restrict>
+     			<name name="**"/>
+				<archives>
+					<zips>
+						<fileset dir="${lib.home}" includes="*.jar, *.zip"/>
+					</zips>
+				</archives>
+    		</restrict>
+    		
+		</jar>
+	</target>
+
+
+	<target name="jar-runtime-lib-src" depends="compile" description="Packing runtime library source">
+		<mkdir dir="${archive.home}"/>
+
+		<jar destfile="${archive.home}/${product}-runtime-lib-src.jar" update="true">
+    		<restrict>
+     			<name name="**"/>
+				<archives>
+					<zips>
+						<fileset dir="${lib.home}/src" includes="*.jar, *.zip"/>
+					</zips>
+				</archives>
+    		</restrict>
+		</jar>
+	</target>
+
+
+	<target name="jar-update" depends="compile" description="Update whole package">
+		<jar destfile="${archive.home}/${package}.jar" update="true">
+    		<fileset dir="${bin.home}"/>
+		</jar>
+	</target>
+
+
+	<target name="datasets" depends="compile" description="Create datasets archive">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<zip destfile="${archive.home}/datasets.zip" basedir="${datasets.home}" />
+	</target>
+
+
+</project>
+

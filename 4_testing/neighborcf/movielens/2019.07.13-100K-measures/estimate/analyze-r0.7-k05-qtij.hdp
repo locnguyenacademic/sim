@@ -1,0 +1,318 @@
+General evaluation
+
+  i09.05.qtij
+    Hudup recall = 0.9996
+    MAE.recommend = 0.7701
+    MSE.recommend = 0.9752
+    Pearson.recommend = 0.3481
+    RMSE.recommend = 0.9875
+    Recall.estimate = 0.9936
+    Setup time = 0.2006
+    Speed = 0.2054
+
+  u09.05.qtij
+    Hudup recall = 0.9996
+    MAE.recommend = 0.7894
+    MSE.recommend = 1.0177
+    Pearson.recommend = 0.3022
+    RMSE.recommend = 1.0088
+    Recall.estimate = 0.9936
+    Setup time = 0.0386
+    Speed = 0.1321
+
+
+Dataset evaluation
+
+  Dataset "1"
+    i09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7701
+      MSE.recommend = 0.9752
+      Pearson.recommend = 0.3480
+      RMSE.recommend = 0.9875
+      Recall.estimate = 0.9939
+      Setup time = 0.2180
+      Speed = 0.2102
+    u09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7900
+      MSE.recommend = 1.0184
+      Pearson.recommend = 0.2993
+      RMSE.recommend = 1.0091
+      Recall.estimate = 0.9939
+      Setup time = 0.0280
+      Speed = 0.1698
+
+  Dataset "2"
+    i09.05.qtij
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7737
+      MSE.recommend = 0.9818
+      Pearson.recommend = 0.3428
+      RMSE.recommend = 0.9909
+      Recall.estimate = 0.9938
+      Setup time = 0.1330
+      Speed = 0.1975
+    u09.05.qtij
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7910
+      MSE.recommend = 1.0228
+      Pearson.recommend = 0.2988
+      RMSE.recommend = 1.0113
+      Recall.estimate = 0.9938
+      Setup time = 0.0410
+      Speed = 0.1860
+
+  Dataset "3"
+    i09.05.qtij
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7662
+      MSE.recommend = 0.9697
+      Pearson.recommend = 0.3577
+      RMSE.recommend = 0.9847
+      Recall.estimate = 0.9933
+      Setup time = 0.3310
+      Speed = 0.2502
+    u09.05.qtij
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7865
+      MSE.recommend = 1.0129
+      Pearson.recommend = 0.3071
+      RMSE.recommend = 1.0064
+      Recall.estimate = 0.9933
+      Setup time = 0.0470
+      Speed = 0.1074
+
+  Dataset "4"
+    i09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7710
+      MSE.recommend = 0.9760
+      Pearson.recommend = 0.3472
+      RMSE.recommend = 0.9880
+      Recall.estimate = 0.9936
+      Setup time = 0.1460
+      Speed = 0.1727
+    u09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7909
+      MSE.recommend = 1.0196
+      Pearson.recommend = 0.2972
+      RMSE.recommend = 1.0097
+      Recall.estimate = 0.9936
+      Setup time = 0.0460
+      Speed = 0.1003
+
+  Dataset "5"
+    i09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7695
+      MSE.recommend = 0.9731
+      Pearson.recommend = 0.3448
+      RMSE.recommend = 0.9864
+      Recall.estimate = 0.9933
+      Setup time = 0.1750
+      Speed = 0.1962
+    u09.05.qtij
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7885
+      MSE.recommend = 1.0149
+      Pearson.recommend = 0.3089
+      RMSE.recommend = 1.0074
+      Recall.estimate = 0.9933
+      Setup time = 0.0310
+      Speed = 0.0973
+
+
+Hudup recall evaluation
+
+  i09.05.qtij
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.9989
+    Dataset "3" got 0.9989
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  u09.05.qtij
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.9989
+    Dataset "3" got 0.9989
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+MAE.recommend evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.7701
+    Dataset "2" got 0.7737
+    Dataset "3" got 0.7662
+    Dataset "4" got 0.7710
+    Dataset "5" got 0.7695
+
+  u09.05.qtij
+    Dataset "1" got 0.7900
+    Dataset "2" got 0.7910
+    Dataset "3" got 0.7865
+    Dataset "4" got 0.7909
+    Dataset "5" got 0.7885
+
+
+MSE.recommend evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.9752
+    Dataset "2" got 0.9818
+    Dataset "3" got 0.9697
+    Dataset "4" got 0.9760
+    Dataset "5" got 0.9731
+
+  u09.05.qtij
+    Dataset "1" got 1.0184
+    Dataset "2" got 1.0228
+    Dataset "3" got 1.0129
+    Dataset "4" got 1.0196
+    Dataset "5" got 1.0149
+
+
+Pearson.recommend evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.3480
+    Dataset "2" got 0.3428
+    Dataset "3" got 0.3577
+    Dataset "4" got 0.3472
+    Dataset "5" got 0.3448
+
+  u09.05.qtij
+    Dataset "1" got 0.2993
+    Dataset "2" got 0.2988
+    Dataset "3" got 0.3071
+    Dataset "4" got 0.2972
+    Dataset "5" got 0.3089
+
+
+RMSE.recommend evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.9875
+    Dataset "2" got 0.9909
+    Dataset "3" got 0.9847
+    Dataset "4" got 0.9880
+    Dataset "5" got 0.9864
+
+  u09.05.qtij
+    Dataset "1" got 1.0091
+    Dataset "2" got 1.0113
+    Dataset "3" got 1.0064
+    Dataset "4" got 1.0097
+    Dataset "5" got 1.0074
+
+
+Recall.estimate evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.9939
+    Dataset "2" got 0.9938
+    Dataset "3" got 0.9933
+    Dataset "4" got 0.9936
+    Dataset "5" got 0.9933
+
+  u09.05.qtij
+    Dataset "1" got 0.9939
+    Dataset "2" got 0.9938
+    Dataset "3" got 0.9933
+    Dataset "4" got 0.9936
+    Dataset "5" got 0.9933
+
+
+Setup time evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.2180
+    Dataset "2" got 0.1330
+    Dataset "3" got 0.3310
+    Dataset "4" got 0.1460
+    Dataset "5" got 0.1750
+
+  u09.05.qtij
+    Dataset "1" got 0.0280
+    Dataset "2" got 0.0410
+    Dataset "3" got 0.0470
+    Dataset "4" got 0.0460
+    Dataset "5" got 0.0310
+
+
+Speed evaluation
+
+  i09.05.qtij
+    Dataset "1" got 0.2102
+    Dataset "2" got 0.1975
+    Dataset "3" got 0.2502
+    Dataset "4" got 0.1727
+    Dataset "5" got 0.1962
+
+  u09.05.qtij
+    Dataset "1" got 0.1698
+    Dataset "2" got 0.1860
+    Dataset "3" got 0.1074
+    Dataset "4" got 0.1003
+    Dataset "5" got 0.0973
+
+
+Algorithm parameters
+
+  i09.05.qtij
+    measure=qtij
+    alg_support_cache=true
+    min_rating=1.0000
+    ta_normalized=false
+    smtp_lambda=0.5000
+    max_rating=5.0000
+    cos_normalized=false
+    bcf_median=true
+    bcf_value_bins=1, 2, 3, 4, 5
+    smtp_general_var=false
+
+  u09.05.qtij
+    measure=qtij
+    alg_support_cache=true
+    min_rating=1.0000
+    ta_normalized=false
+    smtp_lambda=0.5000
+    max_rating=5.0000
+    cos_normalized=false
+    bcf_median=true
+    bcf_value_bins=1, 2, 3, 4, 5
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  i09.05.qtij
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u09.05.qtij
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+
+Note
+  Dataset "1" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/E:/temp/sim/datasets/movielens-csv-r0.7-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 630.00MB, Free memory = 214.19MB, Max memory = 910.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "E:\temp\sim"

@@ -1,0 +1,8 @@
+# Sample batch script
+
+
+algorithms=neighbor_itembased, neighbor_itembased2
+
+trainingsets=datasets/movielens/rating001.base#movielens_parser#file, datasets/movielens/rating002.base#movielens_parser#file, datasets/movielens/rating003.base#movielens_parser#file, datasets/movielens/rating004.base#movielens_parser#file, datasets/movielens/rating005.base#movielens_parser#file
+
+testingsets=datasets/movielens/rating001.test#movielens_parser#file, datasets/movielens/rating002.test#movielens_parser#file, datasets/movielens/rating003.test#movielens_parser#file, datasets/movielens/rating004.test#movielens_parser#file, datasets/movielens/rating005.test#movielens_parser#file

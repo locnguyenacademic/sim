@@ -1,0 +1,6781 @@
+General evaluation
+
+  c01.01.2d
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8079
+    MSE.recommend = 1.0175
+    RMSE.recommend = 1.0087
+    Recall.estimate = 0.9707
+    Setup time = 0.1436
+    Speed = 0.0729
+
+  i01.01.cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8229
+    MSE.recommend = 1.1023
+    RMSE.recommend = 1.0499
+    Recall.estimate = 0.9707
+    Setup time = 0.0254
+    Speed = 0.0264
+
+  i01.02.cosine_adjusted
+    Hudup recall = 0.9758
+    MAE.recommend = 0.9220
+    MSE.recommend = 1.3840
+    RMSE.recommend = 1.1764
+    Recall.estimate = 0.8907
+    Setup time = 0.0220
+    Speed = 0.0215
+
+  i02.01.pearson
+    Hudup recall = 0.9745
+    MAE.recommend = 0.9055
+    MSE.recommend = 1.3326
+    RMSE.recommend = 1.1543
+    Recall.estimate = 0.8601
+    Setup time = 0.0280
+    Speed = 0.0231
+
+  i02.02.pearson_constrained
+    Hudup recall = 0.9758
+    MAE.recommend = 0.9098
+    MSE.recommend = 1.3500
+    RMSE.recommend = 1.1619
+    Recall.estimate = 0.8944
+    Setup time = 0.0188
+    Speed = 0.0212
+
+  i02.03.pearson_weighted
+    Hudup recall = 0.9745
+    MAE.recommend = 0.9043
+    MSE.recommend = 1.3304
+    RMSE.recommend = 1.1534
+    Recall.estimate = 0.8601
+    Setup time = 0.0188
+    Speed = 0.0256
+
+  i02.04.pearson_sigmoid
+    Hudup recall = 0.9745
+    MAE.recommend = 0.9044
+    MSE.recommend = 1.3296
+    RMSE.recommend = 1.1531
+    Recall.estimate = 0.8601
+    Setup time = 0.0346
+    Speed = 0.0257
+
+  i03.01.jaccard
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8725
+    MSE.recommend = 1.2570
+    RMSE.recommend = 1.1211
+    Recall.estimate = 0.9707
+    Setup time = 0.0250
+    Speed = 0.0261
+
+  i04.01.msd
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8500
+    MSE.recommend = 1.1936
+    RMSE.recommend = 1.0925
+    Recall.estimate = 0.8944
+    Setup time = 0.0254
+    Speed = 0.0215
+
+  i04.02.msdj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8592
+    MSE.recommend = 1.2191
+    RMSE.recommend = 1.1041
+    Recall.estimate = 0.8944
+    Setup time = 0.0314
+    Speed = 0.0242
+
+  i05.01.pss_item
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8593
+    MSE.recommend = 1.2227
+    RMSE.recommend = 1.1057
+    Recall.estimate = 0.8944
+    Setup time = 0.0310
+    Speed = 0.0214
+
+  i05.02.nhsm
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8703
+    MSE.recommend = 1.2553
+    RMSE.recommend = 1.1203
+    Recall.estimate = 0.8944
+    Setup time = 0.0254
+    Speed = 0.0342
+
+  i06.01.bc
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8212
+    MSE.recommend = 1.1000
+    RMSE.recommend = 1.0488
+    Recall.estimate = 0.9707
+    Setup time = 0.0182
+    Speed = 0.0370
+
+  i06.02.bcf
+    Hudup recall = 0.9745
+    MAE.recommend = 0.9055
+    MSE.recommend = 1.3334
+    RMSE.recommend = 1.1547
+    Recall.estimate = 0.8601
+    Setup time = 0.0310
+    Speed = 0.0368
+
+  i07.01.smtp
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8542
+    MSE.recommend = 1.2058
+    RMSE.recommend = 1.0981
+    Recall.estimate = 0.8819
+    Setup time = 0.0252
+    Speed = 0.0223
+
+  i08.01.amer
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8226
+    MSE.recommend = 1.1018
+    RMSE.recommend = 1.0496
+    Recall.estimate = 0.9707
+    Setup time = 0.0188
+    Speed = 0.0914
+
+  i08.02.amer_cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8228
+    MSE.recommend = 1.1022
+    RMSE.recommend = 1.0498
+    Recall.estimate = 0.9707
+    Setup time = 0.0280
+    Speed = 0.0937
+
+  i08.03.amer_pearson
+    Hudup recall = 0.9745
+    MAE.recommend = 0.8693
+    MSE.recommend = 1.2496
+    RMSE.recommend = 1.1178
+    Recall.estimate = 0.8601
+    Setup time = 0.0250
+    Speed = 0.0897
+
+  i08.04.amer_smtp
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8540
+    MSE.recommend = 1.2052
+    RMSE.recommend = 1.0978
+    Recall.estimate = 0.8819
+    Setup time = 0.0218
+    Speed = 0.0893
+
+  i08.05.amer_amer2
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8224
+    MSE.recommend = 1.1016
+    RMSE.recommend = 1.0495
+    Recall.estimate = 0.9707
+    Setup time = 0.0310
+    Speed = 0.1483
+
+  i09.01.amer2
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8804
+    MSE.recommend = 1.2819
+    RMSE.recommend = 1.1322
+    Recall.estimate = 0.9707
+    Setup time = 0.0218
+    Speed = 0.0906
+
+  i09.02.amer2_cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8226
+    MSE.recommend = 1.1018
+    RMSE.recommend = 1.0497
+    Recall.estimate = 0.9707
+    Setup time = 0.0218
+    Speed = 0.0921
+
+  i09.03.amer2_pearson
+    Hudup recall = 0.9745
+    MAE.recommend = 0.8814
+    MSE.recommend = 1.2757
+    RMSE.recommend = 1.1294
+    Recall.estimate = 0.8601
+    Setup time = 0.0248
+    Speed = 0.0884
+
+  i09.04.amer2_smtp
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8541
+    MSE.recommend = 1.2054
+    RMSE.recommend = 1.0979
+    Recall.estimate = 0.8819
+    Setup time = 0.0216
+    Speed = 0.0877
+
+  i10.01.ta
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8512
+    MSE.recommend = 1.1973
+    RMSE.recommend = 1.0942
+    Recall.estimate = 0.8944
+    Setup time = 0.0282
+    Speed = 0.0215
+
+  i10.02.taj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8597
+    MSE.recommend = 1.2207
+    RMSE.recommend = 1.1048
+    Recall.estimate = 0.8944
+    Setup time = 0.0286
+    Speed = 0.0244
+
+  i10.03.tan
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8779
+    MSE.recommend = 1.2740
+    RMSE.recommend = 1.1287
+    Recall.estimate = 0.8944
+    Setup time = 0.0280
+    Speed = 0.0216
+
+  i10.04.tanj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8829
+    MSE.recommend = 1.2862
+    RMSE.recommend = 1.1341
+    Recall.estimate = 0.8944
+    Setup time = 0.0222
+    Speed = 0.0244
+
+  i11.01.ww
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8375
+    MSE.recommend = 1.1548
+    RMSE.recommend = 1.0746
+    Recall.estimate = 0.9707
+    Setup time = 0.0502
+    Speed = 0.4408
+
+  u01.01.cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8325
+    MSE.recommend = 1.1288
+    RMSE.recommend = 1.0624
+    Recall.estimate = 0.9707
+    Setup time = 0.0316
+    Speed = 0.0230
+
+  u01.02.cosine_adjusted
+    Hudup recall = 0.9724
+    MAE.recommend = 0.9574
+    MSE.recommend = 1.4702
+    RMSE.recommend = 1.2125
+    Recall.estimate = 0.8908
+    Setup time = 0.0218
+    Speed = 0.0182
+
+  u02.01.pearson
+    Hudup recall = 0.8747
+    MAE.recommend = 0.9286
+    MSE.recommend = 1.3895
+    RMSE.recommend = 1.1787
+    Recall.estimate = 0.8701
+    Setup time = 0.0218
+    Speed = 0.0187
+
+  u02.02.pearson_constrained
+    Hudup recall = 0.9758
+    MAE.recommend = 0.9307
+    MSE.recommend = 1.3987
+    RMSE.recommend = 1.1826
+    Recall.estimate = 0.8944
+    Setup time = 0.0278
+    Speed = 0.0176
+
+  u02.03.pearson_weighted
+    Hudup recall = 0.8747
+    MAE.recommend = 0.9266
+    MSE.recommend = 1.3849
+    RMSE.recommend = 1.1768
+    Recall.estimate = 0.8701
+    Setup time = 0.0284
+    Speed = 0.0207
+
+  u02.04.pearson_sigmoid
+    Hudup recall = 0.8747
+    MAE.recommend = 0.9272
+    MSE.recommend = 1.3856
+    RMSE.recommend = 1.1771
+    Recall.estimate = 0.8701
+    Setup time = 0.0282
+    Speed = 0.0210
+
+  u03.01.jaccard
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8847
+    MSE.recommend = 1.2797
+    RMSE.recommend = 1.1312
+    Recall.estimate = 0.9707
+    Setup time = 0.0218
+    Speed = 0.0225
+
+  u04.01.msd
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8620
+    MSE.recommend = 1.2167
+    RMSE.recommend = 1.1030
+    Recall.estimate = 0.8944
+    Setup time = 0.0284
+    Speed = 0.0178
+
+  u04.02.msdj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8749
+    MSE.recommend = 1.2480
+    RMSE.recommend = 1.1171
+    Recall.estimate = 0.8944
+    Setup time = 0.0278
+    Speed = 0.0201
+
+  u05.01.pss
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8729
+    MSE.recommend = 1.2475
+    RMSE.recommend = 1.1169
+    Recall.estimate = 0.8944
+    Setup time = 0.0282
+    Speed = 0.0179
+
+  u05.02.nhsm
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8863
+    MSE.recommend = 1.2827
+    RMSE.recommend = 1.1325
+    Recall.estimate = 0.8944
+    Setup time = 0.0278
+    Speed = 0.0269
+
+  u06.01.bc
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8314
+    MSE.recommend = 1.1262
+    RMSE.recommend = 1.0612
+    Recall.estimate = 0.9707
+    Setup time = 0.0312
+    Speed = 0.0285
+
+  u06.02.bcf
+    Hudup recall = 0.8747
+    MAE.recommend = 0.9281
+    MSE.recommend = 1.3896
+    RMSE.recommend = 1.1788
+    Recall.estimate = 0.8701
+    Setup time = 0.0312
+    Speed = 0.0285
+
+  u07.01.smtp
+    Hudup recall = 0.9748
+    MAE.recommend = 0.8628
+    MSE.recommend = 1.2187
+    RMSE.recommend = 1.1039
+    Recall.estimate = 0.8940
+    Setup time = 0.0250
+    Speed = 0.0187
+
+  u08.01.amer
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8323
+    MSE.recommend = 1.1284
+    RMSE.recommend = 1.0622
+    Recall.estimate = 0.9707
+    Setup time = 0.0186
+    Speed = 0.0648
+
+  u08.02.amer_cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8325
+    MSE.recommend = 1.1287
+    RMSE.recommend = 1.0624
+    Recall.estimate = 0.9707
+    Setup time = 0.0312
+    Speed = 0.0658
+
+  u08.03.amer_pearson
+    Hudup recall = 0.8747
+    MAE.recommend = 0.8878
+    MSE.recommend = 1.2879
+    RMSE.recommend = 1.1348
+    Recall.estimate = 0.8701
+    Setup time = 0.0312
+    Speed = 0.0619
+
+  u08.04.amer_smtp
+    Hudup recall = 0.9748
+    MAE.recommend = 0.8626
+    MSE.recommend = 1.2181
+    RMSE.recommend = 1.1037
+    Recall.estimate = 0.8940
+    Setup time = 0.0218
+    Speed = 0.0626
+
+  u08.05.amer_amer2
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8323
+    MSE.recommend = 1.1283
+    RMSE.recommend = 1.0622
+    Recall.estimate = 0.9707
+    Setup time = 0.0282
+    Speed = 0.1027
+
+  u09.01.amer2
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8971
+    MSE.recommend = 1.3278
+    RMSE.recommend = 1.1523
+    Recall.estimate = 0.9707
+    Setup time = 0.0312
+    Speed = 0.0636
+
+  u09.02.amer2_cosine
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8324
+    MSE.recommend = 1.1284
+    RMSE.recommend = 1.0622
+    Recall.estimate = 0.9707
+    Setup time = 0.0284
+    Speed = 0.0659
+
+  u09.03.amer2_pearson
+    Hudup recall = 0.8747
+    MAE.recommend = 0.9030
+    MSE.recommend = 1.3310
+    RMSE.recommend = 1.1537
+    Recall.estimate = 0.8701
+    Setup time = 0.0316
+    Speed = 0.0631
+
+  u09.04.amer2_smtp
+    Hudup recall = 0.9748
+    MAE.recommend = 0.8628
+    MSE.recommend = 1.2185
+    RMSE.recommend = 1.1038
+    Recall.estimate = 0.8940
+    Setup time = 0.0222
+    Speed = 0.0617
+
+  u10.01.ta
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8636
+    MSE.recommend = 1.2208
+    RMSE.recommend = 1.1049
+    Recall.estimate = 0.8944
+    Setup time = 0.0284
+    Speed = 0.0179
+
+  u10.02.taj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8761
+    MSE.recommend = 1.2511
+    RMSE.recommend = 1.1185
+    Recall.estimate = 0.8944
+    Setup time = 0.0250
+    Speed = 0.0202
+
+  u10.03.tan
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8938
+    MSE.recommend = 1.3048
+    RMSE.recommend = 1.1423
+    Recall.estimate = 0.8944
+    Setup time = 0.0218
+    Speed = 0.0181
+
+  u10.04.tanj
+    Hudup recall = 0.9758
+    MAE.recommend = 0.8997
+    MSE.recommend = 1.3182
+    RMSE.recommend = 1.1481
+    Recall.estimate = 0.8944
+    Setup time = 0.0278
+    Speed = 0.0201
+
+  u11.01.ww
+    Hudup recall = 0.9777
+    MAE.recommend = 0.8443
+    MSE.recommend = 1.1630
+    RMSE.recommend = 1.0784
+    Recall.estimate = 0.9707
+    Setup time = 0.0534
+    Speed = 0.3737
+
+
+Dataset evaluation
+
+  Dataset "1"
+    c01.01.2d
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8086
+      MSE.recommend = 1.0175
+      RMSE.recommend = 1.0087
+      Recall.estimate = 0.9711
+      Setup time = 0.2970
+      Speed = 0.0811
+    i01.01.cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8303
+      MSE.recommend = 1.1239
+      RMSE.recommend = 1.0602
+      Recall.estimate = 0.9711
+      Setup time = 0.0320
+      Speed = 0.0294
+    i01.02.cosine_adjusted
+      Hudup recall = 0.9830
+      MAE.recommend = 0.9292
+      MSE.recommend = 1.4025
+      RMSE.recommend = 1.1843
+      Recall.estimate = 0.8894
+      Setup time = 0.0160
+      Speed = 0.0224
+    i02.01.pearson
+      Hudup recall = 0.9820
+      MAE.recommend = 0.9113
+      MSE.recommend = 1.3497
+      RMSE.recommend = 1.1618
+      Recall.estimate = 0.8584
+      Setup time = 0.0160
+      Speed = 0.0233
+    i02.02.pearson_constrained
+      Hudup recall = 0.9830
+      MAE.recommend = 0.9179
+      MSE.recommend = 1.3717
+      RMSE.recommend = 1.1712
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0203
+    i02.03.pearson_weighted
+      Hudup recall = 0.9820
+      MAE.recommend = 0.9107
+      MSE.recommend = 1.3486
+      RMSE.recommend = 1.1613
+      Recall.estimate = 0.8584
+      Setup time = 0.0150
+      Speed = 0.0255
+    i02.04.pearson_sigmoid
+      Hudup recall = 0.9820
+      MAE.recommend = 0.9104
+      MSE.recommend = 1.3469
+      RMSE.recommend = 1.1606
+      Recall.estimate = 0.8584
+      Setup time = 0.0310
+      Speed = 0.0252
+    i03.01.jaccard
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8825
+      MSE.recommend = 1.2875
+      RMSE.recommend = 1.1347
+      Recall.estimate = 0.9711
+      Setup time = 0.0160
+      Speed = 0.0254
+    i04.01.msd
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8606
+      MSE.recommend = 1.2251
+      RMSE.recommend = 1.1068
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0226
+    i04.02.msdj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8684
+      MSE.recommend = 1.2458
+      RMSE.recommend = 1.1162
+      Recall.estimate = 0.8934
+      Setup time = 0.0320
+      Speed = 0.0231
+    i05.01.pss_item
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8707
+      MSE.recommend = 1.2569
+      RMSE.recommend = 1.1211
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0214
+    i05.02.nhsm
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8810
+      MSE.recommend = 1.2863
+      RMSE.recommend = 1.1341
+      Recall.estimate = 0.8934
+      Setup time = 0.0320
+      Speed = 0.0327
+    i06.01.bc
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8299
+      MSE.recommend = 1.1249
+      RMSE.recommend = 1.0606
+      Recall.estimate = 0.9711
+      Setup time = 0.0150
+      Speed = 0.0378
+    i06.02.bcf
+      Hudup recall = 0.9820
+      MAE.recommend = 0.9117
+      MSE.recommend = 1.3516
+      RMSE.recommend = 1.1626
+      Recall.estimate = 0.8584
+      Setup time = 0.0310
+      Speed = 0.0361
+    i07.01.smtp
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8639
+      MSE.recommend = 1.2342
+      RMSE.recommend = 1.1109
+      Recall.estimate = 0.8818
+      Setup time = 0.0310
+      Speed = 0.0233
+    i08.01.amer
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8302
+      MSE.recommend = 1.1236
+      RMSE.recommend = 1.0600
+      Recall.estimate = 0.9711
+      Setup time = 0.0160
+      Speed = 0.0900
+    i08.02.amer_cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8303
+      MSE.recommend = 1.1238
+      RMSE.recommend = 1.0601
+      Recall.estimate = 0.9711
+      Setup time = 0.0150
+      Speed = 0.0923
+    i08.03.amer_pearson
+      Hudup recall = 0.9820
+      MAE.recommend = 0.8791
+      MSE.recommend = 1.2792
+      RMSE.recommend = 1.1310
+      Recall.estimate = 0.8584
+      Setup time = 0.0160
+      Speed = 0.0889
+    i08.04.amer_smtp
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8637
+      MSE.recommend = 1.2335
+      RMSE.recommend = 1.1106
+      Recall.estimate = 0.8818
+      Setup time = 0.0160
+      Speed = 0.0885
+    i08.05.amer_amer2
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8302
+      MSE.recommend = 1.1237
+      RMSE.recommend = 1.0601
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.1485
+    i09.01.amer2
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8883
+      MSE.recommend = 1.3065
+      RMSE.recommend = 1.1430
+      Recall.estimate = 0.9711
+      Setup time = 0.0160
+      Speed = 0.0903
+    i09.02.amer2_cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8302
+      MSE.recommend = 1.1237
+      RMSE.recommend = 1.0600
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.0911
+    i09.03.amer2_pearson
+      Hudup recall = 0.9820
+      MAE.recommend = 0.8886
+      MSE.recommend = 1.2971
+      RMSE.recommend = 1.1389
+      Recall.estimate = 0.8584
+      Setup time = 0.0310
+      Speed = 0.0882
+    i09.04.amer2_smtp
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8636
+      MSE.recommend = 1.2335
+      RMSE.recommend = 1.1106
+      Recall.estimate = 0.8818
+      Setup time = 0.0310
+      Speed = 0.0863
+    i10.01.ta
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8619
+      MSE.recommend = 1.2295
+      RMSE.recommend = 1.1088
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0214
+    i10.02.taj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8692
+      MSE.recommend = 1.2486
+      RMSE.recommend = 1.1174
+      Recall.estimate = 0.8934
+      Setup time = 0.0320
+      Speed = 0.0237
+    i10.03.tan
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8866
+      MSE.recommend = 1.3006
+      RMSE.recommend = 1.1404
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0217
+    i10.04.tanj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8903
+      MSE.recommend = 1.3078
+      RMSE.recommend = 1.1436
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0239
+    i11.01.ww
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8428
+      MSE.recommend = 1.1651
+      RMSE.recommend = 1.0794
+      Recall.estimate = 0.9711
+      Setup time = 0.0630
+      Speed = 0.4453
+    u01.01.cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8380
+      MSE.recommend = 1.1366
+      RMSE.recommend = 1.0661
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.0215
+    u01.02.cosine_adjusted
+      Hudup recall = 0.9799
+      MAE.recommend = 0.9616
+      MSE.recommend = 1.4743
+      RMSE.recommend = 1.2142
+      Recall.estimate = 0.8899
+      Setup time = 0.0310
+      Speed = 0.0187
+    u02.01.pearson
+      Hudup recall = 0.8865
+      MAE.recommend = 0.9344
+      MSE.recommend = 1.4081
+      RMSE.recommend = 1.1866
+      Recall.estimate = 0.8699
+      Setup time = 0.0150
+      Speed = 0.0188
+    u02.02.pearson_constrained
+      Hudup recall = 0.9830
+      MAE.recommend = 0.9361
+      MSE.recommend = 1.4092
+      RMSE.recommend = 1.1871
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0173
+    u02.03.pearson_weighted
+      Hudup recall = 0.8865
+      MAE.recommend = 0.9321
+      MSE.recommend = 1.4033
+      RMSE.recommend = 1.1846
+      Recall.estimate = 0.8699
+      Setup time = 0.0310
+      Speed = 0.0204
+    u02.04.pearson_sigmoid
+      Hudup recall = 0.8865
+      MAE.recommend = 0.9329
+      MSE.recommend = 1.4042
+      RMSE.recommend = 1.1850
+      Recall.estimate = 0.8699
+      Setup time = 0.0310
+      Speed = 0.0203
+    u03.01.jaccard
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8892
+      MSE.recommend = 1.2856
+      RMSE.recommend = 1.1338
+      Recall.estimate = 0.9711
+      Setup time = 0.0160
+      Speed = 0.0220
+    u04.01.msd
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8683
+      MSE.recommend = 1.2300
+      RMSE.recommend = 1.1091
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0171
+    u04.02.msdj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8806
+      MSE.recommend = 1.2595
+      RMSE.recommend = 1.1223
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0194
+    u05.01.pss
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8794
+      MSE.recommend = 1.2619
+      RMSE.recommend = 1.1233
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0172
+    u05.02.nhsm
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8919
+      MSE.recommend = 1.2953
+      RMSE.recommend = 1.1381
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0261
+    u06.01.bc
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8372
+      MSE.recommend = 1.1351
+      RMSE.recommend = 1.0654
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.0274
+    u06.02.bcf
+      Hudup recall = 0.8865
+      MAE.recommend = 0.9336
+      MSE.recommend = 1.4076
+      RMSE.recommend = 1.1864
+      Recall.estimate = 0.8699
+      Setup time = 0.0470
+      Speed = 0.0279
+    u07.01.smtp
+      Hudup recall = 0.9820
+      MAE.recommend = 0.8689
+      MSE.recommend = 1.2317
+      RMSE.recommend = 1.1098
+      Recall.estimate = 0.8930
+      Setup time = 0.0150
+      Speed = 0.0179
+    u08.01.amer
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8379
+      MSE.recommend = 1.1362
+      RMSE.recommend = 1.0659
+      Recall.estimate = 0.9711
+      Setup time = 0.0160
+      Speed = 0.0633
+    u08.02.amer_cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8380
+      MSE.recommend = 1.1365
+      RMSE.recommend = 1.0661
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.0658
+    u08.03.amer_pearson
+      Hudup recall = 0.8865
+      MAE.recommend = 0.8959
+      MSE.recommend = 1.3113
+      RMSE.recommend = 1.1451
+      Recall.estimate = 0.8699
+      Setup time = 0.0310
+      Speed = 0.0627
+    u08.04.amer_smtp
+      Hudup recall = 0.9820
+      MAE.recommend = 0.8688
+      MSE.recommend = 1.2311
+      RMSE.recommend = 1.1096
+      Recall.estimate = 0.8930
+      Setup time = 0.0320
+      Speed = 0.0640
+    u08.05.amer_amer2
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8378
+      MSE.recommend = 1.1362
+      RMSE.recommend = 1.0659
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.1029
+    u09.01.amer2
+      Hudup recall = 0.9841
+      MAE.recommend = 0.9037
+      MSE.recommend = 1.3417
+      RMSE.recommend = 1.1583
+      Recall.estimate = 0.9711
+      Setup time = 0.0310
+      Speed = 0.0636
+    u09.02.amer2_cosine
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8379
+      MSE.recommend = 1.1362
+      RMSE.recommend = 1.0659
+      Recall.estimate = 0.9711
+      Setup time = 0.0320
+      Speed = 0.0662
+    u09.03.amer2_pearson
+      Hudup recall = 0.8865
+      MAE.recommend = 0.9087
+      MSE.recommend = 1.3487
+      RMSE.recommend = 1.1613
+      Recall.estimate = 0.8699
+      Setup time = 0.0320
+      Speed = 0.0618
+    u09.04.amer2_smtp
+      Hudup recall = 0.9820
+      MAE.recommend = 0.8690
+      MSE.recommend = 1.2316
+      RMSE.recommend = 1.1098
+      Recall.estimate = 0.8930
+      Setup time = 0.0320
+      Speed = 0.0628
+    u10.01.ta
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8697
+      MSE.recommend = 1.2341
+      RMSE.recommend = 1.1109
+      Recall.estimate = 0.8934
+      Setup time = 0.0320
+      Speed = 0.0174
+    u10.02.taj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8815
+      MSE.recommend = 1.2620
+      RMSE.recommend = 1.1234
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0202
+    u10.03.tan
+      Hudup recall = 0.9830
+      MAE.recommend = 0.8994
+      MSE.recommend = 1.3159
+      RMSE.recommend = 1.1471
+      Recall.estimate = 0.8934
+      Setup time = 0.0160
+      Speed = 0.0176
+    u10.04.tanj
+      Hudup recall = 0.9830
+      MAE.recommend = 0.9050
+      MSE.recommend = 1.3287
+      RMSE.recommend = 1.1527
+      Recall.estimate = 0.8934
+      Setup time = 0.0150
+      Speed = 0.0197
+    u11.01.ww
+      Hudup recall = 0.9841
+      MAE.recommend = 0.8500
+      MSE.recommend = 1.1763
+      RMSE.recommend = 1.0846
+      Recall.estimate = 0.9711
+      Setup time = 0.0470
+      Speed = 0.3638
+
+  Dataset "2"
+    c01.01.2d
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8099
+      MSE.recommend = 1.0224
+      RMSE.recommend = 1.0111
+      Recall.estimate = 0.9726
+      Setup time = 0.1250
+      Speed = 0.0775
+    i01.01.cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8183
+      MSE.recommend = 1.0902
+      RMSE.recommend = 1.0441
+      Recall.estimate = 0.9726
+      Setup time = 0.0160
+      Speed = 0.0264
+    i01.02.cosine_adjusted
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9165
+      MSE.recommend = 1.3702
+      RMSE.recommend = 1.1705
+      Recall.estimate = 0.8929
+      Setup time = 0.0320
+      Speed = 0.0216
+    i02.01.pearson
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8993
+      MSE.recommend = 1.3132
+      RMSE.recommend = 1.1460
+      Recall.estimate = 0.8587
+      Setup time = 0.0310
+      Speed = 0.0231
+    i02.02.pearson_constrained
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9029
+      MSE.recommend = 1.3326
+      RMSE.recommend = 1.1544
+      Recall.estimate = 0.8970
+      Setup time = 0.0150
+      Speed = 0.0214
+    i02.03.pearson_weighted
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8976
+      MSE.recommend = 1.3108
+      RMSE.recommend = 1.1449
+      Recall.estimate = 0.8587
+      Setup time = 0.0160
+      Speed = 0.0253
+    i02.04.pearson_sigmoid
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8981
+      MSE.recommend = 1.3102
+      RMSE.recommend = 1.1447
+      Recall.estimate = 0.8587
+      Setup time = 0.0160
+      Speed = 0.0259
+    i03.01.jaccard
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8672
+      MSE.recommend = 1.2415
+      RMSE.recommend = 1.1142
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0264
+    i04.01.msd
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8470
+      MSE.recommend = 1.1842
+      RMSE.recommend = 1.0882
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0213
+    i04.02.msdj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8554
+      MSE.recommend = 1.2081
+      RMSE.recommend = 1.0992
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0249
+    i05.01.pss_item
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8565
+      MSE.recommend = 1.2142
+      RMSE.recommend = 1.1019
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0212
+    i05.02.nhsm
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8666
+      MSE.recommend = 1.2452
+      RMSE.recommend = 1.1159
+      Recall.estimate = 0.8970
+      Setup time = 0.0320
+      Speed = 0.0341
+    i06.01.bc
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8167
+      MSE.recommend = 1.0879
+      RMSE.recommend = 1.0430
+      Recall.estimate = 0.9726
+      Setup time = 0.0150
+      Speed = 0.0382
+    i06.02.bcf
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8994
+      MSE.recommend = 1.3147
+      RMSE.recommend = 1.1466
+      Recall.estimate = 0.8587
+      Setup time = 0.0310
+      Speed = 0.0368
+    i07.01.smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8514
+      MSE.recommend = 1.1970
+      RMSE.recommend = 1.0941
+      Recall.estimate = 0.8855
+      Setup time = 0.0310
+      Speed = 0.0220
+    i08.01.amer
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8182
+      MSE.recommend = 1.0899
+      RMSE.recommend = 1.0440
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0927
+    i08.02.amer_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8183
+      MSE.recommend = 1.0901
+      RMSE.recommend = 1.0441
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0942
+    i08.03.amer_pearson
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8653
+      MSE.recommend = 1.2376
+      RMSE.recommend = 1.1125
+      Recall.estimate = 0.8587
+      Setup time = 0.0310
+      Speed = 0.0915
+    i08.04.amer_smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8512
+      MSE.recommend = 1.1965
+      RMSE.recommend = 1.0938
+      Recall.estimate = 0.8855
+      Setup time = 0.0160
+      Speed = 0.0902
+    i08.05.amer_amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8181
+      MSE.recommend = 1.0899
+      RMSE.recommend = 1.0440
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.1490
+    i09.01.amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8760
+      MSE.recommend = 1.2676
+      RMSE.recommend = 1.1259
+      Recall.estimate = 0.9726
+      Setup time = 0.0160
+      Speed = 0.0912
+    i09.02.amer2_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8182
+      MSE.recommend = 1.0898
+      RMSE.recommend = 1.0439
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0921
+    i09.03.amer2_pearson
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8760
+      MSE.recommend = 1.2604
+      RMSE.recommend = 1.1227
+      Recall.estimate = 0.8587
+      Setup time = 0.0150
+      Speed = 0.0889
+    i09.04.amer2_smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8512
+      MSE.recommend = 1.1965
+      RMSE.recommend = 1.0938
+      Recall.estimate = 0.8855
+      Setup time = 0.0150
+      Speed = 0.0892
+    i10.01.ta
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8480
+      MSE.recommend = 1.1874
+      RMSE.recommend = 1.0897
+      Recall.estimate = 0.8970
+      Setup time = 0.0320
+      Speed = 0.0213
+    i10.02.taj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8559
+      MSE.recommend = 1.2095
+      RMSE.recommend = 1.0998
+      Recall.estimate = 0.8970
+      Setup time = 0.0320
+      Speed = 0.0245
+    i10.03.tan
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8761
+      MSE.recommend = 1.2655
+      RMSE.recommend = 1.1249
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0217
+    i10.04.tanj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8803
+      MSE.recommend = 1.2764
+      RMSE.recommend = 1.1298
+      Recall.estimate = 0.8970
+      Setup time = 0.0160
+      Speed = 0.0244
+    i11.01.ww
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8363
+      MSE.recommend = 1.1535
+      RMSE.recommend = 1.0740
+      Recall.estimate = 0.9726
+      Setup time = 0.0470
+      Speed = 0.3976
+    u01.01.cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8307
+      MSE.recommend = 1.1264
+      RMSE.recommend = 1.0613
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0231
+    u01.02.cosine_adjusted
+      Hudup recall = 0.9714
+      MAE.recommend = 0.9561
+      MSE.recommend = 1.4634
+      RMSE.recommend = 1.2097
+      Recall.estimate = 0.8934
+      Setup time = 0.0310
+      Speed = 0.0178
+    u02.01.pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9285
+      MSE.recommend = 1.3856
+      RMSE.recommend = 1.1771
+      Recall.estimate = 0.8695
+      Setup time = 0.0160
+      Speed = 0.0185
+    u02.02.pearson_constrained
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9297
+      MSE.recommend = 1.3927
+      RMSE.recommend = 1.1801
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0180
+    u02.03.pearson_weighted
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9261
+      MSE.recommend = 1.3803
+      RMSE.recommend = 1.1749
+      Recall.estimate = 0.8695
+      Setup time = 0.0160
+      Speed = 0.0207
+    u02.04.pearson_sigmoid
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9270
+      MSE.recommend = 1.3816
+      RMSE.recommend = 1.1754
+      Recall.estimate = 0.8695
+      Setup time = 0.0320
+      Speed = 0.0208
+    u03.01.jaccard
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8849
+      MSE.recommend = 1.2824
+      RMSE.recommend = 1.1324
+      Recall.estimate = 0.9726
+      Setup time = 0.0150
+      Speed = 0.0232
+    u04.01.msd
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8619
+      MSE.recommend = 1.2163
+      RMSE.recommend = 1.1029
+      Recall.estimate = 0.8970
+      Setup time = 0.0160
+      Speed = 0.0180
+    u04.02.msdj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8751
+      MSE.recommend = 1.2490
+      RMSE.recommend = 1.1176
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0198
+    u05.01.pss
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8726
+      MSE.recommend = 1.2475
+      RMSE.recommend = 1.1169
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0183
+    u05.02.nhsm
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8859
+      MSE.recommend = 1.2822
+      RMSE.recommend = 1.1324
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0273
+    u06.01.bc
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8297
+      MSE.recommend = 1.1245
+      RMSE.recommend = 1.0604
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0288
+    u06.02.bcf
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9275
+      MSE.recommend = 1.3850
+      RMSE.recommend = 1.1769
+      Recall.estimate = 0.8695
+      Setup time = 0.0310
+      Speed = 0.0284
+    u07.01.smtp
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8626
+      MSE.recommend = 1.2185
+      RMSE.recommend = 1.1038
+      Recall.estimate = 0.8965
+      Setup time = 0.0320
+      Speed = 0.0187
+    u08.01.amer
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8306
+      MSE.recommend = 1.1262
+      RMSE.recommend = 1.0612
+      Recall.estimate = 0.9726
+      Setup time = 0.0150
+      Speed = 0.0659
+    u08.02.amer_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8306
+      MSE.recommend = 1.1263
+      RMSE.recommend = 1.0613
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0670
+    u08.03.amer_pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.8875
+      MSE.recommend = 1.2853
+      RMSE.recommend = 1.1337
+      Recall.estimate = 0.8695
+      Setup time = 0.0320
+      Speed = 0.0612
+    u08.04.amer_smtp
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8624
+      MSE.recommend = 1.2180
+      RMSE.recommend = 1.1036
+      Recall.estimate = 0.8965
+      Setup time = 0.0150
+      Speed = 0.0620
+    u08.05.amer_amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8305
+      MSE.recommend = 1.1262
+      RMSE.recommend = 1.0612
+      Recall.estimate = 0.9726
+      Setup time = 0.0320
+      Speed = 0.1049
+    u09.01.amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8950
+      MSE.recommend = 1.3204
+      RMSE.recommend = 1.1491
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0640
+    u09.02.amer2_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8305
+      MSE.recommend = 1.1261
+      RMSE.recommend = 1.0612
+      Recall.estimate = 0.9726
+      Setup time = 0.0310
+      Speed = 0.0662
+    u09.03.amer2_pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9021
+      MSE.recommend = 1.3258
+      RMSE.recommend = 1.1514
+      Recall.estimate = 0.8695
+      Setup time = 0.0310
+      Speed = 0.0629
+    u09.04.amer2_smtp
+      Hudup recall = 0.9745
+      MAE.recommend = 0.8626
+      MSE.recommend = 1.2183
+      RMSE.recommend = 1.1038
+      Recall.estimate = 0.8965
+      Setup time = 0.0160
+      Speed = 0.0607
+    u10.01.ta
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8634
+      MSE.recommend = 1.2201
+      RMSE.recommend = 1.1046
+      Recall.estimate = 0.8970
+      Setup time = 0.0320
+      Speed = 0.0179
+    u10.02.taj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8762
+      MSE.recommend = 1.2519
+      RMSE.recommend = 1.1189
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0202
+    u10.03.tan
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8935
+      MSE.recommend = 1.3062
+      RMSE.recommend = 1.1429
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0180
+    u10.04.tanj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8992
+      MSE.recommend = 1.3198
+      RMSE.recommend = 1.1488
+      Recall.estimate = 0.8970
+      Setup time = 0.0310
+      Speed = 0.0199
+    u11.01.ww
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8434
+      MSE.recommend = 1.1602
+      RMSE.recommend = 1.0771
+      Recall.estimate = 0.9726
+      Setup time = 0.0470
+      Speed = 0.3889
+
+  Dataset "3"
+    c01.01.2d
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8101
+      MSE.recommend = 1.0207
+      RMSE.recommend = 1.0103
+      Recall.estimate = 0.9695
+      Setup time = 0.1560
+      Speed = 0.0723
+    i01.01.cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8266
+      MSE.recommend = 1.1099
+      RMSE.recommend = 1.0535
+      Recall.estimate = 0.9695
+      Setup time = 0.0320
+      Speed = 0.0253
+    i01.02.cosine_adjusted
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9222
+      MSE.recommend = 1.3825
+      RMSE.recommend = 1.1758
+      Recall.estimate = 0.8885
+      Setup time = 0.0160
+      Speed = 0.0211
+    i02.01.pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9023
+      MSE.recommend = 1.3218
+      RMSE.recommend = 1.1497
+      Recall.estimate = 0.8579
+      Setup time = 0.0310
+      Speed = 0.0228
+    i02.02.pearson_constrained
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9078
+      MSE.recommend = 1.3431
+      RMSE.recommend = 1.1589
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0215
+    i02.03.pearson_weighted
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9010
+      MSE.recommend = 1.3191
+      RMSE.recommend = 1.1485
+      Recall.estimate = 0.8579
+      Setup time = 0.0160
+      Speed = 0.0262
+    i02.04.pearson_sigmoid
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9012
+      MSE.recommend = 1.3189
+      RMSE.recommend = 1.1484
+      Recall.estimate = 0.8579
+      Setup time = 0.0320
+      Speed = 0.0261
+    i03.01.jaccard
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8733
+      MSE.recommend = 1.2550
+      RMSE.recommend = 1.1203
+      Recall.estimate = 0.9695
+      Setup time = 0.0320
+      Speed = 0.0269
+    i04.01.msd
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8495
+      MSE.recommend = 1.1884
+      RMSE.recommend = 1.0902
+      Recall.estimate = 0.8919
+      Setup time = 0.0320
+      Speed = 0.0211
+    i04.02.msdj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8585
+      MSE.recommend = 1.2134
+      RMSE.recommend = 1.1015
+      Recall.estimate = 0.8919
+      Setup time = 0.0320
+      Speed = 0.0243
+    i05.01.pss_item
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8580
+      MSE.recommend = 1.2156
+      RMSE.recommend = 1.1025
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0216
+    i05.02.nhsm
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8693
+      MSE.recommend = 1.2491
+      RMSE.recommend = 1.1176
+      Recall.estimate = 0.8919
+      Setup time = 0.0160
+      Speed = 0.0341
+    i06.01.bc
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8244
+      MSE.recommend = 1.1065
+      RMSE.recommend = 1.0519
+      Recall.estimate = 0.9695
+      Setup time = 0.0150
+      Speed = 0.0372
+    i06.02.bcf
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9021
+      MSE.recommend = 1.3224
+      RMSE.recommend = 1.1499
+      Recall.estimate = 0.8579
+      Setup time = 0.0310
+      Speed = 0.0369
+    i07.01.smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8548
+      MSE.recommend = 1.2042
+      RMSE.recommend = 1.0973
+      Recall.estimate = 0.8769
+      Setup time = 0.0160
+      Speed = 0.0217
+    i08.01.amer
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8263
+      MSE.recommend = 1.1092
+      RMSE.recommend = 1.0532
+      Recall.estimate = 0.9695
+      Setup time = 0.0160
+      Speed = 0.0908
+    i08.02.amer_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8265
+      MSE.recommend = 1.1097
+      RMSE.recommend = 1.0534
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.0936
+    i08.03.amer_pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8659
+      MSE.recommend = 1.2365
+      RMSE.recommend = 1.1120
+      Recall.estimate = 0.8579
+      Setup time = 0.0310
+      Speed = 0.0887
+    i08.04.amer_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8546
+      MSE.recommend = 1.2035
+      RMSE.recommend = 1.0971
+      Recall.estimate = 0.8769
+      Setup time = 0.0310
+      Speed = 0.0884
+    i08.05.amer_amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8261
+      MSE.recommend = 1.1089
+      RMSE.recommend = 1.0530
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.1479
+    i09.01.amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8843
+      MSE.recommend = 1.2901
+      RMSE.recommend = 1.1358
+      Recall.estimate = 0.9695
+      Setup time = 0.0150
+      Speed = 0.0894
+    i09.02.amer2_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8264
+      MSE.recommend = 1.1094
+      RMSE.recommend = 1.0533
+      Recall.estimate = 0.9695
+      Setup time = 0.0160
+      Speed = 0.0922
+    i09.03.amer2_pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8775
+      MSE.recommend = 1.2622
+      RMSE.recommend = 1.1235
+      Recall.estimate = 0.8579
+      Setup time = 0.0310
+      Speed = 0.0873
+    i09.04.amer2_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8547
+      MSE.recommend = 1.2039
+      RMSE.recommend = 1.0972
+      Recall.estimate = 0.8769
+      Setup time = 0.0150
+      Speed = 0.0871
+    i10.01.ta
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8506
+      MSE.recommend = 1.1921
+      RMSE.recommend = 1.0918
+      Recall.estimate = 0.8919
+      Setup time = 0.0160
+      Speed = 0.0211
+    i10.02.taj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8590
+      MSE.recommend = 1.2151
+      RMSE.recommend = 1.1023
+      Recall.estimate = 0.8919
+      Setup time = 0.0160
+      Speed = 0.0248
+    i10.03.tan
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8773
+      MSE.recommend = 1.2693
+      RMSE.recommend = 1.1266
+      Recall.estimate = 0.8919
+      Setup time = 0.0150
+      Speed = 0.0215
+    i10.04.tanj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8818
+      MSE.recommend = 1.2806
+      RMSE.recommend = 1.1316
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0243
+    i11.01.ww
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8371
+      MSE.recommend = 1.1557
+      RMSE.recommend = 1.0750
+      Recall.estimate = 0.9695
+      Setup time = 0.0470
+      Speed = 0.4676
+    u01.01.cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8332
+      MSE.recommend = 1.1294
+      RMSE.recommend = 1.0627
+      Recall.estimate = 0.9695
+      Setup time = 0.0320
+      Speed = 0.0237
+    u01.02.cosine_adjusted
+      Hudup recall = 0.9703
+      MAE.recommend = 0.9477
+      MSE.recommend = 1.4445
+      RMSE.recommend = 1.2019
+      Recall.estimate = 0.8891
+      Setup time = 0.0160
+      Speed = 0.0180
+    u02.01.pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9219
+      MSE.recommend = 1.3684
+      RMSE.recommend = 1.1698
+      Recall.estimate = 0.8678
+      Setup time = 0.0310
+      Speed = 0.0187
+    u02.02.pearson_constrained
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9228
+      MSE.recommend = 1.3761
+      RMSE.recommend = 1.1731
+      Recall.estimate = 0.8919
+      Setup time = 0.0150
+      Speed = 0.0179
+    u02.03.pearson_weighted
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9205
+      MSE.recommend = 1.3648
+      RMSE.recommend = 1.1683
+      Recall.estimate = 0.8678
+      Setup time = 0.0320
+      Speed = 0.0206
+    u02.04.pearson_sigmoid
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9206
+      MSE.recommend = 1.3649
+      RMSE.recommend = 1.1683
+      Recall.estimate = 0.8678
+      Setup time = 0.0310
+      Speed = 0.0208
+    u03.01.jaccard
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8818
+      MSE.recommend = 1.2673
+      RMSE.recommend = 1.1258
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.0220
+    u04.01.msd
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8596
+      MSE.recommend = 1.2059
+      RMSE.recommend = 1.0981
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0177
+    u04.02.msdj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8716
+      MSE.recommend = 1.2357
+      RMSE.recommend = 1.1116
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0200
+    u05.01.pss
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8689
+      MSE.recommend = 1.2335
+      RMSE.recommend = 1.1106
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0179
+    u05.02.nhsm
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8818
+      MSE.recommend = 1.2676
+      RMSE.recommend = 1.1259
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0267
+    u06.01.bc
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8325
+      MSE.recommend = 1.1279
+      RMSE.recommend = 1.0620
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.0275
+    u06.02.bcf
+      Hudup recall = 0.8685
+      MAE.recommend = 0.9218
+      MSE.recommend = 1.3693
+      RMSE.recommend = 1.1702
+      Recall.estimate = 0.8678
+      Setup time = 0.0310
+      Speed = 0.0280
+    u07.01.smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8602
+      MSE.recommend = 1.2080
+      RMSE.recommend = 1.0991
+      Recall.estimate = 0.8917
+      Setup time = 0.0160
+      Speed = 0.0186
+    u08.01.amer
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8329
+      MSE.recommend = 1.1288
+      RMSE.recommend = 1.0625
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.0646
+    u08.02.amer_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8331
+      MSE.recommend = 1.1292
+      RMSE.recommend = 1.0627
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.0658
+    u08.03.amer_pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.8827
+      MSE.recommend = 1.2710
+      RMSE.recommend = 1.1274
+      Recall.estimate = 0.8678
+      Setup time = 0.0310
+      Speed = 0.0628
+    u08.04.amer_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8600
+      MSE.recommend = 1.2074
+      RMSE.recommend = 1.0988
+      Recall.estimate = 0.8917
+      Setup time = 0.0160
+      Speed = 0.0619
+    u08.05.amer_amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8329
+      MSE.recommend = 1.1286
+      RMSE.recommend = 1.0624
+      Recall.estimate = 0.9695
+      Setup time = 0.0310
+      Speed = 0.1010
+    u09.01.amer2
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8955
+      MSE.recommend = 1.3188
+      RMSE.recommend = 1.1484
+      Recall.estimate = 0.9695
+      Setup time = 0.0470
+      Speed = 0.0629
+    u09.02.amer2_cosine
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8330
+      MSE.recommend = 1.1289
+      RMSE.recommend = 1.0625
+      Recall.estimate = 0.9695
+      Setup time = 0.0160
+      Speed = 0.0650
+    u09.03.amer2_pearson
+      Hudup recall = 0.8685
+      MAE.recommend = 0.8973
+      MSE.recommend = 1.3133
+      RMSE.recommend = 1.1460
+      Recall.estimate = 0.8678
+      Setup time = 0.0160
+      Speed = 0.0624
+    u09.04.amer2_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8602
+      MSE.recommend = 1.2077
+      RMSE.recommend = 1.0990
+      Recall.estimate = 0.8917
+      Setup time = 0.0160
+      Speed = 0.0629
+    u10.01.ta
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8611
+      MSE.recommend = 1.2095
+      RMSE.recommend = 1.0998
+      Recall.estimate = 0.8919
+      Setup time = 0.0150
+      Speed = 0.0181
+    u10.02.taj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8726
+      MSE.recommend = 1.2381
+      RMSE.recommend = 1.1127
+      Recall.estimate = 0.8919
+      Setup time = 0.0320
+      Speed = 0.0204
+    u10.03.tan
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8899
+      MSE.recommend = 1.2906
+      RMSE.recommend = 1.1360
+      Recall.estimate = 0.8919
+      Setup time = 0.0160
+      Speed = 0.0181
+    u10.04.tanj
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8963
+      MSE.recommend = 1.3058
+      RMSE.recommend = 1.1427
+      Recall.estimate = 0.8919
+      Setup time = 0.0310
+      Speed = 0.0204
+    u11.01.ww
+      Hudup recall = 0.9777
+      MAE.recommend = 0.8436
+      MSE.recommend = 1.1609
+      RMSE.recommend = 1.0774
+      Recall.estimate = 0.9695
+      Setup time = 0.0630
+      Speed = 0.3525
+
+  Dataset "4"
+    c01.01.2d
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8051
+      MSE.recommend = 1.0148
+      RMSE.recommend = 1.0074
+      Recall.estimate = 0.9703
+      Setup time = 0.0620
+      Speed = 0.0672
+    i01.01.cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8168
+      MSE.recommend = 1.0881
+      RMSE.recommend = 1.0431
+      Recall.estimate = 0.9703
+      Setup time = 0.0320
+      Speed = 0.0244
+    i01.02.cosine_adjusted
+      Hudup recall = 0.9714
+      MAE.recommend = 0.9164
+      MSE.recommend = 1.3703
+      RMSE.recommend = 1.1706
+      Recall.estimate = 0.8908
+      Setup time = 0.0150
+      Speed = 0.0205
+    i02.01.pearson
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8988
+      MSE.recommend = 1.3169
+      RMSE.recommend = 1.1476
+      Recall.estimate = 0.8619
+      Setup time = 0.0310
+      Speed = 0.0228
+    i02.02.pearson_constrained
+      Hudup recall = 0.9714
+      MAE.recommend = 0.9050
+      MSE.recommend = 1.3357
+      RMSE.recommend = 1.1557
+      Recall.estimate = 0.8945
+      Setup time = 0.0160
+      Speed = 0.0210
+    i02.03.pearson_weighted
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8977
+      MSE.recommend = 1.3149
+      RMSE.recommend = 1.1467
+      Recall.estimate = 0.8619
+      Setup time = 0.0320
+      Speed = 0.0253
+    i02.04.pearson_sigmoid
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8977
+      MSE.recommend = 1.3140
+      RMSE.recommend = 1.1463
+      Recall.estimate = 0.8619
+      Setup time = 0.0630
+      Speed = 0.0255
+    i03.01.jaccard
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8668
+      MSE.recommend = 1.2418
+      RMSE.recommend = 1.1144
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0258
+    i04.01.msd
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8417
+      MSE.recommend = 1.1715
+      RMSE.recommend = 1.0824
+      Recall.estimate = 0.8945
+      Setup time = 0.0320
+      Speed = 0.0212
+    i04.02.msdj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8522
+      MSE.recommend = 1.2003
+      RMSE.recommend = 1.0956
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0243
+    i05.01.pss_item
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8499
+      MSE.recommend = 1.1967
+      RMSE.recommend = 1.0939
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0216
+    i05.02.nhsm
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8618
+      MSE.recommend = 1.2312
+      RMSE.recommend = 1.1096
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0339
+    i06.01.bc
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8145
+      MSE.recommend = 1.0840
+      RMSE.recommend = 1.0412
+      Recall.estimate = 0.9703
+      Setup time = 0.0150
+      Speed = 0.0363
+    i06.02.bcf
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8984
+      MSE.recommend = 1.3165
+      RMSE.recommend = 1.1474
+      Recall.estimate = 0.8619
+      Setup time = 0.0310
+      Speed = 0.0366
+    i07.01.smtp
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8457
+      MSE.recommend = 1.1814
+      RMSE.recommend = 1.0869
+      Recall.estimate = 0.8830
+      Setup time = 0.0160
+      Speed = 0.0222
+    i08.01.amer
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8165
+      MSE.recommend = 1.0874
+      RMSE.recommend = 1.0428
+      Recall.estimate = 0.9703
+      Setup time = 0.0150
+      Speed = 0.0911
+    i08.02.amer_cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8167
+      MSE.recommend = 1.0880
+      RMSE.recommend = 1.0431
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0934
+    i08.03.amer_pearson
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8607
+      MSE.recommend = 1.2275
+      RMSE.recommend = 1.1079
+      Recall.estimate = 0.8619
+      Setup time = 0.0160
+      Speed = 0.0897
+    i08.04.amer_smtp
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8456
+      MSE.recommend = 1.1808
+      RMSE.recommend = 1.0867
+      Recall.estimate = 0.8830
+      Setup time = 0.0310
+      Speed = 0.0894
+    i08.05.amer_amer2
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8162
+      MSE.recommend = 1.0871
+      RMSE.recommend = 1.0426
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.1476
+    i09.01.amer2
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8730
+      MSE.recommend = 1.2637
+      RMSE.recommend = 1.1241
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0910
+    i09.02.amer2_cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8166
+      MSE.recommend = 1.0875
+      RMSE.recommend = 1.0429
+      Recall.estimate = 0.9703
+      Setup time = 0.0160
+      Speed = 0.0925
+    i09.03.amer2_pearson
+      Hudup recall = 0.9692
+      MAE.recommend = 0.8737
+      MSE.recommend = 1.2575
+      RMSE.recommend = 1.1214
+      Recall.estimate = 0.8619
+      Setup time = 0.0310
+      Speed = 0.0890
+    i09.04.amer2_smtp
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8457
+      MSE.recommend = 1.1812
+      RMSE.recommend = 1.0868
+      Recall.estimate = 0.8830
+      Setup time = 0.0310
+      Speed = 0.0875
+    i10.01.ta
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8426
+      MSE.recommend = 1.1747
+      RMSE.recommend = 1.0838
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0214
+    i10.02.taj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8524
+      MSE.recommend = 1.2010
+      RMSE.recommend = 1.0959
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0242
+    i10.03.tan
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8696
+      MSE.recommend = 1.2519
+      RMSE.recommend = 1.1189
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0214
+    i10.04.tanj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8761
+      MSE.recommend = 1.2687
+      RMSE.recommend = 1.1264
+      Recall.estimate = 0.8945
+      Setup time = 0.0160
+      Speed = 0.0250
+    i11.01.ww
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8325
+      MSE.recommend = 1.1444
+      RMSE.recommend = 1.0698
+      Recall.estimate = 0.9703
+      Setup time = 0.0470
+      Speed = 0.4676
+    u01.01.cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8249
+      MSE.recommend = 1.1127
+      RMSE.recommend = 1.0548
+      Recall.estimate = 0.9703
+      Setup time = 0.0320
+      Speed = 0.0240
+    u01.02.cosine_adjusted
+      Hudup recall = 0.9692
+      MAE.recommend = 0.9590
+      MSE.recommend = 1.4806
+      RMSE.recommend = 1.2168
+      Recall.estimate = 0.8904
+      Setup time = 0.0150
+      Speed = 0.0183
+    u02.01.pearson
+      Hudup recall = 0.8759
+      MAE.recommend = 0.9271
+      MSE.recommend = 1.3877
+      RMSE.recommend = 1.1780
+      Recall.estimate = 0.8706
+      Setup time = 0.0310
+      Speed = 0.0190
+    u02.02.pearson_constrained
+      Hudup recall = 0.9714
+      MAE.recommend = 0.9292
+      MSE.recommend = 1.3981
+      RMSE.recommend = 1.1824
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0173
+    u02.03.pearson_weighted
+      Hudup recall = 0.8759
+      MAE.recommend = 0.9246
+      MSE.recommend = 1.3812
+      RMSE.recommend = 1.1752
+      Recall.estimate = 0.8706
+      Setup time = 0.0310
+      Speed = 0.0210
+    u02.04.pearson_sigmoid
+      Hudup recall = 0.8759
+      MAE.recommend = 0.9256
+      MSE.recommend = 1.3834
+      RMSE.recommend = 1.1762
+      Recall.estimate = 0.8706
+      Setup time = 0.0310
+      Speed = 0.0213
+    u03.01.jaccard
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8792
+      MSE.recommend = 1.2663
+      RMSE.recommend = 1.1253
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0222
+    u04.01.msd
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8555
+      MSE.recommend = 1.2012
+      RMSE.recommend = 1.0960
+      Recall.estimate = 0.8945
+      Setup time = 0.0320
+      Speed = 0.0181
+    u04.02.msdj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8698
+      MSE.recommend = 1.2346
+      RMSE.recommend = 1.1111
+      Recall.estimate = 0.8945
+      Setup time = 0.0150
+      Speed = 0.0212
+    u05.01.pss
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8679
+      MSE.recommend = 1.2338
+      RMSE.recommend = 1.1108
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0180
+    u05.02.nhsm
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8824
+      MSE.recommend = 1.2704
+      RMSE.recommend = 1.1271
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0270
+    u06.01.bc
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8231
+      MSE.recommend = 1.1085
+      RMSE.recommend = 1.0529
+      Recall.estimate = 0.9703
+      Setup time = 0.0320
+      Speed = 0.0292
+    u06.02.bcf
+      Hudup recall = 0.8759
+      MAE.recommend = 0.9269
+      MSE.recommend = 1.3886
+      RMSE.recommend = 1.1784
+      Recall.estimate = 0.8706
+      Setup time = 0.0310
+      Speed = 0.0296
+    u07.01.smtp
+      Hudup recall = 0.9703
+      MAE.recommend = 0.8564
+      MSE.recommend = 1.2032
+      RMSE.recommend = 1.0969
+      Recall.estimate = 0.8941
+      Setup time = 0.0310
+      Speed = 0.0189
+    u08.01.amer
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8247
+      MSE.recommend = 1.1122
+      RMSE.recommend = 1.0546
+      Recall.estimate = 0.9703
+      Setup time = 0.0150
+      Speed = 0.0639
+    u08.02.amer_cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8248
+      MSE.recommend = 1.1125
+      RMSE.recommend = 1.0548
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0651
+    u08.03.amer_pearson
+      Hudup recall = 0.8759
+      MAE.recommend = 0.8824
+      MSE.recommend = 1.2736
+      RMSE.recommend = 1.1285
+      Recall.estimate = 0.8706
+      Setup time = 0.0310
+      Speed = 0.0611
+    u08.04.amer_smtp
+      Hudup recall = 0.9703
+      MAE.recommend = 0.8561
+      MSE.recommend = 1.2026
+      RMSE.recommend = 1.0966
+      Recall.estimate = 0.8941
+      Setup time = 0.0310
+      Speed = 0.0634
+    u08.05.amer_amer2
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8246
+      MSE.recommend = 1.1121
+      RMSE.recommend = 1.0545
+      Recall.estimate = 0.9703
+      Setup time = 0.0160
+      Speed = 0.1022
+    u09.01.amer2
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8905
+      MSE.recommend = 1.3116
+      RMSE.recommend = 1.1452
+      Recall.estimate = 0.9703
+      Setup time = 0.0310
+      Speed = 0.0629
+    u09.02.amer2_cosine
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8247
+      MSE.recommend = 1.1122
+      RMSE.recommend = 1.0546
+      Recall.estimate = 0.9703
+      Setup time = 0.0320
+      Speed = 0.0653
+    u09.03.amer2_pearson
+      Hudup recall = 0.8759
+      MAE.recommend = 0.9001
+      MSE.recommend = 1.3249
+      RMSE.recommend = 1.1510
+      Recall.estimate = 0.8706
+      Setup time = 0.0320
+      Speed = 0.0631
+    u09.04.amer2_smtp
+      Hudup recall = 0.9703
+      MAE.recommend = 0.8564
+      MSE.recommend = 1.2031
+      RMSE.recommend = 1.0968
+      Recall.estimate = 0.8941
+      Setup time = 0.0310
+      Speed = 0.0605
+    u10.01.ta
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8572
+      MSE.recommend = 1.2057
+      RMSE.recommend = 1.0981
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0181
+    u10.02.taj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8712
+      MSE.recommend = 1.2383
+      RMSE.recommend = 1.1128
+      Recall.estimate = 0.8945
+      Setup time = 0.0150
+      Speed = 0.0203
+    u10.03.tan
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8881
+      MSE.recommend = 1.2899
+      RMSE.recommend = 1.1358
+      Recall.estimate = 0.8945
+      Setup time = 0.0150
+      Speed = 0.0187
+    u10.04.tanj
+      Hudup recall = 0.9714
+      MAE.recommend = 0.8948
+      MSE.recommend = 1.3033
+      RMSE.recommend = 1.1416
+      Recall.estimate = 0.8945
+      Setup time = 0.0310
+      Speed = 0.0196
+    u11.01.ww
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8368
+      MSE.recommend = 1.1464
+      RMSE.recommend = 1.0707
+      Recall.estimate = 0.9703
+      Setup time = 0.0470
+      Speed = 0.3511
+
+  Dataset "5"
+    c01.01.2d
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8059
+      MSE.recommend = 1.0123
+      RMSE.recommend = 1.0061
+      Recall.estimate = 0.9700
+      Setup time = 0.0780
+      Speed = 0.0664
+    i01.01.cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8222
+      MSE.recommend = 1.0994
+      RMSE.recommend = 1.0485
+      Recall.estimate = 0.9700
+      Setup time = 0.0150
+      Speed = 0.0264
+    i01.02.cosine_adjusted
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9258
+      MSE.recommend = 1.3946
+      RMSE.recommend = 1.1809
+      Recall.estimate = 0.8916
+      Setup time = 0.0310
+      Speed = 0.0221
+    i02.01.pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9159
+      MSE.recommend = 1.3613
+      RMSE.recommend = 1.1667
+      Recall.estimate = 0.8635
+      Setup time = 0.0310
+      Speed = 0.0235
+    i02.02.pearson_constrained
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9154
+      MSE.recommend = 1.3668
+      RMSE.recommend = 1.1691
+      Recall.estimate = 0.8954
+      Setup time = 0.0160
+      Speed = 0.0218
+    i02.03.pearson_weighted
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9147
+      MSE.recommend = 1.3585
+      RMSE.recommend = 1.1656
+      Recall.estimate = 0.8635
+      Setup time = 0.0150
+      Speed = 0.0256
+    i02.04.pearson_sigmoid
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9148
+      MSE.recommend = 1.3581
+      RMSE.recommend = 1.1654
+      Recall.estimate = 0.8635
+      Setup time = 0.0310
+      Speed = 0.0257
+    i03.01.jaccard
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8728
+      MSE.recommend = 1.2590
+      RMSE.recommend = 1.1220
+      Recall.estimate = 0.9700
+      Setup time = 0.0150
+      Speed = 0.0262
+    i04.01.msd
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8514
+      MSE.recommend = 1.1986
+      RMSE.recommend = 1.0948
+      Recall.estimate = 0.8954
+      Setup time = 0.0160
+      Speed = 0.0213
+    i04.02.msdj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8616
+      MSE.recommend = 1.2278
+      RMSE.recommend = 1.1081
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0243
+    i05.01.pss_item
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8615
+      MSE.recommend = 1.2299
+      RMSE.recommend = 1.1090
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0212
+    i05.02.nhsm
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8728
+      MSE.recommend = 1.2646
+      RMSE.recommend = 1.1245
+      Recall.estimate = 0.8954
+      Setup time = 0.0160
+      Speed = 0.0362
+    i06.01.bc
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8204
+      MSE.recommend = 1.0965
+      RMSE.recommend = 1.0471
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.0354
+    i06.02.bcf
+      Hudup recall = 0.9735
+      MAE.recommend = 0.9157
+      MSE.recommend = 1.3618
+      RMSE.recommend = 1.1670
+      Recall.estimate = 0.8635
+      Setup time = 0.0310
+      Speed = 0.0377
+    i07.01.smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8554
+      MSE.recommend = 1.2123
+      RMSE.recommend = 1.1010
+      Recall.estimate = 0.8821
+      Setup time = 0.0320
+      Speed = 0.0223
+    i08.01.amer
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8219
+      MSE.recommend = 1.0987
+      RMSE.recommend = 1.0482
+      Recall.estimate = 0.9700
+      Setup time = 0.0160
+      Speed = 0.0926
+    i08.02.amer_cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8221
+      MSE.recommend = 1.0993
+      RMSE.recommend = 1.0485
+      Recall.estimate = 0.9700
+      Setup time = 0.0320
+      Speed = 0.0952
+    i08.03.amer_pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8754
+      MSE.recommend = 1.2675
+      RMSE.recommend = 1.1258
+      Recall.estimate = 0.8635
+      Setup time = 0.0310
+      Speed = 0.0899
+    i08.04.amer_smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8551
+      MSE.recommend = 1.2116
+      RMSE.recommend = 1.1007
+      Recall.estimate = 0.8821
+      Setup time = 0.0150
+      Speed = 0.0900
+    i08.05.amer_amer2
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8215
+      MSE.recommend = 1.0981
+      RMSE.recommend = 1.0479
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.1487
+    i09.01.amer2
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8806
+      MSE.recommend = 1.2819
+      RMSE.recommend = 1.1322
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.0911
+    i09.02.amer2_cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8219
+      MSE.recommend = 1.0988
+      RMSE.recommend = 1.0482
+      Recall.estimate = 0.9700
+      Setup time = 0.0150
+      Speed = 0.0925
+    i09.03.amer2_pearson
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8911
+      MSE.recommend = 1.3014
+      RMSE.recommend = 1.1408
+      Recall.estimate = 0.8635
+      Setup time = 0.0160
+      Speed = 0.0887
+    i09.04.amer2_smtp
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8552
+      MSE.recommend = 1.2119
+      RMSE.recommend = 1.1009
+      Recall.estimate = 0.8821
+      Setup time = 0.0160
+      Speed = 0.0885
+    i10.01.ta
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8529
+      MSE.recommend = 1.2029
+      RMSE.recommend = 1.0968
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0224
+    i10.02.taj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8620
+      MSE.recommend = 1.2291
+      RMSE.recommend = 1.1087
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0248
+    i10.03.tan
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8801
+      MSE.recommend = 1.2828
+      RMSE.recommend = 1.1326
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0215
+    i10.04.tanj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8860
+      MSE.recommend = 1.2976
+      RMSE.recommend = 1.1391
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0246
+    i11.01.ww
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8388
+      MSE.recommend = 1.1553
+      RMSE.recommend = 1.0748
+      Recall.estimate = 0.9700
+      Setup time = 0.0470
+      Speed = 0.4259
+    u01.01.cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8359
+      MSE.recommend = 1.1388
+      RMSE.recommend = 1.0672
+      Recall.estimate = 0.9700
+      Setup time = 0.0320
+      Speed = 0.0226
+    u01.02.cosine_adjusted
+      Hudup recall = 0.9714
+      MAE.recommend = 0.9626
+      MSE.recommend = 1.4881
+      RMSE.recommend = 1.2199
+      Recall.estimate = 0.8910
+      Setup time = 0.0160
+      Speed = 0.0181
+    u02.01.pearson
+      Hudup recall = 0.8738
+      MAE.recommend = 0.9312
+      MSE.recommend = 1.3974
+      RMSE.recommend = 1.1821
+      Recall.estimate = 0.8725
+      Setup time = 0.0160
+      Speed = 0.0186
+    u02.02.pearson_constrained
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9357
+      MSE.recommend = 1.4173
+      RMSE.recommend = 1.1905
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0177
+    u02.03.pearson_weighted
+      Hudup recall = 0.8738
+      MAE.recommend = 0.9297
+      MSE.recommend = 1.3950
+      RMSE.recommend = 1.1811
+      Recall.estimate = 0.8725
+      Setup time = 0.0320
+      Speed = 0.0209
+    u02.04.pearson_sigmoid
+      Hudup recall = 0.8738
+      MAE.recommend = 0.9299
+      MSE.recommend = 1.3940
+      RMSE.recommend = 1.1807
+      Recall.estimate = 0.8725
+      Setup time = 0.0160
+      Speed = 0.0217
+    u03.01.jaccard
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8883
+      MSE.recommend = 1.2970
+      RMSE.recommend = 1.1389
+      Recall.estimate = 0.9700
+      Setup time = 0.0160
+      Speed = 0.0233
+    u04.01.msd
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8649
+      MSE.recommend = 1.2301
+      RMSE.recommend = 1.1091
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0181
+    u04.02.msdj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8776
+      MSE.recommend = 1.2611
+      RMSE.recommend = 1.1230
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0201
+    u05.01.pss
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8757
+      MSE.recommend = 1.2605
+      RMSE.recommend = 1.1227
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0182
+    u05.02.nhsm
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8896
+      MSE.recommend = 1.2978
+      RMSE.recommend = 1.1392
+      Recall.estimate = 0.8954
+      Setup time = 0.0150
+      Speed = 0.0274
+    u06.01.bc
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8345
+      MSE.recommend = 1.1350
+      RMSE.recommend = 1.0653
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.0294
+    u06.02.bcf
+      Hudup recall = 0.8738
+      MAE.recommend = 0.9309
+      MSE.recommend = 1.3977
+      RMSE.recommend = 1.1822
+      Recall.estimate = 0.8725
+      Setup time = 0.0160
+      Speed = 0.0287
+    u07.01.smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8659
+      MSE.recommend = 1.2321
+      RMSE.recommend = 1.1100
+      Recall.estimate = 0.8949
+      Setup time = 0.0310
+      Speed = 0.0196
+    u08.01.amer
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8357
+      MSE.recommend = 1.1384
+      RMSE.recommend = 1.0670
+      Recall.estimate = 0.9700
+      Setup time = 0.0160
+      Speed = 0.0662
+    u08.02.amer_cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8358
+      MSE.recommend = 1.1387
+      RMSE.recommend = 1.0671
+      Recall.estimate = 0.9700
+      Setup time = 0.0320
+      Speed = 0.0653
+    u08.03.amer_pearson
+      Hudup recall = 0.8738
+      MAE.recommend = 0.8903
+      MSE.recommend = 1.2985
+      RMSE.recommend = 1.1395
+      Recall.estimate = 0.8725
+      Setup time = 0.0310
+      Speed = 0.0619
+    u08.04.amer_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8656
+      MSE.recommend = 1.2314
+      RMSE.recommend = 1.1097
+      Recall.estimate = 0.8949
+      Setup time = 0.0150
+      Speed = 0.0618
+    u08.05.amer_amer2
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8356
+      MSE.recommend = 1.1382
+      RMSE.recommend = 1.0669
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.1026
+    u09.01.amer2
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9006
+      MSE.recommend = 1.3464
+      RMSE.recommend = 1.1604
+      Recall.estimate = 0.9700
+      Setup time = 0.0160
+      Speed = 0.0647
+    u09.02.amer2_cosine
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8357
+      MSE.recommend = 1.1383
+      RMSE.recommend = 1.0669
+      Recall.estimate = 0.9700
+      Setup time = 0.0310
+      Speed = 0.0668
+    u09.03.amer2_pearson
+      Hudup recall = 0.8738
+      MAE.recommend = 0.9067
+      MSE.recommend = 1.3425
+      RMSE.recommend = 1.1587
+      Recall.estimate = 0.8725
+      Setup time = 0.0470
+      Speed = 0.0654
+    u09.04.amer2_smtp
+      Hudup recall = 0.9735
+      MAE.recommend = 0.8658
+      MSE.recommend = 1.2316
+      RMSE.recommend = 1.1098
+      Recall.estimate = 0.8949
+      Setup time = 0.0160
+      Speed = 0.0616
+    u10.01.ta
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8668
+      MSE.recommend = 1.2346
+      RMSE.recommend = 1.1111
+      Recall.estimate = 0.8954
+      Setup time = 0.0320
+      Speed = 0.0183
+    u10.02.taj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8792
+      MSE.recommend = 1.2651
+      RMSE.recommend = 1.1248
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0201
+    u10.03.tan
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8983
+      MSE.recommend = 1.3213
+      RMSE.recommend = 1.1495
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0182
+    u10.04.tanj
+      Hudup recall = 0.9756
+      MAE.recommend = 0.9033
+      MSE.recommend = 1.3336
+      RMSE.recommend = 1.1548
+      Recall.estimate = 0.8954
+      Setup time = 0.0310
+      Speed = 0.0208
+    u11.01.ww
+      Hudup recall = 0.9756
+      MAE.recommend = 0.8476
+      MSE.recommend = 1.1713
+      RMSE.recommend = 1.0823
+      Recall.estimate = 0.9700
+      Setup time = 0.0630
+      Speed = 0.4122
+
+
+Hudup recall evaluation
+
+  c01.01.2d
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i01.01.cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i02.01.pearson
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i02.02.pearson_constrained
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i02.03.pearson_weighted
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i03.01.jaccard
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i04.01.msd
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i04.02.msdj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i05.01.pss_item
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i05.02.nhsm
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i06.01.bc
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i06.02.bcf
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i07.01.smtp
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i08.01.amer
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i08.02.amer_cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i08.03.amer_pearson
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i08.04.amer_smtp
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i08.05.amer_amer2
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i09.01.amer2
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i09.02.amer2_cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  i09.03.amer2_pearson
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9735
+
+  i09.04.amer2_smtp
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i10.01.ta
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i10.02.taj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i10.03.tan
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i10.04.tanj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  i11.01.ww
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u01.01.cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 0.9799
+    Dataset "2" got 0.9714
+    Dataset "3" got 0.9703
+    Dataset "4" got 0.9692
+    Dataset "5" got 0.9714
+
+  u02.01.pearson
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u02.02.pearson_constrained
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u02.03.pearson_weighted
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u03.01.jaccard
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u04.01.msd
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u04.02.msdj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u05.01.pss
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u05.02.nhsm
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u06.01.bc
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u06.02.bcf
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u07.01.smtp
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9735
+
+  u08.01.amer
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u08.02.amer_cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u08.03.amer_pearson
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u08.04.amer_smtp
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9735
+
+  u08.05.amer_amer2
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u09.01.amer2
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u09.02.amer2_cosine
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+  u09.03.amer2_pearson
+    Dataset "1" got 0.8865
+    Dataset "2" got 0.8685
+    Dataset "3" got 0.8685
+    Dataset "4" got 0.8759
+    Dataset "5" got 0.8738
+
+  u09.04.amer2_smtp
+    Dataset "1" got 0.9820
+    Dataset "2" got 0.9745
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9735
+
+  u10.01.ta
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u10.02.taj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u10.03.tan
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u10.04.tanj
+    Dataset "1" got 0.9830
+    Dataset "2" got 0.9756
+    Dataset "3" got 0.9735
+    Dataset "4" got 0.9714
+    Dataset "5" got 0.9756
+
+  u11.01.ww
+    Dataset "1" got 0.9841
+    Dataset "2" got 0.9777
+    Dataset "3" got 0.9777
+    Dataset "4" got 0.9735
+    Dataset "5" got 0.9756
+
+
+MAE.recommend evaluation
+
+  c01.01.2d
+    Dataset "1" got 0.8086
+    Dataset "2" got 0.8099
+    Dataset "3" got 0.8101
+    Dataset "4" got 0.8051
+    Dataset "5" got 0.8059
+
+  i01.01.cosine
+    Dataset "1" got 0.8303
+    Dataset "2" got 0.8183
+    Dataset "3" got 0.8266
+    Dataset "4" got 0.8168
+    Dataset "5" got 0.8222
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 0.9292
+    Dataset "2" got 0.9165
+    Dataset "3" got 0.9222
+    Dataset "4" got 0.9164
+    Dataset "5" got 0.9258
+
+  i02.01.pearson
+    Dataset "1" got 0.9113
+    Dataset "2" got 0.8993
+    Dataset "3" got 0.9023
+    Dataset "4" got 0.8988
+    Dataset "5" got 0.9159
+
+  i02.02.pearson_constrained
+    Dataset "1" got 0.9179
+    Dataset "2" got 0.9029
+    Dataset "3" got 0.9078
+    Dataset "4" got 0.9050
+    Dataset "5" got 0.9154
+
+  i02.03.pearson_weighted
+    Dataset "1" got 0.9107
+    Dataset "2" got 0.8976
+    Dataset "3" got 0.9010
+    Dataset "4" got 0.8977
+    Dataset "5" got 0.9147
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 0.9104
+    Dataset "2" got 0.8981
+    Dataset "3" got 0.9012
+    Dataset "4" got 0.8977
+    Dataset "5" got 0.9148
+
+  i03.01.jaccard
+    Dataset "1" got 0.8825
+    Dataset "2" got 0.8672
+    Dataset "3" got 0.8733
+    Dataset "4" got 0.8668
+    Dataset "5" got 0.8728
+
+  i04.01.msd
+    Dataset "1" got 0.8606
+    Dataset "2" got 0.8470
+    Dataset "3" got 0.8495
+    Dataset "4" got 0.8417
+    Dataset "5" got 0.8514
+
+  i04.02.msdj
+    Dataset "1" got 0.8684
+    Dataset "2" got 0.8554
+    Dataset "3" got 0.8585
+    Dataset "4" got 0.8522
+    Dataset "5" got 0.8616
+
+  i05.01.pss_item
+    Dataset "1" got 0.8707
+    Dataset "2" got 0.8565
+    Dataset "3" got 0.8580
+    Dataset "4" got 0.8499
+    Dataset "5" got 0.8615
+
+  i05.02.nhsm
+    Dataset "1" got 0.8810
+    Dataset "2" got 0.8666
+    Dataset "3" got 0.8693
+    Dataset "4" got 0.8618
+    Dataset "5" got 0.8728
+
+  i06.01.bc
+    Dataset "1" got 0.8299
+    Dataset "2" got 0.8167
+    Dataset "3" got 0.8244
+    Dataset "4" got 0.8145
+    Dataset "5" got 0.8204
+
+  i06.02.bcf
+    Dataset "1" got 0.9117
+    Dataset "2" got 0.8994
+    Dataset "3" got 0.9021
+    Dataset "4" got 0.8984
+    Dataset "5" got 0.9157
+
+  i07.01.smtp
+    Dataset "1" got 0.8639
+    Dataset "2" got 0.8514
+    Dataset "3" got 0.8548
+    Dataset "4" got 0.8457
+    Dataset "5" got 0.8554
+
+  i08.01.amer
+    Dataset "1" got 0.8302
+    Dataset "2" got 0.8182
+    Dataset "3" got 0.8263
+    Dataset "4" got 0.8165
+    Dataset "5" got 0.8219
+
+  i08.02.amer_cosine
+    Dataset "1" got 0.8303
+    Dataset "2" got 0.8183
+    Dataset "3" got 0.8265
+    Dataset "4" got 0.8167
+    Dataset "5" got 0.8221
+
+  i08.03.amer_pearson
+    Dataset "1" got 0.8791
+    Dataset "2" got 0.8653
+    Dataset "3" got 0.8659
+    Dataset "4" got 0.8607
+    Dataset "5" got 0.8754
+
+  i08.04.amer_smtp
+    Dataset "1" got 0.8637
+    Dataset "2" got 0.8512
+    Dataset "3" got 0.8546
+    Dataset "4" got 0.8456
+    Dataset "5" got 0.8551
+
+  i08.05.amer_amer2
+    Dataset "1" got 0.8302
+    Dataset "2" got 0.8181
+    Dataset "3" got 0.8261
+    Dataset "4" got 0.8162
+    Dataset "5" got 0.8215
+
+  i09.01.amer2
+    Dataset "1" got 0.8883
+    Dataset "2" got 0.8760
+    Dataset "3" got 0.8843
+    Dataset "4" got 0.8730
+    Dataset "5" got 0.8806
+
+  i09.02.amer2_cosine
+    Dataset "1" got 0.8302
+    Dataset "2" got 0.8182
+    Dataset "3" got 0.8264
+    Dataset "4" got 0.8166
+    Dataset "5" got 0.8219
+
+  i09.03.amer2_pearson
+    Dataset "1" got 0.8886
+    Dataset "2" got 0.8760
+    Dataset "3" got 0.8775
+    Dataset "4" got 0.8737
+    Dataset "5" got 0.8911
+
+  i09.04.amer2_smtp
+    Dataset "1" got 0.8636
+    Dataset "2" got 0.8512
+    Dataset "3" got 0.8547
+    Dataset "4" got 0.8457
+    Dataset "5" got 0.8552
+
+  i10.01.ta
+    Dataset "1" got 0.8619
+    Dataset "2" got 0.8480
+    Dataset "3" got 0.8506
+    Dataset "4" got 0.8426
+    Dataset "5" got 0.8529
+
+  i10.02.taj
+    Dataset "1" got 0.8692
+    Dataset "2" got 0.8559
+    Dataset "3" got 0.8590
+    Dataset "4" got 0.8524
+    Dataset "5" got 0.8620
+
+  i10.03.tan
+    Dataset "1" got 0.8866
+    Dataset "2" got 0.8761
+    Dataset "3" got 0.8773
+    Dataset "4" got 0.8696
+    Dataset "5" got 0.8801
+
+  i10.04.tanj
+    Dataset "1" got 0.8903
+    Dataset "2" got 0.8803
+    Dataset "3" got 0.8818
+    Dataset "4" got 0.8761
+    Dataset "5" got 0.8860
+
+  i11.01.ww
+    Dataset "1" got 0.8428
+    Dataset "2" got 0.8363
+    Dataset "3" got 0.8371
+    Dataset "4" got 0.8325
+    Dataset "5" got 0.8388
+
+  u01.01.cosine
+    Dataset "1" got 0.8380
+    Dataset "2" got 0.8307
+    Dataset "3" got 0.8332
+    Dataset "4" got 0.8249
+    Dataset "5" got 0.8359
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 0.9616
+    Dataset "2" got 0.9561
+    Dataset "3" got 0.9477
+    Dataset "4" got 0.9590
+    Dataset "5" got 0.9626
+
+  u02.01.pearson
+    Dataset "1" got 0.9344
+    Dataset "2" got 0.9285
+    Dataset "3" got 0.9219
+    Dataset "4" got 0.9271
+    Dataset "5" got 0.9312
+
+  u02.02.pearson_constrained
+    Dataset "1" got 0.9361
+    Dataset "2" got 0.9297
+    Dataset "3" got 0.9228
+    Dataset "4" got 0.9292
+    Dataset "5" got 0.9357
+
+  u02.03.pearson_weighted
+    Dataset "1" got 0.9321
+    Dataset "2" got 0.9261
+    Dataset "3" got 0.9205
+    Dataset "4" got 0.9246
+    Dataset "5" got 0.9297
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 0.9329
+    Dataset "2" got 0.9270
+    Dataset "3" got 0.9206
+    Dataset "4" got 0.9256
+    Dataset "5" got 0.9299
+
+  u03.01.jaccard
+    Dataset "1" got 0.8892
+    Dataset "2" got 0.8849
+    Dataset "3" got 0.8818
+    Dataset "4" got 0.8792
+    Dataset "5" got 0.8883
+
+  u04.01.msd
+    Dataset "1" got 0.8683
+    Dataset "2" got 0.8619
+    Dataset "3" got 0.8596
+    Dataset "4" got 0.8555
+    Dataset "5" got 0.8649
+
+  u04.02.msdj
+    Dataset "1" got 0.8806
+    Dataset "2" got 0.8751
+    Dataset "3" got 0.8716
+    Dataset "4" got 0.8698
+    Dataset "5" got 0.8776
+
+  u05.01.pss
+    Dataset "1" got 0.8794
+    Dataset "2" got 0.8726
+    Dataset "3" got 0.8689
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8757
+
+  u05.02.nhsm
+    Dataset "1" got 0.8919
+    Dataset "2" got 0.8859
+    Dataset "3" got 0.8818
+    Dataset "4" got 0.8824
+    Dataset "5" got 0.8896
+
+  u06.01.bc
+    Dataset "1" got 0.8372
+    Dataset "2" got 0.8297
+    Dataset "3" got 0.8325
+    Dataset "4" got 0.8231
+    Dataset "5" got 0.8345
+
+  u06.02.bcf
+    Dataset "1" got 0.9336
+    Dataset "2" got 0.9275
+    Dataset "3" got 0.9218
+    Dataset "4" got 0.9269
+    Dataset "5" got 0.9309
+
+  u07.01.smtp
+    Dataset "1" got 0.8689
+    Dataset "2" got 0.8626
+    Dataset "3" got 0.8602
+    Dataset "4" got 0.8564
+    Dataset "5" got 0.8659
+
+  u08.01.amer
+    Dataset "1" got 0.8379
+    Dataset "2" got 0.8306
+    Dataset "3" got 0.8329
+    Dataset "4" got 0.8247
+    Dataset "5" got 0.8357
+
+  u08.02.amer_cosine
+    Dataset "1" got 0.8380
+    Dataset "2" got 0.8306
+    Dataset "3" got 0.8331
+    Dataset "4" got 0.8248
+    Dataset "5" got 0.8358
+
+  u08.03.amer_pearson
+    Dataset "1" got 0.8959
+    Dataset "2" got 0.8875
+    Dataset "3" got 0.8827
+    Dataset "4" got 0.8824
+    Dataset "5" got 0.8903
+
+  u08.04.amer_smtp
+    Dataset "1" got 0.8688
+    Dataset "2" got 0.8624
+    Dataset "3" got 0.8600
+    Dataset "4" got 0.8561
+    Dataset "5" got 0.8656
+
+  u08.05.amer_amer2
+    Dataset "1" got 0.8378
+    Dataset "2" got 0.8305
+    Dataset "3" got 0.8329
+    Dataset "4" got 0.8246
+    Dataset "5" got 0.8356
+
+  u09.01.amer2
+    Dataset "1" got 0.9037
+    Dataset "2" got 0.8950
+    Dataset "3" got 0.8955
+    Dataset "4" got 0.8905
+    Dataset "5" got 0.9006
+
+  u09.02.amer2_cosine
+    Dataset "1" got 0.8379
+    Dataset "2" got 0.8305
+    Dataset "3" got 0.8330
+    Dataset "4" got 0.8247
+    Dataset "5" got 0.8357
+
+  u09.03.amer2_pearson
+    Dataset "1" got 0.9087
+    Dataset "2" got 0.9021
+    Dataset "3" got 0.8973
+    Dataset "4" got 0.9001
+    Dataset "5" got 0.9067
+
+  u09.04.amer2_smtp
+    Dataset "1" got 0.8690
+    Dataset "2" got 0.8626
+    Dataset "3" got 0.8602
+    Dataset "4" got 0.8564
+    Dataset "5" got 0.8658
+
+  u10.01.ta
+    Dataset "1" got 0.8697
+    Dataset "2" got 0.8634
+    Dataset "3" got 0.8611
+    Dataset "4" got 0.8572
+    Dataset "5" got 0.8668
+
+  u10.02.taj
+    Dataset "1" got 0.8815
+    Dataset "2" got 0.8762
+    Dataset "3" got 0.8726
+    Dataset "4" got 0.8712
+    Dataset "5" got 0.8792
+
+  u10.03.tan
+    Dataset "1" got 0.8994
+    Dataset "2" got 0.8935
+    Dataset "3" got 0.8899
+    Dataset "4" got 0.8881
+    Dataset "5" got 0.8983
+
+  u10.04.tanj
+    Dataset "1" got 0.9050
+    Dataset "2" got 0.8992
+    Dataset "3" got 0.8963
+    Dataset "4" got 0.8948
+    Dataset "5" got 0.9033
+
+  u11.01.ww
+    Dataset "1" got 0.8500
+    Dataset "2" got 0.8434
+    Dataset "3" got 0.8436
+    Dataset "4" got 0.8368
+    Dataset "5" got 0.8476
+
+
+MSE.recommend evaluation
+
+  c01.01.2d
+    Dataset "1" got 1.0175
+    Dataset "2" got 1.0224
+    Dataset "3" got 1.0207
+    Dataset "4" got 1.0148
+    Dataset "5" got 1.0123
+
+  i01.01.cosine
+    Dataset "1" got 1.1239
+    Dataset "2" got 1.0902
+    Dataset "3" got 1.1099
+    Dataset "4" got 1.0881
+    Dataset "5" got 1.0994
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 1.4025
+    Dataset "2" got 1.3702
+    Dataset "3" got 1.3825
+    Dataset "4" got 1.3703
+    Dataset "5" got 1.3946
+
+  i02.01.pearson
+    Dataset "1" got 1.3497
+    Dataset "2" got 1.3132
+    Dataset "3" got 1.3218
+    Dataset "4" got 1.3169
+    Dataset "5" got 1.3613
+
+  i02.02.pearson_constrained
+    Dataset "1" got 1.3717
+    Dataset "2" got 1.3326
+    Dataset "3" got 1.3431
+    Dataset "4" got 1.3357
+    Dataset "5" got 1.3668
+
+  i02.03.pearson_weighted
+    Dataset "1" got 1.3486
+    Dataset "2" got 1.3108
+    Dataset "3" got 1.3191
+    Dataset "4" got 1.3149
+    Dataset "5" got 1.3585
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 1.3469
+    Dataset "2" got 1.3102
+    Dataset "3" got 1.3189
+    Dataset "4" got 1.3140
+    Dataset "5" got 1.3581
+
+  i03.01.jaccard
+    Dataset "1" got 1.2875
+    Dataset "2" got 1.2415
+    Dataset "3" got 1.2550
+    Dataset "4" got 1.2418
+    Dataset "5" got 1.2590
+
+  i04.01.msd
+    Dataset "1" got 1.2251
+    Dataset "2" got 1.1842
+    Dataset "3" got 1.1884
+    Dataset "4" got 1.1715
+    Dataset "5" got 1.1986
+
+  i04.02.msdj
+    Dataset "1" got 1.2458
+    Dataset "2" got 1.2081
+    Dataset "3" got 1.2134
+    Dataset "4" got 1.2003
+    Dataset "5" got 1.2278
+
+  i05.01.pss_item
+    Dataset "1" got 1.2569
+    Dataset "2" got 1.2142
+    Dataset "3" got 1.2156
+    Dataset "4" got 1.1967
+    Dataset "5" got 1.2299
+
+  i05.02.nhsm
+    Dataset "1" got 1.2863
+    Dataset "2" got 1.2452
+    Dataset "3" got 1.2491
+    Dataset "4" got 1.2312
+    Dataset "5" got 1.2646
+
+  i06.01.bc
+    Dataset "1" got 1.1249
+    Dataset "2" got 1.0879
+    Dataset "3" got 1.1065
+    Dataset "4" got 1.0840
+    Dataset "5" got 1.0965
+
+  i06.02.bcf
+    Dataset "1" got 1.3516
+    Dataset "2" got 1.3147
+    Dataset "3" got 1.3224
+    Dataset "4" got 1.3165
+    Dataset "5" got 1.3618
+
+  i07.01.smtp
+    Dataset "1" got 1.2342
+    Dataset "2" got 1.1970
+    Dataset "3" got 1.2042
+    Dataset "4" got 1.1814
+    Dataset "5" got 1.2123
+
+  i08.01.amer
+    Dataset "1" got 1.1236
+    Dataset "2" got 1.0899
+    Dataset "3" got 1.1092
+    Dataset "4" got 1.0874
+    Dataset "5" got 1.0987
+
+  i08.02.amer_cosine
+    Dataset "1" got 1.1238
+    Dataset "2" got 1.0901
+    Dataset "3" got 1.1097
+    Dataset "4" got 1.0880
+    Dataset "5" got 1.0993
+
+  i08.03.amer_pearson
+    Dataset "1" got 1.2792
+    Dataset "2" got 1.2376
+    Dataset "3" got 1.2365
+    Dataset "4" got 1.2275
+    Dataset "5" got 1.2675
+
+  i08.04.amer_smtp
+    Dataset "1" got 1.2335
+    Dataset "2" got 1.1965
+    Dataset "3" got 1.2035
+    Dataset "4" got 1.1808
+    Dataset "5" got 1.2116
+
+  i08.05.amer_amer2
+    Dataset "1" got 1.1237
+    Dataset "2" got 1.0899
+    Dataset "3" got 1.1089
+    Dataset "4" got 1.0871
+    Dataset "5" got 1.0981
+
+  i09.01.amer2
+    Dataset "1" got 1.3065
+    Dataset "2" got 1.2676
+    Dataset "3" got 1.2901
+    Dataset "4" got 1.2637
+    Dataset "5" got 1.2819
+
+  i09.02.amer2_cosine
+    Dataset "1" got 1.1237
+    Dataset "2" got 1.0898
+    Dataset "3" got 1.1094
+    Dataset "4" got 1.0875
+    Dataset "5" got 1.0988
+
+  i09.03.amer2_pearson
+    Dataset "1" got 1.2971
+    Dataset "2" got 1.2604
+    Dataset "3" got 1.2622
+    Dataset "4" got 1.2575
+    Dataset "5" got 1.3014
+
+  i09.04.amer2_smtp
+    Dataset "1" got 1.2335
+    Dataset "2" got 1.1965
+    Dataset "3" got 1.2039
+    Dataset "4" got 1.1812
+    Dataset "5" got 1.2119
+
+  i10.01.ta
+    Dataset "1" got 1.2295
+    Dataset "2" got 1.1874
+    Dataset "3" got 1.1921
+    Dataset "4" got 1.1747
+    Dataset "5" got 1.2029
+
+  i10.02.taj
+    Dataset "1" got 1.2486
+    Dataset "2" got 1.2095
+    Dataset "3" got 1.2151
+    Dataset "4" got 1.2010
+    Dataset "5" got 1.2291
+
+  i10.03.tan
+    Dataset "1" got 1.3006
+    Dataset "2" got 1.2655
+    Dataset "3" got 1.2693
+    Dataset "4" got 1.2519
+    Dataset "5" got 1.2828
+
+  i10.04.tanj
+    Dataset "1" got 1.3078
+    Dataset "2" got 1.2764
+    Dataset "3" got 1.2806
+    Dataset "4" got 1.2687
+    Dataset "5" got 1.2976
+
+  i11.01.ww
+    Dataset "1" got 1.1651
+    Dataset "2" got 1.1535
+    Dataset "3" got 1.1557
+    Dataset "4" got 1.1444
+    Dataset "5" got 1.1553
+
+  u01.01.cosine
+    Dataset "1" got 1.1366
+    Dataset "2" got 1.1264
+    Dataset "3" got 1.1294
+    Dataset "4" got 1.1127
+    Dataset "5" got 1.1388
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 1.4743
+    Dataset "2" got 1.4634
+    Dataset "3" got 1.4445
+    Dataset "4" got 1.4806
+    Dataset "5" got 1.4881
+
+  u02.01.pearson
+    Dataset "1" got 1.4081
+    Dataset "2" got 1.3856
+    Dataset "3" got 1.3684
+    Dataset "4" got 1.3877
+    Dataset "5" got 1.3974
+
+  u02.02.pearson_constrained
+    Dataset "1" got 1.4092
+    Dataset "2" got 1.3927
+    Dataset "3" got 1.3761
+    Dataset "4" got 1.3981
+    Dataset "5" got 1.4173
+
+  u02.03.pearson_weighted
+    Dataset "1" got 1.4033
+    Dataset "2" got 1.3803
+    Dataset "3" got 1.3648
+    Dataset "4" got 1.3812
+    Dataset "5" got 1.3950
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 1.4042
+    Dataset "2" got 1.3816
+    Dataset "3" got 1.3649
+    Dataset "4" got 1.3834
+    Dataset "5" got 1.3940
+
+  u03.01.jaccard
+    Dataset "1" got 1.2856
+    Dataset "2" got 1.2824
+    Dataset "3" got 1.2673
+    Dataset "4" got 1.2663
+    Dataset "5" got 1.2970
+
+  u04.01.msd
+    Dataset "1" got 1.2300
+    Dataset "2" got 1.2163
+    Dataset "3" got 1.2059
+    Dataset "4" got 1.2012
+    Dataset "5" got 1.2301
+
+  u04.02.msdj
+    Dataset "1" got 1.2595
+    Dataset "2" got 1.2490
+    Dataset "3" got 1.2357
+    Dataset "4" got 1.2346
+    Dataset "5" got 1.2611
+
+  u05.01.pss
+    Dataset "1" got 1.2619
+    Dataset "2" got 1.2475
+    Dataset "3" got 1.2335
+    Dataset "4" got 1.2338
+    Dataset "5" got 1.2605
+
+  u05.02.nhsm
+    Dataset "1" got 1.2953
+    Dataset "2" got 1.2822
+    Dataset "3" got 1.2676
+    Dataset "4" got 1.2704
+    Dataset "5" got 1.2978
+
+  u06.01.bc
+    Dataset "1" got 1.1351
+    Dataset "2" got 1.1245
+    Dataset "3" got 1.1279
+    Dataset "4" got 1.1085
+    Dataset "5" got 1.1350
+
+  u06.02.bcf
+    Dataset "1" got 1.4076
+    Dataset "2" got 1.3850
+    Dataset "3" got 1.3693
+    Dataset "4" got 1.3886
+    Dataset "5" got 1.3977
+
+  u07.01.smtp
+    Dataset "1" got 1.2317
+    Dataset "2" got 1.2185
+    Dataset "3" got 1.2080
+    Dataset "4" got 1.2032
+    Dataset "5" got 1.2321
+
+  u08.01.amer
+    Dataset "1" got 1.1362
+    Dataset "2" got 1.1262
+    Dataset "3" got 1.1288
+    Dataset "4" got 1.1122
+    Dataset "5" got 1.1384
+
+  u08.02.amer_cosine
+    Dataset "1" got 1.1365
+    Dataset "2" got 1.1263
+    Dataset "3" got 1.1292
+    Dataset "4" got 1.1125
+    Dataset "5" got 1.1387
+
+  u08.03.amer_pearson
+    Dataset "1" got 1.3113
+    Dataset "2" got 1.2853
+    Dataset "3" got 1.2710
+    Dataset "4" got 1.2736
+    Dataset "5" got 1.2985
+
+  u08.04.amer_smtp
+    Dataset "1" got 1.2311
+    Dataset "2" got 1.2180
+    Dataset "3" got 1.2074
+    Dataset "4" got 1.2026
+    Dataset "5" got 1.2314
+
+  u08.05.amer_amer2
+    Dataset "1" got 1.1362
+    Dataset "2" got 1.1262
+    Dataset "3" got 1.1286
+    Dataset "4" got 1.1121
+    Dataset "5" got 1.1382
+
+  u09.01.amer2
+    Dataset "1" got 1.3417
+    Dataset "2" got 1.3204
+    Dataset "3" got 1.3188
+    Dataset "4" got 1.3116
+    Dataset "5" got 1.3464
+
+  u09.02.amer2_cosine
+    Dataset "1" got 1.1362
+    Dataset "2" got 1.1261
+    Dataset "3" got 1.1289
+    Dataset "4" got 1.1122
+    Dataset "5" got 1.1383
+
+  u09.03.amer2_pearson
+    Dataset "1" got 1.3487
+    Dataset "2" got 1.3258
+    Dataset "3" got 1.3133
+    Dataset "4" got 1.3249
+    Dataset "5" got 1.3425
+
+  u09.04.amer2_smtp
+    Dataset "1" got 1.2316
+    Dataset "2" got 1.2183
+    Dataset "3" got 1.2077
+    Dataset "4" got 1.2031
+    Dataset "5" got 1.2316
+
+  u10.01.ta
+    Dataset "1" got 1.2341
+    Dataset "2" got 1.2201
+    Dataset "3" got 1.2095
+    Dataset "4" got 1.2057
+    Dataset "5" got 1.2346
+
+  u10.02.taj
+    Dataset "1" got 1.2620
+    Dataset "2" got 1.2519
+    Dataset "3" got 1.2381
+    Dataset "4" got 1.2383
+    Dataset "5" got 1.2651
+
+  u10.03.tan
+    Dataset "1" got 1.3159
+    Dataset "2" got 1.3062
+    Dataset "3" got 1.2906
+    Dataset "4" got 1.2899
+    Dataset "5" got 1.3213
+
+  u10.04.tanj
+    Dataset "1" got 1.3287
+    Dataset "2" got 1.3198
+    Dataset "3" got 1.3058
+    Dataset "4" got 1.3033
+    Dataset "5" got 1.3336
+
+  u11.01.ww
+    Dataset "1" got 1.1763
+    Dataset "2" got 1.1602
+    Dataset "3" got 1.1609
+    Dataset "4" got 1.1464
+    Dataset "5" got 1.1713
+
+
+RMSE.recommend evaluation
+
+  c01.01.2d
+    Dataset "1" got 1.0087
+    Dataset "2" got 1.0111
+    Dataset "3" got 1.0103
+    Dataset "4" got 1.0074
+    Dataset "5" got 1.0061
+
+  i01.01.cosine
+    Dataset "1" got 1.0602
+    Dataset "2" got 1.0441
+    Dataset "3" got 1.0535
+    Dataset "4" got 1.0431
+    Dataset "5" got 1.0485
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 1.1843
+    Dataset "2" got 1.1705
+    Dataset "3" got 1.1758
+    Dataset "4" got 1.1706
+    Dataset "5" got 1.1809
+
+  i02.01.pearson
+    Dataset "1" got 1.1618
+    Dataset "2" got 1.1460
+    Dataset "3" got 1.1497
+    Dataset "4" got 1.1476
+    Dataset "5" got 1.1667
+
+  i02.02.pearson_constrained
+    Dataset "1" got 1.1712
+    Dataset "2" got 1.1544
+    Dataset "3" got 1.1589
+    Dataset "4" got 1.1557
+    Dataset "5" got 1.1691
+
+  i02.03.pearson_weighted
+    Dataset "1" got 1.1613
+    Dataset "2" got 1.1449
+    Dataset "3" got 1.1485
+    Dataset "4" got 1.1467
+    Dataset "5" got 1.1656
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 1.1606
+    Dataset "2" got 1.1447
+    Dataset "3" got 1.1484
+    Dataset "4" got 1.1463
+    Dataset "5" got 1.1654
+
+  i03.01.jaccard
+    Dataset "1" got 1.1347
+    Dataset "2" got 1.1142
+    Dataset "3" got 1.1203
+    Dataset "4" got 1.1144
+    Dataset "5" got 1.1220
+
+  i04.01.msd
+    Dataset "1" got 1.1068
+    Dataset "2" got 1.0882
+    Dataset "3" got 1.0902
+    Dataset "4" got 1.0824
+    Dataset "5" got 1.0948
+
+  i04.02.msdj
+    Dataset "1" got 1.1162
+    Dataset "2" got 1.0992
+    Dataset "3" got 1.1015
+    Dataset "4" got 1.0956
+    Dataset "5" got 1.1081
+
+  i05.01.pss_item
+    Dataset "1" got 1.1211
+    Dataset "2" got 1.1019
+    Dataset "3" got 1.1025
+    Dataset "4" got 1.0939
+    Dataset "5" got 1.1090
+
+  i05.02.nhsm
+    Dataset "1" got 1.1341
+    Dataset "2" got 1.1159
+    Dataset "3" got 1.1176
+    Dataset "4" got 1.1096
+    Dataset "5" got 1.1245
+
+  i06.01.bc
+    Dataset "1" got 1.0606
+    Dataset "2" got 1.0430
+    Dataset "3" got 1.0519
+    Dataset "4" got 1.0412
+    Dataset "5" got 1.0471
+
+  i06.02.bcf
+    Dataset "1" got 1.1626
+    Dataset "2" got 1.1466
+    Dataset "3" got 1.1499
+    Dataset "4" got 1.1474
+    Dataset "5" got 1.1670
+
+  i07.01.smtp
+    Dataset "1" got 1.1109
+    Dataset "2" got 1.0941
+    Dataset "3" got 1.0973
+    Dataset "4" got 1.0869
+    Dataset "5" got 1.1010
+
+  i08.01.amer
+    Dataset "1" got 1.0600
+    Dataset "2" got 1.0440
+    Dataset "3" got 1.0532
+    Dataset "4" got 1.0428
+    Dataset "5" got 1.0482
+
+  i08.02.amer_cosine
+    Dataset "1" got 1.0601
+    Dataset "2" got 1.0441
+    Dataset "3" got 1.0534
+    Dataset "4" got 1.0431
+    Dataset "5" got 1.0485
+
+  i08.03.amer_pearson
+    Dataset "1" got 1.1310
+    Dataset "2" got 1.1125
+    Dataset "3" got 1.1120
+    Dataset "4" got 1.1079
+    Dataset "5" got 1.1258
+
+  i08.04.amer_smtp
+    Dataset "1" got 1.1106
+    Dataset "2" got 1.0938
+    Dataset "3" got 1.0971
+    Dataset "4" got 1.0867
+    Dataset "5" got 1.1007
+
+  i08.05.amer_amer2
+    Dataset "1" got 1.0601
+    Dataset "2" got 1.0440
+    Dataset "3" got 1.0530
+    Dataset "4" got 1.0426
+    Dataset "5" got 1.0479
+
+  i09.01.amer2
+    Dataset "1" got 1.1430
+    Dataset "2" got 1.1259
+    Dataset "3" got 1.1358
+    Dataset "4" got 1.1241
+    Dataset "5" got 1.1322
+
+  i09.02.amer2_cosine
+    Dataset "1" got 1.0600
+    Dataset "2" got 1.0439
+    Dataset "3" got 1.0533
+    Dataset "4" got 1.0429
+    Dataset "5" got 1.0482
+
+  i09.03.amer2_pearson
+    Dataset "1" got 1.1389
+    Dataset "2" got 1.1227
+    Dataset "3" got 1.1235
+    Dataset "4" got 1.1214
+    Dataset "5" got 1.1408
+
+  i09.04.amer2_smtp
+    Dataset "1" got 1.1106
+    Dataset "2" got 1.0938
+    Dataset "3" got 1.0972
+    Dataset "4" got 1.0868
+    Dataset "5" got 1.1009
+
+  i10.01.ta
+    Dataset "1" got 1.1088
+    Dataset "2" got 1.0897
+    Dataset "3" got 1.0918
+    Dataset "4" got 1.0838
+    Dataset "5" got 1.0968
+
+  i10.02.taj
+    Dataset "1" got 1.1174
+    Dataset "2" got 1.0998
+    Dataset "3" got 1.1023
+    Dataset "4" got 1.0959
+    Dataset "5" got 1.1087
+
+  i10.03.tan
+    Dataset "1" got 1.1404
+    Dataset "2" got 1.1249
+    Dataset "3" got 1.1266
+    Dataset "4" got 1.1189
+    Dataset "5" got 1.1326
+
+  i10.04.tanj
+    Dataset "1" got 1.1436
+    Dataset "2" got 1.1298
+    Dataset "3" got 1.1316
+    Dataset "4" got 1.1264
+    Dataset "5" got 1.1391
+
+  i11.01.ww
+    Dataset "1" got 1.0794
+    Dataset "2" got 1.0740
+    Dataset "3" got 1.0750
+    Dataset "4" got 1.0698
+    Dataset "5" got 1.0748
+
+  u01.01.cosine
+    Dataset "1" got 1.0661
+    Dataset "2" got 1.0613
+    Dataset "3" got 1.0627
+    Dataset "4" got 1.0548
+    Dataset "5" got 1.0672
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 1.2142
+    Dataset "2" got 1.2097
+    Dataset "3" got 1.2019
+    Dataset "4" got 1.2168
+    Dataset "5" got 1.2199
+
+  u02.01.pearson
+    Dataset "1" got 1.1866
+    Dataset "2" got 1.1771
+    Dataset "3" got 1.1698
+    Dataset "4" got 1.1780
+    Dataset "5" got 1.1821
+
+  u02.02.pearson_constrained
+    Dataset "1" got 1.1871
+    Dataset "2" got 1.1801
+    Dataset "3" got 1.1731
+    Dataset "4" got 1.1824
+    Dataset "5" got 1.1905
+
+  u02.03.pearson_weighted
+    Dataset "1" got 1.1846
+    Dataset "2" got 1.1749
+    Dataset "3" got 1.1683
+    Dataset "4" got 1.1752
+    Dataset "5" got 1.1811
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 1.1850
+    Dataset "2" got 1.1754
+    Dataset "3" got 1.1683
+    Dataset "4" got 1.1762
+    Dataset "5" got 1.1807
+
+  u03.01.jaccard
+    Dataset "1" got 1.1338
+    Dataset "2" got 1.1324
+    Dataset "3" got 1.1258
+    Dataset "4" got 1.1253
+    Dataset "5" got 1.1389
+
+  u04.01.msd
+    Dataset "1" got 1.1091
+    Dataset "2" got 1.1029
+    Dataset "3" got 1.0981
+    Dataset "4" got 1.0960
+    Dataset "5" got 1.1091
+
+  u04.02.msdj
+    Dataset "1" got 1.1223
+    Dataset "2" got 1.1176
+    Dataset "3" got 1.1116
+    Dataset "4" got 1.1111
+    Dataset "5" got 1.1230
+
+  u05.01.pss
+    Dataset "1" got 1.1233
+    Dataset "2" got 1.1169
+    Dataset "3" got 1.1106
+    Dataset "4" got 1.1108
+    Dataset "5" got 1.1227
+
+  u05.02.nhsm
+    Dataset "1" got 1.1381
+    Dataset "2" got 1.1324
+    Dataset "3" got 1.1259
+    Dataset "4" got 1.1271
+    Dataset "5" got 1.1392
+
+  u06.01.bc
+    Dataset "1" got 1.0654
+    Dataset "2" got 1.0604
+    Dataset "3" got 1.0620
+    Dataset "4" got 1.0529
+    Dataset "5" got 1.0653
+
+  u06.02.bcf
+    Dataset "1" got 1.1864
+    Dataset "2" got 1.1769
+    Dataset "3" got 1.1702
+    Dataset "4" got 1.1784
+    Dataset "5" got 1.1822
+
+  u07.01.smtp
+    Dataset "1" got 1.1098
+    Dataset "2" got 1.1038
+    Dataset "3" got 1.0991
+    Dataset "4" got 1.0969
+    Dataset "5" got 1.1100
+
+  u08.01.amer
+    Dataset "1" got 1.0659
+    Dataset "2" got 1.0612
+    Dataset "3" got 1.0625
+    Dataset "4" got 1.0546
+    Dataset "5" got 1.0670
+
+  u08.02.amer_cosine
+    Dataset "1" got 1.0661
+    Dataset "2" got 1.0613
+    Dataset "3" got 1.0627
+    Dataset "4" got 1.0548
+    Dataset "5" got 1.0671
+
+  u08.03.amer_pearson
+    Dataset "1" got 1.1451
+    Dataset "2" got 1.1337
+    Dataset "3" got 1.1274
+    Dataset "4" got 1.1285
+    Dataset "5" got 1.1395
+
+  u08.04.amer_smtp
+    Dataset "1" got 1.1096
+    Dataset "2" got 1.1036
+    Dataset "3" got 1.0988
+    Dataset "4" got 1.0966
+    Dataset "5" got 1.1097
+
+  u08.05.amer_amer2
+    Dataset "1" got 1.0659
+    Dataset "2" got 1.0612
+    Dataset "3" got 1.0624
+    Dataset "4" got 1.0545
+    Dataset "5" got 1.0669
+
+  u09.01.amer2
+    Dataset "1" got 1.1583
+    Dataset "2" got 1.1491
+    Dataset "3" got 1.1484
+    Dataset "4" got 1.1452
+    Dataset "5" got 1.1604
+
+  u09.02.amer2_cosine
+    Dataset "1" got 1.0659
+    Dataset "2" got 1.0612
+    Dataset "3" got 1.0625
+    Dataset "4" got 1.0546
+    Dataset "5" got 1.0669
+
+  u09.03.amer2_pearson
+    Dataset "1" got 1.1613
+    Dataset "2" got 1.1514
+    Dataset "3" got 1.1460
+    Dataset "4" got 1.1510
+    Dataset "5" got 1.1587
+
+  u09.04.amer2_smtp
+    Dataset "1" got 1.1098
+    Dataset "2" got 1.1038
+    Dataset "3" got 1.0990
+    Dataset "4" got 1.0968
+    Dataset "5" got 1.1098
+
+  u10.01.ta
+    Dataset "1" got 1.1109
+    Dataset "2" got 1.1046
+    Dataset "3" got 1.0998
+    Dataset "4" got 1.0981
+    Dataset "5" got 1.1111
+
+  u10.02.taj
+    Dataset "1" got 1.1234
+    Dataset "2" got 1.1189
+    Dataset "3" got 1.1127
+    Dataset "4" got 1.1128
+    Dataset "5" got 1.1248
+
+  u10.03.tan
+    Dataset "1" got 1.1471
+    Dataset "2" got 1.1429
+    Dataset "3" got 1.1360
+    Dataset "4" got 1.1358
+    Dataset "5" got 1.1495
+
+  u10.04.tanj
+    Dataset "1" got 1.1527
+    Dataset "2" got 1.1488
+    Dataset "3" got 1.1427
+    Dataset "4" got 1.1416
+    Dataset "5" got 1.1548
+
+  u11.01.ww
+    Dataset "1" got 1.0846
+    Dataset "2" got 1.0771
+    Dataset "3" got 1.0774
+    Dataset "4" got 1.0707
+    Dataset "5" got 1.0823
+
+
+Recall.estimate evaluation
+
+  c01.01.2d
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i01.01.cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 0.8894
+    Dataset "2" got 0.8929
+    Dataset "3" got 0.8885
+    Dataset "4" got 0.8908
+    Dataset "5" got 0.8916
+
+  i02.01.pearson
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i02.02.pearson_constrained
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i02.03.pearson_weighted
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i03.01.jaccard
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i04.01.msd
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i04.02.msdj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i05.01.pss_item
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i05.02.nhsm
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i06.01.bc
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i06.02.bcf
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i07.01.smtp
+    Dataset "1" got 0.8818
+    Dataset "2" got 0.8855
+    Dataset "3" got 0.8769
+    Dataset "4" got 0.8830
+    Dataset "5" got 0.8821
+
+  i08.01.amer
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i08.02.amer_cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i08.03.amer_pearson
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i08.04.amer_smtp
+    Dataset "1" got 0.8818
+    Dataset "2" got 0.8855
+    Dataset "3" got 0.8769
+    Dataset "4" got 0.8830
+    Dataset "5" got 0.8821
+
+  i08.05.amer_amer2
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i09.01.amer2
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i09.02.amer2_cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  i09.03.amer2_pearson
+    Dataset "1" got 0.8584
+    Dataset "2" got 0.8587
+    Dataset "3" got 0.8579
+    Dataset "4" got 0.8619
+    Dataset "5" got 0.8635
+
+  i09.04.amer2_smtp
+    Dataset "1" got 0.8818
+    Dataset "2" got 0.8855
+    Dataset "3" got 0.8769
+    Dataset "4" got 0.8830
+    Dataset "5" got 0.8821
+
+  i10.01.ta
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i10.02.taj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i10.03.tan
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i10.04.tanj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  i11.01.ww
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u01.01.cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 0.8899
+    Dataset "2" got 0.8934
+    Dataset "3" got 0.8891
+    Dataset "4" got 0.8904
+    Dataset "5" got 0.8910
+
+  u02.01.pearson
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u02.02.pearson_constrained
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u02.03.pearson_weighted
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u03.01.jaccard
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u04.01.msd
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u04.02.msdj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u05.01.pss
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u05.02.nhsm
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u06.01.bc
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u06.02.bcf
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u07.01.smtp
+    Dataset "1" got 0.8930
+    Dataset "2" got 0.8965
+    Dataset "3" got 0.8917
+    Dataset "4" got 0.8941
+    Dataset "5" got 0.8949
+
+  u08.01.amer
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u08.02.amer_cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u08.03.amer_pearson
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u08.04.amer_smtp
+    Dataset "1" got 0.8930
+    Dataset "2" got 0.8965
+    Dataset "3" got 0.8917
+    Dataset "4" got 0.8941
+    Dataset "5" got 0.8949
+
+  u08.05.amer_amer2
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u09.01.amer2
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u09.02.amer2_cosine
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+  u09.03.amer2_pearson
+    Dataset "1" got 0.8699
+    Dataset "2" got 0.8695
+    Dataset "3" got 0.8678
+    Dataset "4" got 0.8706
+    Dataset "5" got 0.8725
+
+  u09.04.amer2_smtp
+    Dataset "1" got 0.8930
+    Dataset "2" got 0.8965
+    Dataset "3" got 0.8917
+    Dataset "4" got 0.8941
+    Dataset "5" got 0.8949
+
+  u10.01.ta
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u10.02.taj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u10.03.tan
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u10.04.tanj
+    Dataset "1" got 0.8934
+    Dataset "2" got 0.8970
+    Dataset "3" got 0.8919
+    Dataset "4" got 0.8945
+    Dataset "5" got 0.8954
+
+  u11.01.ww
+    Dataset "1" got 0.9711
+    Dataset "2" got 0.9726
+    Dataset "3" got 0.9695
+    Dataset "4" got 0.9703
+    Dataset "5" got 0.9700
+
+
+Setup time evaluation
+
+  c01.01.2d
+    Dataset "1" got 0.2970
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1560
+    Dataset "4" got 0.0620
+    Dataset "5" got 0.0780
+
+  i01.01.cosine
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0150
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0310
+
+  i02.01.pearson
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i02.02.pearson_constrained
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0160
+
+  i02.03.pearson_weighted
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0150
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0630
+    Dataset "5" got 0.0310
+
+  i03.01.jaccard
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0150
+
+  i04.01.msd
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0160
+
+  i04.02.msdj
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i05.01.pss_item
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i05.02.nhsm
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  i06.01.bc
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0310
+
+  i06.02.bcf
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i07.01.smtp
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0320
+
+  i08.01.amer
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0160
+
+  i08.02.amer_cosine
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  i08.03.amer_pearson
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0310
+
+  i08.04.amer_smtp
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0150
+
+  i08.05.amer_amer2
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i09.01.amer2
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i09.02.amer2_cosine
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0150
+
+  i09.03.amer2_pearson
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  i09.04.amer2_smtp
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  i10.01.ta
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  i10.02.taj
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  i10.03.tan
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  i10.04.tanj
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0320
+
+  i11.01.ww
+    Dataset "1" got 0.0630
+    Dataset "2" got 0.0470
+    Dataset "3" got 0.0470
+    Dataset "4" got 0.0470
+    Dataset "5" got 0.0470
+
+  u01.01.cosine
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0320
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0160
+
+  u02.01.pearson
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u02.02.pearson_constrained
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  u02.03.pearson_weighted
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u03.01.jaccard
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u04.01.msd
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0320
+
+  u04.02.msdj
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0310
+
+  u05.01.pss
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  u05.02.nhsm
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0150
+
+  u06.01.bc
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0310
+
+  u06.02.bcf
+    Dataset "1" got 0.0470
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u07.01.smtp
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  u08.01.amer
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0160
+
+  u08.02.amer_cosine
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  u08.03.amer_pearson
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  u08.04.amer_smtp
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0150
+
+  u08.05.amer_amer2
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0160
+    Dataset "5" got 0.0310
+
+  u09.01.amer2
+    Dataset "1" got 0.0310
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0470
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u09.02.amer2_cosine
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0310
+
+  u09.03.amer2_pearson
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0320
+    Dataset "5" got 0.0470
+
+  u09.04.amer2_smtp
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0160
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0160
+
+  u10.01.ta
+    Dataset "1" got 0.0320
+    Dataset "2" got 0.0320
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0320
+
+  u10.02.taj
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0320
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0310
+
+  u10.03.tan
+    Dataset "1" got 0.0160
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0160
+    Dataset "4" got 0.0150
+    Dataset "5" got 0.0310
+
+  u10.04.tanj
+    Dataset "1" got 0.0150
+    Dataset "2" got 0.0310
+    Dataset "3" got 0.0310
+    Dataset "4" got 0.0310
+    Dataset "5" got 0.0310
+
+  u11.01.ww
+    Dataset "1" got 0.0470
+    Dataset "2" got 0.0470
+    Dataset "3" got 0.0630
+    Dataset "4" got 0.0470
+    Dataset "5" got 0.0630
+
+
+Speed evaluation
+
+  c01.01.2d
+    Dataset "1" got 0.0811
+    Dataset "2" got 0.0775
+    Dataset "3" got 0.0723
+    Dataset "4" got 0.0672
+    Dataset "5" got 0.0664
+
+  i01.01.cosine
+    Dataset "1" got 0.0294
+    Dataset "2" got 0.0264
+    Dataset "3" got 0.0253
+    Dataset "4" got 0.0244
+    Dataset "5" got 0.0264
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 0.0224
+    Dataset "2" got 0.0216
+    Dataset "3" got 0.0211
+    Dataset "4" got 0.0205
+    Dataset "5" got 0.0221
+
+  i02.01.pearson
+    Dataset "1" got 0.0233
+    Dataset "2" got 0.0231
+    Dataset "3" got 0.0228
+    Dataset "4" got 0.0228
+    Dataset "5" got 0.0235
+
+  i02.02.pearson_constrained
+    Dataset "1" got 0.0203
+    Dataset "2" got 0.0214
+    Dataset "3" got 0.0215
+    Dataset "4" got 0.0210
+    Dataset "5" got 0.0218
+
+  i02.03.pearson_weighted
+    Dataset "1" got 0.0255
+    Dataset "2" got 0.0253
+    Dataset "3" got 0.0262
+    Dataset "4" got 0.0253
+    Dataset "5" got 0.0256
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 0.0252
+    Dataset "2" got 0.0259
+    Dataset "3" got 0.0261
+    Dataset "4" got 0.0255
+    Dataset "5" got 0.0257
+
+  i03.01.jaccard
+    Dataset "1" got 0.0254
+    Dataset "2" got 0.0264
+    Dataset "3" got 0.0269
+    Dataset "4" got 0.0258
+    Dataset "5" got 0.0262
+
+  i04.01.msd
+    Dataset "1" got 0.0226
+    Dataset "2" got 0.0213
+    Dataset "3" got 0.0211
+    Dataset "4" got 0.0212
+    Dataset "5" got 0.0213
+
+  i04.02.msdj
+    Dataset "1" got 0.0231
+    Dataset "2" got 0.0249
+    Dataset "3" got 0.0243
+    Dataset "4" got 0.0243
+    Dataset "5" got 0.0243
+
+  i05.01.pss_item
+    Dataset "1" got 0.0214
+    Dataset "2" got 0.0212
+    Dataset "3" got 0.0216
+    Dataset "4" got 0.0216
+    Dataset "5" got 0.0212
+
+  i05.02.nhsm
+    Dataset "1" got 0.0327
+    Dataset "2" got 0.0341
+    Dataset "3" got 0.0341
+    Dataset "4" got 0.0339
+    Dataset "5" got 0.0362
+
+  i06.01.bc
+    Dataset "1" got 0.0378
+    Dataset "2" got 0.0382
+    Dataset "3" got 0.0372
+    Dataset "4" got 0.0363
+    Dataset "5" got 0.0354
+
+  i06.02.bcf
+    Dataset "1" got 0.0361
+    Dataset "2" got 0.0368
+    Dataset "3" got 0.0369
+    Dataset "4" got 0.0366
+    Dataset "5" got 0.0377
+
+  i07.01.smtp
+    Dataset "1" got 0.0233
+    Dataset "2" got 0.0220
+    Dataset "3" got 0.0217
+    Dataset "4" got 0.0222
+    Dataset "5" got 0.0223
+
+  i08.01.amer
+    Dataset "1" got 0.0900
+    Dataset "2" got 0.0927
+    Dataset "3" got 0.0908
+    Dataset "4" got 0.0911
+    Dataset "5" got 0.0926
+
+  i08.02.amer_cosine
+    Dataset "1" got 0.0923
+    Dataset "2" got 0.0942
+    Dataset "3" got 0.0936
+    Dataset "4" got 0.0934
+    Dataset "5" got 0.0952
+
+  i08.03.amer_pearson
+    Dataset "1" got 0.0889
+    Dataset "2" got 0.0915
+    Dataset "3" got 0.0887
+    Dataset "4" got 0.0897
+    Dataset "5" got 0.0899
+
+  i08.04.amer_smtp
+    Dataset "1" got 0.0885
+    Dataset "2" got 0.0902
+    Dataset "3" got 0.0884
+    Dataset "4" got 0.0894
+    Dataset "5" got 0.0900
+
+  i08.05.amer_amer2
+    Dataset "1" got 0.1485
+    Dataset "2" got 0.1490
+    Dataset "3" got 0.1479
+    Dataset "4" got 0.1476
+    Dataset "5" got 0.1487
+
+  i09.01.amer2
+    Dataset "1" got 0.0903
+    Dataset "2" got 0.0912
+    Dataset "3" got 0.0894
+    Dataset "4" got 0.0910
+    Dataset "5" got 0.0911
+
+  i09.02.amer2_cosine
+    Dataset "1" got 0.0911
+    Dataset "2" got 0.0921
+    Dataset "3" got 0.0922
+    Dataset "4" got 0.0925
+    Dataset "5" got 0.0925
+
+  i09.03.amer2_pearson
+    Dataset "1" got 0.0882
+    Dataset "2" got 0.0889
+    Dataset "3" got 0.0873
+    Dataset "4" got 0.0890
+    Dataset "5" got 0.0887
+
+  i09.04.amer2_smtp
+    Dataset "1" got 0.0863
+    Dataset "2" got 0.0892
+    Dataset "3" got 0.0871
+    Dataset "4" got 0.0875
+    Dataset "5" got 0.0885
+
+  i10.01.ta
+    Dataset "1" got 0.0214
+    Dataset "2" got 0.0213
+    Dataset "3" got 0.0211
+    Dataset "4" got 0.0214
+    Dataset "5" got 0.0224
+
+  i10.02.taj
+    Dataset "1" got 0.0237
+    Dataset "2" got 0.0245
+    Dataset "3" got 0.0248
+    Dataset "4" got 0.0242
+    Dataset "5" got 0.0248
+
+  i10.03.tan
+    Dataset "1" got 0.0217
+    Dataset "2" got 0.0217
+    Dataset "3" got 0.0215
+    Dataset "4" got 0.0214
+    Dataset "5" got 0.0215
+
+  i10.04.tanj
+    Dataset "1" got 0.0239
+    Dataset "2" got 0.0244
+    Dataset "3" got 0.0243
+    Dataset "4" got 0.0250
+    Dataset "5" got 0.0246
+
+  i11.01.ww
+    Dataset "1" got 0.4453
+    Dataset "2" got 0.3976
+    Dataset "3" got 0.4676
+    Dataset "4" got 0.4676
+    Dataset "5" got 0.4259
+
+  u01.01.cosine
+    Dataset "1" got 0.0215
+    Dataset "2" got 0.0231
+    Dataset "3" got 0.0237
+    Dataset "4" got 0.0240
+    Dataset "5" got 0.0226
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 0.0187
+    Dataset "2" got 0.0178
+    Dataset "3" got 0.0180
+    Dataset "4" got 0.0183
+    Dataset "5" got 0.0181
+
+  u02.01.pearson
+    Dataset "1" got 0.0188
+    Dataset "2" got 0.0185
+    Dataset "3" got 0.0187
+    Dataset "4" got 0.0190
+    Dataset "5" got 0.0186
+
+  u02.02.pearson_constrained
+    Dataset "1" got 0.0173
+    Dataset "2" got 0.0180
+    Dataset "3" got 0.0179
+    Dataset "4" got 0.0173
+    Dataset "5" got 0.0177
+
+  u02.03.pearson_weighted
+    Dataset "1" got 0.0204
+    Dataset "2" got 0.0207
+    Dataset "3" got 0.0206
+    Dataset "4" got 0.0210
+    Dataset "5" got 0.0209
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 0.0203
+    Dataset "2" got 0.0208
+    Dataset "3" got 0.0208
+    Dataset "4" got 0.0213
+    Dataset "5" got 0.0217
+
+  u03.01.jaccard
+    Dataset "1" got 0.0220
+    Dataset "2" got 0.0232
+    Dataset "3" got 0.0220
+    Dataset "4" got 0.0222
+    Dataset "5" got 0.0233
+
+  u04.01.msd
+    Dataset "1" got 0.0171
+    Dataset "2" got 0.0180
+    Dataset "3" got 0.0177
+    Dataset "4" got 0.0181
+    Dataset "5" got 0.0181
+
+  u04.02.msdj
+    Dataset "1" got 0.0194
+    Dataset "2" got 0.0198
+    Dataset "3" got 0.0200
+    Dataset "4" got 0.0212
+    Dataset "5" got 0.0201
+
+  u05.01.pss
+    Dataset "1" got 0.0172
+    Dataset "2" got 0.0183
+    Dataset "3" got 0.0179
+    Dataset "4" got 0.0180
+    Dataset "5" got 0.0182
+
+  u05.02.nhsm
+    Dataset "1" got 0.0261
+    Dataset "2" got 0.0273
+    Dataset "3" got 0.0267
+    Dataset "4" got 0.0270
+    Dataset "5" got 0.0274
+
+  u06.01.bc
+    Dataset "1" got 0.0274
+    Dataset "2" got 0.0288
+    Dataset "3" got 0.0275
+    Dataset "4" got 0.0292
+    Dataset "5" got 0.0294
+
+  u06.02.bcf
+    Dataset "1" got 0.0279
+    Dataset "2" got 0.0284
+    Dataset "3" got 0.0280
+    Dataset "4" got 0.0296
+    Dataset "5" got 0.0287
+
+  u07.01.smtp
+    Dataset "1" got 0.0179
+    Dataset "2" got 0.0187
+    Dataset "3" got 0.0186
+    Dataset "4" got 0.0189
+    Dataset "5" got 0.0196
+
+  u08.01.amer
+    Dataset "1" got 0.0633
+    Dataset "2" got 0.0659
+    Dataset "3" got 0.0646
+    Dataset "4" got 0.0639
+    Dataset "5" got 0.0662
+
+  u08.02.amer_cosine
+    Dataset "1" got 0.0658
+    Dataset "2" got 0.0670
+    Dataset "3" got 0.0658
+    Dataset "4" got 0.0651
+    Dataset "5" got 0.0653
+
+  u08.03.amer_pearson
+    Dataset "1" got 0.0627
+    Dataset "2" got 0.0612
+    Dataset "3" got 0.0628
+    Dataset "4" got 0.0611
+    Dataset "5" got 0.0619
+
+  u08.04.amer_smtp
+    Dataset "1" got 0.0640
+    Dataset "2" got 0.0620
+    Dataset "3" got 0.0619
+    Dataset "4" got 0.0634
+    Dataset "5" got 0.0618
+
+  u08.05.amer_amer2
+    Dataset "1" got 0.1029
+    Dataset "2" got 0.1049
+    Dataset "3" got 0.1010
+    Dataset "4" got 0.1022
+    Dataset "5" got 0.1026
+
+  u09.01.amer2
+    Dataset "1" got 0.0636
+    Dataset "2" got 0.0640
+    Dataset "3" got 0.0629
+    Dataset "4" got 0.0629
+    Dataset "5" got 0.0647
+
+  u09.02.amer2_cosine
+    Dataset "1" got 0.0662
+    Dataset "2" got 0.0662
+    Dataset "3" got 0.0650
+    Dataset "4" got 0.0653
+    Dataset "5" got 0.0668
+
+  u09.03.amer2_pearson
+    Dataset "1" got 0.0618
+    Dataset "2" got 0.0629
+    Dataset "3" got 0.0624
+    Dataset "4" got 0.0631
+    Dataset "5" got 0.0654
+
+  u09.04.amer2_smtp
+    Dataset "1" got 0.0628
+    Dataset "2" got 0.0607
+    Dataset "3" got 0.0629
+    Dataset "4" got 0.0605
+    Dataset "5" got 0.0616
+
+  u10.01.ta
+    Dataset "1" got 0.0174
+    Dataset "2" got 0.0179
+    Dataset "3" got 0.0181
+    Dataset "4" got 0.0181
+    Dataset "5" got 0.0183
+
+  u10.02.taj
+    Dataset "1" got 0.0202
+    Dataset "2" got 0.0202
+    Dataset "3" got 0.0204
+    Dataset "4" got 0.0203
+    Dataset "5" got 0.0201
+
+  u10.03.tan
+    Dataset "1" got 0.0176
+    Dataset "2" got 0.0180
+    Dataset "3" got 0.0181
+    Dataset "4" got 0.0187
+    Dataset "5" got 0.0182
+
+  u10.04.tanj
+    Dataset "1" got 0.0197
+    Dataset "2" got 0.0199
+    Dataset "3" got 0.0204
+    Dataset "4" got 0.0196
+    Dataset "5" got 0.0208
+
+  u11.01.ww
+    Dataset "1" got 0.3638
+    Dataset "2" got 0.3889
+    Dataset "3" got 0.3525
+    Dataset "4" got 0.3511
+    Dataset "5" got 0.4122
+
+
+Algorithm parameters
+
+  c01.01.2d
+    similar=cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i01.01.cosine
+    similar=cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i01.02.cosine_adjusted
+    similar=acos
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i02.01.pearson
+    similar=pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i02.02.pearson_constrained
+    similar=cpcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i02.03.pearson_weighted
+    similar=wpcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i02.04.pearson_sigmoid
+    similar=spcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i03.01.jaccard
+    similar=jaccard
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i04.01.msd
+    similar=msd
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i04.02.msdj
+    similar=msdj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i05.01.pss_item
+    similar=pss
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i05.02.nhsm
+    similar=nhsm
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i06.01.bc
+    similar=bc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i06.02.bcf
+    similar=bcf
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i07.01.smtp
+    similar=smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i08.01.amer
+    similar=amer
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i08.02.amer_cosine
+    similar=amer_cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i08.03.amer_pearson
+    similar=amer_pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i08.04.amer_smtp
+    similar=amer_smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i08.05.amer_amer2
+    similar=amer_amer2
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i09.01.amer2
+    similar=amer2
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i09.02.amer2_cosine
+    similar=amer2_cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i09.03.amer2_pearson
+    similar=amer2_pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i09.04.amer2_smtp
+    similar=amer2_smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i10.01.ta
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i10.02.taj
+    similar=taj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i10.03.tan
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=true
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i10.04.tanj
+    similar=taj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=true
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  i11.01.ww
+    similar=cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u01.01.cosine
+    similar=cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u01.02.cosine_adjusted
+    similar=acos
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u02.01.pearson
+    similar=pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u02.02.pearson_constrained
+    similar=cpcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u02.03.pearson_weighted
+    similar=wpcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u02.04.pearson_sigmoid
+    similar=spcc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u03.01.jaccard
+    similar=jaccard
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u04.01.msd
+    similar=msd
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u04.02.msdj
+    similar=msdj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u05.01.pss
+    similar=pss
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u05.02.nhsm
+    similar=nhsm
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u06.01.bc
+    similar=bc
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u06.02.bcf
+    similar=bcf
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u07.01.smtp
+    similar=smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u08.01.amer
+    similar=amer
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u08.02.amer_cosine
+    similar=amer_cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u08.03.amer_pearson
+    similar=amer_pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u08.04.amer_smtp
+    similar=amer_smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u08.05.amer_amer2
+    similar=amer_amer2
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u09.01.amer2
+    similar=amer2
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u09.02.amer2_cosine
+    similar=amer2_cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u09.03.amer2_pearson
+    similar=amer2_pearson
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u09.04.amer2_smtp
+    similar=amer2_smtp
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u10.01.ta
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u10.02.taj
+    similar=taj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u10.03.tan
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=true
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u10.04.tanj
+    similar=taj
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=true
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+  u11.01.ww
+    similar=cosine
+    lambda=0.5000
+    hybrid=false
+    alg_support_cache=true
+    general_var=false
+    minmax_mode=true
+    maxrating=5.0000
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    weight2=0.5000
+    weight1=0.5000
+
+
+Algorithm descriptions
+
+  c01.01.2d
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i01.01.cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i01.02.cosine_adjusted
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i02.01.pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i02.02.pearson_constrained
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i02.03.pearson_weighted
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i02.04.pearson_sigmoid
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i03.01.jaccard
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i04.01.msd
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i04.02.msdj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i05.01.pss_item
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i05.02.nhsm
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i06.01.bc
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i06.02.bcf
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i07.01.smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i08.01.amer
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i08.02.amer_cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i08.03.amer_pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i08.04.amer_smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i08.05.amer_amer2
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i09.01.amer2
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i09.02.amer2_cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i09.03.amer2_pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i09.04.amer2_smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i10.01.ta
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i10.02.taj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i10.03.tan
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i10.04.tanj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  i11.01.ww
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u01.01.cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u01.02.cosine_adjusted
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u02.01.pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u02.02.pearson_constrained
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u02.03.pearson_weighted
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u02.04.pearson_sigmoid
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u03.01.jaccard
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u04.01.msd
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u04.02.msdj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u05.01.pss
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u05.02.nhsm
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u06.01.bc
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u06.02.bcf
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u07.01.smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u08.01.amer
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u08.02.amer_cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u08.03.amer_pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u08.04.amer_smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u08.05.amer_amer2
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u09.01.amer2
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u09.02.amer2_cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u09.03.amer2_pearson
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u09.04.amer2_smtp
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u10.01.ta
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u10.02.taj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u10.03.tan
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u10.04.tanj
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  u11.01.ww
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+
+Note
+  Dataset "1" has path "file:/e:/temp/amer/datasets/movielens-csv-r0.9-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/e:/temp/amer/datasets/movielens-csv-r0.9-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/e:/temp/amer/datasets/movielens-csv-r0.9-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/e:/temp/amer/datasets/movielens-csv-r0.9-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/e:/temp/amer/datasets/movielens-csv-r0.9-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 942.00MB, Free memory = 723.77MB, Max memory = 942.00MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "e:\temp\amer"

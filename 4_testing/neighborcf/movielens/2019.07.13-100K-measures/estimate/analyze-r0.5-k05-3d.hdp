@@ -1,0 +1,312 @@
+General evaluation
+
+  c02.01.3d.msd
+    Hudup recall = 1.0000
+    MAE.recommend = 0.9175
+    MSE.recommend = 1.1944
+    Pearson.recommend = 0.2133
+    RMSE.recommend = 1.0929
+    Recall.estimate = 0.9966
+    Setup time = 0.2812
+    Speed = 22.3684
+
+  c02.02.3d.cosine
+    Hudup recall = 1.0000
+    MAE.recommend = 0.9258
+    MSE.recommend = 1.2140
+    Pearson.recommend = 0.1685
+    RMSE.recommend = 1.1018
+    Recall.estimate = 0.9966
+    Setup time = 0.1408
+    Speed = 22.8536
+
+
+Dataset evaluation
+
+  Dataset "1"
+    c02.01.3d.msd
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9182
+      MSE.recommend = 1.2004
+      Pearson.recommend = 0.2084
+      RMSE.recommend = 1.0956
+      Recall.estimate = 0.9968
+      Setup time = 0.5780
+      Speed = 23.2054
+    c02.02.3d.cosine
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9266
+      MSE.recommend = 1.2200
+      Pearson.recommend = 0.1623
+      RMSE.recommend = 1.1045
+      Recall.estimate = 0.9968
+      Setup time = 0.1410
+      Speed = 23.3299
+
+  Dataset "2"
+    c02.01.3d.msd
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9178
+      MSE.recommend = 1.1929
+      Pearson.recommend = 0.2189
+      RMSE.recommend = 1.0922
+      Recall.estimate = 0.9968
+      Setup time = 0.2810
+      Speed = 24.1871
+    c02.02.3d.cosine
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9263
+      MSE.recommend = 1.2127
+      Pearson.recommend = 0.1757
+      RMSE.recommend = 1.1012
+      Recall.estimate = 0.9968
+      Setup time = 0.1410
+      Speed = 26.4392
+
+  Dataset "3"
+    c02.01.3d.msd
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9168
+      MSE.recommend = 1.1905
+      Pearson.recommend = 0.2175
+      RMSE.recommend = 1.0911
+      Recall.estimate = 0.9968
+      Setup time = 0.1400
+      Speed = 25.3039
+    c02.02.3d.cosine
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9254
+      MSE.recommend = 1.2107
+      Pearson.recommend = 0.1727
+      RMSE.recommend = 1.1003
+      Recall.estimate = 0.9968
+      Setup time = 0.1410
+      Speed = 27.2853
+
+  Dataset "4"
+    c02.01.3d.msd
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9161
+      MSE.recommend = 1.1939
+      Pearson.recommend = 0.2120
+      RMSE.recommend = 1.0927
+      Recall.estimate = 0.9960
+      Setup time = 0.2500
+      Speed = 20.7336
+    c02.02.3d.cosine
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9244
+      MSE.recommend = 1.2132
+      Pearson.recommend = 0.1693
+      RMSE.recommend = 1.1015
+      Recall.estimate = 0.9960
+      Setup time = 0.1400
+      Speed = 18.8289
+
+  Dataset "5"
+    c02.01.3d.msd
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9183
+      MSE.recommend = 1.1946
+      Pearson.recommend = 0.2096
+      RMSE.recommend = 1.0930
+      Recall.estimate = 0.9967
+      Setup time = 0.1570
+      Speed = 18.4118
+    c02.02.3d.cosine
+      Hudup recall = 1.0000
+      MAE.recommend = 0.9265
+      MSE.recommend = 1.2136
+      Pearson.recommend = 0.1623
+      RMSE.recommend = 1.1016
+      Recall.estimate = 0.9967
+      Setup time = 0.1410
+      Speed = 18.3849
+
+
+Hudup recall evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  c02.02.3d.cosine
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+MAE.recommend evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 0.9182
+    Dataset "2" got 0.9178
+    Dataset "3" got 0.9168
+    Dataset "4" got 0.9161
+    Dataset "5" got 0.9183
+
+  c02.02.3d.cosine
+    Dataset "1" got 0.9266
+    Dataset "2" got 0.9263
+    Dataset "3" got 0.9254
+    Dataset "4" got 0.9244
+    Dataset "5" got 0.9265
+
+
+MSE.recommend evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 1.2004
+    Dataset "2" got 1.1929
+    Dataset "3" got 1.1905
+    Dataset "4" got 1.1939
+    Dataset "5" got 1.1946
+
+  c02.02.3d.cosine
+    Dataset "1" got 1.2200
+    Dataset "2" got 1.2127
+    Dataset "3" got 1.2107
+    Dataset "4" got 1.2132
+    Dataset "5" got 1.2136
+
+
+Pearson.recommend evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 0.2084
+    Dataset "2" got 0.2189
+    Dataset "3" got 0.2175
+    Dataset "4" got 0.2120
+    Dataset "5" got 0.2096
+
+  c02.02.3d.cosine
+    Dataset "1" got 0.1623
+    Dataset "2" got 0.1757
+    Dataset "3" got 0.1727
+    Dataset "4" got 0.1693
+    Dataset "5" got 0.1623
+
+
+RMSE.recommend evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 1.0956
+    Dataset "2" got 1.0922
+    Dataset "3" got 1.0911
+    Dataset "4" got 1.0927
+    Dataset "5" got 1.0930
+
+  c02.02.3d.cosine
+    Dataset "1" got 1.1045
+    Dataset "2" got 1.1012
+    Dataset "3" got 1.1003
+    Dataset "4" got 1.1015
+    Dataset "5" got 1.1016
+
+
+Recall.estimate evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 0.9968
+    Dataset "2" got 0.9968
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9960
+    Dataset "5" got 0.9967
+
+  c02.02.3d.cosine
+    Dataset "1" got 0.9968
+    Dataset "2" got 0.9968
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9960
+    Dataset "5" got 0.9967
+
+
+Setup time evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 0.5780
+    Dataset "2" got 0.2810
+    Dataset "3" got 0.1400
+    Dataset "4" got 0.2500
+    Dataset "5" got 0.1570
+
+  c02.02.3d.cosine
+    Dataset "1" got 0.1410
+    Dataset "2" got 0.1410
+    Dataset "3" got 0.1410
+    Dataset "4" got 0.1400
+    Dataset "5" got 0.1410
+
+
+Speed evaluation
+
+  c02.01.3d.msd
+    Dataset "1" got 23.2054
+    Dataset "2" got 24.1871
+    Dataset "3" got 25.3039
+    Dataset "4" got 20.7336
+    Dataset "5" got 18.4118
+
+  c02.02.3d.cosine
+    Dataset "1" got 23.3299
+    Dataset "2" got 26.4392
+    Dataset "3" got 27.2853
+    Dataset "4" got 18.8289
+    Dataset "5" got 18.3849
+
+
+Algorithm parameters
+
+  c02.01.3d.msd
+    measure=msd
+    alg_support_cache=true
+    min_rating=1.0000
+    max_rating=5.0000
+    cos_normalized=false
+    bcf_median=true
+    bcf_value_bins=1, 2, 3, 4, 5
+
+  c02.02.3d.cosine
+    measure=cosine
+    alg_support_cache=true
+    min_rating=1.0000
+    max_rating=5.0000
+    cos_normalized=false
+    bcf_median=true
+    bcf_value_bins=1, 2, 3, 4, 5
+
+
+Algorithm descriptions
+
+  c02.01.3d.msd
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+  c02.02.3d.cosine
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+
+
+Note
+  Dataset "1" has path "file:/E:/temp/amer/datasets/movielens-csv-r0.5-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/E:/temp/amer/datasets/movielens-csv-r0.5-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/E:/temp/amer/datasets/movielens-csv-r0.5-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/E:/temp/amer/datasets/movielens-csv-r0.5-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/E:/temp/amer/datasets/movielens-csv-r0.5-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 989.00MB, Free memory = 853.86MB, Max memory = 989.00MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "E:\temp\amer"

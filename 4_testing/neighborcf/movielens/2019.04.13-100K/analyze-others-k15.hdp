@@ -1,0 +1,2034 @@
+General evaluation
+
+  15.nhsm_user
+    Hudup recall = 0.2149
+    MAE.recommend = 0.8047
+    MSE.recommend = 1.0498
+    RMSE.recommend = 1.0245
+    Setup time = 0.2231
+    Speed = 0.0864
+
+  16.nhsm_item
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7254
+    MSE.recommend = 0.8484
+    RMSE.recommend = 0.9211
+    Setup time = 0.2257
+    Speed = 0.4110
+
+  18.bcf_item
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7413
+    MSE.recommend = 0.8809
+    RMSE.recommend = 0.9385
+    Setup time = 0.2425
+    Speed = 0.3847
+
+  19.jaccard
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7345
+    MSE.recommend = 0.8696
+    RMSE.recommend = 0.9325
+    Setup time = 0.2313
+    Speed = 0.1110
+
+  20.msd
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7451
+    MSE.recommend = 0.8918
+    RMSE.recommend = 0.9443
+    Setup time = 0.2251
+    Speed = 0.1161
+
+  21.ta_maxproject
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7431
+    MSE.recommend = 0.8872
+    RMSE.recommend = 0.9419
+    Setup time = 0.2612
+    Speed = 0.1335
+
+  22.ta_minproject
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7428
+    MSE.recommend = 0.8867
+    RMSE.recommend = 0.9416
+    Setup time = 0.2589
+    Speed = 0.1401
+
+  23.ta_equalradius
+    Hudup recall = 0.8711
+    MAE.recommend = 0.7435
+    MSE.recommend = 0.8882
+    RMSE.recommend = 0.9424
+    Setup time = 0.2806
+    Speed = 0.1495
+
+
+Dataset evaluation
+
+  Dataset "1"
+    15.nhsm_user
+      Hudup recall = 0.1967
+      MAE.recommend = 0.8039
+      MSE.recommend = 1.0256
+      RMSE.recommend = 1.0127
+      Setup time = 0.2660
+      Speed = 0.0830
+    16.nhsm_item
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7240
+      MSE.recommend = 0.8379
+      RMSE.recommend = 0.9154
+      Setup time = 0.2190
+      Speed = 0.3638
+    18.bcf_item
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7432
+      MSE.recommend = 0.8765
+      RMSE.recommend = 0.9362
+      Setup time = 0.2450
+      Speed = 0.4826
+    19.jaccard
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7334
+      MSE.recommend = 0.8603
+      RMSE.recommend = 0.9276
+      Setup time = 0.2190
+      Speed = 0.1051
+    20.msd
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7442
+      MSE.recommend = 0.8823
+      RMSE.recommend = 0.9393
+      Setup time = 0.2340
+      Speed = 0.1095
+    21.ta_maxproject
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7421
+      MSE.recommend = 0.8777
+      RMSE.recommend = 0.9369
+      Setup time = 0.2190
+      Speed = 0.1161
+    22.ta_minproject
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7420
+      MSE.recommend = 0.8771
+      RMSE.recommend = 0.9365
+      Setup time = 0.2610
+      Speed = 0.1271
+    23.ta_equalradius
+      Hudup recall = 0.8824
+      MAE.recommend = 0.7426
+      MSE.recommend = 0.8786
+      RMSE.recommend = 0.9373
+      Setup time = 0.2740
+      Speed = 0.1817
+
+  Dataset "2"
+    15.nhsm_user
+      Hudup recall = 0.2159
+      MAE.recommend = 0.8033
+      MSE.recommend = 1.0133
+      RMSE.recommend = 1.0066
+      Setup time = 0.2350
+      Speed = 0.0857
+    16.nhsm_item
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7314
+      MSE.recommend = 0.8544
+      RMSE.recommend = 0.9243
+      Setup time = 0.2180
+      Speed = 0.3841
+    18.bcf_item
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7417
+      MSE.recommend = 0.8751
+      RMSE.recommend = 0.9355
+      Setup time = 0.2500
+      Speed = 0.3730
+    19.jaccard
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7398
+      MSE.recommend = 0.8718
+      RMSE.recommend = 0.9337
+      Setup time = 0.2350
+      Speed = 0.1129
+    20.msd
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7504
+      MSE.recommend = 0.8937
+      RMSE.recommend = 0.9453
+      Setup time = 0.2190
+      Speed = 0.1180
+    21.ta_maxproject
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7488
+      MSE.recommend = 0.8897
+      RMSE.recommend = 0.9433
+      Setup time = 0.2190
+      Speed = 0.1263
+    22.ta_minproject
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7486
+      MSE.recommend = 0.8894
+      RMSE.recommend = 0.9431
+      Setup time = 0.2630
+      Speed = 0.1366
+    23.ta_equalradius
+      Hudup recall = 0.8680
+      MAE.recommend = 0.7492
+      MSE.recommend = 0.8907
+      RMSE.recommend = 0.9438
+      Setup time = 0.4300
+      Speed = 0.2049
+
+  Dataset "3"
+    15.nhsm_user
+      Hudup recall = 0.2179
+      MAE.recommend = 0.8126
+      MSE.recommend = 1.0553
+      RMSE.recommend = 1.0273
+      Setup time = 0.2190
+      Speed = 0.0881
+    16.nhsm_item
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7178
+      MSE.recommend = 0.8317
+      RMSE.recommend = 0.9120
+      Setup time = 0.2190
+      Speed = 0.3752
+    18.bcf_item
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7366
+      MSE.recommend = 0.8709
+      RMSE.recommend = 0.9332
+      Setup time = 0.2660
+      Speed = 0.3752
+    19.jaccard
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7296
+      MSE.recommend = 0.8575
+      RMSE.recommend = 0.9260
+      Setup time = 0.2340
+      Speed = 0.1072
+    20.msd
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7407
+      MSE.recommend = 0.8805
+      RMSE.recommend = 0.9383
+      Setup time = 0.2350
+      Speed = 0.1115
+    21.ta_maxproject
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7383
+      MSE.recommend = 0.8752
+      RMSE.recommend = 0.9355
+      Setup time = 0.2190
+      Speed = 0.1300
+    22.ta_minproject
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7381
+      MSE.recommend = 0.8746
+      RMSE.recommend = 0.9352
+      Setup time = 0.2540
+      Speed = 0.1305
+    23.ta_equalradius
+      Hudup recall = 0.8910
+      MAE.recommend = 0.7389
+      MSE.recommend = 0.8764
+      RMSE.recommend = 0.9362
+      Setup time = 0.2500
+      Speed = 0.1563
+
+  Dataset "4"
+    15.nhsm_user
+      Hudup recall = 0.2242
+      MAE.recommend = 0.7947
+      MSE.recommend = 1.0185
+      RMSE.recommend = 1.0092
+      Setup time = 0.2030
+      Speed = 0.0852
+    16.nhsm_item
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7220
+      MSE.recommend = 0.8286
+      RMSE.recommend = 0.9103
+      Setup time = 0.2190
+      Speed = 0.3986
+    18.bcf_item
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7363
+      MSE.recommend = 0.8577
+      RMSE.recommend = 0.9261
+      Setup time = 0.2970
+      Speed = 0.3947
+    19.jaccard
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7296
+      MSE.recommend = 0.8495
+      RMSE.recommend = 0.9217
+      Setup time = 0.2500
+      Speed = 0.1168
+    20.msd
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7399
+      MSE.recommend = 0.8701
+      RMSE.recommend = 0.9328
+      Setup time = 0.2340
+      Speed = 0.1218
+    21.ta_maxproject
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7379
+      MSE.recommend = 0.8653
+      RMSE.recommend = 0.9302
+      Setup time = 0.2470
+      Speed = 0.1425
+    22.ta_minproject
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7376
+      MSE.recommend = 0.8648
+      RMSE.recommend = 0.9300
+      Setup time = 0.2970
+      Speed = 0.1503
+    23.ta_equalradius
+      Hudup recall = 0.8679
+      MAE.recommend = 0.7383
+      MSE.recommend = 0.8664
+      RMSE.recommend = 0.9308
+      Setup time = 0.3060
+      Speed = 0.1735
+
+  Dataset "5"
+    15.nhsm_user
+      Hudup recall = 0.2240
+      MAE.recommend = 0.8097
+      MSE.recommend = 1.0675
+      RMSE.recommend = 1.0332
+      Setup time = 0.2190
+      Speed = 0.0907
+    16.nhsm_item
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7213
+      MSE.recommend = 0.8340
+      RMSE.recommend = 0.9132
+      Setup time = 0.2350
+      Speed = 0.3734
+    18.bcf_item
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7371
+      MSE.recommend = 0.8670
+      RMSE.recommend = 0.9311
+      Setup time = 0.2190
+      Speed = 0.3592
+    19.jaccard
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7300
+      MSE.recommend = 0.8543
+      RMSE.recommend = 0.9243
+      Setup time = 0.2190
+      Speed = 0.1055
+    20.msd
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7397
+      MSE.recommend = 0.8748
+      RMSE.recommend = 0.9353
+      Setup time = 0.2190
+      Speed = 0.1110
+    21.ta_maxproject
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7379
+      MSE.recommend = 0.8707
+      RMSE.recommend = 0.9331
+      Setup time = 0.2430
+      Speed = 0.1286
+    22.ta_minproject
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7376
+      MSE.recommend = 0.8700
+      RMSE.recommend = 0.9327
+      Setup time = 0.2480
+      Speed = 0.1289
+    23.ta_equalradius
+      Hudup recall = 0.8801
+      MAE.recommend = 0.7383
+      MSE.recommend = 0.8716
+      RMSE.recommend = 0.9336
+      Setup time = 0.3200
+      Speed = 0.1331
+
+  Dataset "6"
+    15.nhsm_user
+      Hudup recall = 0.2116
+      MAE.recommend = 0.8231
+      MSE.recommend = 1.1082
+      RMSE.recommend = 1.0527
+      Setup time = 0.2190
+      Speed = 0.0856
+    16.nhsm_item
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7314
+      MSE.recommend = 0.8628
+      RMSE.recommend = 0.9289
+      Setup time = 0.2180
+      Speed = 0.3952
+    18.bcf_item
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7502
+      MSE.recommend = 0.8943
+      RMSE.recommend = 0.9457
+      Setup time = 0.2340
+      Speed = 0.3889
+    19.jaccard
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7403
+      MSE.recommend = 0.8841
+      RMSE.recommend = 0.9403
+      Setup time = 0.2190
+      Speed = 0.1155
+    20.msd
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7525
+      MSE.recommend = 0.9086
+      RMSE.recommend = 0.9532
+      Setup time = 0.2190
+      Speed = 0.1204
+    21.ta_maxproject
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7505
+      MSE.recommend = 0.9038
+      RMSE.recommend = 0.9507
+      Setup time = 0.5230
+      Speed = 0.1405
+    22.ta_minproject
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7503
+      MSE.recommend = 0.9033
+      RMSE.recommend = 0.9504
+      Setup time = 0.2530
+      Speed = 0.1442
+    23.ta_equalradius
+      Hudup recall = 0.8675
+      MAE.recommend = 0.7510
+      MSE.recommend = 0.9049
+      RMSE.recommend = 0.9513
+      Setup time = 0.2350
+      Speed = 0.1406
+
+  Dataset "7"
+    15.nhsm_user
+      Hudup recall = 0.2158
+      MAE.recommend = 0.8162
+      MSE.recommend = 1.0904
+      RMSE.recommend = 1.0442
+      Setup time = 0.2030
+      Speed = 0.0890
+    16.nhsm_item
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7141
+      MSE.recommend = 0.8343
+      RMSE.recommend = 0.9134
+      Setup time = 0.2190
+      Speed = 0.3746
+    18.bcf_item
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7303
+      MSE.recommend = 0.8736
+      RMSE.recommend = 0.9346
+      Setup time = 0.2030
+      Speed = 0.3610
+    19.jaccard
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7226
+      MSE.recommend = 0.8536
+      RMSE.recommend = 0.9239
+      Setup time = 0.2190
+      Speed = 0.1070
+    20.msd
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7334
+      MSE.recommend = 0.8768
+      RMSE.recommend = 0.9364
+      Setup time = 0.2190
+      Speed = 0.1101
+    21.ta_maxproject
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7315
+      MSE.recommend = 0.8725
+      RMSE.recommend = 0.9341
+      Setup time = 0.2460
+      Speed = 0.1284
+    22.ta_minproject
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7313
+      MSE.recommend = 0.8722
+      RMSE.recommend = 0.9339
+      Setup time = 0.2400
+      Speed = 0.1331
+    23.ta_equalradius
+      Hudup recall = 0.8633
+      MAE.recommend = 0.7318
+      MSE.recommend = 0.8734
+      RMSE.recommend = 0.9345
+      Setup time = 0.2560
+      Speed = 0.1357
+
+  Dataset "8"
+    15.nhsm_user
+      Hudup recall = 0.2179
+      MAE.recommend = 0.7988
+      MSE.recommend = 1.0499
+      RMSE.recommend = 1.0246
+      Setup time = 0.2030
+      Speed = 0.0867
+    16.nhsm_item
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7217
+      MSE.recommend = 0.8430
+      RMSE.recommend = 0.9181
+      Setup time = 0.2190
+      Speed = 0.3737
+    18.bcf_item
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7397
+      MSE.recommend = 0.8832
+      RMSE.recommend = 0.9398
+      Setup time = 0.2180
+      Speed = 0.3609
+    19.jaccard
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7298
+      MSE.recommend = 0.8624
+      RMSE.recommend = 0.9286
+      Setup time = 0.2180
+      Speed = 0.1053
+    20.msd
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7409
+      MSE.recommend = 0.8859
+      RMSE.recommend = 0.9412
+      Setup time = 0.2190
+      Speed = 0.1112
+    21.ta_maxproject
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7385
+      MSE.recommend = 0.8807
+      RMSE.recommend = 0.9385
+      Setup time = 0.2530
+      Speed = 0.1283
+    22.ta_minproject
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7384
+      MSE.recommend = 0.8804
+      RMSE.recommend = 0.9383
+      Setup time = 0.2360
+      Speed = 0.1397
+    23.ta_equalradius
+      Hudup recall = 0.8682
+      MAE.recommend = 0.7391
+      MSE.recommend = 0.8821
+      RMSE.recommend = 0.9392
+      Setup time = 0.3240
+      Speed = 0.1700
+
+  Dataset "9"
+    15.nhsm_user
+      Hudup recall = 0.2144
+      MAE.recommend = 0.8156
+      MSE.recommend = 1.0995
+      RMSE.recommend = 1.0486
+      Setup time = 0.2190
+      Speed = 0.0806
+    16.nhsm_item
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7373
+      MSE.recommend = 0.8768
+      RMSE.recommend = 0.9364
+      Setup time = 0.2190
+      Speed = 0.4795
+    18.bcf_item
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7483
+      MSE.recommend = 0.9028
+      RMSE.recommend = 0.9501
+      Setup time = 0.3120
+      Speed = 0.3991
+    19.jaccard
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7456
+      MSE.recommend = 0.8975
+      RMSE.recommend = 0.9474
+      Setup time = 0.2180
+      Speed = 0.1206
+    20.msd
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7551
+      MSE.recommend = 0.9162
+      RMSE.recommend = 0.9572
+      Setup time = 0.2190
+      Speed = 0.1281
+    21.ta_maxproject
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7534
+      MSE.recommend = 0.9124
+      RMSE.recommend = 0.9552
+      Setup time = 0.2530
+      Speed = 0.1469
+    22.ta_minproject
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7532
+      MSE.recommend = 0.9120
+      RMSE.recommend = 0.9550
+      Setup time = 0.3030
+      Speed = 0.1601
+    23.ta_equalradius
+      Hudup recall = 0.8826
+      MAE.recommend = 0.7538
+      MSE.recommend = 0.9134
+      RMSE.recommend = 0.9557
+      Setup time = 0.3770
+      Speed = 0.1679
+
+  Dataset "10"
+    15.nhsm_user
+      Hudup recall = 0.2235
+      MAE.recommend = 0.8066
+      MSE.recommend = 1.0333
+      RMSE.recommend = 1.0165
+      Setup time = 0.2190
+      Speed = 0.0817
+    16.nhsm_item
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7287
+      MSE.recommend = 0.8467
+      RMSE.recommend = 0.9202
+      Setup time = 0.2270
+      Speed = 0.4394
+    18.bcf_item
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7423
+      MSE.recommend = 0.8722
+      RMSE.recommend = 0.9339
+      Setup time = 0.2350
+      Speed = 0.4101
+    19.jaccard
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7349
+      MSE.recommend = 0.8607
+      RMSE.recommend = 0.9277
+      Setup time = 0.2340
+      Speed = 0.1256
+    20.msd
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7445
+      MSE.recommend = 0.8828
+      RMSE.recommend = 0.9396
+      Setup time = 0.2180
+      Speed = 0.1304
+    21.ta_maxproject
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7427
+      MSE.recommend = 0.8786
+      RMSE.recommend = 0.9373
+      Setup time = 0.2420
+      Speed = 0.1521
+    22.ta_minproject
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7424
+      MSE.recommend = 0.8779
+      RMSE.recommend = 0.9370
+      Setup time = 0.2520
+      Speed = 0.1559
+    23.ta_equalradius
+      Hudup recall = 0.8623
+      MAE.recommend = 0.7430
+      MSE.recommend = 0.8794
+      RMSE.recommend = 0.9378
+      Setup time = 0.2350
+      Speed = 0.1425
+
+  Dataset "11"
+    15.nhsm_user
+      Hudup recall = 0.2170
+      MAE.recommend = 0.8057
+      MSE.recommend = 1.0479
+      RMSE.recommend = 1.0237
+      Setup time = 0.2180
+      Speed = 0.0899
+    16.nhsm_item
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7320
+      MSE.recommend = 0.8660
+      RMSE.recommend = 0.9306
+      Setup time = 0.2230
+      Speed = 0.4427
+    18.bcf_item
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7530
+      MSE.recommend = 0.9096
+      RMSE.recommend = 0.9537
+      Setup time = 0.2660
+      Speed = 0.3826
+    19.jaccard
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7430
+      MSE.recommend = 0.8929
+      RMSE.recommend = 0.9449
+      Setup time = 0.2190
+      Speed = 0.1088
+    20.msd
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7539
+      MSE.recommend = 0.9148
+      RMSE.recommend = 0.9565
+      Setup time = 0.2190
+      Speed = 0.1144
+    21.ta_maxproject
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7518
+      MSE.recommend = 0.9102
+      RMSE.recommend = 0.9541
+      Setup time = 0.2480
+      Speed = 0.1333
+    22.ta_minproject
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7516
+      MSE.recommend = 0.9096
+      RMSE.recommend = 0.9537
+      Setup time = 0.2470
+      Speed = 0.1406
+    23.ta_equalradius
+      Hudup recall = 0.8614
+      MAE.recommend = 0.7524
+      MSE.recommend = 0.9113
+      RMSE.recommend = 0.9546
+      Setup time = 0.2190
+      Speed = 0.1394
+
+  Dataset "12"
+    15.nhsm_user
+      Hudup recall = 0.1987
+      MAE.recommend = 0.7745
+      MSE.recommend = 0.9986
+      RMSE.recommend = 0.9993
+      Setup time = 0.2350
+      Speed = 0.0880
+    16.nhsm_item
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7207
+      MSE.recommend = 0.8368
+      RMSE.recommend = 0.9148
+      Setup time = 0.2270
+      Speed = 0.4319
+    18.bcf_item
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7351
+      MSE.recommend = 0.8732
+      RMSE.recommend = 0.9345
+      Setup time = 0.2190
+      Speed = 0.3541
+    19.jaccard
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7303
+      MSE.recommend = 0.8602
+      RMSE.recommend = 0.9275
+      Setup time = 0.2350
+      Speed = 0.1017
+    20.msd
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7412
+      MSE.recommend = 0.8860
+      RMSE.recommend = 0.9413
+      Setup time = 0.2190
+      Speed = 0.1063
+    21.ta_maxproject
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7391
+      MSE.recommend = 0.8807
+      RMSE.recommend = 0.9384
+      Setup time = 0.2510
+      Speed = 0.1241
+    22.ta_minproject
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7388
+      MSE.recommend = 0.8801
+      RMSE.recommend = 0.9381
+      Setup time = 0.2490
+      Speed = 0.1308
+    23.ta_equalradius
+      Hudup recall = 0.8549
+      MAE.recommend = 0.7395
+      MSE.recommend = 0.8817
+      RMSE.recommend = 0.9390
+      Setup time = 0.2180
+      Speed = 0.1221
+
+  Dataset "13"
+    15.nhsm_user
+      Hudup recall = 0.2211
+      MAE.recommend = 0.8024
+      MSE.recommend = 1.0559
+      RMSE.recommend = 1.0276
+      Setup time = 0.2350
+      Speed = 0.0860
+    16.nhsm_item
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7265
+      MSE.recommend = 0.8547
+      RMSE.recommend = 0.9245
+      Setup time = 0.2300
+      Speed = 0.4513
+    18.bcf_item
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7373
+      MSE.recommend = 0.8748
+      RMSE.recommend = 0.9353
+      Setup time = 0.2190
+      Speed = 0.3725
+    19.jaccard
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7380
+      MSE.recommend = 0.8793
+      RMSE.recommend = 0.9377
+      Setup time = 0.2350
+      Speed = 0.1115
+    20.msd
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7474
+      MSE.recommend = 0.8992
+      RMSE.recommend = 0.9483
+      Setup time = 0.2350
+      Speed = 0.1164
+    21.ta_maxproject
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7459
+      MSE.recommend = 0.8956
+      RMSE.recommend = 0.9464
+      Setup time = 0.2480
+      Speed = 0.1361
+    22.ta_minproject
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7456
+      MSE.recommend = 0.8949
+      RMSE.recommend = 0.9460
+      Setup time = 0.2720
+      Speed = 0.1409
+    23.ta_equalradius
+      Hudup recall = 0.8844
+      MAE.recommend = 0.7462
+      MSE.recommend = 0.8963
+      RMSE.recommend = 0.9467
+      Setup time = 0.2500
+      Speed = 0.1257
+
+  Dataset "14"
+    15.nhsm_user
+      Hudup recall = 0.2137
+      MAE.recommend = 0.8063
+      MSE.recommend = 1.0492
+      RMSE.recommend = 1.0243
+      Setup time = 0.2190
+      Speed = 0.0959
+    16.nhsm_item
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7291
+      MSE.recommend = 0.8674
+      RMSE.recommend = 0.9313
+      Setup time = 0.2420
+      Speed = 0.4230
+    18.bcf_item
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7484
+      MSE.recommend = 0.9007
+      RMSE.recommend = 0.9491
+      Setup time = 0.2190
+      Speed = 0.3544
+    19.jaccard
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7395
+      MSE.recommend = 0.8907
+      RMSE.recommend = 0.9438
+      Setup time = 0.2190
+      Speed = 0.0988
+    20.msd
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7503
+      MSE.recommend = 0.9137
+      RMSE.recommend = 0.9559
+      Setup time = 0.2350
+      Speed = 0.1033
+    21.ta_maxproject
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7479
+      MSE.recommend = 0.9084
+      RMSE.recommend = 0.9531
+      Setup time = 0.2530
+      Speed = 0.1201
+    22.ta_minproject
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7478
+      MSE.recommend = 0.9081
+      RMSE.recommend = 0.9530
+      Setup time = 0.2500
+      Speed = 0.1239
+    23.ta_equalradius
+      Hudup recall = 0.8661
+      MAE.recommend = 0.7484
+      MSE.recommend = 0.9096
+      RMSE.recommend = 0.9537
+      Setup time = 0.2340
+      Speed = 0.1148
+
+  Dataset "15"
+    15.nhsm_user
+      Hudup recall = 0.2106
+      MAE.recommend = 0.7978
+      MSE.recommend = 1.0342
+      RMSE.recommend = 1.0169
+      Setup time = 0.2340
+      Speed = 0.0806
+    16.nhsm_item
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7229
+      MSE.recommend = 0.8515
+      RMSE.recommend = 0.9228
+      Setup time = 0.2510
+      Speed = 0.4584
+    18.bcf_item
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7400
+      MSE.recommend = 0.8819
+      RMSE.recommend = 0.9391
+      Setup time = 0.2350
+      Speed = 0.4026
+    19.jaccard
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7315
+      MSE.recommend = 0.8694
+      RMSE.recommend = 0.9324
+      Setup time = 0.2970
+      Speed = 0.1232
+    20.msd
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7418
+      MSE.recommend = 0.8917
+      RMSE.recommend = 0.9443
+      Setup time = 0.2340
+      Speed = 0.1285
+    21.ta_maxproject
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7396
+      MSE.recommend = 0.8869
+      RMSE.recommend = 0.9417
+      Setup time = 0.2540
+      Speed = 0.1493
+    22.ta_minproject
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7393
+      MSE.recommend = 0.8861
+      RMSE.recommend = 0.9413
+      Setup time = 0.2590
+      Speed = 0.1589
+    23.ta_equalradius
+      Hudup recall = 0.8660
+      MAE.recommend = 0.7400
+      MSE.recommend = 0.8877
+      RMSE.recommend = 0.9422
+      Setup time = 0.2810
+      Speed = 0.1349
+
+
+Hudup recall evaluation
+
+  15.nhsm_user
+    Dataset "1" got 0.1967
+    Dataset "2" got 0.2159
+    Dataset "3" got 0.2179
+    Dataset "4" got 0.2242
+    Dataset "5" got 0.2240
+    Dataset "6" got 0.2116
+    Dataset "7" got 0.2158
+    Dataset "8" got 0.2179
+    Dataset "9" got 0.2144
+    Dataset "10" got 0.2235
+    Dataset "11" got 0.2170
+    Dataset "12" got 0.1987
+    Dataset "13" got 0.2211
+    Dataset "14" got 0.2137
+    Dataset "15" got 0.2106
+
+  16.nhsm_item
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  18.bcf_item
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  19.jaccard
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  20.msd
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  21.ta_maxproject
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  22.ta_minproject
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+  23.ta_equalradius
+    Dataset "1" got 0.8824
+    Dataset "2" got 0.8680
+    Dataset "3" got 0.8910
+    Dataset "4" got 0.8679
+    Dataset "5" got 0.8801
+    Dataset "6" got 0.8675
+    Dataset "7" got 0.8633
+    Dataset "8" got 0.8682
+    Dataset "9" got 0.8826
+    Dataset "10" got 0.8623
+    Dataset "11" got 0.8614
+    Dataset "12" got 0.8549
+    Dataset "13" got 0.8844
+    Dataset "14" got 0.8661
+    Dataset "15" got 0.8660
+
+
+MAE.recommend evaluation
+
+  15.nhsm_user
+    Dataset "1" got 0.8039
+    Dataset "2" got 0.8033
+    Dataset "3" got 0.8126
+    Dataset "4" got 0.7947
+    Dataset "5" got 0.8097
+    Dataset "6" got 0.8231
+    Dataset "7" got 0.8162
+    Dataset "8" got 0.7988
+    Dataset "9" got 0.8156
+    Dataset "10" got 0.8066
+    Dataset "11" got 0.8057
+    Dataset "12" got 0.7745
+    Dataset "13" got 0.8024
+    Dataset "14" got 0.8063
+    Dataset "15" got 0.7978
+
+  16.nhsm_item
+    Dataset "1" got 0.7240
+    Dataset "2" got 0.7314
+    Dataset "3" got 0.7178
+    Dataset "4" got 0.7220
+    Dataset "5" got 0.7213
+    Dataset "6" got 0.7314
+    Dataset "7" got 0.7141
+    Dataset "8" got 0.7217
+    Dataset "9" got 0.7373
+    Dataset "10" got 0.7287
+    Dataset "11" got 0.7320
+    Dataset "12" got 0.7207
+    Dataset "13" got 0.7265
+    Dataset "14" got 0.7291
+    Dataset "15" got 0.7229
+
+  18.bcf_item
+    Dataset "1" got 0.7432
+    Dataset "2" got 0.7417
+    Dataset "3" got 0.7366
+    Dataset "4" got 0.7363
+    Dataset "5" got 0.7371
+    Dataset "6" got 0.7502
+    Dataset "7" got 0.7303
+    Dataset "8" got 0.7397
+    Dataset "9" got 0.7483
+    Dataset "10" got 0.7423
+    Dataset "11" got 0.7530
+    Dataset "12" got 0.7351
+    Dataset "13" got 0.7373
+    Dataset "14" got 0.7484
+    Dataset "15" got 0.7400
+
+  19.jaccard
+    Dataset "1" got 0.7334
+    Dataset "2" got 0.7398
+    Dataset "3" got 0.7296
+    Dataset "4" got 0.7296
+    Dataset "5" got 0.7300
+    Dataset "6" got 0.7403
+    Dataset "7" got 0.7226
+    Dataset "8" got 0.7298
+    Dataset "9" got 0.7456
+    Dataset "10" got 0.7349
+    Dataset "11" got 0.7430
+    Dataset "12" got 0.7303
+    Dataset "13" got 0.7380
+    Dataset "14" got 0.7395
+    Dataset "15" got 0.7315
+
+  20.msd
+    Dataset "1" got 0.7442
+    Dataset "2" got 0.7504
+    Dataset "3" got 0.7407
+    Dataset "4" got 0.7399
+    Dataset "5" got 0.7397
+    Dataset "6" got 0.7525
+    Dataset "7" got 0.7334
+    Dataset "8" got 0.7409
+    Dataset "9" got 0.7551
+    Dataset "10" got 0.7445
+    Dataset "11" got 0.7539
+    Dataset "12" got 0.7412
+    Dataset "13" got 0.7474
+    Dataset "14" got 0.7503
+    Dataset "15" got 0.7418
+
+  21.ta_maxproject
+    Dataset "1" got 0.7421
+    Dataset "2" got 0.7488
+    Dataset "3" got 0.7383
+    Dataset "4" got 0.7379
+    Dataset "5" got 0.7379
+    Dataset "6" got 0.7505
+    Dataset "7" got 0.7315
+    Dataset "8" got 0.7385
+    Dataset "9" got 0.7534
+    Dataset "10" got 0.7427
+    Dataset "11" got 0.7518
+    Dataset "12" got 0.7391
+    Dataset "13" got 0.7459
+    Dataset "14" got 0.7479
+    Dataset "15" got 0.7396
+
+  22.ta_minproject
+    Dataset "1" got 0.7420
+    Dataset "2" got 0.7486
+    Dataset "3" got 0.7381
+    Dataset "4" got 0.7376
+    Dataset "5" got 0.7376
+    Dataset "6" got 0.7503
+    Dataset "7" got 0.7313
+    Dataset "8" got 0.7384
+    Dataset "9" got 0.7532
+    Dataset "10" got 0.7424
+    Dataset "11" got 0.7516
+    Dataset "12" got 0.7388
+    Dataset "13" got 0.7456
+    Dataset "14" got 0.7478
+    Dataset "15" got 0.7393
+
+  23.ta_equalradius
+    Dataset "1" got 0.7426
+    Dataset "2" got 0.7492
+    Dataset "3" got 0.7389
+    Dataset "4" got 0.7383
+    Dataset "5" got 0.7383
+    Dataset "6" got 0.7510
+    Dataset "7" got 0.7318
+    Dataset "8" got 0.7391
+    Dataset "9" got 0.7538
+    Dataset "10" got 0.7430
+    Dataset "11" got 0.7524
+    Dataset "12" got 0.7395
+    Dataset "13" got 0.7462
+    Dataset "14" got 0.7484
+    Dataset "15" got 0.7400
+
+
+MSE.recommend evaluation
+
+  15.nhsm_user
+    Dataset "1" got 1.0256
+    Dataset "2" got 1.0133
+    Dataset "3" got 1.0553
+    Dataset "4" got 1.0185
+    Dataset "5" got 1.0675
+    Dataset "6" got 1.1082
+    Dataset "7" got 1.0904
+    Dataset "8" got 1.0499
+    Dataset "9" got 1.0995
+    Dataset "10" got 1.0333
+    Dataset "11" got 1.0479
+    Dataset "12" got 0.9986
+    Dataset "13" got 1.0559
+    Dataset "14" got 1.0492
+    Dataset "15" got 1.0342
+
+  16.nhsm_item
+    Dataset "1" got 0.8379
+    Dataset "2" got 0.8544
+    Dataset "3" got 0.8317
+    Dataset "4" got 0.8286
+    Dataset "5" got 0.8340
+    Dataset "6" got 0.8628
+    Dataset "7" got 0.8343
+    Dataset "8" got 0.8430
+    Dataset "9" got 0.8768
+    Dataset "10" got 0.8467
+    Dataset "11" got 0.8660
+    Dataset "12" got 0.8368
+    Dataset "13" got 0.8547
+    Dataset "14" got 0.8674
+    Dataset "15" got 0.8515
+
+  18.bcf_item
+    Dataset "1" got 0.8765
+    Dataset "2" got 0.8751
+    Dataset "3" got 0.8709
+    Dataset "4" got 0.8577
+    Dataset "5" got 0.8670
+    Dataset "6" got 0.8943
+    Dataset "7" got 0.8736
+    Dataset "8" got 0.8832
+    Dataset "9" got 0.9028
+    Dataset "10" got 0.8722
+    Dataset "11" got 0.9096
+    Dataset "12" got 0.8732
+    Dataset "13" got 0.8748
+    Dataset "14" got 0.9007
+    Dataset "15" got 0.8819
+
+  19.jaccard
+    Dataset "1" got 0.8603
+    Dataset "2" got 0.8718
+    Dataset "3" got 0.8575
+    Dataset "4" got 0.8495
+    Dataset "5" got 0.8543
+    Dataset "6" got 0.8841
+    Dataset "7" got 0.8536
+    Dataset "8" got 0.8624
+    Dataset "9" got 0.8975
+    Dataset "10" got 0.8607
+    Dataset "11" got 0.8929
+    Dataset "12" got 0.8602
+    Dataset "13" got 0.8793
+    Dataset "14" got 0.8907
+    Dataset "15" got 0.8694
+
+  20.msd
+    Dataset "1" got 0.8823
+    Dataset "2" got 0.8937
+    Dataset "3" got 0.8805
+    Dataset "4" got 0.8701
+    Dataset "5" got 0.8748
+    Dataset "6" got 0.9086
+    Dataset "7" got 0.8768
+    Dataset "8" got 0.8859
+    Dataset "9" got 0.9162
+    Dataset "10" got 0.8828
+    Dataset "11" got 0.9148
+    Dataset "12" got 0.8860
+    Dataset "13" got 0.8992
+    Dataset "14" got 0.9137
+    Dataset "15" got 0.8917
+
+  21.ta_maxproject
+    Dataset "1" got 0.8777
+    Dataset "2" got 0.8897
+    Dataset "3" got 0.8752
+    Dataset "4" got 0.8653
+    Dataset "5" got 0.8707
+    Dataset "6" got 0.9038
+    Dataset "7" got 0.8725
+    Dataset "8" got 0.8807
+    Dataset "9" got 0.9124
+    Dataset "10" got 0.8786
+    Dataset "11" got 0.9102
+    Dataset "12" got 0.8807
+    Dataset "13" got 0.8956
+    Dataset "14" got 0.9084
+    Dataset "15" got 0.8869
+
+  22.ta_minproject
+    Dataset "1" got 0.8771
+    Dataset "2" got 0.8894
+    Dataset "3" got 0.8746
+    Dataset "4" got 0.8648
+    Dataset "5" got 0.8700
+    Dataset "6" got 0.9033
+    Dataset "7" got 0.8722
+    Dataset "8" got 0.8804
+    Dataset "9" got 0.9120
+    Dataset "10" got 0.8779
+    Dataset "11" got 0.9096
+    Dataset "12" got 0.8801
+    Dataset "13" got 0.8949
+    Dataset "14" got 0.9081
+    Dataset "15" got 0.8861
+
+  23.ta_equalradius
+    Dataset "1" got 0.8786
+    Dataset "2" got 0.8907
+    Dataset "3" got 0.8764
+    Dataset "4" got 0.8664
+    Dataset "5" got 0.8716
+    Dataset "6" got 0.9049
+    Dataset "7" got 0.8734
+    Dataset "8" got 0.8821
+    Dataset "9" got 0.9134
+    Dataset "10" got 0.8794
+    Dataset "11" got 0.9113
+    Dataset "12" got 0.8817
+    Dataset "13" got 0.8963
+    Dataset "14" got 0.9096
+    Dataset "15" got 0.8877
+
+
+RMSE.recommend evaluation
+
+  15.nhsm_user
+    Dataset "1" got 1.0127
+    Dataset "2" got 1.0066
+    Dataset "3" got 1.0273
+    Dataset "4" got 1.0092
+    Dataset "5" got 1.0332
+    Dataset "6" got 1.0527
+    Dataset "7" got 1.0442
+    Dataset "8" got 1.0246
+    Dataset "9" got 1.0486
+    Dataset "10" got 1.0165
+    Dataset "11" got 1.0237
+    Dataset "12" got 0.9993
+    Dataset "13" got 1.0276
+    Dataset "14" got 1.0243
+    Dataset "15" got 1.0169
+
+  16.nhsm_item
+    Dataset "1" got 0.9154
+    Dataset "2" got 0.9243
+    Dataset "3" got 0.9120
+    Dataset "4" got 0.9103
+    Dataset "5" got 0.9132
+    Dataset "6" got 0.9289
+    Dataset "7" got 0.9134
+    Dataset "8" got 0.9181
+    Dataset "9" got 0.9364
+    Dataset "10" got 0.9202
+    Dataset "11" got 0.9306
+    Dataset "12" got 0.9148
+    Dataset "13" got 0.9245
+    Dataset "14" got 0.9313
+    Dataset "15" got 0.9228
+
+  18.bcf_item
+    Dataset "1" got 0.9362
+    Dataset "2" got 0.9355
+    Dataset "3" got 0.9332
+    Dataset "4" got 0.9261
+    Dataset "5" got 0.9311
+    Dataset "6" got 0.9457
+    Dataset "7" got 0.9346
+    Dataset "8" got 0.9398
+    Dataset "9" got 0.9501
+    Dataset "10" got 0.9339
+    Dataset "11" got 0.9537
+    Dataset "12" got 0.9345
+    Dataset "13" got 0.9353
+    Dataset "14" got 0.9491
+    Dataset "15" got 0.9391
+
+  19.jaccard
+    Dataset "1" got 0.9276
+    Dataset "2" got 0.9337
+    Dataset "3" got 0.9260
+    Dataset "4" got 0.9217
+    Dataset "5" got 0.9243
+    Dataset "6" got 0.9403
+    Dataset "7" got 0.9239
+    Dataset "8" got 0.9286
+    Dataset "9" got 0.9474
+    Dataset "10" got 0.9277
+    Dataset "11" got 0.9449
+    Dataset "12" got 0.9275
+    Dataset "13" got 0.9377
+    Dataset "14" got 0.9438
+    Dataset "15" got 0.9324
+
+  20.msd
+    Dataset "1" got 0.9393
+    Dataset "2" got 0.9453
+    Dataset "3" got 0.9383
+    Dataset "4" got 0.9328
+    Dataset "5" got 0.9353
+    Dataset "6" got 0.9532
+    Dataset "7" got 0.9364
+    Dataset "8" got 0.9412
+    Dataset "9" got 0.9572
+    Dataset "10" got 0.9396
+    Dataset "11" got 0.9565
+    Dataset "12" got 0.9413
+    Dataset "13" got 0.9483
+    Dataset "14" got 0.9559
+    Dataset "15" got 0.9443
+
+  21.ta_maxproject
+    Dataset "1" got 0.9369
+    Dataset "2" got 0.9433
+    Dataset "3" got 0.9355
+    Dataset "4" got 0.9302
+    Dataset "5" got 0.9331
+    Dataset "6" got 0.9507
+    Dataset "7" got 0.9341
+    Dataset "8" got 0.9385
+    Dataset "9" got 0.9552
+    Dataset "10" got 0.9373
+    Dataset "11" got 0.9541
+    Dataset "12" got 0.9384
+    Dataset "13" got 0.9464
+    Dataset "14" got 0.9531
+    Dataset "15" got 0.9417
+
+  22.ta_minproject
+    Dataset "1" got 0.9365
+    Dataset "2" got 0.9431
+    Dataset "3" got 0.9352
+    Dataset "4" got 0.9300
+    Dataset "5" got 0.9327
+    Dataset "6" got 0.9504
+    Dataset "7" got 0.9339
+    Dataset "8" got 0.9383
+    Dataset "9" got 0.9550
+    Dataset "10" got 0.9370
+    Dataset "11" got 0.9537
+    Dataset "12" got 0.9381
+    Dataset "13" got 0.9460
+    Dataset "14" got 0.9530
+    Dataset "15" got 0.9413
+
+  23.ta_equalradius
+    Dataset "1" got 0.9373
+    Dataset "2" got 0.9438
+    Dataset "3" got 0.9362
+    Dataset "4" got 0.9308
+    Dataset "5" got 0.9336
+    Dataset "6" got 0.9513
+    Dataset "7" got 0.9345
+    Dataset "8" got 0.9392
+    Dataset "9" got 0.9557
+    Dataset "10" got 0.9378
+    Dataset "11" got 0.9546
+    Dataset "12" got 0.9390
+    Dataset "13" got 0.9467
+    Dataset "14" got 0.9537
+    Dataset "15" got 0.9422
+
+
+Setup time evaluation
+
+  15.nhsm_user
+    Dataset "1" got 0.2660
+    Dataset "2" got 0.2350
+    Dataset "3" got 0.2190
+    Dataset "4" got 0.2030
+    Dataset "5" got 0.2190
+    Dataset "6" got 0.2190
+    Dataset "7" got 0.2030
+    Dataset "8" got 0.2030
+    Dataset "9" got 0.2190
+    Dataset "10" got 0.2190
+    Dataset "11" got 0.2180
+    Dataset "12" got 0.2350
+    Dataset "13" got 0.2350
+    Dataset "14" got 0.2190
+    Dataset "15" got 0.2340
+
+  16.nhsm_item
+    Dataset "1" got 0.2190
+    Dataset "2" got 0.2180
+    Dataset "3" got 0.2190
+    Dataset "4" got 0.2190
+    Dataset "5" got 0.2350
+    Dataset "6" got 0.2180
+    Dataset "7" got 0.2190
+    Dataset "8" got 0.2190
+    Dataset "9" got 0.2190
+    Dataset "10" got 0.2270
+    Dataset "11" got 0.2230
+    Dataset "12" got 0.2270
+    Dataset "13" got 0.2300
+    Dataset "14" got 0.2420
+    Dataset "15" got 0.2510
+
+  18.bcf_item
+    Dataset "1" got 0.2450
+    Dataset "2" got 0.2500
+    Dataset "3" got 0.2660
+    Dataset "4" got 0.2970
+    Dataset "5" got 0.2190
+    Dataset "6" got 0.2340
+    Dataset "7" got 0.2030
+    Dataset "8" got 0.2180
+    Dataset "9" got 0.3120
+    Dataset "10" got 0.2350
+    Dataset "11" got 0.2660
+    Dataset "12" got 0.2190
+    Dataset "13" got 0.2190
+    Dataset "14" got 0.2190
+    Dataset "15" got 0.2350
+
+  19.jaccard
+    Dataset "1" got 0.2190
+    Dataset "2" got 0.2350
+    Dataset "3" got 0.2340
+    Dataset "4" got 0.2500
+    Dataset "5" got 0.2190
+    Dataset "6" got 0.2190
+    Dataset "7" got 0.2190
+    Dataset "8" got 0.2180
+    Dataset "9" got 0.2180
+    Dataset "10" got 0.2340
+    Dataset "11" got 0.2190
+    Dataset "12" got 0.2350
+    Dataset "13" got 0.2350
+    Dataset "14" got 0.2190
+    Dataset "15" got 0.2970
+
+  20.msd
+    Dataset "1" got 0.2340
+    Dataset "2" got 0.2190
+    Dataset "3" got 0.2350
+    Dataset "4" got 0.2340
+    Dataset "5" got 0.2190
+    Dataset "6" got 0.2190
+    Dataset "7" got 0.2190
+    Dataset "8" got 0.2190
+    Dataset "9" got 0.2190
+    Dataset "10" got 0.2180
+    Dataset "11" got 0.2190
+    Dataset "12" got 0.2190
+    Dataset "13" got 0.2350
+    Dataset "14" got 0.2350
+    Dataset "15" got 0.2340
+
+  21.ta_maxproject
+    Dataset "1" got 0.2190
+    Dataset "2" got 0.2190
+    Dataset "3" got 0.2190
+    Dataset "4" got 0.2470
+    Dataset "5" got 0.2430
+    Dataset "6" got 0.5230
+    Dataset "7" got 0.2460
+    Dataset "8" got 0.2530
+    Dataset "9" got 0.2530
+    Dataset "10" got 0.2420
+    Dataset "11" got 0.2480
+    Dataset "12" got 0.2510
+    Dataset "13" got 0.2480
+    Dataset "14" got 0.2530
+    Dataset "15" got 0.2540
+
+  22.ta_minproject
+    Dataset "1" got 0.2610
+    Dataset "2" got 0.2630
+    Dataset "3" got 0.2540
+    Dataset "4" got 0.2970
+    Dataset "5" got 0.2480
+    Dataset "6" got 0.2530
+    Dataset "7" got 0.2400
+    Dataset "8" got 0.2360
+    Dataset "9" got 0.3030
+    Dataset "10" got 0.2520
+    Dataset "11" got 0.2470
+    Dataset "12" got 0.2490
+    Dataset "13" got 0.2720
+    Dataset "14" got 0.2500
+    Dataset "15" got 0.2590
+
+  23.ta_equalradius
+    Dataset "1" got 0.2740
+    Dataset "2" got 0.4300
+    Dataset "3" got 0.2500
+    Dataset "4" got 0.3060
+    Dataset "5" got 0.3200
+    Dataset "6" got 0.2350
+    Dataset "7" got 0.2560
+    Dataset "8" got 0.3240
+    Dataset "9" got 0.3770
+    Dataset "10" got 0.2350
+    Dataset "11" got 0.2190
+    Dataset "12" got 0.2180
+    Dataset "13" got 0.2500
+    Dataset "14" got 0.2340
+    Dataset "15" got 0.2810
+
+
+Speed evaluation
+
+  15.nhsm_user
+    Dataset "1" got 0.0830
+    Dataset "2" got 0.0857
+    Dataset "3" got 0.0881
+    Dataset "4" got 0.0852
+    Dataset "5" got 0.0907
+    Dataset "6" got 0.0856
+    Dataset "7" got 0.0890
+    Dataset "8" got 0.0867
+    Dataset "9" got 0.0806
+    Dataset "10" got 0.0817
+    Dataset "11" got 0.0899
+    Dataset "12" got 0.0880
+    Dataset "13" got 0.0860
+    Dataset "14" got 0.0959
+    Dataset "15" got 0.0806
+
+  16.nhsm_item
+    Dataset "1" got 0.3638
+    Dataset "2" got 0.3841
+    Dataset "3" got 0.3752
+    Dataset "4" got 0.3986
+    Dataset "5" got 0.3734
+    Dataset "6" got 0.3952
+    Dataset "7" got 0.3746
+    Dataset "8" got 0.3737
+    Dataset "9" got 0.4795
+    Dataset "10" got 0.4394
+    Dataset "11" got 0.4427
+    Dataset "12" got 0.4319
+    Dataset "13" got 0.4513
+    Dataset "14" got 0.4230
+    Dataset "15" got 0.4584
+
+  18.bcf_item
+    Dataset "1" got 0.4826
+    Dataset "2" got 0.3730
+    Dataset "3" got 0.3752
+    Dataset "4" got 0.3947
+    Dataset "5" got 0.3592
+    Dataset "6" got 0.3889
+    Dataset "7" got 0.3610
+    Dataset "8" got 0.3609
+    Dataset "9" got 0.3991
+    Dataset "10" got 0.4101
+    Dataset "11" got 0.3826
+    Dataset "12" got 0.3541
+    Dataset "13" got 0.3725
+    Dataset "14" got 0.3544
+    Dataset "15" got 0.4026
+
+  19.jaccard
+    Dataset "1" got 0.1051
+    Dataset "2" got 0.1129
+    Dataset "3" got 0.1072
+    Dataset "4" got 0.1168
+    Dataset "5" got 0.1055
+    Dataset "6" got 0.1155
+    Dataset "7" got 0.1070
+    Dataset "8" got 0.1053
+    Dataset "9" got 0.1206
+    Dataset "10" got 0.1256
+    Dataset "11" got 0.1088
+    Dataset "12" got 0.1017
+    Dataset "13" got 0.1115
+    Dataset "14" got 0.0988
+    Dataset "15" got 0.1232
+
+  20.msd
+    Dataset "1" got 0.1095
+    Dataset "2" got 0.1180
+    Dataset "3" got 0.1115
+    Dataset "4" got 0.1218
+    Dataset "5" got 0.1110
+    Dataset "6" got 0.1204
+    Dataset "7" got 0.1101
+    Dataset "8" got 0.1112
+    Dataset "9" got 0.1281
+    Dataset "10" got 0.1304
+    Dataset "11" got 0.1144
+    Dataset "12" got 0.1063
+    Dataset "13" got 0.1164
+    Dataset "14" got 0.1033
+    Dataset "15" got 0.1285
+
+  21.ta_maxproject
+    Dataset "1" got 0.1161
+    Dataset "2" got 0.1263
+    Dataset "3" got 0.1300
+    Dataset "4" got 0.1425
+    Dataset "5" got 0.1286
+    Dataset "6" got 0.1405
+    Dataset "7" got 0.1284
+    Dataset "8" got 0.1283
+    Dataset "9" got 0.1469
+    Dataset "10" got 0.1521
+    Dataset "11" got 0.1333
+    Dataset "12" got 0.1241
+    Dataset "13" got 0.1361
+    Dataset "14" got 0.1201
+    Dataset "15" got 0.1493
+
+  22.ta_minproject
+    Dataset "1" got 0.1271
+    Dataset "2" got 0.1366
+    Dataset "3" got 0.1305
+    Dataset "4" got 0.1503
+    Dataset "5" got 0.1289
+    Dataset "6" got 0.1442
+    Dataset "7" got 0.1331
+    Dataset "8" got 0.1397
+    Dataset "9" got 0.1601
+    Dataset "10" got 0.1559
+    Dataset "11" got 0.1406
+    Dataset "12" got 0.1308
+    Dataset "13" got 0.1409
+    Dataset "14" got 0.1239
+    Dataset "15" got 0.1589
+
+  23.ta_equalradius
+    Dataset "1" got 0.1817
+    Dataset "2" got 0.2049
+    Dataset "3" got 0.1563
+    Dataset "4" got 0.1735
+    Dataset "5" got 0.1331
+    Dataset "6" got 0.1406
+    Dataset "7" got 0.1357
+    Dataset "8" got 0.1700
+    Dataset "9" got 0.1679
+    Dataset "10" got 0.1425
+    Dataset "11" got 0.1394
+    Dataset "12" got 0.1221
+    Dataset "13" got 0.1257
+    Dataset "14" got 0.1148
+    Dataset "15" got 0.1349
+
+
+Algorithm parameters
+
+  15.nhsm_user
+    similar=nhsm
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  16.nhsm_item
+    similar=nhsm
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  18.bcf_item
+    similar=bcf
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  19.jaccard
+    similar=jaccard
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  20.msd
+    similar=msd
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  21.ta_maxproject
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=1.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  22.ta_minproject
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=2.0000
+    weight2=0.5000
+    weight1=0.5000
+
+  23.ta_equalradius
+    similar=ta
+    lambda=0.5000
+    hybrid=false
+    general_var=false
+    maxrating=5.0000
+    value_bins=1, 2, 3, 4, 5
+    combined=true
+    tamode=3.0000
+    weight2=0.5000
+    weight1=0.5000
+
+
+Algorithm descriptions
+
+  15.nhsm_user
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  16.nhsm_item
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  18.bcf_item
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  19.jaccard
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  20.msd
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  21.ta_maxproject
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  22.ta_minproject
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+  23.ta_equalradius
+    Dataset "1" got 
+    Dataset "2" got 
+    Dataset "3" got 
+    Dataset "4" got 
+    Dataset "5" got 
+    Dataset "6" got 
+    Dataset "7" got 
+    Dataset "8" got 
+    Dataset "9" got 
+    Dataset "10" got 
+    Dataset "11" got 
+    Dataset "12" got 
+    Dataset "13" got 
+    Dataset "14" got 
+    Dataset "15" got 
+
+
+Note
+  Dataset "1" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating1.test"
+  Dataset "2" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating2.test"
+  Dataset "3" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating3.test"
+  Dataset "4" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating4.test"
+  Dataset "5" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating5.test"
+  Dataset "6" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating6.test"
+  Dataset "7" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating7.test"
+  Dataset "8" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating8.test"
+  Dataset "9" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating9.test"
+  Dataset "10" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating10.test"
+  Dataset "11" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating11.test"
+  Dataset "12" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating12.test"
+  Dataset "13" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating13.test"
+  Dataset "14" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating14.test"
+  Dataset "15" has path "file:/e:/GoogleDrive/todo/working/projects/amer/3_implementation/datasets/movielens-csv-k15/hdp_rating15.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 1023.50MB, Free memory = 716.61MB, Max memory = 1023.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "e:\GoogleDrive\todo\working\projects\amer\3_implementation"
