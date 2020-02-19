@@ -103,7 +103,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	/**
 	 * Name of CjacMD measure which is developed by Suryakant and Tripti Mahara.
 	 */
-	public static final String CJACMD = "mmd";
+	public static final String CJACMD = "cjacmd";
 
 	
 	/**
