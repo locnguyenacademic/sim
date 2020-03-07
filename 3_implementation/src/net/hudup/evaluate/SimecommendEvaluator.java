@@ -3,10 +3,8 @@ package net.hudup.evaluate;
 import java.rmi.RemoteException;
 
 import net.hudup.Evaluator;
-import net.hudup.alg.cf.NeighborCFTwosCombined;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.Recommender;
-import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the recommendation evaluator for similarity measures.
@@ -29,27 +27,6 @@ public class SimecommendEvaluator extends RecommendEvaluator {
 	 */
 	public SimecommendEvaluator() {
 		// TODO Auto-generated constructor stub
-	}
-
-	
-	@Override
-	protected void initializeBeforeRun() {
-		// TODO Auto-generated method stub
-		super.initializeBeforeRun();
-		
-		//Setting min-max mode for combined similarities. Improving date: 2019.08.04 by Loc Nguyen
-		try { //Use try-catch block because this code block is not important.
-			if (this.config.containsKey(NeighborCFTwosCombined.COMBINED_MINMAX_MODE_FIELD)) {
-				boolean minmax = this.config.getAsBoolean(NeighborCFTwosCombined.COMBINED_MINMAX_MODE_FIELD);
-				for (Alg alg : algList) {
-					if (alg instanceof NeighborCFTwosCombined)
-						((NeighborCFTwosCombined)alg).setMinmax(minmax);
-				}
-			}
-		}
-		catch (Throwable e) {
-			LogUtil.error("Error in setting support cache mode");
-		}
 	}
 
 	
