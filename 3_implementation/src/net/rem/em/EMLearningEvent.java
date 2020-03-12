@@ -61,8 +61,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 			int currentIteration, Serializable currentStatistic,
 			Serializable currentParameter, Serializable estimatedParameter) {
 		// TODO Auto-generated constructor stub
-		super(em, type, null, trainingDataset, estimatedParameter); //The EM wrapper can solve the problem of different hosts.
-		this.alg = (EM) getSource();
+		super(em, type, em, trainingDataset, estimatedParameter); //The EM wrapper can solve the problem of different hosts.
 		this.currentIteration = currentIteration;
 		this.currentStatistics = currentStatistic;
 		this.currentParameter = currentParameter; 

@@ -1,3 +1,3 @@
 call .\env.bat
 
-%JAVA_CMD% -Xmx1g net.hudup.Starter %1
+%JAVA_CMD% net.hudup.Starter %1

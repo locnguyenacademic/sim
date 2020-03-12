@@ -1,3 +1,3 @@
 call .\env.bat
 
-%JAVA_CMD% -Xmx1g net.hudup.evaluate.SimecommendEvaluator
+%JAVA_CMD% net.hudup.evaluate.SimecommendEvaluator
