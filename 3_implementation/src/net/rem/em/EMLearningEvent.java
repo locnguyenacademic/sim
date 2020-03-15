@@ -71,7 +71,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 	
 	@Override
 	public String translate() {
-		return translate((EM) getSource(), false);
+		return translate((EM)this.alg, false);
 	}
 	
 	

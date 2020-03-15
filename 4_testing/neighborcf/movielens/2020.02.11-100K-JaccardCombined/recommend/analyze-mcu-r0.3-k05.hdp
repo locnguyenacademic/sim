@@ -1,0 +1,2311 @@
+General evaluation
+
+  mcu01.01.cosine_jaccard
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7305
+    MSE.recommend = 0.8687
+    Precision.recommend = 0.0156
+    R.recommend = 0.3099
+    Recall.recommend = 0.9223
+    Setup time = 0.1596
+    Speed = 2.0253
+
+  mcu01.02.cosine_smd
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7362
+    MSE.recommend = 0.8790
+    Precision.recommend = 0.0155
+    R.recommend = 0.3044
+    Recall.recommend = 0.9212
+    Setup time = 0.1198
+    Speed = 2.0619
+
+  mcu01.03.cosine_improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7472
+    MSE.recommend = 0.9012
+    Precision.recommend = 0.0153
+    R.recommend = 0.2862
+    Recall.recommend = 0.9162
+    Setup time = 0.1192
+    Speed = 2.0424
+
+  mcu02.01.pearson_jaccard
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7284
+    MSE.recommend = 0.8601
+    Precision.recommend = 0.0143
+    R.recommend = 0.3107
+    Recall.recommend = 0.9373
+    Setup time = 0.1236
+    Speed = 2.0705
+
+  mcu02.02.pearson_smd
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7373
+    MSE.recommend = 0.8774
+    Precision.recommend = 0.0141
+    R.recommend = 0.3025
+    Recall.recommend = 0.9388
+    Setup time = 0.1202
+    Speed = 2.0880
+
+  mcu02.03.pearson_improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7624
+    MSE.recommend = 0.9334
+    Precision.recommend = 0.0140
+    R.recommend = 0.2283
+    Recall.recommend = 0.9308
+    Setup time = 0.1190
+    Speed = 2.0605
+
+  mcu03.01.pip_jaccard
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7231
+    MSE.recommend = 0.8596
+    Precision.recommend = 0.0159
+    R.recommend = 0.3249
+    Recall.recommend = 0.9266
+    Setup time = 0.1196
+    Speed = 2.0315
+
+  mcu03.02.pip_smd
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7265
+    MSE.recommend = 0.8654
+    Precision.recommend = 0.0158
+    R.recommend = 0.3208
+    Recall.recommend = 0.9259
+    Setup time = 0.1158
+    Speed = 2.0629
+
+  mcu03.03.pip_improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7318
+    MSE.recommend = 0.8746
+    Precision.recommend = 0.0157
+    R.recommend = 0.3135
+    Recall.recommend = 0.9234
+    Setup time = 0.1262
+    Speed = 2.0487
+
+  mcu04.01.pss_jaccard
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7253
+    MSE.recommend = 0.8629
+    Precision.recommend = 0.0158
+    R.recommend = 0.3176
+    Recall.recommend = 0.9232
+    Setup time = 0.1250
+    Speed = 2.1089
+
+  mcu04.02.pss_smd
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7288
+    MSE.recommend = 0.8687
+    Precision.recommend = 0.0157
+    R.recommend = 0.3133
+    Recall.recommend = 0.9218
+    Setup time = 0.1344
+    Speed = 2.1488
+
+  mcu04.03.pss_improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7337
+    MSE.recommend = 0.8771
+    Precision.recommend = 0.0156
+    R.recommend = 0.3084
+    Recall.recommend = 0.9186
+    Setup time = 0.1310
+    Speed = 2.1380
+
+  mcu05.01.ta_jaccard
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7294
+    MSE.recommend = 0.8662
+    Precision.recommend = 0.0157
+    R.recommend = 0.3129
+    Recall.recommend = 0.9224
+    Setup time = 0.1282
+    Speed = 2.1146
+
+  mcu05.02.ta_smd
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7346
+    MSE.recommend = 0.8754
+    Precision.recommend = 0.0155
+    R.recommend = 0.3077
+    Recall.recommend = 0.9212
+    Setup time = 0.1250
+    Speed = 2.1703
+
+  mcu05.03.ta_improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9934
+    MAE.recommend = 0.7455
+    MSE.recommend = 0.8971
+    Precision.recommend = 0.0154
+    R.recommend = 0.2884
+    Recall.recommend = 0.9164
+    Setup time = 0.1250
+    Speed = 2.1518
+
+
+Dataset evaluation
+
+  Dataset "1"
+    mcu01.01.cosine_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7300
+      MSE.recommend = 0.8679
+      Precision.recommend = 0.0157
+      R.recommend = 0.3136
+      Recall.recommend = 0.9248
+      Setup time = 0.2720
+      Speed = 2.1324
+    mcu01.02.cosine_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7356
+      MSE.recommend = 0.8777
+      Precision.recommend = 0.0155
+      R.recommend = 0.3015
+      Recall.recommend = 0.9247
+      Setup time = 0.1280
+      Speed = 2.1650
+    mcu01.03.cosine_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7465
+      MSE.recommend = 0.9004
+      Precision.recommend = 0.0154
+      R.recommend = 0.2907
+      Recall.recommend = 0.9200
+      Setup time = 0.1270
+      Speed = 2.1233
+    mcu02.01.pearson_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7284
+      MSE.recommend = 0.8601
+      Precision.recommend = 0.0144
+      R.recommend = 0.3097
+      Recall.recommend = 0.9398
+      Setup time = 0.1220
+      Speed = 2.1662
+    mcu02.02.pearson_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7367
+      MSE.recommend = 0.8766
+      Precision.recommend = 0.0142
+      R.recommend = 0.3023
+      Recall.recommend = 0.9420
+      Setup time = 0.1190
+      Speed = 2.2085
+    mcu02.03.pearson_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7622
+      MSE.recommend = 0.9328
+      Precision.recommend = 0.0141
+      R.recommend = 0.2286
+      Recall.recommend = 0.9358
+      Setup time = 0.1100
+      Speed = 2.1363
+    mcu03.01.pip_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7222
+      MSE.recommend = 0.8576
+      Precision.recommend = 0.0159
+      R.recommend = 0.3284
+      Recall.recommend = 0.9281
+      Setup time = 0.1250
+      Speed = 2.1306
+    mcu03.02.pip_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7252
+      MSE.recommend = 0.8633
+      Precision.recommend = 0.0159
+      R.recommend = 0.3173
+      Recall.recommend = 0.9273
+      Setup time = 0.1100
+      Speed = 2.1687
+    mcu03.03.pip_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7307
+      MSE.recommend = 0.8719
+      Precision.recommend = 0.0158
+      R.recommend = 0.3099
+      Recall.recommend = 0.9257
+      Setup time = 0.1250
+      Speed = 2.1706
+    mcu04.01.pss_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7242
+      MSE.recommend = 0.8610
+      Precision.recommend = 0.0159
+      R.recommend = 0.3149
+      Recall.recommend = 0.9250
+      Setup time = 0.1250
+      Speed = 2.2212
+    mcu04.02.pss_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7281
+      MSE.recommend = 0.8676
+      Precision.recommend = 0.0158
+      R.recommend = 0.3102
+      Recall.recommend = 0.9232
+      Setup time = 0.1410
+      Speed = 2.2654
+    mcu04.03.pss_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7324
+      MSE.recommend = 0.8746
+      Precision.recommend = 0.0157
+      R.recommend = 0.3055
+      Recall.recommend = 0.9206
+      Setup time = 0.1400
+      Speed = 2.2492
+    mcu05.01.ta_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7285
+      MSE.recommend = 0.8647
+      Precision.recommend = 0.0157
+      R.recommend = 0.3131
+      Recall.recommend = 0.9252
+      Setup time = 0.1250
+      Speed = 2.2332
+    mcu05.02.ta_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7343
+      MSE.recommend = 0.8745
+      Precision.recommend = 0.0156
+      R.recommend = 0.3033
+      Recall.recommend = 0.9245
+      Setup time = 0.1250
+      Speed = 2.2775
+    mcu05.03.ta_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7450
+      MSE.recommend = 0.8969
+      Precision.recommend = 0.0155
+      R.recommend = 0.2900
+      Recall.recommend = 0.9203
+      Setup time = 0.1410
+      Speed = 2.2600
+
+  Dataset "2"
+    mcu01.01.cosine_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7327
+      MSE.recommend = 0.8775
+      Precision.recommend = 0.0154
+      R.recommend = 0.3105
+      Recall.recommend = 0.9248
+      Setup time = 0.1460
+      Speed = 1.6791
+    mcu01.02.cosine_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7376
+      MSE.recommend = 0.8878
+      Precision.recommend = 0.0152
+      R.recommend = 0.3141
+      Recall.recommend = 0.9226
+      Setup time = 0.1180
+      Speed = 1.7103
+    mcu01.03.cosine_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7473
+      MSE.recommend = 0.9083
+      Precision.recommend = 0.0151
+      R.recommend = 0.2981
+      Recall.recommend = 0.9187
+      Setup time = 0.1120
+      Speed = 1.6819
+    mcu02.01.pearson_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7313
+      MSE.recommend = 0.8724
+      Precision.recommend = 0.0141
+      R.recommend = 0.3125
+      Recall.recommend = 0.9394
+      Setup time = 0.1220
+      Speed = 1.7052
+    mcu02.02.pearson_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7402
+      MSE.recommend = 0.8912
+      Precision.recommend = 0.0139
+      R.recommend = 0.3024
+      Recall.recommend = 0.9404
+      Setup time = 0.1080
+      Speed = 1.7247
+    mcu02.03.pearson_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7645
+      MSE.recommend = 0.9467
+      Precision.recommend = 0.0139
+      R.recommend = 0.2318
+      Recall.recommend = 0.9332
+      Setup time = 0.1100
+      Speed = 1.7257
+    mcu03.01.pip_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7257
+      MSE.recommend = 0.8671
+      Precision.recommend = 0.0158
+      R.recommend = 0.3191
+      Recall.recommend = 0.9305
+      Setup time = 0.1090
+      Speed = 1.6625
+    mcu03.02.pip_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7293
+      MSE.recommend = 0.8741
+      Precision.recommend = 0.0157
+      R.recommend = 0.3152
+      Recall.recommend = 0.9296
+      Setup time = 0.1250
+      Speed = 1.6918
+    mcu03.03.pip_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7345
+      MSE.recommend = 0.8852
+      Precision.recommend = 0.0156
+      R.recommend = 0.3222
+      Recall.recommend = 0.9268
+      Setup time = 0.1250
+      Speed = 1.6872
+    mcu04.01.pss_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7282
+      MSE.recommend = 0.8713
+      Precision.recommend = 0.0157
+      R.recommend = 0.3183
+      Recall.recommend = 0.9272
+      Setup time = 0.1250
+      Speed = 1.7314
+    mcu04.02.pss_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7314
+      MSE.recommend = 0.8774
+      Precision.recommend = 0.0156
+      R.recommend = 0.3122
+      Recall.recommend = 0.9251
+      Setup time = 0.1410
+      Speed = 1.7807
+    mcu04.03.pss_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7356
+      MSE.recommend = 0.8861
+      Precision.recommend = 0.0154
+      R.recommend = 0.3117
+      Recall.recommend = 0.9214
+      Setup time = 0.1250
+      Speed = 1.7521
+    mcu05.01.ta_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7317
+      MSE.recommend = 0.8748
+      Precision.recommend = 0.0155
+      R.recommend = 0.3139
+      Recall.recommend = 0.9252
+      Setup time = 0.1090
+      Speed = 1.7487
+    mcu05.02.ta_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7367
+      MSE.recommend = 0.8853
+      Precision.recommend = 0.0153
+      R.recommend = 0.3167
+      Recall.recommend = 0.9234
+      Setup time = 0.1250
+      Speed = 1.7853
+    mcu05.03.ta_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9915
+      MAE.recommend = 0.7462
+      MSE.recommend = 0.9058
+      Precision.recommend = 0.0152
+      R.recommend = 0.2955
+      Recall.recommend = 0.9192
+      Setup time = 0.1090
+      Speed = 1.7665
+
+  Dataset "3"
+    mcu01.01.cosine_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7233
+      MSE.recommend = 0.8497
+      Precision.recommend = 0.0157
+      R.recommend = 0.2975
+      Recall.recommend = 0.9234
+      Setup time = 0.1380
+      Speed = 2.3457
+    mcu01.02.cosine_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7284
+      MSE.recommend = 0.8586
+      Precision.recommend = 0.0155
+      R.recommend = 0.2969
+      Recall.recommend = 0.9212
+      Setup time = 0.1190
+      Speed = 2.3792
+    mcu01.03.cosine_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7406
+      MSE.recommend = 0.8827
+      Precision.recommend = 0.0153
+      R.recommend = 0.2736
+      Recall.recommend = 0.9152
+      Setup time = 0.1140
+      Speed = 2.3580
+    mcu02.01.pearson_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7200
+      MSE.recommend = 0.8385
+      Precision.recommend = 0.0143
+      R.recommend = 0.2949
+      Recall.recommend = 0.9371
+      Setup time = 0.1190
+      Speed = 2.3759
+    mcu02.02.pearson_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7296
+      MSE.recommend = 0.8560
+      Precision.recommend = 0.0141
+      R.recommend = 0.2996
+      Recall.recommend = 0.9390
+      Setup time = 0.1250
+      Speed = 2.4305
+    mcu02.03.pearson_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7554
+      MSE.recommend = 0.9138
+      Precision.recommend = 0.0140
+      R.recommend = 0.2362
+      Recall.recommend = 0.9286
+      Setup time = 0.1250
+      Speed = 2.4591
+    mcu03.01.pip_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7163
+      MSE.recommend = 0.8428
+      Precision.recommend = 0.0159
+      R.recommend = 0.3188
+      Recall.recommend = 0.9257
+      Setup time = 0.1250
+      Speed = 2.3600
+    mcu03.02.pip_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7200
+      MSE.recommend = 0.8483
+      Precision.recommend = 0.0159
+      R.recommend = 0.3169
+      Recall.recommend = 0.9260
+      Setup time = 0.1100
+      Speed = 2.3855
+    mcu03.03.pip_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7246
+      MSE.recommend = 0.8558
+      Precision.recommend = 0.0158
+      R.recommend = 0.3066
+      Recall.recommend = 0.9231
+      Setup time = 0.1410
+      Speed = 2.3622
+    mcu04.01.pss_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7185
+      MSE.recommend = 0.8454
+      Precision.recommend = 0.0159
+      R.recommend = 0.3090
+      Recall.recommend = 0.9234
+      Setup time = 0.1250
+      Speed = 2.4508
+    mcu04.02.pss_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7219
+      MSE.recommend = 0.8496
+      Precision.recommend = 0.0158
+      R.recommend = 0.3084
+      Recall.recommend = 0.9225
+      Setup time = 0.1250
+      Speed = 2.4943
+    mcu04.03.pss_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7265
+      MSE.recommend = 0.8569
+      Precision.recommend = 0.0157
+      R.recommend = 0.2998
+      Recall.recommend = 0.9193
+      Setup time = 0.1250
+      Speed = 2.4972
+    mcu05.01.ta_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7225
+      MSE.recommend = 0.8481
+      Precision.recommend = 0.0157
+      R.recommend = 0.3004
+      Recall.recommend = 0.9236
+      Setup time = 0.1250
+      Speed = 2.4601
+    mcu05.02.ta_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7272
+      MSE.recommend = 0.8560
+      Precision.recommend = 0.0155
+      R.recommend = 0.2988
+      Recall.recommend = 0.9217
+      Setup time = 0.1250
+      Speed = 2.5309
+    mcu05.03.ta_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7389
+      MSE.recommend = 0.8789
+      Precision.recommend = 0.0154
+      R.recommend = 0.2715
+      Recall.recommend = 0.9154
+      Setup time = 0.1250
+      Speed = 2.4938
+
+  Dataset "4"
+    mcu01.01.cosine_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7339
+      MSE.recommend = 0.8746
+      Precision.recommend = 0.0156
+      R.recommend = 0.3180
+      Recall.recommend = 0.9182
+      Setup time = 0.1240
+      Speed = 2.1683
+    mcu01.02.cosine_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7397
+      MSE.recommend = 0.8855
+      Precision.recommend = 0.0154
+      R.recommend = 0.3054
+      Recall.recommend = 0.9181
+      Setup time = 0.1180
+      Speed = 2.2232
+    mcu01.03.cosine_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7498
+      MSE.recommend = 0.9058
+      Precision.recommend = 0.0152
+      R.recommend = 0.2892
+      Recall.recommend = 0.9120
+      Setup time = 0.1170
+      Speed = 2.2278
+    mcu02.01.pearson_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7306
+      MSE.recommend = 0.8623
+      Precision.recommend = 0.0142
+      R.recommend = 0.3131
+      Recall.recommend = 0.9330
+      Setup time = 0.1370
+      Speed = 2.2458
+    mcu02.02.pearson_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7413
+      MSE.recommend = 0.8832
+      Precision.recommend = 0.0140
+      R.recommend = 0.3016
+      Recall.recommend = 0.9336
+      Setup time = 0.1400
+      Speed = 2.2178
+    mcu02.03.pearson_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7663
+      MSE.recommend = 0.9384
+      Precision.recommend = 0.0139
+      R.recommend = 0.2198
+      Recall.recommend = 0.9255
+      Setup time = 0.1250
+      Speed = 2.1622
+    mcu03.01.pip_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7260
+      MSE.recommend = 0.8648
+      Precision.recommend = 0.0159
+      R.recommend = 0.3282
+      Recall.recommend = 0.9243
+      Setup time = 0.1140
+      Speed = 2.1775
+    mcu03.02.pip_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7285
+      MSE.recommend = 0.8692
+      Precision.recommend = 0.0158
+      R.recommend = 0.3295
+      Recall.recommend = 0.9231
+      Setup time = 0.1250
+      Speed = 2.2229
+    mcu03.03.pip_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7341
+      MSE.recommend = 0.8788
+      Precision.recommend = 0.0157
+      R.recommend = 0.3128
+      Recall.recommend = 0.9208
+      Setup time = 0.1250
+      Speed = 2.1678
+    mcu04.01.pss_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7284
+      MSE.recommend = 0.8691
+      Precision.recommend = 0.0158
+      R.recommend = 0.3222
+      Recall.recommend = 0.9200
+      Setup time = 0.1250
+      Speed = 2.2623
+    mcu04.02.pss_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7317
+      MSE.recommend = 0.8741
+      Precision.recommend = 0.0157
+      R.recommend = 0.3180
+      Recall.recommend = 0.9191
+      Setup time = 0.1400
+      Speed = 2.2812
+    mcu04.03.pss_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7373
+      MSE.recommend = 0.8835
+      Precision.recommend = 0.0156
+      R.recommend = 0.3149
+      Recall.recommend = 0.9153
+      Setup time = 0.1250
+      Speed = 2.2726
+    mcu05.01.ta_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7327
+      MSE.recommend = 0.8720
+      Precision.recommend = 0.0156
+      R.recommend = 0.3231
+      Recall.recommend = 0.9184
+      Setup time = 0.1410
+      Speed = 2.2456
+    mcu05.02.ta_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7375
+      MSE.recommend = 0.8809
+      Precision.recommend = 0.0155
+      R.recommend = 0.3114
+      Recall.recommend = 0.9175
+      Setup time = 0.1250
+      Speed = 2.3135
+    mcu05.03.ta_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7478
+      MSE.recommend = 0.9008
+      Precision.recommend = 0.0153
+      R.recommend = 0.2966
+      Recall.recommend = 0.9122
+      Setup time = 0.1250
+      Speed = 2.3101
+
+  Dataset "5"
+    mcu01.01.cosine_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7327
+      MSE.recommend = 0.8737
+      Precision.recommend = 0.0158
+      R.recommend = 0.3101
+      Recall.recommend = 0.9202
+      Setup time = 0.1180
+      Speed = 1.8012
+    mcu01.02.cosine_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7395
+      MSE.recommend = 0.8855
+      Precision.recommend = 0.0156
+      R.recommend = 0.3039
+      Recall.recommend = 0.9193
+      Setup time = 0.1160
+      Speed = 1.8318
+    mcu01.03.cosine_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7518
+      MSE.recommend = 0.9087
+      Precision.recommend = 0.0155
+      R.recommend = 0.2795
+      Recall.recommend = 0.9153
+      Setup time = 0.1260
+      Speed = 1.8210
+    mcu02.01.pearson_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7315
+      MSE.recommend = 0.8674
+      Precision.recommend = 0.0145
+      R.recommend = 0.3234
+      Recall.recommend = 0.9373
+      Setup time = 0.1180
+      Speed = 1.8596
+    mcu02.02.pearson_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7389
+      MSE.recommend = 0.8801
+      Precision.recommend = 0.0142
+      R.recommend = 0.3066
+      Recall.recommend = 0.9391
+      Setup time = 0.1090
+      Speed = 1.8584
+    mcu02.03.pearson_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7635
+      MSE.recommend = 0.9351
+      Precision.recommend = 0.0141
+      R.recommend = 0.2249
+      Recall.recommend = 0.9307
+      Setup time = 0.1250
+      Speed = 1.8195
+    mcu03.01.pip_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7251
+      MSE.recommend = 0.8654
+      Precision.recommend = 0.0161
+      R.recommend = 0.3301
+      Recall.recommend = 0.9244
+      Setup time = 0.1250
+      Speed = 1.8271
+    mcu03.02.pip_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7294
+      MSE.recommend = 0.8722
+      Precision.recommend = 0.0160
+      R.recommend = 0.3249
+      Recall.recommend = 0.9234
+      Setup time = 0.1090
+      Speed = 1.8453
+    mcu03.03.pip_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7352
+      MSE.recommend = 0.8813
+      Precision.recommend = 0.0159
+      R.recommend = 0.3158
+      Recall.recommend = 0.9207
+      Setup time = 0.1150
+      Speed = 1.8555
+    mcu04.01.pss_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7270
+      MSE.recommend = 0.8679
+      Precision.recommend = 0.0160
+      R.recommend = 0.3234
+      Recall.recommend = 0.9207
+      Setup time = 0.1250
+      Speed = 1.8788
+    mcu04.02.pss_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7310
+      MSE.recommend = 0.8746
+      Precision.recommend = 0.0159
+      R.recommend = 0.3175
+      Recall.recommend = 0.9192
+      Setup time = 0.1250
+      Speed = 1.9223
+    mcu04.03.pss_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7369
+      MSE.recommend = 0.8844
+      Precision.recommend = 0.0158
+      R.recommend = 0.3103
+      Recall.recommend = 0.9163
+      Setup time = 0.1400
+      Speed = 1.9187
+    mcu05.01.ta_jaccard
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7315
+      MSE.recommend = 0.8713
+      Precision.recommend = 0.0158
+      R.recommend = 0.3139
+      Recall.recommend = 0.9197
+      Setup time = 0.1410
+      Speed = 1.8855
+    mcu05.02.ta_smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7372
+      MSE.recommend = 0.8804
+      Precision.recommend = 0.0157
+      R.recommend = 0.3082
+      Recall.recommend = 0.9188
+      Setup time = 0.1250
+      Speed = 1.9441
+    mcu05.03.ta_improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9894
+      MAE.recommend = 0.7494
+      MSE.recommend = 0.9032
+      Precision.recommend = 0.0155
+      R.recommend = 0.2884
+      Recall.recommend = 0.9151
+      Setup time = 0.1250
+      Speed = 1.9289
+
+
+Exact recall evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu03.02.pip_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu04.02.pss_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu05.02.ta_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+Hudup recall evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.9926
+    Dataset "2" got 0.9915
+    Dataset "3" got 0.9968
+    Dataset "4" got 0.9968
+    Dataset "5" got 0.9894
+
+
+MAE.recommend evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.7300
+    Dataset "2" got 0.7327
+    Dataset "3" got 0.7233
+    Dataset "4" got 0.7339
+    Dataset "5" got 0.7327
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.7356
+    Dataset "2" got 0.7376
+    Dataset "3" got 0.7284
+    Dataset "4" got 0.7397
+    Dataset "5" got 0.7395
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.7465
+    Dataset "2" got 0.7473
+    Dataset "3" got 0.7406
+    Dataset "4" got 0.7498
+    Dataset "5" got 0.7518
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.7284
+    Dataset "2" got 0.7313
+    Dataset "3" got 0.7200
+    Dataset "4" got 0.7306
+    Dataset "5" got 0.7315
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.7367
+    Dataset "2" got 0.7402
+    Dataset "3" got 0.7296
+    Dataset "4" got 0.7413
+    Dataset "5" got 0.7389
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.7622
+    Dataset "2" got 0.7645
+    Dataset "3" got 0.7554
+    Dataset "4" got 0.7663
+    Dataset "5" got 0.7635
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.7222
+    Dataset "2" got 0.7257
+    Dataset "3" got 0.7163
+    Dataset "4" got 0.7260
+    Dataset "5" got 0.7251
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.7252
+    Dataset "2" got 0.7293
+    Dataset "3" got 0.7200
+    Dataset "4" got 0.7285
+    Dataset "5" got 0.7294
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.7307
+    Dataset "2" got 0.7345
+    Dataset "3" got 0.7246
+    Dataset "4" got 0.7341
+    Dataset "5" got 0.7352
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.7242
+    Dataset "2" got 0.7282
+    Dataset "3" got 0.7185
+    Dataset "4" got 0.7284
+    Dataset "5" got 0.7270
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.7281
+    Dataset "2" got 0.7314
+    Dataset "3" got 0.7219
+    Dataset "4" got 0.7317
+    Dataset "5" got 0.7310
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.7324
+    Dataset "2" got 0.7356
+    Dataset "3" got 0.7265
+    Dataset "4" got 0.7373
+    Dataset "5" got 0.7369
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.7285
+    Dataset "2" got 0.7317
+    Dataset "3" got 0.7225
+    Dataset "4" got 0.7327
+    Dataset "5" got 0.7315
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.7343
+    Dataset "2" got 0.7367
+    Dataset "3" got 0.7272
+    Dataset "4" got 0.7375
+    Dataset "5" got 0.7372
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.7450
+    Dataset "2" got 0.7462
+    Dataset "3" got 0.7389
+    Dataset "4" got 0.7478
+    Dataset "5" got 0.7494
+
+
+MSE.recommend evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.8679
+    Dataset "2" got 0.8775
+    Dataset "3" got 0.8497
+    Dataset "4" got 0.8746
+    Dataset "5" got 0.8737
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.8777
+    Dataset "2" got 0.8878
+    Dataset "3" got 0.8586
+    Dataset "4" got 0.8855
+    Dataset "5" got 0.8855
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.9004
+    Dataset "2" got 0.9083
+    Dataset "3" got 0.8827
+    Dataset "4" got 0.9058
+    Dataset "5" got 0.9087
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.8601
+    Dataset "2" got 0.8724
+    Dataset "3" got 0.8385
+    Dataset "4" got 0.8623
+    Dataset "5" got 0.8674
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.8766
+    Dataset "2" got 0.8912
+    Dataset "3" got 0.8560
+    Dataset "4" got 0.8832
+    Dataset "5" got 0.8801
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.9328
+    Dataset "2" got 0.9467
+    Dataset "3" got 0.9138
+    Dataset "4" got 0.9384
+    Dataset "5" got 0.9351
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.8576
+    Dataset "2" got 0.8671
+    Dataset "3" got 0.8428
+    Dataset "4" got 0.8648
+    Dataset "5" got 0.8654
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.8633
+    Dataset "2" got 0.8741
+    Dataset "3" got 0.8483
+    Dataset "4" got 0.8692
+    Dataset "5" got 0.8722
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.8719
+    Dataset "2" got 0.8852
+    Dataset "3" got 0.8558
+    Dataset "4" got 0.8788
+    Dataset "5" got 0.8813
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.8610
+    Dataset "2" got 0.8713
+    Dataset "3" got 0.8454
+    Dataset "4" got 0.8691
+    Dataset "5" got 0.8679
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.8676
+    Dataset "2" got 0.8774
+    Dataset "3" got 0.8496
+    Dataset "4" got 0.8741
+    Dataset "5" got 0.8746
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.8746
+    Dataset "2" got 0.8861
+    Dataset "3" got 0.8569
+    Dataset "4" got 0.8835
+    Dataset "5" got 0.8844
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.8647
+    Dataset "2" got 0.8748
+    Dataset "3" got 0.8481
+    Dataset "4" got 0.8720
+    Dataset "5" got 0.8713
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.8745
+    Dataset "2" got 0.8853
+    Dataset "3" got 0.8560
+    Dataset "4" got 0.8809
+    Dataset "5" got 0.8804
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.8969
+    Dataset "2" got 0.9058
+    Dataset "3" got 0.8789
+    Dataset "4" got 0.9008
+    Dataset "5" got 0.9032
+
+
+Precision.recommend evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.0157
+    Dataset "2" got 0.0154
+    Dataset "3" got 0.0157
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0158
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.0155
+    Dataset "2" got 0.0152
+    Dataset "3" got 0.0155
+    Dataset "4" got 0.0154
+    Dataset "5" got 0.0156
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.0154
+    Dataset "2" got 0.0151
+    Dataset "3" got 0.0153
+    Dataset "4" got 0.0152
+    Dataset "5" got 0.0155
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.0144
+    Dataset "2" got 0.0141
+    Dataset "3" got 0.0143
+    Dataset "4" got 0.0142
+    Dataset "5" got 0.0145
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.0142
+    Dataset "2" got 0.0139
+    Dataset "3" got 0.0141
+    Dataset "4" got 0.0140
+    Dataset "5" got 0.0142
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.0141
+    Dataset "2" got 0.0139
+    Dataset "3" got 0.0140
+    Dataset "4" got 0.0139
+    Dataset "5" got 0.0141
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.0159
+    Dataset "2" got 0.0158
+    Dataset "3" got 0.0159
+    Dataset "4" got 0.0159
+    Dataset "5" got 0.0161
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.0159
+    Dataset "2" got 0.0157
+    Dataset "3" got 0.0159
+    Dataset "4" got 0.0158
+    Dataset "5" got 0.0160
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.0158
+    Dataset "2" got 0.0156
+    Dataset "3" got 0.0158
+    Dataset "4" got 0.0157
+    Dataset "5" got 0.0159
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.0159
+    Dataset "2" got 0.0157
+    Dataset "3" got 0.0159
+    Dataset "4" got 0.0158
+    Dataset "5" got 0.0160
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.0158
+    Dataset "2" got 0.0156
+    Dataset "3" got 0.0158
+    Dataset "4" got 0.0157
+    Dataset "5" got 0.0159
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.0157
+    Dataset "2" got 0.0154
+    Dataset "3" got 0.0157
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0158
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.0157
+    Dataset "2" got 0.0155
+    Dataset "3" got 0.0157
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0158
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.0156
+    Dataset "2" got 0.0153
+    Dataset "3" got 0.0155
+    Dataset "4" got 0.0155
+    Dataset "5" got 0.0157
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.0155
+    Dataset "2" got 0.0152
+    Dataset "3" got 0.0154
+    Dataset "4" got 0.0153
+    Dataset "5" got 0.0155
+
+
+R.recommend evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.3136
+    Dataset "2" got 0.3105
+    Dataset "3" got 0.2975
+    Dataset "4" got 0.3180
+    Dataset "5" got 0.3101
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.3015
+    Dataset "2" got 0.3141
+    Dataset "3" got 0.2969
+    Dataset "4" got 0.3054
+    Dataset "5" got 0.3039
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.2907
+    Dataset "2" got 0.2981
+    Dataset "3" got 0.2736
+    Dataset "4" got 0.2892
+    Dataset "5" got 0.2795
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.3097
+    Dataset "2" got 0.3125
+    Dataset "3" got 0.2949
+    Dataset "4" got 0.3131
+    Dataset "5" got 0.3234
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.3023
+    Dataset "2" got 0.3024
+    Dataset "3" got 0.2996
+    Dataset "4" got 0.3016
+    Dataset "5" got 0.3066
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.2286
+    Dataset "2" got 0.2318
+    Dataset "3" got 0.2362
+    Dataset "4" got 0.2198
+    Dataset "5" got 0.2249
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.3284
+    Dataset "2" got 0.3191
+    Dataset "3" got 0.3188
+    Dataset "4" got 0.3282
+    Dataset "5" got 0.3301
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.3173
+    Dataset "2" got 0.3152
+    Dataset "3" got 0.3169
+    Dataset "4" got 0.3295
+    Dataset "5" got 0.3249
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.3099
+    Dataset "2" got 0.3222
+    Dataset "3" got 0.3066
+    Dataset "4" got 0.3128
+    Dataset "5" got 0.3158
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.3149
+    Dataset "2" got 0.3183
+    Dataset "3" got 0.3090
+    Dataset "4" got 0.3222
+    Dataset "5" got 0.3234
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.3102
+    Dataset "2" got 0.3122
+    Dataset "3" got 0.3084
+    Dataset "4" got 0.3180
+    Dataset "5" got 0.3175
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.3055
+    Dataset "2" got 0.3117
+    Dataset "3" got 0.2998
+    Dataset "4" got 0.3149
+    Dataset "5" got 0.3103
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.3131
+    Dataset "2" got 0.3139
+    Dataset "3" got 0.3004
+    Dataset "4" got 0.3231
+    Dataset "5" got 0.3139
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.3033
+    Dataset "2" got 0.3167
+    Dataset "3" got 0.2988
+    Dataset "4" got 0.3114
+    Dataset "5" got 0.3082
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.2900
+    Dataset "2" got 0.2955
+    Dataset "3" got 0.2715
+    Dataset "4" got 0.2966
+    Dataset "5" got 0.2884
+
+
+Recall.recommend evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.9248
+    Dataset "2" got 0.9248
+    Dataset "3" got 0.9234
+    Dataset "4" got 0.9182
+    Dataset "5" got 0.9202
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.9247
+    Dataset "2" got 0.9226
+    Dataset "3" got 0.9212
+    Dataset "4" got 0.9181
+    Dataset "5" got 0.9193
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.9200
+    Dataset "2" got 0.9187
+    Dataset "3" got 0.9152
+    Dataset "4" got 0.9120
+    Dataset "5" got 0.9153
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.9398
+    Dataset "2" got 0.9394
+    Dataset "3" got 0.9371
+    Dataset "4" got 0.9330
+    Dataset "5" got 0.9373
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.9420
+    Dataset "2" got 0.9404
+    Dataset "3" got 0.9390
+    Dataset "4" got 0.9336
+    Dataset "5" got 0.9391
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.9358
+    Dataset "2" got 0.9332
+    Dataset "3" got 0.9286
+    Dataset "4" got 0.9255
+    Dataset "5" got 0.9307
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.9281
+    Dataset "2" got 0.9305
+    Dataset "3" got 0.9257
+    Dataset "4" got 0.9243
+    Dataset "5" got 0.9244
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.9273
+    Dataset "2" got 0.9296
+    Dataset "3" got 0.9260
+    Dataset "4" got 0.9231
+    Dataset "5" got 0.9234
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.9257
+    Dataset "2" got 0.9268
+    Dataset "3" got 0.9231
+    Dataset "4" got 0.9208
+    Dataset "5" got 0.9207
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.9250
+    Dataset "2" got 0.9272
+    Dataset "3" got 0.9234
+    Dataset "4" got 0.9200
+    Dataset "5" got 0.9207
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.9232
+    Dataset "2" got 0.9251
+    Dataset "3" got 0.9225
+    Dataset "4" got 0.9191
+    Dataset "5" got 0.9192
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.9206
+    Dataset "2" got 0.9214
+    Dataset "3" got 0.9193
+    Dataset "4" got 0.9153
+    Dataset "5" got 0.9163
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.9252
+    Dataset "2" got 0.9252
+    Dataset "3" got 0.9236
+    Dataset "4" got 0.9184
+    Dataset "5" got 0.9197
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.9245
+    Dataset "2" got 0.9234
+    Dataset "3" got 0.9217
+    Dataset "4" got 0.9175
+    Dataset "5" got 0.9188
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.9203
+    Dataset "2" got 0.9192
+    Dataset "3" got 0.9154
+    Dataset "4" got 0.9122
+    Dataset "5" got 0.9151
+
+
+Setup time evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 0.2720
+    Dataset "2" got 0.1460
+    Dataset "3" got 0.1380
+    Dataset "4" got 0.1240
+    Dataset "5" got 0.1180
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 0.1280
+    Dataset "2" got 0.1180
+    Dataset "3" got 0.1190
+    Dataset "4" got 0.1180
+    Dataset "5" got 0.1160
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 0.1270
+    Dataset "2" got 0.1120
+    Dataset "3" got 0.1140
+    Dataset "4" got 0.1170
+    Dataset "5" got 0.1260
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 0.1220
+    Dataset "2" got 0.1220
+    Dataset "3" got 0.1190
+    Dataset "4" got 0.1370
+    Dataset "5" got 0.1180
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 0.1190
+    Dataset "2" got 0.1080
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1400
+    Dataset "5" got 0.1090
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 0.1100
+    Dataset "2" got 0.1100
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1250
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1090
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1140
+    Dataset "5" got 0.1250
+
+  mcu03.02.pip_smd
+    Dataset "1" got 0.1100
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1100
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1090
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1410
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1150
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1250
+
+  mcu04.02.pss_smd
+    Dataset "1" got 0.1410
+    Dataset "2" got 0.1410
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1400
+    Dataset "5" got 0.1250
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 0.1400
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1400
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1090
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1410
+    Dataset "5" got 0.1410
+
+  mcu05.02.ta_smd
+    Dataset "1" got 0.1250
+    Dataset "2" got 0.1250
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1250
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 0.1410
+    Dataset "2" got 0.1090
+    Dataset "3" got 0.1250
+    Dataset "4" got 0.1250
+    Dataset "5" got 0.1250
+
+
+Speed evaluation
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got 2.1324
+    Dataset "2" got 1.6791
+    Dataset "3" got 2.3457
+    Dataset "4" got 2.1683
+    Dataset "5" got 1.8012
+
+  mcu01.02.cosine_smd
+    Dataset "1" got 2.1650
+    Dataset "2" got 1.7103
+    Dataset "3" got 2.3792
+    Dataset "4" got 2.2232
+    Dataset "5" got 1.8318
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got 2.1233
+    Dataset "2" got 1.6819
+    Dataset "3" got 2.3580
+    Dataset "4" got 2.2278
+    Dataset "5" got 1.8210
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got 2.1662
+    Dataset "2" got 1.7052
+    Dataset "3" got 2.3759
+    Dataset "4" got 2.2458
+    Dataset "5" got 1.8596
+
+  mcu02.02.pearson_smd
+    Dataset "1" got 2.2085
+    Dataset "2" got 1.7247
+    Dataset "3" got 2.4305
+    Dataset "4" got 2.2178
+    Dataset "5" got 1.8584
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got 2.1363
+    Dataset "2" got 1.7257
+    Dataset "3" got 2.4591
+    Dataset "4" got 2.1622
+    Dataset "5" got 1.8195
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got 2.1306
+    Dataset "2" got 1.6625
+    Dataset "3" got 2.3600
+    Dataset "4" got 2.1775
+    Dataset "5" got 1.8271
+
+  mcu03.02.pip_smd
+    Dataset "1" got 2.1687
+    Dataset "2" got 1.6918
+    Dataset "3" got 2.3855
+    Dataset "4" got 2.2229
+    Dataset "5" got 1.8453
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got 2.1706
+    Dataset "2" got 1.6872
+    Dataset "3" got 2.3622
+    Dataset "4" got 2.1678
+    Dataset "5" got 1.8555
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got 2.2212
+    Dataset "2" got 1.7314
+    Dataset "3" got 2.4508
+    Dataset "4" got 2.2623
+    Dataset "5" got 1.8788
+
+  mcu04.02.pss_smd
+    Dataset "1" got 2.2654
+    Dataset "2" got 1.7807
+    Dataset "3" got 2.4943
+    Dataset "4" got 2.2812
+    Dataset "5" got 1.9223
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got 2.2492
+    Dataset "2" got 1.7521
+    Dataset "3" got 2.4972
+    Dataset "4" got 2.2726
+    Dataset "5" got 1.9187
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got 2.2332
+    Dataset "2" got 1.7487
+    Dataset "3" got 2.4601
+    Dataset "4" got 2.2456
+    Dataset "5" got 1.8855
+
+  mcu05.02.ta_smd
+    Dataset "1" got 2.2775
+    Dataset "2" got 1.7853
+    Dataset "3" got 2.5309
+    Dataset "4" got 2.3135
+    Dataset "5" got 1.9441
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got 2.2600
+    Dataset "2" got 1.7665
+    Dataset "3" got 2.4938
+    Dataset "4" got 2.3101
+    Dataset "5" got 1.9289
+
+
+Algorithm parameters
+
+  mcu01.01.cosine_jaccard
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=jaccard
+    measure=cosine
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu01.02.cosine_smd
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=amer
+    measure=cosine
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu01.03.cosine_improvedj
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=ij
+    measure=cosine
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu02.01.pearson_jaccard
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=jaccard
+    measure=pearson
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu02.02.pearson_smd
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=amer
+    measure=pearson
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu02.03.pearson_improvedj
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=ij
+    measure=pearson
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu03.01.pip_jaccard
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=jaccard
+    measure=pip
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu03.02.pip_smd
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=amer
+    measure=pip
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu03.03.pip_improvedj
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=ij
+    measure=pip
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu04.01.pss_jaccard
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=jaccard
+    measure=pss
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu04.02.pss_smd
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=amer
+    measure=pss
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu04.03.pss_improvedj
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=ij
+    measure=pss
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu05.01.ta_jaccard
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=jaccard
+    measure=ta
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu05.02.ta_smd
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=amer
+    measure=ta
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+  mcu05.03.ta_improvedj
+    combined_weight2=1.0000
+    combined_minmax=true
+    msd_fraction=false
+    delay_unsetup=false
+    other_measure=ij
+    measure=ta
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    combined_type=1.0000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+    combined_weight1=1.0000
+
+
+Algorithm descriptions
+
+  mcu01.01.cosine_jaccard
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu01.02.cosine_smd
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu01.03.cosine_improvedj
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu02.01.pearson_jaccard
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu02.02.pearson_smd
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu02.03.pearson_improvedj
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu03.01.pip_jaccard
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu03.02.pip_smd
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu03.03.pip_improvedj
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu04.01.pss_jaccard
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu04.02.pss_smd
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu04.03.pss_improvedj
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu05.01.ta_jaccard
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu05.02.ta_smd
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+  mcu05.03.ta_improvedj
+    Dataset "1" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "2" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "3" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "4" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+    Dataset "5" got User-based collaborative filtering algorithm by multiplicated combination of two other ones
+
+
+Note
+  Dataset "1" has path "file:/e:/GoogleDrive/zsync/test2/datasets/movielens-csv-r0.3-k05/hdp_rating1.test"
+  Dataset "2" has path "file:/e:/GoogleDrive/zsync/test2/datasets/movielens-csv-r0.3-k05/hdp_rating2.test"
+  Dataset "3" has path "file:/e:/GoogleDrive/zsync/test2/datasets/movielens-csv-r0.3-k05/hdp_rating3.test"
+  Dataset "4" has path "file:/e:/GoogleDrive/zsync/test2/datasets/movielens-csv-r0.3-k05/hdp_rating4.test"
+  Dataset "5" has path "file:/e:/GoogleDrive/zsync/test2/datasets/movielens-csv-r0.3-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_241-b07, Java HotSpot(TM) 64-Bit Server VM version 25.241-b07, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 10, amd64, version 10.0
+  Memory(VM): Allocated memory = 880.50MB, Free memory = 740.62MB, Max memory = 1801.00MB
+  CPU: Intel64 Family 6 Model 60 Stepping 3, GenuineIntel, AMD64, the number of processors is 4
+  Directory: Current working directory is "e:\GoogleDrive\zsync\test2"
