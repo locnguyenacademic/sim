@@ -100,7 +100,7 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 		SetupAlgEvent evt = new SetupAlgEvent(
 				this,
 				Type.done,
-				this,
+				this.getName(),
 				dataset,
 				" (t = " + this.getCurrentIteration() + ") learned models: " + this.getDescription());
 		fireSetupEvent(evt);

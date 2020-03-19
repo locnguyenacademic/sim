@@ -101,7 +101,7 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 		SetupAlgEvent evt = new SetupAlgEvent(
 				this,
 				Type.done,
-				this,
+				this.getName(),
 				dataset,
 				"Learned models: " + this.getDescription());
 		fireSetupEvent(evt);

@@ -2,6 +2,8 @@ package net.rem.em;
 
 import java.io.Serializable;
 
+import net.hudup.core.PluginStorage;
+import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.logistic.NextUpdate;
@@ -61,7 +63,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 			int currentIteration, Serializable currentStatistic,
 			Serializable currentParameter, Serializable estimatedParameter) {
 		// TODO Auto-generated constructor stub
-		super(em, type, em, trainingDataset, estimatedParameter); //The EM wrapper can solve the problem of different hosts.
+		super(em, type, em.getName(), trainingDataset, estimatedParameter); //The EM wrapper can solve the problem of different hosts.
 		this.currentIteration = currentIteration;
 		this.currentStatistics = currentStatistic;
 		this.currentParameter = currentParameter; 
@@ -71,7 +73,11 @@ public class EMLearningEvent extends SetupAlgEvent {
 	
 	@Override
 	public String translate() {
-		return translate((EM)this.alg, false);
+		Alg alg = PluginStorage.getNormalAlgReg().query(getAlgName());
+		if ((alg == null) || !(alg instanceof EM))
+			return "";
+		else
+			return translate((EM)alg, false);
 	}
 	
 	
