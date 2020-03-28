@@ -293,7 +293,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		try {
 			parameter = rm.getParameter();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			parameter = null;
 		}
 		
@@ -306,7 +306,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 				return new REMInspector(UIUtil.getFrameForComponent(null), rm);
 			} 
 			catch (Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 				LogUtil.error("Cannot retrieve inspector");
 			}
 			
@@ -675,7 +675,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 				Double.parseDouble(value.toString());
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			return Constants.UNUSED;
 		}
@@ -859,7 +859,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 			return parser.parse2(expr);
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return Constants.UNUSED;
@@ -906,7 +906,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 				// TODO Auto-generated method stub
 				try {
 					return "R=" + MathUtil.format(rm.calcR(), 2);
-				} catch (Exception e) {e.printStackTrace();}
+				} catch (Exception e) {LogUtil.trace(e);}
 				
 				return "R=NaN";
 			}
@@ -1164,7 +1164,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return false;

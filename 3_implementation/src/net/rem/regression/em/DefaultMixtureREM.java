@@ -17,6 +17,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.DSUtil;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.rem.regression.LargeStatistics;
 
@@ -312,7 +313,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 					}
 					catch (Throwable e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						LogUtil.trace(e);
 						parameter = null;
 					}
 				}

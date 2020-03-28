@@ -14,6 +14,7 @@ import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Pair;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.RatingFilter;
 import net.hudup.core.logistic.UriAdapter;
@@ -298,7 +299,7 @@ abstract class BnetBinaryDistributedKB extends KBaseAbstract {
 					graphList.add(graph);
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		

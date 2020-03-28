@@ -10,6 +10,7 @@ import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.BaseClass;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.rem.soco.Soco;
 
@@ -82,7 +83,7 @@ public class NeighborCFExtItemBasedSoco extends NeighborCFExtItemBased {
 		try {
 			return soco.getRowSim(vRating1.id(), vRating2.id());
 		}
-		catch (Throwable e) {e.printStackTrace();}
+		catch (Throwable e) {LogUtil.trace(e);}
 		
 		return Constants.UNUSED;
 	}

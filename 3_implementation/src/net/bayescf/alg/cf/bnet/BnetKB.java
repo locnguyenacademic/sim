@@ -14,6 +14,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.UriAdapter;
 import net.hudup.core.logistic.xURI;
@@ -69,7 +70,7 @@ public class BnetKB extends KBaseAbstract {
 			bnet = learning.learn(sample, null);
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class BnetKB extends KBaseAbstract {
 			in.close();
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class BnetKB extends KBaseAbstract {
 			out.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 	}
 

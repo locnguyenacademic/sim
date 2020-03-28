@@ -17,6 +17,7 @@ import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Pair;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.RatingFilter;
 import net.hudup.core.logistic.SystemUtil;
@@ -192,7 +193,7 @@ abstract class BnetBinaryKB extends BnetKB2 {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -200,7 +201,7 @@ abstract class BnetBinaryKB extends BnetKB2 {
 					bitMapReader.close();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			
 			if (adapter != null)
@@ -257,7 +258,7 @@ abstract class BnetBinaryKB extends BnetKB2 {
 			BitDataUtil.writeBitItemMap(bitItemMap, bitMapWriter);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -265,7 +266,7 @@ abstract class BnetBinaryKB extends BnetKB2 {
 					bitMapWriter.close();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			
 			if (adapter != null)

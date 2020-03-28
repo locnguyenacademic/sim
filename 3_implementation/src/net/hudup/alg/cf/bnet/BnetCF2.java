@@ -10,6 +10,7 @@ import net.hudup.core.alg.KBase;
 import net.hudup.core.alg.Recommender;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.xURI;
 import net.hudup.logistic.inference.BnetLearner;
@@ -88,7 +89,7 @@ public class BnetCF2 extends BnetCF {
 		} 
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		} 
 		
 		return config;

@@ -602,7 +602,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		}
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return parameter0;
@@ -775,7 +775,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 					AttributeList attributes = getSampleAttributeList(sample);
 					try {
 						sample.close();
-					} catch (Exception e) { e.printStackTrace(); }
+					} catch (Exception e) { LogUtil.trace(e); }
 					
 					if (attributes == null || attributes.size() == 0) {
 						JOptionPane.showMessageDialog(
@@ -920,7 +920,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 				return ss / (double)count;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return Constants.UNUSED;
@@ -946,7 +946,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 			stat = null;
 		}
 		if (stat == null)

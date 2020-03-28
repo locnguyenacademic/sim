@@ -22,6 +22,7 @@ import net.hudup.core.data.Rating;
 import net.hudup.core.data.RatingMatrix;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.data.Snapshot;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.data.SnapshotImpl;
 
@@ -208,7 +209,7 @@ public class SparseProcessor {
 		} 
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 			try {
 				recommender.unsetup();
 			}
@@ -271,7 +272,7 @@ public class SparseProcessor {
 			
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -279,14 +280,14 @@ public class SparseProcessor {
 					userRatings.close();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			
 			try {
 				recommender.unsetup();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		
@@ -378,7 +379,7 @@ public class SparseProcessor {
 			}
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			result = false;
 		}
 		finally {
@@ -386,7 +387,7 @@ public class SparseProcessor {
 				svdCf.unsetup();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		
@@ -415,7 +416,7 @@ public class SparseProcessor {
 				userMatrix.assign(newMatrix);
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			result = false;
 		}
 		finally {
@@ -423,7 +424,7 @@ public class SparseProcessor {
 				svdCf.unsetup();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		
@@ -471,7 +472,7 @@ public class SparseProcessor {
 			}
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			result = false;
 		}
 		finally {
@@ -479,7 +480,7 @@ public class SparseProcessor {
 				bayesLutCf.unsetup();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		

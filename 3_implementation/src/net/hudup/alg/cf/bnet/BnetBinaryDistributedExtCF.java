@@ -98,7 +98,7 @@ public class BnetBinaryDistributedExtCF extends BnetBinaryDistributedCF {
 					graphList.add(graph);
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		
@@ -233,7 +233,7 @@ abstract class BnetBinaryDistributedExtKB extends KBaseAbstract {
 					itemIds.add(itemId);
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 	}

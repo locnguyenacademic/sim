@@ -624,7 +624,7 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 				// TODO Auto-generated method stub
 				try {
 					return "R=" + MathUtil.format(calcR(), 2);
-				} catch (Exception e) {e.printStackTrace();}
+				} catch (Exception e) {LogUtil.trace(e);}
 				
 				return "R=NaN";
 			}

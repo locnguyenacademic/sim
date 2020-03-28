@@ -48,6 +48,7 @@ import javax.swing.table.TableModel;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.UriAssoc;
 import net.hudup.core.logistic.xURI;
@@ -670,7 +671,7 @@ public class REMInspector extends JDialog implements Inspector {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			this.txtCalc.setText("");
 		}
 			
@@ -793,7 +794,7 @@ public class REMInspector extends JDialog implements Inspector {
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 	}

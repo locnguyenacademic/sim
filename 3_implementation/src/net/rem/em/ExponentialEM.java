@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import net.hudup.core.alg.SetupAlgEvent.Type;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This abstract class model a expectation maximization (EM) algorithm for exponential family.
@@ -86,7 +87,7 @@ public abstract class ExponentialEM extends EMAbstract {
 						this.currentIteration, (Serializable)this.statistics,
 						(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 			}
-			catch (Throwable e) {e.printStackTrace();}
+			catch (Throwable e) {LogUtil.trace(e);}
 			
 			boolean terminated = terminatedCondition(this.estimatedParameter, this.currentParameter, this.previousParameter);
 			if (terminated)
@@ -110,7 +111,7 @@ public abstract class ExponentialEM extends EMAbstract {
 					this.currentIteration, (Serializable)this.statistics,
 					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 		}
-		catch (Throwable e) {e.printStackTrace();}
+		catch (Throwable e) {LogUtil.trace(e);}
 
 		finishNotify();
 		return this.estimatedParameter;

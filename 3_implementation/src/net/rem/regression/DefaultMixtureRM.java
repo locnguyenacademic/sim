@@ -149,7 +149,7 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 		
 		try {
 			mixREM.addSetupListener(this);
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {LogUtil.trace(e);}
 		
 		return mixREM;
 	}

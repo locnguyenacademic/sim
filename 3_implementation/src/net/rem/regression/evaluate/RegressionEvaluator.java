@@ -7,6 +7,7 @@ import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.TestAlg;
 import net.hudup.core.data.Profile;
 import net.hudup.core.evaluate.execute.ExecuteEvaluator;
+import net.hudup.core.logistic.LogUtil;
 import net.rem.regression.RM;
 
 /**
@@ -39,7 +40,7 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 		// TODO Auto-generated method stub
 		try {
 			return (Serializable) ((RM)alg).extractResponseValue(testingProfile);
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {LogUtil.trace(e);}
 		
 		return null;
 	}

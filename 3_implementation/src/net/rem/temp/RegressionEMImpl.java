@@ -617,7 +617,7 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 		}
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return parameter0;
@@ -1062,7 +1062,7 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 				return ss / (double)count;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return Constants.UNUSED;
@@ -1088,7 +1088,7 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 			return null;
 		}
 		

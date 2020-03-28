@@ -6,6 +6,7 @@ import net.hudup.core.PluginStorage;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.Dataset;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 
 /**
@@ -128,7 +129,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 			}
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return buffer.toString();

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import net.hudup.core.alg.SetupAlgEvent.Type;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the generalized expectation maximization (GEM) algorithm.
@@ -66,7 +67,7 @@ public abstract class GEM extends EMAbstract {
 						this.currentIteration, null,
 						(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 			}
-			catch (Throwable e) {e.printStackTrace();}
+			catch (Throwable e) {LogUtil.trace(e);}
 			
 			boolean terminated = terminatedCondition(this.estimatedParameter, this.currentParameter, this.previousParameter);
 			if (terminated)
@@ -91,7 +92,7 @@ public abstract class GEM extends EMAbstract {
 					this.currentIteration, null,
 					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 		}
-		catch (Throwable e) {e.printStackTrace();}
+		catch (Throwable e) {LogUtil.trace(e);}
 
 		finishNotify();
 		return this.estimatedParameter;

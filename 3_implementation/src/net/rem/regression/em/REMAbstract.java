@@ -14,6 +14,7 @@ import net.hudup.core.alg.MemoryBasedAlg;
 import net.hudup.core.alg.MemoryBasedAlgRemote;
 import net.hudup.core.alg.NoteAlg;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.xURI;
 import net.rem.em.EM;
@@ -66,7 +67,7 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 		}
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return null;

@@ -12,6 +12,7 @@ import net.hudup.core.data.MemFetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.Profiles;
 import net.hudup.core.logistic.DSUtil;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This abstract class represents a set of document vectors. SMTP measure in this class is developed by Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee, and implemented by Loc Nguyen.
@@ -65,7 +66,7 @@ public abstract class DocumentVectorSet {
 			docs.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		int n = getAttributeList().size();
@@ -112,7 +113,7 @@ public abstract class DocumentVectorSet {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 	}
 
@@ -209,7 +210,7 @@ public abstract class DocumentVectorSet {
 			return (a/b + lambda) / (1 + lambda);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 			return Constants.UNUSED;
 		}
 	}

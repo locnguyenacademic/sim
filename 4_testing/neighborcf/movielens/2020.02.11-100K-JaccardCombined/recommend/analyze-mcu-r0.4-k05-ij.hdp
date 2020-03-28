@@ -1,0 +1,213 @@
+General evaluation
+
+  u03.03.improvedj
+    Exact recall = 1.0000
+    Hudup recall = 0.9968
+    MAE.recommend = 0.7389
+    MSE.recommend = 0.8753
+    Precision.recommend = 0.0240
+    R.recommend = 0.2140
+    Recall.recommend = 0.6142
+    Setup time = 0.3282
+    Speed = 3.7932
+
+
+Dataset evaluation
+
+  Dataset "1"
+    u03.03.improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7339
+      MSE.recommend = 0.8643
+      Precision.recommend = 0.0238
+      R.recommend = 0.2067
+      Recall.recommend = 0.6037
+      Setup time = 0.4850
+      Speed = 5.2827
+
+  Dataset "2"
+    u03.03.improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7421
+      MSE.recommend = 0.8836
+      Precision.recommend = 0.0240
+      R.recommend = 0.2209
+      Recall.recommend = 0.6199
+      Setup time = 0.3440
+      Speed = 5.0500
+
+  Dataset "3"
+    u03.03.improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9958
+      MAE.recommend = 0.7395
+      MSE.recommend = 0.8763
+      Precision.recommend = 0.0241
+      R.recommend = 0.2222
+      Recall.recommend = 0.6117
+      Setup time = 0.2640
+      Speed = 3.4472
+
+  Dataset "4"
+    u03.03.improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9958
+      MAE.recommend = 0.7420
+      MSE.recommend = 0.8811
+      Precision.recommend = 0.0239
+      R.recommend = 0.2071
+      Recall.recommend = 0.6158
+      Setup time = 0.3600
+      Speed = 2.9855
+
+  Dataset "5"
+    u03.03.improvedj
+      Exact recall = 1.0000
+      Hudup recall = 0.9968
+      MAE.recommend = 0.7371
+      MSE.recommend = 0.8712
+      Precision.recommend = 0.0243
+      R.recommend = 0.2133
+      Recall.recommend = 0.6200
+      Setup time = 0.1880
+      Speed = 2.2004
+
+
+Exact recall evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+Hudup recall evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.9979
+    Dataset "2" got 0.9979
+    Dataset "3" got 0.9958
+    Dataset "4" got 0.9958
+    Dataset "5" got 0.9968
+
+
+MAE.recommend evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.7339
+    Dataset "2" got 0.7421
+    Dataset "3" got 0.7395
+    Dataset "4" got 0.7420
+    Dataset "5" got 0.7371
+
+
+MSE.recommend evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.8643
+    Dataset "2" got 0.8836
+    Dataset "3" got 0.8763
+    Dataset "4" got 0.8811
+    Dataset "5" got 0.8712
+
+
+Precision.recommend evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.0238
+    Dataset "2" got 0.0240
+    Dataset "3" got 0.0241
+    Dataset "4" got 0.0239
+    Dataset "5" got 0.0243
+
+
+R.recommend evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.2067
+    Dataset "2" got 0.2209
+    Dataset "3" got 0.2222
+    Dataset "4" got 0.2071
+    Dataset "5" got 0.2133
+
+
+Recall.recommend evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.6037
+    Dataset "2" got 0.6199
+    Dataset "3" got 0.6117
+    Dataset "4" got 0.6158
+    Dataset "5" got 0.6200
+
+
+Setup time evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 0.4850
+    Dataset "2" got 0.3440
+    Dataset "3" got 0.2640
+    Dataset "4" got 0.3600
+    Dataset "5" got 0.1880
+
+
+Speed evaluation
+
+  u03.03.improvedj
+    Dataset "1" got 5.2827
+    Dataset "2" got 5.0500
+    Dataset "3" got 3.4472
+    Dataset "4" got 2.9855
+    Dataset "5" got 2.2004
+
+
+Evaluation information
+  Total records: 4715
+  Evaluated records: 4715
+  Evaluation percentage: 100.0%
+  Elapsed time: 4 hours 59 minutes 1 seconds
+
+
+Algorithm parameters
+
+  u03.03.improvedj
+    msd_fraction=false
+    delay_unsetup=false
+    measure=ij
+    hybrid=false
+    alg_support_cache=true
+    ta_normalized=false
+    value_bins=1, 2, 3, 4, 5
+    mu_alpha=0.5000
+    smtp_lambda=0.5000
+    cos_normalized=false
+    bcf_median=true
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  u03.03.improvedj
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/e:/todo/test/datasets/movielens-csv-r0.4-k05/hdp_rating1.test"
+  Testing dataset "2" has path "file:/e:/todo/test/datasets/movielens-csv-r0.4-k05/hdp_rating2.test"
+  Testing dataset "3" has path "file:/e:/todo/test/datasets/movielens-csv-r0.4-k05/hdp_rating3.test"
+  Testing dataset "4" has path "file:/e:/todo/test/datasets/movielens-csv-r0.4-k05/hdp_rating4.test"
+  Testing dataset "5" has path "file:/e:/todo/test/datasets/movielens-csv-r0.4-k05/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 589.00MB, Free memory = 468.23MB, Max memory = 910.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "e:\todo\test"

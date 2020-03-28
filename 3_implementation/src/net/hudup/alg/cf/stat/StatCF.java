@@ -24,6 +24,7 @@ import net.hudup.core.data.Pair;
 import net.hudup.core.data.Rating;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.UriAdapter;
 import net.hudup.core.logistic.xURI;
 import net.hudup.core.parser.TextParsable;
@@ -154,7 +155,7 @@ abstract class StatKB extends KBaseAbstract {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		
@@ -170,7 +171,7 @@ abstract class StatKB extends KBaseAbstract {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		
@@ -186,7 +187,7 @@ abstract class StatKB extends KBaseAbstract {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		adapter.close();
@@ -308,7 +309,7 @@ abstract class StatKB extends KBaseAbstract {
 			
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			if (users != null) {
@@ -316,7 +317,7 @@ abstract class StatKB extends KBaseAbstract {
 					users.close();
 				}
 				catch (Throwable e) {
-					e.printStackTrace();
+					LogUtil.trace(e);
 				}
 			}
 			
@@ -325,7 +326,7 @@ abstract class StatKB extends KBaseAbstract {
 					items.close();
 				}
 				catch (Throwable e) {
-					e.printStackTrace();
+					LogUtil.trace(e);
 				}
 			}
 			
@@ -348,7 +349,7 @@ abstract class StatKB extends KBaseAbstract {
 			generalStatWriter.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		
@@ -360,7 +361,7 @@ abstract class StatKB extends KBaseAbstract {
 			userStatsWriter.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		
@@ -372,7 +373,7 @@ abstract class StatKB extends KBaseAbstract {
 			itemStatsWriter.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		adapter.close();

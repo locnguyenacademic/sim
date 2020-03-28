@@ -7,6 +7,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import net.hudup.core.logistic.ClipboardUtil;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.ui.TextArea;
 import net.hudup.core.logistic.ui.UIUtil;
 import net.rem.regression.RM;
@@ -82,7 +83,7 @@ public class REMTextArea extends TextArea {
 			return rm.getDescription();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 		return "";

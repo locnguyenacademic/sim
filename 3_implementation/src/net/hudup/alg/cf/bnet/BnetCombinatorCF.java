@@ -17,6 +17,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.RatingFilter;
 import net.hudup.core.logistic.ValueTriple;
 import net.hudup.evaluate.ui.EvaluateGUI;
@@ -164,7 +165,7 @@ public class BnetCombinatorCF extends CompositeRecommenderAbstract {
 			config.put(INNER_RECOMMENDER, algList);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 
 		

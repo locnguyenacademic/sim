@@ -1772,7 +1772,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 //			size = vFetcher.getMetadata().getSize();
 //		}
 //		catch (Throwable e) {
-//			e.printStackTrace();
+//			LogUtil.trace(e);
 //			size = -1;
 //		}
 //		List<RatingVector> vRatings = size <= 0 ? Util.newList() : Util.newList(size);
@@ -1782,7 +1782,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 //		}
 //		catch (Exception e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			LogUtil.trace(e);
 //		}
 //		if (vRatings.size() < 2) return Util.newMap();
 //		

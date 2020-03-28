@@ -7,6 +7,7 @@ import java.util.Map;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.parser.TextParserUtil;
 import weka.clusterers.EM;
 import weka.core.Attribute;
@@ -191,7 +192,7 @@ public class Clusterer {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		
 	}

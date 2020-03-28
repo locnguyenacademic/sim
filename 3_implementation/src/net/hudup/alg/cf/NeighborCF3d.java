@@ -15,6 +15,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.BaseClass;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.evaluate.ui.EvaluateGUI;
 
 /**
@@ -152,7 +153,7 @@ public class NeighborCF3d extends NeighborCF2d {
 				userRatings.reset();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			
 			if (simTotal == 0) continue;
@@ -169,7 +170,7 @@ public class NeighborCF3d extends NeighborCF2d {
 		} 
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		localUserSimCache.clear();
 		

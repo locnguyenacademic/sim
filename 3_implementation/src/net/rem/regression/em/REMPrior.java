@@ -9,6 +9,7 @@ import net.hudup.core.Util;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.DSUtil;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.parser.TextParserUtil;
 import net.rem.regression.LargeStatistics;
@@ -229,7 +230,7 @@ public class REMPrior extends REMImpl {
 			} 
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LogUtil.trace(e);
 				return null;
 			}
 		}

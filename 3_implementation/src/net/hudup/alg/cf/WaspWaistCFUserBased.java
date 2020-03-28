@@ -15,6 +15,7 @@ import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.BaseClass;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This abstract class implements the user-based Wasp Waist (WW) collaborative filtering algorithm.
@@ -123,7 +124,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 				userRatings.reset();
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 			if (!calculated) continue;
 			
@@ -138,7 +139,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		} 
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		localUserSimCache.clear();
 		
@@ -175,14 +176,14 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 			}
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		try {
 			vRatings.close();
 		} 
 		catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		if (simList.size() == 0) return result;
 		

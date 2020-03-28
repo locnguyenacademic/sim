@@ -14,6 +14,7 @@ import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Rating;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 
 /**
@@ -145,7 +146,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -153,7 +154,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			} 
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		if (ratingCounts.size() == 0)
@@ -212,7 +213,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -220,7 +221,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			} 
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		List<Integer> userIds = Util.newList();
@@ -285,7 +286,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.trace(e);
 		}
 		finally {
 			try {
@@ -293,7 +294,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 			} 
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LogUtil.trace(e);
 			}
 		}
 		List<Integer> itemIds = Util.newList();
