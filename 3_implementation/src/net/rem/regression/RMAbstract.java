@@ -99,7 +99,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	
 	@Override
-	protected Object learn(Object...info) throws RemoteException {
+	public synchronized Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		Object resulted = null;
 		if (prepareInternalData())

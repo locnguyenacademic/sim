@@ -43,20 +43,30 @@ public abstract class GEM extends EMAbstract {
 	
 	
 	@Override
-	protected synchronized Object learn(Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
+	public Object learnStart(Object...info) throws RemoteException {
+		if (isLearnStarted()) return null;
+
+		learnStarted = true;
+
 		this.estimatedParameter = this.currentParameter = this.previousParameter = this.statistics = null;
 		this.currentIteration = 0;
 		this.estimatedParameter = this.currentParameter = initializeParameter();
 		initializeNotify();
 		if (this.estimatedParameter == null) {
-			finishNotify();
-			return null;
+			synchronized (this) {
+				learnStarted = false;
+				learnPaused = false;
+
+				finishNotify();
+				
+				notifyAll();
+				return null;
+			}
 		}
 		
 		this.currentIteration = 1;
 		int maxIteration = getMaxIteration();
-		while(this.currentIteration < maxIteration) {
+		while (learnStarted && this.currentIteration < maxIteration) {
 			this.estimatedParameter = argmaxQ(this.currentParameter);
 			if (this.estimatedParameter == null)
 				break;
@@ -64,8 +74,8 @@ public abstract class GEM extends EMAbstract {
 			//Firing doing event
 			try {
 				fireSetupEvent(new EMLearningEvent(this, Type.doing, this.dataset,
-						this.currentIteration, null,
-						(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
+					this.currentIteration, maxIteration, null,
+					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 			}
 			catch (Throwable e) {LogUtil.trace(e);}
 			
@@ -79,22 +89,39 @@ public abstract class GEM extends EMAbstract {
 				permuteNotify();
 			}
 			
-		}
+			synchronized (this) {
+				while (learnPaused) {
+					notifyAll();
+					try {
+						wait();
+					} catch (Exception e) {LogUtil.trace(e);}
+				}
+			}
+			
+		} //End while
 		
 		if (this.estimatedParameter != null)
 			this.currentParameter = this.estimatedParameter;
 		else if (this.currentParameter != null)
 			this.estimatedParameter = this.currentParameter;
 
-		//Firing done event
-		try {
-			fireSetupEvent(new EMLearningEvent(this, Type.done, this.dataset,
-					this.currentIteration, null,
-					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
-		}
-		catch (Throwable e) {LogUtil.trace(e);}
+		synchronized (this) {
+			learnStarted = false;
+			learnPaused = false;
 
-		finishNotify();
+			//Firing done event
+			try {
+				fireSetupEvent(new EMLearningEvent(this, Type.done, this.dataset,
+					this.currentIteration, this.currentIteration, null,
+					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
+			}
+			catch (Throwable e) {LogUtil.trace(e);}
+	
+			finishNotify();
+			
+			notifyAll();
+		}
+		
 		return this.estimatedParameter;
 	}
 

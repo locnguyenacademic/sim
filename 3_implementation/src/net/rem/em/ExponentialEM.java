@@ -53,25 +53,33 @@ public abstract class ExponentialEM extends EMAbstract {
 	
 	
 	/*
-	 * In the previous version, the learn method is marked synchronized.
-	 * However, if the number of loops is huge, removing synchronized keyword allows clients to retrieve the estimated parameter (learned result)
-	 * when this learn method is running.
+	 * In the this version, the learn method is not marked synchronized.
 	 */
 	@Override
-	protected synchronized Object learn(Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
+	public Object learnStart(Object...info) throws RemoteException {
+		if (isLearnStarted()) return null;
+
+		learnStarted = true;
+
 		this.estimatedParameter = this.currentParameter = this.previousParameter = this.statistics = null;
 		this.currentIteration = 0;
 		this.estimatedParameter = this.currentParameter = initializeParameter();
 		initializeNotify();
 		if (this.estimatedParameter == null) {
-			finishNotify();
-			return null;
+			synchronized (this) {
+				learnStarted = false;
+				learnPaused = false;
+
+				finishNotify();
+				
+				notifyAll();
+				return null;
+			}
 		}
 		
 		this.currentIteration = 1;
 		int maxIteration = getMaxIteration();
-		while(this.currentIteration < maxIteration) {
+		while (learnStarted && this.currentIteration < maxIteration) {
 			Object tempStatistics = expectation(this.currentParameter);
 			if (tempStatistics == null)
 				break;
@@ -84,8 +92,8 @@ public abstract class ExponentialEM extends EMAbstract {
 			//Firing setup doing event
 			try {
 				fireSetupEvent(new EMLearningEvent(this, Type.doing, this.dataset,
-						this.currentIteration, (Serializable)this.statistics,
-						(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
+					this.currentIteration, maxIteration, (Serializable)this.statistics,
+					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
 			}
 			catch (Throwable e) {LogUtil.trace(e);}
 			
@@ -98,22 +106,40 @@ public abstract class ExponentialEM extends EMAbstract {
 				this.currentIteration++;
 				permuteNotify();
 			}
-		}
+			
+			synchronized (this) {
+				while (learnPaused) {
+					notifyAll();
+					try {
+						wait();
+					} catch (Exception e) {LogUtil.trace(e);}
+				}
+			}
+			
+		} //End while
 		
 		if (this.estimatedParameter != null)
 			this.currentParameter = this.estimatedParameter;
 		else if (this.currentParameter != null)
 			this.estimatedParameter = this.currentParameter;
 		
-		//Firing setup done event
-		try {
-			fireSetupEvent(new EMLearningEvent(this, Type.done, this.dataset,
-					this.currentIteration, (Serializable)this.statistics,
-					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
-		}
-		catch (Throwable e) {LogUtil.trace(e);}
+		synchronized (this) {
+			learnStarted = false;
+			learnPaused = false;
 
-		finishNotify();
+			//Firing setup done event
+			try {
+				fireSetupEvent(new EMLearningEvent(this, Type.done, this.dataset,
+					this.currentIteration, this.currentIteration, (Serializable)this.statistics,
+					(Serializable)this.currentParameter, (Serializable)this.estimatedParameter));
+			}
+			catch (Throwable e) {LogUtil.trace(e);}
+	
+			finishNotify();
+			
+			notifyAll();
+		}
+		
 		return this.estimatedParameter;
 	}
 

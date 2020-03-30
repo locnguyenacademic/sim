@@ -7,7 +7,6 @@ import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.logistic.LogUtil;
-import net.hudup.core.logistic.NextUpdate;
 
 /**
  * This class represents events when expectation maximization (EM) algorithm runs.
@@ -28,7 +27,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 	/**
 	 * Current iteration.
 	 */
-	protected Serializable currentIteration = 0;
+	protected int currentIteration = 0;
 
 	
 	/**
@@ -51,7 +50,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 	
 	/**
 	 * Default constructor with the source as EM algorithm.
-	 * @param em the EM algorithm as the source of this event.
+	 * @param em the EM algorithm as the source of this event. This EM algorithm is invalid in remote call because the source is transient variable.
 	 * @param type event type.
 	 * @param trainingDataset training dataset.
 	 * @param currentIteration current iteration.
@@ -59,16 +58,32 @@ public class EMLearningEvent extends SetupAlgEvent {
 	 * @param currentParameter current parameter.
 	 * @param estimatedParameter estimated parameter of algorithm as setup result.
 	 */
-	@NextUpdate
 	public EMLearningEvent(EM em, Type type, Dataset trainingDataset,
-			int currentIteration, Serializable currentStatistic,
+			int currentIteration, int maxIteration, Serializable currentStatistic,
 			Serializable currentParameter, Serializable estimatedParameter) {
 		// TODO Auto-generated constructor stub
-		super(em, type, em.getName(), trainingDataset, estimatedParameter); //The EM wrapper can solve the problem of different hosts.
+		super(em, type, em.getName(), trainingDataset, estimatedParameter, currentIteration, maxIteration);
 		this.currentIteration = currentIteration;
 		this.currentStatistics = currentStatistic;
 		this.currentParameter = currentParameter; 
 		this.estimatedParameter = estimatedParameter;
+	}
+
+	
+	/**
+	 * Getting source as EM algorithm. This method cannot be called remotely because the source is transient variable.
+	 * @return source as EM algorithm.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private EM getEM() {
+		Object source = getSource();
+		if (source == null)
+			return null;
+		else if (source instanceof EM)
+			return (EM)source;
+		else
+			return null;
 	}
 
 	

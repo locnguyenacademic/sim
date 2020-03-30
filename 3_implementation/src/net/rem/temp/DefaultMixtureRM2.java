@@ -36,7 +36,7 @@ public class DefaultMixtureRM2 extends DefaultMixtureRM {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object learn(Object... info) throws RemoteException {
+	public /*synchronized*/ Object learnStart(Object... info) throws RemoteException {
 		// TODO Auto-generated method stub
 		DefaultMixtureREM prevMixREM = null;
 		double prevFitness = -1;

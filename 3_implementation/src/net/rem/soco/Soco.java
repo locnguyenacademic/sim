@@ -73,7 +73,7 @@ public class Soco extends ExponentialEM {
 
 	
 	@Override
-	protected synchronized Object learn(Object... info) throws RemoteException {
+	public Object learnStart(Object... info) throws RemoteException {
 		// TODO Auto-generated method stub
 		String mainUnit = config.getAsString(DataConfig.MAIN_UNIT);
 		boolean prepared = false;
@@ -87,7 +87,7 @@ public class Soco extends ExponentialEM {
 			return null;
 		}
 
-		return super.learn(info);
+		return super.learnStart(info);
 	}
 
 

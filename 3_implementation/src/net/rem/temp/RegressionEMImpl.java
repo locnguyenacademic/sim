@@ -103,11 +103,11 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	
 	
 	@Override
-	protected Object learn(Object...info) throws RemoteException {
+	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		Object resulted = null;
 		if (prepareInternalData(this.sample))
-			resulted = super.learn();
+			resulted = super.learnStart();
 		if (resulted == null)
 			clearInternalData();
 

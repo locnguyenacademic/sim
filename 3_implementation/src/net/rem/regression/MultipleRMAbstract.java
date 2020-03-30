@@ -75,7 +75,7 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	 * @throws RemoteException if any error raises.
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized void setup(Dataset dataset, Object[] info, RM...regressions) throws RemoteException {
+	public /*synchronized*/ void setup(Dataset dataset, Object[] info, RM...regressions) throws RemoteException {
 		// TODO Auto-generated method stub
 		unsetup();
 		for (RM regression : regressions) {
@@ -96,7 +96,7 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 			this.regressions.get(i).getConfig().put(R_INDICES_FIELD, cfgIndicesList.get(i));
 		}
 		
-		learn();
+		learnStart();
 		
 		SetupAlgEvent evt = new SetupAlgEvent(
 				this,
@@ -134,7 +134,7 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 
 
 	@Override
-	protected Object learn(Object...info) throws RemoteException {
+	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		List<Object> parameterList = Util.newList();
 		boolean success = false;

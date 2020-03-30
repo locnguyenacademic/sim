@@ -67,14 +67,17 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object learn(Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
+	public Object learnStart(Object... info) throws RemoteException {
+		if (isLearnStarted()) return null;
+
+		learnStarted = true;
+		
 		DefaultMixtureREM prevMixREM = null;
 		double prevFitness = -1;
 		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
 		int maxK = getConfig().getAsInt(COMP_MAX_NUMBER_FIELD);
 		maxK = maxK <= 0 ? Integer.MAX_VALUE : maxK;
-		while (true) {
+		while (learnStarted) {
 			DefaultMixtureREM mixREM = createInternalRM();
 			
 			if (prevMixREM != null) {
@@ -127,11 +130,28 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 				mixREM.unsetup();
 				break;
 			}
-		}
+			
+			synchronized (this) {
+				while (learnPaused) {
+					notifyAll();
+					try {
+						wait();
+					} catch (Exception e) {LogUtil.trace(e);}
+				}
+			}
+			
+		} //End while
 		
 		if (prevMixREM != null)
 			prevMixREM.unsetup();
 		this.mixREM = prevMixREM;
+		
+		synchronized (this) {
+			learnStarted = false;
+			learnPaused = false;
+			notifyAll();
+		}
+		
 		return prevMixREM;
 	}
 

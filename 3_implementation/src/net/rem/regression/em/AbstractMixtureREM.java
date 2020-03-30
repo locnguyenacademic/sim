@@ -67,7 +67,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	
 	@Override
-	protected Object learn(Object...info) throws RemoteException {
+	public Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		boolean prepared = false;
 		if (info == null || info.length == 0 || !(info[0] instanceof DefaultMixtureREM))
@@ -79,7 +79,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			return null;
 		}
 		
-		if (super.learn(info) == null) {
+		if (super.learnStart(info) == null) {
 			clearInternalData();
 			return null;
 		}
@@ -171,7 +171,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected synchronized Object learn(Object...info) throws RemoteException {
+			public synchronized Object learnStart(Object...info) throws RemoteException {
 				// TODO Auto-generated method stub
 				boolean prepared = prepareInternalData(sample);
 				if (prepared)

@@ -53,14 +53,14 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 	
 	
 	@Override
-	protected Object learn(Object...info) throws RemoteException {
+	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		if (!prepareInternalData(this.sample)) {
 			clearInternalData();
 			return null;
 		}
 		
-		ExchangedParameter[] parameters = (ExchangedParameter[])super.learn();
+		ExchangedParameter[] parameters = (ExchangedParameter[])super.learnStart();
 		if (parameters == null) {
 			clearInternalData();
 			return null;
@@ -296,7 +296,7 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected synchronized Object learn(Object...info) throws RemoteException {
+				public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 					// TODO Auto-generated method stub
 					boolean prepared = prepareInternalData(inputSample);
 					if (prepared)

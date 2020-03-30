@@ -85,7 +85,7 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized void setup(Dataset dataset, Object...info) throws RemoteException {
+	public /*synchronized*/ void setup(Dataset dataset, Object...info) throws RemoteException {
 		unsetup();
 		this.dataset = dataset;
 		if (info != null && info.length > 0 && (info[0] instanceof Fetcher<?>))
@@ -95,7 +95,7 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 		
 		this.estimatedParameter = this.currentParameter = this.previousParameter = this.statistics = null;
 		this.currentIteration = 0;
-		learn(info);
+		learnStart(info);
 		
 		SetupAlgEvent evt = new SetupAlgEvent(
 				this,
