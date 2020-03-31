@@ -116,8 +116,8 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	@Override
 	public DataConfig createDefaultConfig() {
 		// TODO Auto-generated method stub
-		if (remoteAlg instanceof EMAbstract)
-			return ((EMAbstract)remoteAlg).createDefaultConfig();
+		if (remoteAlg instanceof EM)
+			return ((EM)remoteAlg).createDefaultConfig();
 		else {
 			LogUtil.warn("Wrapper of remote EM algorithm does not support createDefaultConfig()");
 			return null;

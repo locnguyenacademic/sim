@@ -210,8 +210,8 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 	@Override
 	public DataConfig createDefaultConfig() {
 		// TODO Auto-generated method stub
-		if (remoteAlg instanceof RMAbstract)
-			return ((RMAbstract)remoteAlg).createDefaultConfig();
+		if (remoteAlg instanceof RM)
+			return ((RM)remoteAlg).createDefaultConfig();
 		else {
 			LogUtil.warn("Wrapper of remote RM algorithm does not support createDefaultConfig()");
 			return null;
