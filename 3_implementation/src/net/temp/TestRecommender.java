@@ -1,13 +1,9 @@
 package net.temp;
 
 import java.rmi.RemoteException;
-import java.util.Set;
 
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.RecommendParam;
-import net.hudup.core.alg.RecommenderAbstract;
-import net.hudup.core.data.Dataset;
-import net.hudup.core.data.RatingVector;
+import net.hudup.core.alg.cf.NeighborCFUserBased;
 
 /**
  * Temporal test recommender algorithm.
@@ -16,8 +12,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
-@Deprecated
-public class TestRecommender extends RecommenderAbstract {
+public class TestRecommender extends NeighborCFUserBased {
 
 	
 	/**
@@ -31,34 +26,6 @@ public class TestRecommender extends RecommenderAbstract {
 	 */
 	public TestRecommender() {
 		// TODO Auto-generated constructor stub
-	}
-
-	
-	@Override
-	public Dataset getDataset() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	@Override
-	public void setup(Dataset dataset, Object... params) throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	@Override
-	public RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	@Override
-	public RatingVector recommend(RecommendParam param, int maxRecommend) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	
@@ -81,6 +48,8 @@ public class TestRecommender extends RecommenderAbstract {
 		// TODO Auto-generated method stub
 		return new TestRecommender();
 	}
+
+
 	
 
 }
