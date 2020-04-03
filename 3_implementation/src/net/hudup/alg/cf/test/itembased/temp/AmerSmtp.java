@@ -2,11 +2,11 @@ package net.hudup.alg.cf.test.itembased.temp;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
 @Deprecated
-public class AmerSmtp extends NeighborCFTwosCombinedItemBased implements TestAlg {
+public class AmerSmtp extends NeighborCFTwosCombinedItemBased implements ForTest {
 
 	
 	/**

@@ -2,10 +2,10 @@ package net.hudup.alg.cf.test.multcombined.userbased;
 
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
-public class PSSIJ extends NeighborCFTwosCombinedMultUserBased implements TestAlg {
+public class PSSIJ extends NeighborCFTwosCombinedMultUserBased implements ForTest {
 
 	
 	/**

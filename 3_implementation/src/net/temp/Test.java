@@ -17,6 +17,7 @@ import net.rem.regression.RMAbstract;
  * @version 1.0
  *
  */
+@Deprecated
 public class Test {
 
 	

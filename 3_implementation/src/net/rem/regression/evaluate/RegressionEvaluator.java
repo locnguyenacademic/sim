@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.alg.AlgDesc2;
 import net.hudup.core.data.Profile;
 import net.hudup.core.evaluate.execute.ExecuteEvaluator;
 import net.hudup.core.logistic.LogUtil;
@@ -54,7 +54,7 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 //		if ((remoteAlg != null) && (remoteAlg instanceof Alg))
 //			alg = (Alg)remoteAlg;
 
-		return (alg instanceof RM) && (!(alg instanceof TestAlg));
+		return (alg instanceof RM) && (!(AlgDesc2.isForTest(alg)));
 	}
 
 	

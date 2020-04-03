@@ -2,11 +2,11 @@ package net.hudup.alg.cf.test.userbased.temp;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedUserBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
 @Deprecated
-public class Amer2Pearson extends NeighborCFTwosCombinedUserBased implements TestAlg {
+public class Amer2Pearson extends NeighborCFTwosCombinedUserBased implements ForTest {
 
 	
 	/**

@@ -2,7 +2,7 @@ package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFExtUserBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
 /**
@@ -11,7 +11,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class Amer extends NeighborCFExtUserBased implements TestAlg {
+public class Amer extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**

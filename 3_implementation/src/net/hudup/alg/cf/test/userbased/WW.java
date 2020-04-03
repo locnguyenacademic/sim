@@ -2,10 +2,10 @@ package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.WaspWaistCFUserBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
-public class WW extends WaspWaistCFUserBased implements TestAlg {
+public class WW extends WaspWaistCFUserBased implements ForTest {
 
 	
 	/**

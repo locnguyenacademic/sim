@@ -2,10 +2,10 @@ package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
+import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
 
-public class Pearson extends NeighborCFExtItemBased implements TestAlg {
+public class Pearson extends NeighborCFExtItemBased implements ForTest {
 
 	
 	/**

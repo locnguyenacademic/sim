@@ -2,10 +2,10 @@ package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.TestAlg;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
-public class Amer2COD extends NeighborCFTwosCombinedItemBased implements TestAlg {
+public class Amer2COD extends NeighborCFTwosCombinedItemBased implements ForTest {
 
 	
 	/**
