@@ -758,7 +758,18 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
 				// TODO Auto-generated method stub
 				if (key.equals(R_INDICES_FIELD)) {
+					boolean loadDataset = true;
 					if (attList != null) {
+						int answer = JOptionPane.showConfirmDialog(
+							comp,
+							"Attributes exist but do you want to \nload dataset for refreshing?",
+							"Loading dataset confirm",
+							JOptionPane.YES_NO_OPTION);
+						loadDataset = answer == JOptionPane.YES_OPTION;
+					}
+						
+					
+					if (!loadDataset) {
 						RegressResponseChooser chooser = new RegressResponseChooser(comp, attList);
 						return chooser.getIndices();
 					}

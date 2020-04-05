@@ -41,7 +41,7 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 			"It is impossible to specify 1^2, log(2) because 1^2 and log(1) are evaluated as fixed numbers (1 and 0, for example), not index but it is possible to specify log(x1), x2.\n" +
 			"Index is number, field name, or mathematical expression.\n" +
 			"If index is number, it starts with 1 because index 0 always points to 1 value and so please do not declare number index 0 or negative number index. Number index -1 is wrong, which is used to indicate that the \"r_indices\" is only used for hinting.\n" +
-			"The last index is the index (number, field name, mathematical expression) of reponsor and remaining indices (n-1 first indices) are indices of regressors.\n" +
+			"The last index is the index (number, field name, mathematical expression) of responsor and remaining indices (n-1 first indices) are indices of regressors.\n" +
 			"A hinting example of \"r_indices\" is \"{1, #x2, -1, (#x3 + #x4)^2, log(#y)}\" in which the index -1 indicates that such hinting \"r_indices\" will be wrong in parsing.\n" +
 			"When \"r_indices\" is wrong, it is assigned as \"1, 2,..., n\" where n is the number of fields (variables) and the nth field (the last field) is responsor and remaining fields are regressors.";
 			
