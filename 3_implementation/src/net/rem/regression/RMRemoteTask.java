@@ -115,7 +115,7 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 	 * @param index specified index. Index 0 is not included in the profile because this specified index is in the parameter <code>r_indices</code>.
 	 * So the index here is the second index, and of course it is number.
 	 * Index starts from 1. So index 0 always indicates to value 1. 
-	 * @return value of regressor (X) extracted from specified profile.
+	 * @return value of regressor (X) extracted from specified profile. Note, the returned value is not transformed.
 	 * @throws RemoteException if any error raises.
 	 */
 	double extractRegressorValue(Object input, int index) throws RemoteException;
@@ -124,7 +124,7 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 	/**
 	 * Extracting statistical values of specified regressor.
 	 * @param regressor specified regressor.
-	 * @return statistical values of specified regressor.
+	 * @return statistical values of specified regressor. Note, the returned value is not transformed.
 	 * @throws RemoteException if any error raises.
 	 */
 	List<Double> extractRegressorStatistic(VarWrapper regressor) throws RemoteException;

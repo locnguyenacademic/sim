@@ -15,6 +15,7 @@ import net.hudup.core.Util;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.RMAbstract;
 
 /**
  * This class represents the exchanged parameter for the REM algorithm.
@@ -418,6 +419,39 @@ public class ExchangedParameter implements Cloneable, Serializable {
 
 	
 	/**
+	 * Evaluating the normal probability density function with specified mean and variance given multivariate data.
+	 * Inherited class can re-defined this density function.
+	 * @param value specified response value z.
+	 * @param mean specified mean.
+	 * @param variance specified variance.
+	 * @return value evaluated from the normal probability density function given multivariate data.
+	 */
+	public static double normalPDF(List<Double> value, List<Double> mean, List<double[]> variance) {
+		int n = mean.size();
+		
+		double v1 = Math.sqrt(Math.pow(2*Math.PI, n)*RMAbstract.matrixDeterminant(variance));
+//		if (v1 == 0) v1 = v1 + Double.MIN_VALUE; //Solving the problem of zero variance.
+
+		List<Double> d = DSUtil.initDoubleList(n, 0);
+		for (int i = 0; i < n; i++) {
+			d.add(value.get(i) - mean.get(i));
+		}
+		
+		List<double[]> inverseVariance = RMAbstract.matrixInverse(variance);
+		double v2 = 0;
+		for (int j = 0; j < n; j++) {
+			double sum = 0;
+			for (int i = 0; i < n; i++) {
+				sum += d.get(i)*inverseVariance.get(i)[j];
+			}
+			v2 += sum*d.get(j);
+		}
+
+		return (1.0 / (Double.MIN_VALUE + v1)) * Math.exp(-v2/2.0);
+	}
+
+	
+	/**
 	 * Evaluating the normal probability density function with specified mean and variance.
 	 * Inherited class can re-defined this density function.
 	 * @param value specified response value z.
@@ -427,9 +461,9 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 */
 	public static double normalPDF(double value, double mean, double variance) {
 		double d = value - mean;
-		if (variance == 0)
-			variance = variance + Double.MIN_VALUE; //Solving the problem of zero variance.
-		return (1.0 / Math.sqrt(2*Math.PI*variance)) * Math.exp(-(d*d) / (2*variance));
+//		if (variance == 0)
+//			variance = variance + Double.MIN_VALUE; //Solving the problem of zero variance.
+		return (1.0 / (Double.MIN_VALUE + Math.sqrt(2*Math.PI*variance))) * Math.exp(-(d*d) / (2*variance));
 	}
 
 	

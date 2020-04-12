@@ -668,8 +668,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	 */
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
-		double[] xStatistic = extractRegressorValues(input);
+		double[] xStatistic = extractAndTransformRegressorValues(input);
 		return executeByXStatistic(xStatistic);
 	}
 	
@@ -847,7 +846,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	 * @return list of values of regressors from input object.
 	 * @throws RemoteException if any error raises.
 	 */
-	protected double[] extractRegressorValues(Object input) throws RemoteException {
+	protected double[] extractAndTransformRegressorValues(Object input) throws RemoteException {
 		Profile profile = null;
 		if (input instanceof Profile)
 			profile = (Profile)input;

@@ -527,6 +527,54 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	
 	/**
+	 * Calculating determinant of the given matrix.
+	 * @param A given matrix.
+	 * @return determinant of the given matrix.
+	 */
+	public static double matrixDeterminant(List<double[]> A) {
+		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
+		LUDecomposition lu = new LUDecomposition(M);
+		return lu.getDeterminant();
+	}
+	
+	
+	/**
+	 * Calculating inverse of the given matrix.
+	 * @param A given matrix.
+	 * @return inverse of the given matrix.
+	 */
+	public static List<double[]> matrixInverse(List<double[]> A) {
+		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
+		try {
+			//Firstly, solve exact solution by LU Decomposition
+			DecompositionSolver solver = new LUDecomposition(M).getSolver();
+			return DSUtil.toDoubleList(solver.getInverse().getData());
+		}
+		catch (Exception e1) {
+			LogUtil.info("Problem from LU Decomposition: " + e1.getMessage());
+			try {
+				//Secondly, solve approximate solution by QR Decomposition
+				DecompositionSolver solver = new QRDecomposition(M).getSolver(); //It is possible to replace QRDecomposition by LUDecomposition here.
+				return DSUtil.toDoubleList(solver.getInverse().getData());
+			}
+			catch (SingularMatrixException e2) {
+				LogUtil.info("Singular matrix problem from QR Decomposition");
+				//Finally, solve approximate solution by Moore–Penrose pseudo-inverse matrix
+				try {
+					DecompositionSolver solver = new SingularValueDecomposition(M).getSolver(); //It is possible to replace QRDecomposition by LUDecomposition here.
+					return DSUtil.toDoubleList(solver.getInverse().getData());
+				}
+				catch (SingularMatrixException e3) {
+					LogUtil.info("Cannot solve the problem of singluar matrix by Moore–Penrose pseudo-inverse matrix in #solve(RealMatrix, RealVector)");
+				}
+			}
+		}
+		
+		return Util.newList();
+	}
+
+	
+	/**
 	 * Solving the equation Ax = b. This method uses firstly LU decomposition to solve exact solution and then uses QR decomposition to solve approximate solution in least square sense.
 	 * Finally, if the problem of singular matrix continues to raise, Moore–Penrose pseudo-inverse matrix is used to find approximate solution.
 	 * @param A specified matrix.
