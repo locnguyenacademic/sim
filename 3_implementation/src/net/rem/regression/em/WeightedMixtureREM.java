@@ -11,6 +11,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 
 /**
  * This class implements the mixture regression model with weighting mechanism.
@@ -27,12 +28,6 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
-	/**
-	 * Extra list of normal distribution parameters.
-	 */
-	protected List<NormalDisParameter> normalDisParameters = Util.newList();
-	
 	
 	/**
 	 * Default constructor.
@@ -52,12 +47,32 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 		return result;
 	}
 
+	
+	/**
+	 * Adjusting weights of coefficients according to normal distribution.
+	 */
+	protected void adjustWeightNormalDistribution() {
+		for (REMImpl rem : rems) {
+			ExchangedParameter parameter = null;
+			LargeStatistics stat = null;
+			try {
+				parameter = (ExchangedParameter)rem.getParameter();
+				stat = (LargeStatistics) rem.expectation(parameter, this.data);
+			} 
+			catch (Exception e) {LogUtil.trace(e);}
+			
+			NormalDisParameter xNormalDisParameter = new NormalDisParameter(stat);
+			parameter.setXNormalDisParameter(xNormalDisParameter);
+		}
+	}
 
+	
 	/**
 	 * Adjusting weights of coefficients according to maximum mechanism.
 	 */
-	@SuppressWarnings("unchecked")
-	protected void adjustWeightMax() {
+	@SuppressWarnings({ "unchecked", "unused" })
+	@Deprecated
+	private void adjustWeightMax() {
 		List<ExchangedParameter> parameters = null;
 		try {
 			parameters = (List<ExchangedParameter>)getParameter();
@@ -85,86 +100,46 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	}
 	
 	
-	/**
-	 * Adjusting weights of coefficients according to normal distribution.
-	 * @param outParameters output parameters.
-	 */
-	protected void adjustWeightNormalDistribution() {
-		if (rems == null || rems.size() == 0) return;
-		
-		List<NormalDisParameter> tempDisParameters = Util.newList();
-		for (REMImpl rem : rems) {
-			LargeStatistics stat= null;
-			try {
-				stat = (LargeStatistics) rem.expectation(rem.getParameter(), this.data);
-			} 
-			catch (Exception e) {LogUtil.trace(e);}
-			if (stat == null) return;
-			
-			NormalDisParameter disParameter = estimateNormalParameter(stat);
-			if (disParameter != null) tempDisParameters.add(disParameter);
-		}
-		if (tempDisParameters.size() != rems.size()) return;
-		
-		this.normalDisParameters.clear();
-		this.normalDisParameters.addAll(tempDisParameters);
+	@Override
+	protected REMImpl createREM() {
+		return new WeightedREMExt();
 	}
 
-	
+
 	/**
-	 * Estimating normal distribution parameter.
-	 * @param stat given a large statistics.
-	 * @return parameter of normal distribution parameter given a large statistics.
+	 * This class is an extension of regression expectation maximization algorithm with weighting mechanism.
+	 * @author Loc Nguyen
+	 * @version 1.0
 	 */
-	private NormalDisParameter estimateNormalParameter(LargeStatistics stat) {
-		if (stat == null) return null;
-		List<double[]> xData = stat.getXData();
-		if (xData == null || xData.size() == 0) return null;
+	protected class WeightedREMExt extends REMExt {
 		
-		int n = xData.get(0).length - 1;
-		if (n <= 0) return null;
-		
-		List<Double> xMean = DSUtil.initDoubleList(n, 0);
-		int N = xData.size();
-		for (int i = 0; i < N; i++) {
-			double[] x = xData.get(i);
-			for (int j = 0; j < n; j++) {
-				xMean.set(j, xMean.get(j) + x[j+1]);
-			}
-		}
-		for (int j = 0; j < n; j++) {
-			xMean.set(j, xMean.get(j) / (double)N);
-		}
-		
-		
-		List<double[]> xVariance = Util.newList(n);
-		for (int i = 0; i < n; i++) {
-			double[] x = new double[n];
-			Arrays.fill(x, 0);
-			xVariance.add(x);
-		}
-		
-		for (int i = 0; i < N; i++) {
-			double[] d = xData.get(i);
-			for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
+		/**
+		 * Serial version UID for serializable class.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
+			ExchangedParameter parameter = (ExchangedParameter)super.maximization(currentStatistic, info);
 			
-			for (int j = 0; j < n; j++) {
-				double[] x = xVariance.get(j);
-				for (int k = 0; k < n; k++) {
-					x[k] = x[k] + d[j+1]*d[k+1];
-				}
-			}
+//			LargeStatistics stat = (LargeStatistics)currentStatistic;
+//			List<Double> kCondProbs = null;
+//			if (info != null && info.length > 0 && (info[0] instanceof List<?>)) {
+//				@SuppressWarnings("unchecked")
+//				List<Double> kCondProbTemp = (List<Double>)info[0];
+//				kCondProbs = kCondProbTemp;
+//			}
+//			
+//			NormalDisParameter xNormalDisParameter = null;
+//			if (kCondProbs == null)
+//				xNormalDisParameter = new NormalDisParameter(stat);
+//			else
+//				xNormalDisParameter = new NormalDisParameter(stat, kCondProbs);
+//			parameter.setXNormalDisParameter(xNormalDisParameter);
+			
+			return parameter;
 		}
 		
-		for (int j = 0; j < n; j++) {
-			double[] x = xVariance.get(j);
-			for (int k = 0; k < n; k++) {
-				x[k] = x[k] / (double)N;
-			}
-		}
-		
-		
-		return new NormalDisParameter(xMean, xVariance);
 	}
 	
 	
@@ -173,16 +148,20 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	 * @param xStatistic specified X statistic.
 	 * @return extra coefficients.
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Double> calcExtraCoeffs(double[] xStatistic) {
-		if (normalDisParameters == null || normalDisParameters.size() != rems.size())
-			return Util.newList();
+		List<ExchangedParameter> parameters = null;
+		try {
+			parameters = (List<ExchangedParameter>)getParameter();
+		} catch (Exception e) {LogUtil.trace(e);}
 		
-		List<Double> extraCoeffs = Util.newList(normalDisParameters.size());
+		List<Double> extraCoeffs = Util.newList(parameters.size());
 		double sumExtraCoeffs = 0;
-		for (NormalDisParameter parameter : normalDisParameters) {
+		for (ExchangedParameter parameter : parameters) {
 			double extraCoeff = ExchangedParameter.normalPDF(
 					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
-					parameter.getMean(), parameter.getVariance());
+					parameter.getXNormalDisParameter().getMean(),
+					parameter.getXNormalDisParameter().getVariance());
 			extraCoeffs.add(extraCoeff);
 			sumExtraCoeffs += extraCoeff;
 		}
@@ -202,8 +181,8 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		if (normalDisParameters == null || normalDisParameters.size() != rems.size())
-			return super.executeByXStatistic(xStatistic);
+		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
+			return Constants.UNUSED;
 		
 		List<Double> extraCoeffs = calcExtraCoeffs(xStatistic);
 		double[] coeffs = new double[rems.size()];
@@ -234,58 +213,13 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		if (normalDisParameters == null || normalDisParameters.size() != rems.size() || rems.size() == 0)
-			return super.execute(input);
+		if (this.rems == null || this.rems.size() == 0)
+			return Constants.UNUSED;
 		
 		double[] xStatistic = rems.get(0).extractAndTransformRegressorValues(input);
 		return executeByXStatistic(xStatistic);
 	}
 
-	
-	/**
-	 * This class represents parameter of multivariate normal distribution.
-	 * @author Loc Nguyen
-	 * @version 1.0
-	 */
-	protected class NormalDisParameter {
-		
-		/**
-		 * Mean.
-		 */
-		protected List<Double> mean = Util.newList();
-		
-		/**
-		 * Variance.
-		 */
-		protected List<double[]> variance = Util.newList();
-		
-		/**
-		 * Constructor of specified mean and variance.
-		 * @param mean specified mean.
-		 * @param variance specified variance.
-		 */
-		public NormalDisParameter(List<Double> mean, List<double[]> variance) {
-			this.mean = mean;
-			this.variance = variance;
-		}
-		
-		/**
-		 * Getting mean.
-		 * @return
-		 */
-		public List<Double> getMean() {
-			return mean;
-		}
-		
-		/**
-		 * Getting variance.
-		 * @return variance.
-		 */
-		public List<double[]> getVariance() {
-			return variance;
-		}
-	}
-	
 	
 	@Override
 	public String getName() {
@@ -299,9 +233,9 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	
 	@Override
 	public Alg newInstance() {
-		WeightedMixtureREM crispREM = new WeightedMixtureREM();
-		crispREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return crispREM;
+		WeightedMixtureREM weightedREM = new WeightedMixtureREM();
+		weightedREM.getConfig().putAll((DataConfig)this.getConfig().clone());
+		return weightedREM;
 	}
 
 

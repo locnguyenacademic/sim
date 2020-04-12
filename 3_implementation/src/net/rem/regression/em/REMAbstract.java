@@ -126,6 +126,9 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 		buffer.append(", coeff=" + MathUtil.format(exParameter.getCoeff()));
 		buffer.append(", z-variance=" + MathUtil.format(exParameter.getZVariance()));
 
+		if (exParameter.getXNormalDisParameter() != null)
+			buffer.append(", x-parameter=(" + exParameter.getXNormalDisParameter().toString() + ")");
+
 		return buffer.toString();
 	}
 

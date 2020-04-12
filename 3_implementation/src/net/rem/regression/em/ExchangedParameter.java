@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.hudup.core.Cloneable;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.logistic.DSUtil;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
+import net.hudup.core.parser.TextParserUtil;
 import net.rem.regression.LargeStatistics;
 import net.rem.regression.RMAbstract;
 
@@ -32,9 +32,210 @@ public class ExchangedParameter implements Cloneable, Serializable {
 
 
 	/**
-	 * Logger of this class.
+	 * This class represents parameter of multivariate normal distribution.
+	 * @author Loc Nguyen
+	 * @version 1.0
 	 */
-	protected final static Logger logger = Logger.getLogger(ExchangedParameter.class);
+	public static class NormalDisParameter implements Cloneable, Serializable {
+		
+		/**
+		 * Default serial version UID.
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Mean.
+		 */
+		protected List<Double> mean = Util.newList();
+		
+		/**
+		 * Variance.
+		 */
+		protected List<double[]> variance = Util.newList();
+		
+		/**
+		 * Default constructor.
+		 */
+		private NormalDisParameter() {
+			
+		}
+		
+		/**
+		 * Constructor of specified mean and variance.
+		 * @param mean specified mean.
+		 * @param variance specified variance.
+		 */
+		public NormalDisParameter(List<Double> mean, List<double[]> variance) {
+			this.mean = mean;
+			this.variance = variance;
+		}
+		
+		/**
+		 * Constructor with a large statistics.
+		 * @param stat given a large statistics.
+		 */
+		public NormalDisParameter(LargeStatistics stat) {
+			if (stat == null) return;
+			List<double[]> xData = stat.getXData();
+			if (xData == null || xData.size() == 0) return;
+			
+			int n = xData.get(0).length - 1;
+			if (n <= 0) return;
+			
+			List<Double> xMean = DSUtil.initDoubleList(n, 0);
+			int N = xData.size();
+			for (int i = 0; i < N; i++) {
+				double[] x = xData.get(i);
+				for (int j = 0; j < n; j++) {
+					xMean.set(j, xMean.get(j) + x[j+1]);
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				xMean.set(j, xMean.get(j) / (double)N);
+			}
+			
+			
+			List<double[]> xVariance = Util.newList(n);
+			for (int i = 0; i < n; i++) {
+				double[] x = new double[n];
+				Arrays.fill(x, 0);
+				xVariance.add(x);
+			}
+			
+			for (int i = 0; i < N; i++) {
+				double[] d = xData.get(i);
+				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
+				
+				for (int j = 0; j < n; j++) {
+					double[] x = xVariance.get(j);
+					for (int k = 0; k < n; k++) {
+						x[k] = x[k] + d[j+1]*d[k+1];
+					}
+				}
+			}
+			
+			for (int j = 0; j < n; j++) {
+				double[] x = xVariance.get(j);
+				for (int k = 0; k < n; k++) {
+					x[k] = x[k] / (double)N;
+				}
+			}
+			
+			
+			this.mean = xMean;
+			this.variance = xVariance;
+		}
+		
+		/**
+		 * Constructor with a large statistics and conditional probabilities.
+		 * @param stat given a large statistics.
+		 * @param kCondProbs conditional probabilities.
+		 */
+		public NormalDisParameter(LargeStatistics stat, List<Double> kCondProbs) {
+			if (stat == null) return;
+			List<double[]> xData = stat.getXData();
+			if (xData == null || xData.size() == 0) return;
+			
+			int n = xData.get(0).length - 1;
+			if (n <= 0) return;
+			
+			int N = xData.size();
+			double sumCondProbs = 0;
+			for (int i = 0; i < N; i++) {sumCondProbs += kCondProbs.get(i);}
+			
+			List<Double> xMean = DSUtil.initDoubleList(n, 0);
+			for (int i = 0; i < N; i++) {
+				double[] x = xData.get(i);
+				for (int j = 0; j < n; j++) {
+					xMean.set(j, xMean.get(j) + kCondProbs.get(i)*x[j+1]);
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				xMean.set(j, xMean.get(j)/sumCondProbs);
+			}
+			
+			
+			List<double[]> xVariance = Util.newList(n);
+			for (int i = 0; i < n; i++) {
+				double[] x = new double[n];
+				Arrays.fill(x, 0);
+				xVariance.add(x);
+			}
+			
+			for (int i = 0; i < N; i++) {
+				double[] d = xData.get(i);
+				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
+				
+				for (int j = 0; j < n; j++) {
+					double[] x = xVariance.get(j);
+					for (int k = 0; k < n; k++) {
+						x[k] = x[k] + kCondProbs.get(i)*d[j+1]*d[k+1];
+					}
+				}
+			}
+			
+			for (int j = 0; j < n; j++) {
+				double[] x = xVariance.get(j);
+				for (int k = 0; k < n; k++) {
+					x[k] = x[k]/sumCondProbs;
+				}
+			}
+			
+			
+			this.mean = xMean;
+			this.variance = xVariance;
+		}
+
+		/**
+		 * Getting mean.
+		 * @return mean.
+		 */
+		public List<Double> getMean() {
+			return mean;
+		}
+		
+		/**
+		 * Getting variance.
+		 * @return variance.
+		 */
+		public List<double[]> getVariance() {
+			return variance;
+		}
+
+		@Override
+		public Object clone() {
+			NormalDisParameter newParameter = new NormalDisParameter();
+			newParameter.mean = (this.mean != null ? DSUtil.toDoubleList(this.mean) : null);
+			
+			if (this.variance != null) {
+				newParameter.variance = Util.newList(this.variance.size());
+				for (double[] array : this.variance) {
+					newParameter.variance.add(Arrays.copyOf(array, array.length));
+				}
+			}
+			
+			return newParameter;
+		}
+
+		@Override
+		public String toString() {
+			if (mean == null || mean.size() == 0 || variance == null || variance.size() == 0)
+				return "";
+			
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("mean=(" + TextParserUtil.toTextFormatted(mean, ",") + "), ");
+			buffer.append("variance=(");
+			for (int i = 0; i < variance.size(); i++) {
+				if (i > 0) buffer.append(", ");
+				buffer.append(TextParserUtil.toTextFormatted(variance.get(i), ","));
+			}
+			buffer.append(")");
+			
+			return buffer.toString();
+		}
+		
+		
+	}
 
 	
 	/**
@@ -64,6 +265,13 @@ public class ExchangedParameter implements Cloneable, Serializable {
 
 	
 	/**
+	 * Parameter of normal distribution of X variable, excluding the first 1 value.
+	 * Note, X statistics is (1, x1, x2,..., xn) but normal distribution of X variable has x1, x2,..., xn. 
+	 */
+	protected NormalDisParameter xNormalDisParameter = null;
+	
+	
+	/**
 	 * Default constructor.
 	 */
 	private ExchangedParameter() {
@@ -82,24 +290,38 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	}
 
 	
+//	/**
+//	 * Constructor with specified alpha, betas, coefficient, and Z variance.
+//	 * @param alpha specified alpha. It must be not null.
+//	 * @param betas specified betas. It must be not null.
+//	 * @param coeff specified coefficient.
+//	 * @param zVariance specified Z variance.
+//	 */
+//	public ExchangedParameter(List<Double> alpha, List<double[]> betas, double coeff, double zVariance) {
+//		this(alpha, betas, coeff, zVariance, null);
+//	}
+	
+	
 	/**
-	 * Constructor with specified alpha, betas, coefficient, and Z variance.
+	 * Constructor with specified alpha, betas, coefficient, Z variance, and parameter of normal distribution of X variable.
 	 * @param alpha specified alpha. It must be not null.
 	 * @param betas specified betas. It must be not null.
 	 * @param coeff specified coefficient.
 	 * @param zVariance specified Z variance.
+	 * @param xNormalDisParameter parameter of normal distribution of X variable, excluding the first 1 value.
+	 * Note, X statistics is (1, x1, x2,..., xn) but normal distribution of X variable has x1, x2,..., xn.
 	 */
-	public ExchangedParameter(List<Double> alpha, List<double[]> betas, double coeff, double zVariance) {
+	public ExchangedParameter(List<Double> alpha, List<double[]> betas, double coeff, double zVariance, NormalDisParameter xNormalDisParameter) {
 		this.alpha = alpha;
 		this.betas = betas;
 		this.coeff = coeff;
 		this.zVariance = zVariance;
+		this.xNormalDisParameter = xNormalDisParameter;
 	}
-	
+
 	
 	@Override
 	public Object clone() {
-		// TODO Auto-generated method stub
 		ExchangedParameter newParameter = new ExchangedParameter();
 		newParameter.coeff = this.coeff;
 		newParameter.alpha = (this.alpha != null ? DSUtil.toDoubleList(this.alpha) : null);
@@ -112,6 +334,9 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		}
 		
 		newParameter.zVariance = this.zVariance;
+		
+		if (this.xNormalDisParameter != null)
+			newParameter.xNormalDisParameter = (NormalDisParameter)this.xNormalDisParameter.clone(); 
 		
 		return newParameter;
 	}
@@ -186,6 +411,24 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 */
 	public void setZVariance(double zVariance) {
 		this.zVariance = zVariance;
+	}
+	
+	
+	/**
+	 * Getting parameter of normal distribution of X variable.
+	 * @return parameter of normal distribution of X variable.
+	 */
+	public NormalDisParameter getXNormalDisParameter() {
+		return xNormalDisParameter;
+	}
+	
+	
+	/**
+	 * Setting parameter of normal distribution of X variable.
+	 * @param xNormalDisParameter parameter of normal distribution of X variable.
+	 */
+	public void setXNormalDisParameter(NormalDisParameter xNormalDisParameter) {
+		this.xNormalDisParameter = xNormalDisParameter;
 	}
 	
 	
@@ -361,14 +604,12 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		if (this.alpha == null)
 			return "";
 		
 		StringBuffer buffer = new StringBuffer();
 		for (int j = 0; j < this.alpha.size(); j++) {
-			if (j > 0)
-				buffer.append(", ");
+			if (j > 0) buffer.append(", ");
 			buffer.append(MathUtil.format(this.alpha.get(j)));
 		}
 		
@@ -376,6 +617,9 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		buffer.append("coeff=" + MathUtil.format(this.coeff));
 		buffer.append(", z-variance=" + MathUtil.format(this.zVariance));
 		
+		if (xNormalDisParameter != null)
+			buffer.append(", x-parameter=(" + xNormalDisParameter.toString() + ")");
+			
 		return buffer.toString();
 	}
 
@@ -500,7 +744,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		for (int i = 0; i < parameterList.size(); i++) {
 			if (denominator == 0) {
 				condProbs.add(1.0 / (double)parameterList.size());
-				logger.warn("Reset uniform conditional probability of component due to zero denominator");
+				LogUtil.warn("Reset uniform conditional probability of component due to zero denominator");
 			}
 			else
 				condProbs.add(numerators.get(i) / denominator);

@@ -509,7 +509,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		
 		@Override
 		protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
-			// TODO Auto-generated method stub
 			LargeStatistics stat = (LargeStatistics)currentStatistic;
 			if (stat == null || stat.isEmpty())
 				return null;
