@@ -16,7 +16,7 @@ import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 /**
  * This class implements the mixture regression model with weighting mechanism.
  * In fact, weights are added to EM coefficients. In this current implementation, these weights are response probabilities P(Z|X) and regressor probabilities P(X).
- * The method {@link #adjustWeights()} is responsible for calculating these weights. 
+ * The method {@link #adjustMixtureParameters()} is responsible for calculating these weights. 
  * 
  * @author Loc Nguyen
  * @version 1.0
