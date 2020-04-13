@@ -61,14 +61,12 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 * @throws RemoteException if any error raises.
 	 */
 	public void setup(DefaultMixtureREM other) throws RemoteException {
-		// TODO Auto-generated method stub
 		super.setup((Dataset)null, other);
 	}
 
 	
 	@Override
 	public Object learnStart(Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		boolean prepared = false;
 		if (info == null || info.length == 0 || !(info[0] instanceof DefaultMixtureREM))
 			prepared = prepareInternalData(this.sample);
@@ -95,7 +93,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized void unsetup() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.unsetup();
 		if (this.rems != null) {
 			for (REMImpl rem : this.rems)
@@ -172,7 +169,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 			@Override
 			public synchronized Object learnStart(Object...info) throws RemoteException {
-				// TODO Auto-generated method stub
 				boolean prepared = prepareInternalData(sample);
 				if (prepared)
 					return prepared;
@@ -182,13 +178,11 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 			@Override
 			protected Object transformRegressor(Object x, boolean inverse) {
-				// TODO Auto-generated method stub
 				return getMixtureREM().transformRegressor(x, inverse);
 			}
 
 			@Override
 			public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-				// TODO Auto-generated method stub
 				return getMixtureREM().transformResponse(z, inverse);
 			}
 			
@@ -234,7 +228,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	@Override
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (currentParameter == null)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -264,7 +257,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (currentStatistic == null)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -294,7 +286,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	@Override
 	protected Object initializeParameter() {
-		// TODO Auto-generated method stub
 		List<ExchangedParameter> parameters = Util.newList(this.rems.size());
 		for (int k = 0; k < this.rems.size(); k++) {
 			REMImpl rem = this.rems.get(k);
@@ -320,7 +311,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	protected void permuteNotify() {
-		// TODO Auto-generated method stub
 		super.permuteNotify();
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> estimatedParameters = (List<ExchangedParameter>)getEstimatedParameter();
@@ -345,7 +335,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	protected void finishNotify() {
-		// TODO Auto-generated method stub
 		super.finishNotify();
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> estimatedParameters = (List<ExchangedParameter>)getEstimatedParameter();
@@ -371,7 +360,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 * @throws RemoteException if any error raises.
 	 */
 	protected boolean adjustMixtureParameters() throws RemoteException {
-		// TODO Auto-generated method stub
 		//Do nothing
 		return true;
 	}
@@ -379,7 +367,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	protected boolean terminatedCondition(Object estimatedParameter, Object currentParameter, Object previousParameter, Object... info) {
-		// TODO Auto-generated method stub
 		if (this.rems == null)
 			return true;
 
@@ -412,12 +399,11 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	
 	@Override
-	public LargeStatistics getLargeStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
-		if (this.rems == null || this.rems.size() == 0)
-			return null;
+	public synchronized LargeStatistics getLargeStatistics() throws RemoteException {
+		if (rems != null && rems.size() > 0)
+			return rems.get(0).getLargeStatistics(); //Suppose all REMs have the same large statistics.
 		else
-			return this.rems.get(0).getLargeStatistics(); // Suppose all REMs have the same large statistics.
+			return null;
 	}
 
 
@@ -464,7 +450,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		
@@ -495,7 +480,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (parameter == null || !(parameter instanceof List<?>))
 			return "";
 		
@@ -517,7 +501,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null)
 			return "";
 
@@ -540,21 +523,18 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return RMAbstract.getInspector(this);
 	}
 
 
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {EMRemote.class.getName(), RMRemote.class.getName(), MemoryBasedAlgRemote.class.getName()};
 	}
 
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
 		return config;
@@ -563,7 +543,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public synchronized VarWrapper extractRegressor(int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -573,7 +552,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Util.newList();
 		else
@@ -583,7 +561,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized List<VarWrapper> extractSingleRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Util.newList();
 		else
@@ -593,7 +570,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized double extractRegressorValue(Object input, int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		else
@@ -603,7 +579,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public List<Double> extractRegressorStatistic(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Util.newList();
 		else
@@ -613,7 +588,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized VarWrapper extractResponse() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -623,7 +597,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized Object extractResponseValue(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -639,21 +612,18 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 * @return transformed value of X.
 	 */
 	protected Object transformRegressor(Object x, boolean inverse) {
-		// TODO Auto-generated method stub
 		return x;
 	}
 
 	
 	@Override
 	public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-		// TODO Auto-generated method stub
 		return z;
 	}
 	
 	
 	@Override
 	public synchronized Graph createRegressorGraph(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 
@@ -701,7 +671,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized Graph createResponseGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -711,7 +680,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized Graph createErrorGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -721,7 +689,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized List<Graph> createResponseRalatedGraphs() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -731,7 +698,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public synchronized double calcVariance() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		else
@@ -741,7 +707,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public double calcR() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		else
@@ -751,7 +716,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public double[] calcError() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -761,7 +725,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	@Override
 	public boolean saveLargeStatistics(xURI uri, int decimal) throws RemoteException {
-		// TODO Auto-generated method stub
 		return RMAbstract.saveLargeStatistics(this, getLargeStatistics(), uri, decimal);
 	}
 	

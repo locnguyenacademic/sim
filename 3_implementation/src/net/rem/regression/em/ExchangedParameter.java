@@ -32,213 +32,6 @@ public class ExchangedParameter implements Cloneable, Serializable {
 
 
 	/**
-	 * This class represents parameter of multivariate normal distribution.
-	 * @author Loc Nguyen
-	 * @version 1.0
-	 */
-	public static class NormalDisParameter implements Cloneable, Serializable {
-		
-		/**
-		 * Default serial version UID.
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		/**
-		 * Mean.
-		 */
-		protected List<Double> mean = Util.newList();
-		
-		/**
-		 * Variance.
-		 */
-		protected List<double[]> variance = Util.newList();
-		
-		/**
-		 * Default constructor.
-		 */
-		private NormalDisParameter() {
-			
-		}
-		
-		/**
-		 * Constructor of specified mean and variance.
-		 * @param mean specified mean.
-		 * @param variance specified variance.
-		 */
-		public NormalDisParameter(List<Double> mean, List<double[]> variance) {
-			this.mean = mean;
-			this.variance = variance;
-		}
-		
-		/**
-		 * Constructor with a large statistics.
-		 * @param stat given a large statistics.
-		 */
-		public NormalDisParameter(LargeStatistics stat) {
-			if (stat == null) return;
-			List<double[]> xData = stat.getXData();
-			if (xData == null || xData.size() == 0) return;
-			
-			int n = xData.get(0).length - 1;
-			if (n <= 0) return;
-			
-			List<Double> xMean = DSUtil.initDoubleList(n, 0);
-			int N = xData.size();
-			for (int i = 0; i < N; i++) {
-				double[] x = xData.get(i);
-				for (int j = 0; j < n; j++) {
-					xMean.set(j, xMean.get(j) + x[j+1]);
-				}
-			}
-			for (int j = 0; j < n; j++) {
-				xMean.set(j, xMean.get(j) / (double)N);
-			}
-			
-			
-			List<double[]> xVariance = Util.newList(n);
-			for (int i = 0; i < n; i++) {
-				double[] x = new double[n];
-				Arrays.fill(x, 0);
-				xVariance.add(x);
-			}
-			
-			for (int i = 0; i < N; i++) {
-				double[] d = xData.get(i);
-				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
-				
-				for (int j = 0; j < n; j++) {
-					double[] x = xVariance.get(j);
-					for (int k = 0; k < n; k++) {
-						x[k] = x[k] + d[j+1]*d[k+1];
-					}
-				}
-			}
-			
-			for (int j = 0; j < n; j++) {
-				double[] x = xVariance.get(j);
-				for (int k = 0; k < n; k++) {
-					x[k] = x[k] / (double)N;
-				}
-			}
-			
-			
-			this.mean = xMean;
-			this.variance = xVariance;
-		}
-		
-		/**
-		 * Constructor with a large statistics and conditional probabilities.
-		 * @param stat given a large statistics.
-		 * @param kCondProbs conditional probabilities.
-		 */
-		public NormalDisParameter(LargeStatistics stat, List<Double> kCondProbs) {
-			if (stat == null) return;
-			List<double[]> xData = stat.getXData();
-			if (xData == null || xData.size() == 0) return;
-			
-			int n = xData.get(0).length - 1;
-			if (n <= 0) return;
-			
-			int N = xData.size();
-			double sumCondProbs = 0;
-			for (int i = 0; i < N; i++) {sumCondProbs += kCondProbs.get(i);}
-			
-			List<Double> xMean = DSUtil.initDoubleList(n, 0);
-			for (int i = 0; i < N; i++) {
-				double[] x = xData.get(i);
-				for (int j = 0; j < n; j++) {
-					xMean.set(j, xMean.get(j) + kCondProbs.get(i)*x[j+1]);
-				}
-			}
-			for (int j = 0; j < n; j++) {
-				xMean.set(j, xMean.get(j)/sumCondProbs);
-			}
-			
-			
-			List<double[]> xVariance = Util.newList(n);
-			for (int i = 0; i < n; i++) {
-				double[] x = new double[n];
-				Arrays.fill(x, 0);
-				xVariance.add(x);
-			}
-			
-			for (int i = 0; i < N; i++) {
-				double[] d = xData.get(i);
-				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
-				
-				for (int j = 0; j < n; j++) {
-					double[] x = xVariance.get(j);
-					for (int k = 0; k < n; k++) {
-						x[k] = x[k] + kCondProbs.get(i)*d[j+1]*d[k+1];
-					}
-				}
-			}
-			
-			for (int j = 0; j < n; j++) {
-				double[] x = xVariance.get(j);
-				for (int k = 0; k < n; k++) {
-					x[k] = x[k]/sumCondProbs;
-				}
-			}
-			
-			
-			this.mean = xMean;
-			this.variance = xVariance;
-		}
-
-		/**
-		 * Getting mean.
-		 * @return mean.
-		 */
-		public List<Double> getMean() {
-			return mean;
-		}
-		
-		/**
-		 * Getting variance.
-		 * @return variance.
-		 */
-		public List<double[]> getVariance() {
-			return variance;
-		}
-
-		@Override
-		public Object clone() {
-			NormalDisParameter newParameter = new NormalDisParameter();
-			newParameter.mean = (this.mean != null ? DSUtil.toDoubleList(this.mean) : null);
-			
-			if (this.variance != null) {
-				newParameter.variance = Util.newList(this.variance.size());
-				for (double[] array : this.variance) {
-					newParameter.variance.add(Arrays.copyOf(array, array.length));
-				}
-			}
-			
-			return newParameter;
-		}
-
-		@Override
-		public String toString() {
-			if (mean == null || mean.size() == 0 || variance == null || variance.size() == 0)
-				return "";
-			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("mean=(" + TextParserUtil.toTextFormatted(mean, ",") + "), ");
-			buffer.append("variance=(");
-			for (int i = 0; i < variance.size(); i++) {
-				if (i > 0) buffer.append(", ");
-				buffer.append(TextParserUtil.toTextFormatted(variance.get(i), ","));
-			}
-			buffer.append(")");
-			
-			return buffer.toString();
-		}
-		
-		
-	}
-
-	
-	/**
 	 * Alpha coefficients for Z statistics.
 	 */
 	protected List<Double> alpha = null;
@@ -290,16 +83,16 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	}
 
 	
-//	/**
-//	 * Constructor with specified alpha, betas, coefficient, and Z variance.
-//	 * @param alpha specified alpha. It must be not null.
-//	 * @param betas specified betas. It must be not null.
-//	 * @param coeff specified coefficient.
-//	 * @param zVariance specified Z variance.
-//	 */
-//	public ExchangedParameter(List<Double> alpha, List<double[]> betas, double coeff, double zVariance) {
-//		this(alpha, betas, coeff, zVariance, null);
-//	}
+	/**
+	 * Constructor with specified alpha, betas, coefficient, and Z variance.
+	 * @param alpha specified alpha. It must be not null.
+	 * @param betas specified betas. It must be not null.
+	 * @param coeff specified coefficient.
+	 * @param zVariance specified Z variance.
+	 */
+	public ExchangedParameter(List<Double> alpha, List<double[]> betas, double coeff, double zVariance) {
+		this(alpha, betas, coeff, zVariance, null);
+	}
 	
 	
 	/**
@@ -824,6 +617,214 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		return list;
 	}
 	
+	
+	/**
+	 * This class represents parameter of multivariate normal distribution.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 */
+	public static class NormalDisParameter implements Cloneable, Serializable {
+		
+		/**
+		 * Default serial version UID.
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Mean.
+		 */
+		protected List<Double> mean = Util.newList();
+		
+		/**
+		 * Variance.
+		 */
+		protected List<double[]> variance = Util.newList();
+		
+		/**
+		 * Default constructor.
+		 */
+		private NormalDisParameter() {
+			
+		}
+		
+		/**
+		 * Constructor of specified mean and variance.
+		 * @param mean specified mean.
+		 * @param variance specified variance.
+		 */
+		public NormalDisParameter(List<Double> mean, List<double[]> variance) {
+			this.mean = mean;
+			this.variance = variance;
+		}
+		
+		/**
+		 * Constructor with a large statistics.
+		 * @param stat given a large statistics.
+		 */
+		public NormalDisParameter(LargeStatistics stat) {
+			if (stat == null) return;
+			List<double[]> xData = stat.getXData();
+			if (xData == null || xData.size() == 0) return;
+			
+			int n = xData.get(0).length - 1;
+			if (n <= 0) return;
+			
+			List<Double> xMean = DSUtil.initDoubleList(n, 0);
+			int N = xData.size();
+			for (int i = 0; i < N; i++) {
+				double[] x = xData.get(i);
+				for (int j = 0; j < n; j++) {
+					xMean.set(j, xMean.get(j) + x[j+1]);
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				xMean.set(j, xMean.get(j) / (double)N);
+			}
+			
+			
+			List<double[]> xVariance = Util.newList(n);
+			for (int i = 0; i < n; i++) {
+				double[] x = new double[n];
+				Arrays.fill(x, 0);
+				xVariance.add(x);
+			}
+			
+			for (int i = 0; i < N; i++) {
+				double[] d = xData.get(i);
+				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
+				
+				for (int j = 0; j < n; j++) {
+					double[] x = xVariance.get(j);
+					for (int k = 0; k < n; k++) {
+						x[k] = x[k] + d[j+1]*d[k+1];
+					}
+				}
+			}
+			
+			for (int j = 0; j < n; j++) {
+				double[] x = xVariance.get(j);
+				for (int k = 0; k < n; k++) {
+					x[k] = x[k] / (double)N;
+				}
+			}
+			
+			
+			this.mean = xMean;
+			this.variance = xVariance;
+		}
+		
+		/**
+		 * Constructor with a large statistics and conditional probabilities.
+		 * @param stat given a large statistics.
+		 * @param kCondProbs conditional probabilities.
+		 */
+		public NormalDisParameter(LargeStatistics stat, List<Double> kCondProbs) {
+			if (stat == null) return;
+			List<double[]> xData = stat.getXData();
+			if (xData == null || xData.size() == 0) return;
+			
+			int n = xData.get(0).length - 1;
+			if (n <= 0) return;
+			
+			int N = xData.size();
+			double sumCondProbs = 0;
+			for (int i = 0; i < N; i++) {sumCondProbs += kCondProbs.get(i);}
+			
+			List<Double> xMean = DSUtil.initDoubleList(n, 0);
+			for (int i = 0; i < N; i++) {
+				double[] x = xData.get(i);
+				for (int j = 0; j < n; j++) {
+					xMean.set(j, xMean.get(j) + kCondProbs.get(i)*x[j+1]);
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				xMean.set(j, xMean.get(j)/sumCondProbs);
+			}
+			
+			
+			List<double[]> xVariance = Util.newList(n);
+			for (int i = 0; i < n; i++) {
+				double[] x = new double[n];
+				Arrays.fill(x, 0);
+				xVariance.add(x);
+			}
+			
+			for (int i = 0; i < N; i++) {
+				double[] d = xData.get(i);
+				for (int j = 0; j < n; j++) {d[j+1] = d[j+1] - xMean.get(j);}
+				
+				for (int j = 0; j < n; j++) {
+					double[] x = xVariance.get(j);
+					for (int k = 0; k < n; k++) {
+						x[k] = x[k] + kCondProbs.get(i)*d[j+1]*d[k+1];
+					}
+				}
+			}
+			
+			for (int j = 0; j < n; j++) {
+				double[] x = xVariance.get(j);
+				for (int k = 0; k < n; k++) {
+					x[k] = x[k]/sumCondProbs;
+				}
+			}
+			
+			
+			this.mean = xMean;
+			this.variance = xVariance;
+		}
+
+		/**
+		 * Getting mean.
+		 * @return mean.
+		 */
+		public List<Double> getMean() {
+			return mean;
+		}
+		
+		/**
+		 * Getting variance.
+		 * @return variance.
+		 */
+		public List<double[]> getVariance() {
+			return variance;
+		}
+
+		@Override
+		public Object clone() {
+			NormalDisParameter newParameter = new NormalDisParameter();
+			newParameter.mean = (this.mean != null ? DSUtil.toDoubleList(this.mean) : null);
+			
+			if (this.variance != null) {
+				newParameter.variance = Util.newList(this.variance.size());
+				for (double[] array : this.variance) {
+					newParameter.variance.add(Arrays.copyOf(array, array.length));
+				}
+			}
+			
+			return newParameter;
+		}
+
+		@Override
+		public String toString() {
+			if (mean == null || mean.size() == 0 || variance == null || variance.size() == 0)
+				return "";
+			
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("mean=(" + DSUtil.shortenVerbalName(TextParserUtil.toTextFormatted(mean, ",")) + "), ");
+			buffer.append("variance=(");
+			StringBuffer var = new StringBuffer();
+			for (int i = 0; i < variance.size(); i++) {
+				if (i > 0) var.append(", ");
+				var.append(TextParserUtil.toTextFormatted(variance.get(i), ","));
+			}
+			buffer.append(DSUtil.shortenVerbalName(var.toString()) + ")");
+			
+			return buffer.toString();
+		}
+		
+		
+	}
+
 	
 }
 

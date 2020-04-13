@@ -1221,16 +1221,33 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 	/**
 	 * Generating 2-dimensional regressive data with specified list of regression coefficients, list of probabilities, list of variances, and size.
+	 * Generated data for regressors x1, x2,..., xn is in [0, 1].
+	 * Following is a code snippet to generate normal data for regression model:<br>
+	 * <br>
+	 * <code>
+	 * List<double[]> alphas = Util.newList(2);<br>
+	 * alphas.add(new double[] {0, 1});<br>
+	 * alphas.add(new double[] {1, -1});<br>
+	 * List<Double> probs = Util.newList(2);<br>
+	 * probs.add(0.5);<br>
+	 * probs.add(0.5);<br>
+	 * List<Double> variances = Util.newList(2);<br>
+	 * variances.add(0.001);<br>
+	 * variances.add(0.001);<br>
+	 * LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianData2(alphas, probs, variances, 10000);
+	 * </code>
+	 * <br>
 	 * @param alphas specified list of regression coefficients.
-	 * @param probs specified list of probabilities.
+	 * @param probs specified list of probabilities. Each probability in this parameter specifies the frequency to fill in data for corresponding regression model.
+	 * For instance, given 1000 times, if probs[1] = 0.4 and probs[2] = 0.6 then, the frequencies to generate data for the first model and second model are 400 and 600 times, respectively.
 	 * @param variances specified list of variances.
 	 * @param size size of data.
 	 * @return regressive large statistics generated from specified list of regression coefficients, list of probabilities, list of variances, and size.
 	 */
 	public static LargeStatistics generate2DRegressiveGaussianData(List<double[]> alphas, List<Double> probs, List<Double> variances, int size) {
 		if (alphas.size() == 0) return null;
-		List<double[]> xData = Util.newList(alphas.size() * size);
-		List<double[]> zData = Util.newList(alphas.size() * size);
+		List<double[]> xData = Util.newList(size);
+		List<double[]> zData = Util.newList(size);
 		
 		Random cRnd = new Random();
 		Random xRnd = new Random();
@@ -1280,25 +1297,44 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	/**
 	 * Generating 2-dimensional regressive data with specified list of regression coefficients, list of probabilities, list of variances, and size.
+	 * Generated data for regressors x1, x2,..., xn is in [0, 1].
+	 * The difference between this method and {@link #generate2DRegressiveGaussianData(List, List, List, int)} is that this method generates data for x1, x2,..., xn according to intervals.
+	 * For instance, if the number models is k = alphas.size(), the intervals to generate data of xi for k models are (0, 1/k), (1/k, 2/k),..., and ((k-1)/k, 1), respectively.
+	 * Following is a code snippet to generate normal data for regression model:<br>
+	 * <br>
+	 * <code>
+	 * List<double[]> alphas = Util.newList(2);<br>
+	 * alphas.add(new double[] {0, 1});<br>
+	 * alphas.add(new double[] {1, -1});<br>
+	 * List<Double> probs = Util.newList(2);<br>
+	 * probs.add(0.5);<br>
+	 * probs.add(0.5);<br>
+	 * List<Double> variances = Util.newList(2);<br>
+	 * variances.add(0.001);<br>
+	 * variances.add(0.001);<br>
+	 * LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianData2(alphas, probs, variances, 10000);
+	 * </code>
+	 * <br>
 	 * @param alphas specified list of regression coefficients.
-	 * @param probs specified list of probabilities.
+	 * @param probs specified list of probabilities. Each probability in this parameter specifies the frequency to fill in data for corresponding regression model.
+	 * For instance, given 1000 times, if probs[1] = 0.4 and probs[2] = 0.6 then, the frequencies to generate data for the first model and second model are 400 and 600 times, respectively.
 	 * @param variances specified list of variances.
 	 * @param size size of data.
 	 * @return regressive large statistics generated from specified list of regression coefficients, list of probabilities, list of variances, and size.
 	 */
-	public static LargeStatistics generate2DRegressiveGaussianData2(List<double[]> alphas, List<Double> probs, List<Double> variances, int size) {
+	public static LargeStatistics generate2DRegressiveGaussianDataWithXIntervals(List<double[]> alphas, List<Double> probs, List<Double> variances, int size) {
 		if (alphas.size() == 0) return null;
-		List<double[]> xData = Util.newList(alphas.size() * size);
-		List<double[]> zData = Util.newList(alphas.size() * size);
+		List<double[]> xData = Util.newList(size);
+		List<double[]> zData = Util.newList(size);
 		
-		Random cRnd = new Random();
-		Random xRnd = new Random();
-		List<Random> zRnds = Util.newList(alphas.size());
+		Random cRnd = new Random(); //for randomizing indices.
+		Random xRnd = new Random(); //for randomizing x1, x2,..., xn
+		List<Random> zRnds = Util.newList(alphas.size()); //for randomizing z
 		for (int k = 0; k < alphas.size(); k++) {
 			zRnds.add(new Random());
 		}
 
-		//Indexing
+		//Indexing which aims to filling regression models (x1, x2,..., xn) according to random order.
 		int[] counts = new int[alphas.size()];
 		List<Integer> numbers = Util.newList(alphas.size());
 		int m = 1000;
@@ -1319,7 +1355,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		}
 		
 		//Interval
-		List<double[]> intervals= Util.newList(alphas.size());
+		List<double[]> intervals= Util.newList(alphas.size()); //Each interval specifies range of a regressor (Xi).  
 		for (int i = 0 ; i < alphas.size(); i++) {
 			double d = 1.0 / alphas.size();
 			double a = i * d;

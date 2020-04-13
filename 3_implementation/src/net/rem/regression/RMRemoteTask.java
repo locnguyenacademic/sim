@@ -73,7 +73,7 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 	/**
 	 * Executing by X statistics.
 	 * @param xStatistic X statistics (regressors). The first element of this X statistics is 1.
-	 * @return result of execution. Return null if execution is failed.
+	 * @return result of execution. Return NaN if execution is failed.
 	 * @throws RemoteException if any error raises.
 	 */
 	double executeByXStatistic(double[] xStatistic) throws RemoteException;

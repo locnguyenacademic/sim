@@ -172,7 +172,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 
 	@Override
 	protected Object expectation(Object currentParameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> parameters = (List<ExchangedParameter>)currentParameter;
 		@SuppressWarnings("unchecked")
@@ -231,9 +230,8 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
-		if (currentStatistic == null)
-			return null;
+		if (currentStatistic == null) return null;
+		
 		@SuppressWarnings("unchecked")
 		List<LargeStatistics> stats = (List<LargeStatistics>)currentStatistic;
 		List<ExchangedParameter> parameters = Util.newList(this.rems.size());
@@ -278,7 +276,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Object initializeParameter() {
-		// TODO Auto-generated method stub
 		List<ExchangedParameter> prevParameters = Util.newList();
 		if (getConfig().containsKey(PREV_PARAMS_FIELD))
 			prevParameters = (List<ExchangedParameter>)getConfig().get(PREV_PARAMS_FIELD);
@@ -312,9 +309,8 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 						}
 					}
 					catch (Throwable e) {
-						// TODO Auto-generated catch block
-						LogUtil.trace(e);
 						parameter = null;
+						LogUtil.trace(e);
 					}
 				}
 				else {
@@ -352,36 +348,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
-	/**
-	 * Getting the fitness criterion of this model given large statistics.
-	 * @param stat given large statistics.
-	 * @return the fitness criterion of this model given large statistics. Return NaN if any error raises.
-	 * @throws RemoteException if any error raises.
-	 */
-	@Deprecated
-	public synchronized double getFitness2(LargeStatistics stat) throws RemoteException {
-		@SuppressWarnings("unchecked")
-		List<ExchangedParameter> parameters = (List<ExchangedParameter>)getParameter();
-		if (stat == null || parameters == null || parameters.size() == 0)
-			return Constants.UNUSED;
-		
-		int N = stat.getZData().size();
-		if (N == 0) return Constants.UNUSED;
-		double fitness = 0.0;
-		for (int i = 0; i < N; i++) {
-			double[] xVector = stat.getXData().get(i);
-			double[] zVector = stat.getZData().get(i);
-			
-			List<Double> probs = ExchangedParameter.normalZCondProbs(parameters, xVector, zVector);
-			double[] max = MathUtil.findExtremeValue(probs, true);
-			if (max != null)
-				fitness += max[0];
-		}
-		
-		return fitness / (double)N;
-	}
-
-	
 	/**
 	 * Getting the fitness criterion of this model given large statistics.
 	 * @param stat given large statistics.
@@ -708,4 +674,35 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
+//	/**
+//	 * Getting the fitness criterion of this model given large statistics.
+//	 * @param stat given large statistics.
+//	 * @return the fitness criterion of this model given large statistics. Return NaN if any error raises.
+//	 * @throws RemoteException if any error raises.
+//	 */
+//	@SuppressWarnings("unused")
+//	@Deprecated
+//	private synchronized double getFitness2(LargeStatistics stat) throws RemoteException {
+//		@SuppressWarnings("unchecked")
+//		List<ExchangedParameter> parameters = (List<ExchangedParameter>)getParameter();
+//		if (stat == null || parameters == null || parameters.size() == 0)
+//			return Constants.UNUSED;
+//		
+//		int N = stat.getZData().size();
+//		if (N == 0) return Constants.UNUSED;
+//		double fitness = 0.0;
+//		for (int i = 0; i < N; i++) {
+//			double[] xVector = stat.getXData().get(i);
+//			double[] zVector = stat.getZData().get(i);
+//			
+//			List<Double> probs = ExchangedParameter.normalZCondProbs(parameters, xVector, zVector);
+//			double[] max = MathUtil.findExtremeValue(probs, true);
+//			if (max != null)
+//				fitness += max[0];
+//		}
+//		
+//		return fitness / (double)N;
+//	}
+
+	
 }

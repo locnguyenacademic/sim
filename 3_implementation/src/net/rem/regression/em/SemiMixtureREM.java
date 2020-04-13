@@ -1,6 +1,5 @@
 package net.rem.regression.em;
 
-import static net.rem.regression.RMAbstract.notSatisfy;
 import static net.rem.regression.RMAbstract.splitIndices;
 import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
 
@@ -23,7 +22,6 @@ import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
-import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.Vector2;
 import net.rem.regression.LargeStatistics;
 import net.rem.regression.VarWrapper;
@@ -32,13 +30,21 @@ import net.rem.regression.em.ui.graph.PlotGraphExt;
 
 /**
  * This class implements the semi-mixture regression model.
- * If there are 2 partial models and dual mode is true, this semi-mixture regression model becomes dual regression model.
- *  
+ * Suppose the dataset is x1, x2,..., xn, z then, this semi-mixture model by default builds up n sub regression models such as
+ * (x1, z), (x2, z),..., and (xn, z). The semi mixture model has two modes such as mutual model and uniform mode.<br>
+ * <br>
+ * Let z1, z2,..., zn be n estimated values of z calculated from such
+ * n such sub-models, if the mutual mode is set true, the final estimated value of z is (z1 + z2 + ... + zn) / n (please see {@link #expectation(Object, Object...)}).
+ * If there are 2 partial models and dual mode is true, this semi-mixture regression model becomes dual regression model.<br>
+ * <br>
+ * If the uniform model is set true, EM coefficients of sub-models are 1/n. Otherwise, each EM coefficient is calculated according to conditional probabilities at the last iteration of the algorithm loop
+ * (please see {@link #adjustMixtureParameters()}).<br>
+ * <br>
+ * In general, the feature of this semi mixture model is not to calculate EM coefficients at each iteration of EM loop and so it is faster than normal mixture model. 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-@NextUpdate
 public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAlg, NoteAlg {
 
 	
@@ -121,7 +127,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	
 	@Override
 	protected REMImpl createREM() {
-		// TODO Auto-generated method stub
 		REMImpl rem = super.createREM();
 		rem.getConfig().put(EM_EPSILON_FIELD, this.getConfig().get(EM_EPSILON_FIELD));
 		rem.getConfig().put(EM_MAX_ITERATION_FIELD, this.getConfig().get(EM_MAX_ITERATION_FIELD));
@@ -135,7 +140,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	 */
 	@Override
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		@SuppressWarnings("unchecked")
 		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation(currentParameter, info);
 		
@@ -151,7 +155,7 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 					return null;
 			}
 			
-			//Calculating average value of Z in mutual mode.
+			//Calculating average value of Z in mutual mode. For instance, the estimated value of Z is the average over all sub-models.
 			for (int i = 0; i < N; i++) {
 				double mean0 = 0;
 				double coeffSum = 0;
@@ -179,7 +183,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	
 	@Override
 	protected Object initializeParameter() {
-		// TODO Auto-generated method stub
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> parameters = (List<ExchangedParameter>)super.initializeParameter();
 		
@@ -246,112 +249,8 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	}
 	
 	
-	/**
-	 * Adjusting specified parameters based on specified statistics according to mixture model for many iterations.
-	 * This method is replaced by {@link #adjustMixtureParameters()} method.
-	 * @return true if the adjustment process is successful.
-	 * @throws Exception if any error raises.
-	 */
-	@Deprecated
-	protected boolean adjustMixtureParameters2() throws Exception {
-		if (this.rems == null || this.rems.size() == 0)
-			return false;
-		
-		for (REMImpl rem : this.rems) {
-			ExchangedParameter parameter = rem.getExchangedParameter();
-			double zVariance = parameter.estimateZVariance(rem.getLargeStatistics());
-			parameter.setZVariance(zVariance);
-			parameter.setCoeff(1.0 / (double)this.rems.size());
-		}
-		//In uniform mode, all coefficients are 1/K. In logistic mode, coefficients are not used. 
-		if (getConfig().getAsBoolean(UNIFORM_MODE_FIELD))
-			return true;
-		
-		boolean terminated = true;
-		int t = 0;
-		int maxIteration = getConfig().getAsInt(EM_MAX_ITERATION_FIELD);
-		maxIteration = (maxIteration <= 0) ? EM_MAX_ITERATION : maxIteration;
-		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
-		do {
-			terminated = true;
-			t++;
-			this.currentIteration++;
-			
-			List<ExchangedParameter> parameterList = Util.newList(this.rems.size());
-			for (REMImpl rem : this.rems) {
-				ExchangedParameter parameter = rem.getExchangedParameter();
-				parameterList.add((ExchangedParameter)parameter.clone());
-			}
-			
-			for (int k = 0; k < this.rems.size(); k++) {
-				REMImpl rem = this.rems.get(k);
-				ExchangedParameter parameter = rem.getExchangedParameter();
-				
-				double condProbSum = 0;
-				int N = 0;
-				List<double[]> zData = rem.getData().getZData(); //By default, all models have the same original Z variables.
-				//double zSum = 0;
-				List<List<Double>> condProbsList = Util.newList(N);
-				for (int i = 0; i < zData.size(); i++) {
-					double zValue = zData.get(i)[1];
-					if (!Util.isUsed(zValue))
-						continue;
-					
-					List<double[]> XList = Util.newList(this.rems.size());
-					for (REMImpl rem2 : this.rems) {
-						XList.add(rem2.getLargeStatistics().getXData().get(i));
-					}
-					
-					List<Double> condProbs = ExchangedParameter.normalZCondProbs(parameterList, XList, Arrays.asList(new double[] {1, zValue}));
-					condProbsList.add(condProbs);
-					
-					condProbSum += condProbs.get(k);
-					//zSum += condProbs.get(k) * zValue;
-					N++;
-				}
-				if (condProbSum == 0)
-					LogUtil.warn("#adjustMixtureParameters: zero sum of conditional probabilities in " + k + "th model");
-				
-				//Estimating coefficient
-				double coeff = condProbSum / (double)N;
-				if (notSatisfy(coeff, parameter.getCoeff(), threshold))
-					terminated = terminated && false;
-				parameter.setCoeff(coeff);
-				
-//				//Estimating mean
-//				double mean = zSum / condProbSum;
-//				if (notSatisfy(mean, parameter.getMean(), threshold))
-//					terminated = terminated && false;
-//				parameter.setMean(mean);
-//				
-//				//Estimating variance
-//				double zDevSum = 0;
-//				for (int i = 0; i < zData.size(); i++) {
-//					double zValue = zData.get(i)[1];
-//					if (!Util.isUsed(zValue))
-//						continue;
-//
-//					List<Double> condProbs = condProbsList.get(i);
-//					double d = zValue - mean;
-//					zDevSum += condProbs.get(k) * (d*d);
-//				}
-//				double variance = zDevSum / condProbSum;
-//				if (notSatisfy(variance, parameter.getVariance(), threshold))
-//					terminated = terminated && false;
-//				parameter.setVariance(variance);
-//				if (variance == 0)
-//					logger.warn("#adjustMixtureParameters: Variance of the " + k + "th model is 0");
-			}
-			
-		} while (!terminated && t < maxIteration);
-		
-		return true;
-	}
-
-	
 	@Override
 	public synchronized LargeStatistics getLargeStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		
@@ -386,7 +285,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0 || xStatistic.length != this.rems.size() + 1)
 			return Constants.UNUSED;
 		
@@ -406,7 +304,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 //		if (getConfig().getAsBoolean(LOGISTIC_MODE_FIELD)) { // Logistic mode does not use probability
 //			if (this.rems == null || this.rems.size() == 0)
 //				return null;
@@ -445,7 +342,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -456,7 +352,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		SemiMixtureREM semiMixREM = new SemiMixtureREM();
 		semiMixREM.getConfig().putAll((DataConfig)this.getConfig().clone());
 		return semiMixREM;
@@ -465,21 +360,18 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 
 	
 	@Override
 	public String note() {
-		// TODO Auto-generated method stub
 		return note;
 	}
 
 
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MUTUAL_MODE_FIELD, MUTUAL_MODE_DEFAULT);
 		config.put(UNIFORM_MODE_FIELD, UNIFORM_MODE_DEFAULT);
@@ -491,7 +383,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 	
 	@Override
 	public VarWrapper extractRegressor(int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		else
@@ -501,7 +392,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		List<VarWrapper> varList = Util.newList();
 		if (this.rems == null || this.rems.size() == 0)
 			return varList;
@@ -517,7 +407,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public List<VarWrapper> extractSingleRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		List<VarWrapper> varList = Util.newList();
 		if (this.rems == null || this.rems.size() == 0)
 			return varList;
@@ -533,7 +422,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public double extractRegressorValue(Object input, int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		else
@@ -543,7 +431,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public List<Double> extractRegressorStatistic(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Util.newList();
 		
@@ -561,7 +448,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized Graph createRegressorGraph(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		
@@ -579,7 +465,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized Graph createResponseGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 
@@ -646,7 +531,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public Graph createErrorGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		
@@ -708,7 +592,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 			@Override
 			public String getGraphFeature() {
-				// TODO Auto-generated method stub
 				return MathUtil.format(mean, 2) + " +/- 1.96*" + 
     				MathUtil.format(sd, 2);
 			}
@@ -731,7 +614,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized double calcVariance() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		
@@ -759,7 +641,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized double calcR() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		
@@ -789,7 +670,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public double[] calcError() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.rems == null || this.rems.size() == 0)
 			return null;
 		
@@ -811,6 +691,110 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 		
     	return new double[] {error.mean(), error.mleVar()};
 	}
+
+
+//	/**
+//	 * Adjusting specified parameters based on specified statistics according to mixture model for many iterations.
+//	 * This method is replaced by {@link #adjustMixtureParameters()} method.
+//	 * @return true if the adjustment process is successful.
+//	 * @throws Exception if any error raises.
+//	 */
+//	@SuppressWarnings("unused")
+//	@Deprecated
+//	private boolean adjustMixtureParameters2() throws Exception {
+//		if (this.rems == null || this.rems.size() == 0)
+//			return false;
+//		
+//		for (REMImpl rem : this.rems) {
+//			ExchangedParameter parameter = rem.getExchangedParameter();
+//			double zVariance = parameter.estimateZVariance(rem.getLargeStatistics());
+//			parameter.setZVariance(zVariance);
+//			parameter.setCoeff(1.0 / (double)this.rems.size());
+//		}
+//		//In uniform mode, all coefficients are 1/K. In logistic mode, coefficients are not used. 
+//		if (getConfig().getAsBoolean(UNIFORM_MODE_FIELD))
+//			return true;
+//		
+//		boolean terminated = true;
+//		int t = 0;
+//		int maxIteration = getConfig().getAsInt(EM_MAX_ITERATION_FIELD);
+//		maxIteration = (maxIteration <= 0) ? EM_MAX_ITERATION : maxIteration;
+//		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
+//		do {
+//			terminated = true;
+//			t++;
+//			this.currentIteration++;
+//			
+//			List<ExchangedParameter> parameterList = Util.newList(this.rems.size());
+//			for (REMImpl rem : this.rems) {
+//				ExchangedParameter parameter = rem.getExchangedParameter();
+//				parameterList.add((ExchangedParameter)parameter.clone());
+//			}
+//			
+//			for (int k = 0; k < this.rems.size(); k++) {
+//				REMImpl rem = this.rems.get(k);
+//				ExchangedParameter parameter = rem.getExchangedParameter();
+//				
+//				double condProbSum = 0;
+//				int N = 0;
+//				List<double[]> zData = rem.getData().getZData(); //By default, all models have the same original Z variables.
+//				//double zSum = 0;
+//				List<List<Double>> condProbsList = Util.newList(N);
+//				for (int i = 0; i < zData.size(); i++) {
+//					double zValue = zData.get(i)[1];
+//					if (!Util.isUsed(zValue))
+//						continue;
+//					
+//					List<double[]> XList = Util.newList(this.rems.size());
+//					for (REMImpl rem2 : this.rems) {
+//						XList.add(rem2.getLargeStatistics().getXData().get(i));
+//					}
+//					
+//					List<Double> condProbs = ExchangedParameter.normalZCondProbs(parameterList, XList, Arrays.asList(new double[] {1, zValue}));
+//					condProbsList.add(condProbs);
+//					
+//					condProbSum += condProbs.get(k);
+//					//zSum += condProbs.get(k) * zValue;
+//					N++;
+//				}
+//				if (condProbSum == 0)
+//					LogUtil.warn("#adjustMixtureParameters: zero sum of conditional probabilities in " + k + "th model");
+//				
+//				//Estimating coefficient
+//				double coeff = condProbSum / (double)N;
+//				if (notSatisfy(coeff, parameter.getCoeff(), threshold))
+//					terminated = terminated && false;
+//				parameter.setCoeff(coeff);
+//				
+////				//Estimating mean
+////				double mean = zSum / condProbSum;
+////				if (notSatisfy(mean, parameter.getMean(), threshold))
+////					terminated = terminated && false;
+////				parameter.setMean(mean);
+////				
+////				//Estimating variance
+////				double zDevSum = 0;
+////				for (int i = 0; i < zData.size(); i++) {
+////					double zValue = zData.get(i)[1];
+////					if (!Util.isUsed(zValue))
+////						continue;
+////
+////					List<Double> condProbs = condProbsList.get(i);
+////					double d = zValue - mean;
+////					zDevSum += condProbs.get(k) * (d*d);
+////				}
+////				double variance = zDevSum / condProbSum;
+////				if (notSatisfy(variance, parameter.getVariance(), threshold))
+////					terminated = terminated && false;
+////				parameter.setVariance(variance);
+////				if (variance == 0)
+////					logger.warn("#adjustMixtureParameters: Variance of the " + k + "th model is 0");
+//			}
+//			
+//		} while (!terminated && t < maxIteration);
+//		
+//		return true;
+//	}
 
 
 }

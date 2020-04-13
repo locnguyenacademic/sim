@@ -46,13 +46,12 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 	 * Default constructor.
 	 */
 	public REMAbstract() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {EMRemote.class.getName(), REMRemote.class.getName(), MemoryBasedAlgRemote.class.getName()};
 	}
 
@@ -66,7 +65,6 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 			return (ExchangedParameter)getParameter();
 		}
 		catch (Throwable e) {
-			// TODO Auto-generated catch block
 			LogUtil.trace(e);
 		}
 		
@@ -88,21 +86,18 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 	 * @return transformed value of X.
 	 */
 	protected Object transformRegressor(Object x, boolean inverse) {
-		// TODO Auto-generated method stub
 		return x;
 	}
 
 
 	@Override
 	public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-		// TODO Auto-generated method stub
 		return z;
 	}
 
 
 	@Override
 	public synchronized String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.getParameter() == null)
 			return "";
 		ExchangedParameter exParameter = ((ExchangedParameter)this.getParameter());
@@ -135,7 +130,6 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 
 	@Override
 	public String parameterToShownText(Object parameter, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (parameter == null || !(parameter instanceof ExchangedParameter))
 			return "";
 		
@@ -152,7 +146,6 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 
 	@Override
 	public String note() {
-		// TODO Auto-generated method stub
 		return note;
 	}
 
@@ -234,7 +227,6 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 
 	@Override
 	public boolean saveLargeStatistics(xURI uri, int decimal) throws RemoteException {
-		// TODO Auto-generated method stub
 		return RMAbstract.saveLargeStatistics(this, this.getLargeStatistics(), uri, decimal);
 	}
 

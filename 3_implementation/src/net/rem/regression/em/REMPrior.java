@@ -16,14 +16,13 @@ import net.rem.regression.LargeStatistics;
 
 /**
  * This class implements expectation maximization algorithm for regression model in case of missing data with support of the prior probability.
- * This class is marked as deprecated class because it is not practical, which is only used for research.
- * How to define prior regressive coefficients and variance is a big problem.
+ * The prior information includes prior regressive coefficients (alpha0) and prior variance of response variable Z (z-variance0).
+ * In current implementation, users need to specify alpha0 and z-variance0 manually. For example, alpha0=(0.9, 0.8, 0.7) and z-variance0=1.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-@Deprecated
 public class REMPrior extends REMImpl {
 
 	
@@ -73,14 +72,12 @@ public class REMPrior extends REMImpl {
 	 * Default constructor.
 	 */
 	public REMPrior() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 	
 	
 	@Override
 	protected void clearInternalData() {
-		// TODO Auto-generated method stub
 		super.clearInternalData();
 		this.alpha0 = null;
 		this.zVariance0 = 0;
@@ -89,7 +86,6 @@ public class REMPrior extends REMImpl {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -100,7 +96,6 @@ public class REMPrior extends REMImpl {
 	
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		REMPrior priorREM = new REMPrior();
 		priorREM.getConfig().putAll((DataConfig)this.getConfig().clone());
 		return priorREM;
@@ -109,7 +104,6 @@ public class REMPrior extends REMImpl {
 
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		LargeStatistics stat = (LargeStatistics)currentStatistic;
 		if (stat.isEmpty())
 			return null;
@@ -129,7 +123,7 @@ public class REMPrior extends REMImpl {
 				double[] xVector =  xStatistic.get(i);
 				double[] zVector = Arrays.copyOf(zStatistic.get(i), zStatistic.get(i).length); 
 				double zMean0 = ExchangedParameter.mean(this.alpha0, xVector);
-				zVector[1] = this.zVariance0*zVector[1] - zVariance*zMean0;
+				zVector[1] = this.zVariance0*zVector[1] - zVariance*zMean0; //This code line is very important.
 				
 				zDataToLearnAlpha.add(zVector);
 			}
@@ -208,7 +202,6 @@ public class REMPrior extends REMImpl {
 	
 	@Override
 	protected Object initializeParameter() {
-		// TODO Auto-generated method stub
 		ExchangedParameter parameter = (ExchangedParameter)super.initializeParameter();
 		if (parameter == null)
 			return null;
@@ -229,7 +222,6 @@ public class REMPrior extends REMImpl {
 				this.zVariance0 = parameter.estimateZVariance(stat) / stat.getZData().size();
 			} 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				LogUtil.trace(e);
 				return null;
 			}
@@ -241,14 +233,12 @@ public class REMPrior extends REMImpl {
 
 	@Override
 	public synchronized String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return super.getDescription() + ", " + moreParametersToText();
 	}
 
 
 	@Override
 	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		return super.parameterToShownText(parameter, info) + ", " + moreParametersToText();
 	}
 
@@ -280,7 +270,6 @@ public class REMPrior extends REMImpl {
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(ALPHA0_FIELD, ALPHA0_DEFAULT);
 		config.put(ZVARIANCE0_FIELD, ZVARIANCE0_DEFAULT);

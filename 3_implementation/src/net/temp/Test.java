@@ -129,9 +129,9 @@ public class Test {
 		variances.add(0.001);
 		variances.add(0.001);
 		
-		LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianData2(alphas, probs, variances, 1000);
+		LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianDataWithXIntervals(alphas, probs, variances, 1000);
 		UriAssoc uriAssoc = Util.getFactory().createUriAssoc(xURI.create(new File(".")));
-		Writer writer = uriAssoc.getWriter(xURI.create(new File("E:\\a.csv")), false);
+		Writer writer = uriAssoc.getWriter(xURI.create(new File("/a.csv")), false);
 		stats.save(writer, -1);
 		writer.close();
 		
