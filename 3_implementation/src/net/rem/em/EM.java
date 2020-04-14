@@ -16,7 +16,7 @@ public interface EM extends EMRemoteTask, ExecutableAlg {
 	/**
 	 * Maximum number of iterations.
 	 */
-	final static int EM_MAX_ITERATION = 10000;
+	final static int EM_MAX_ITERATION = 1000;
 	
 	
 	/**

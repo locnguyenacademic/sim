@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
-import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
@@ -144,16 +143,6 @@ public class JointMixtureREM extends DefaultMixtureREM {
 
 
 	@Override
-	public synchronized Object execute(Object input) throws RemoteException {
-		if (this.rems == null || this.rems.size() == 0)
-			return Constants.UNUSED;
-		
-		double[] xStatistic = rems.get(0).extractRegressorValues(input); //All partial sub-models has the same attribute list.
-		return executeByXStatistic(xStatistic);
-	}
-
-	
-	@Override
 	protected REMImpl createREM() {
 		return new JointREM();
 	}
@@ -211,6 +200,14 @@ public class JointMixtureREM extends DefaultMixtureREM {
 		JointMixtureREM jointREM = new JointMixtureREM();
 		jointREM.getConfig().putAll((DataConfig)this.getConfig().clone());
 		return jointREM;
+	}
+
+
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
+		return config;
 	}
 
 

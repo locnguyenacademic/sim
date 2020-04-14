@@ -2,7 +2,6 @@ package net.rem.regression.em;
 
 import java.rmi.RemoteException;
 
-import net.hudup.core.Constants;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.LogUtil;
@@ -57,16 +56,6 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 
 
 	@Override
-	public synchronized Object execute(Object input) throws RemoteException {
-		if (this.rems == null || this.rems.size() == 0)
-			return Constants.UNUSED;
-		
-		double[] xStatistic = rems.get(0).extractRegressorValues(input); //All partial sub-models has the same attribute list.
-		return executeByXStatistic(xStatistic);
-	}
-
-	
-	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
@@ -84,6 +73,14 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	}
 
 
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
+		return config;
+	}
+	
+	
 //	/**
 //	 * Adjusting weights of EM coefficients according to maximum mechanism.
 //	 */
@@ -114,49 +111,6 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 //					parameters.get(k).setCoeff(0);
 //			}
 //		}
-//	}
-//	
-//	
-//	@Override
-//	protected REMImpl createREM() {
-//		return new WeightedREMExt();
-//	}
-//
-//
-//	/**
-//	 * This class is an extension of regression expectation maximization algorithm with weighting mechanism.
-//	 * @author Loc Nguyen
-//	 * @version 1.0
-//	 */
-//	protected class WeightedREMExt extends REMExt {
-//		
-//		/**
-//		 * Serial version UID for serializable class.
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//		@Override
-//		protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
-//			ExchangedParameter parameter = (ExchangedParameter)super.maximization(currentStatistic, info);
-//			
-//			LargeStatistics stat = (LargeStatistics)currentStatistic;
-//			List<Double> kCondProbs = null;
-//			if (info != null && info.length > 0 && (info[0] instanceof List<?>)) {
-//				@SuppressWarnings("unchecked")
-//				List<Double> kCondProbTemp = (List<Double>)info[0];
-//				kCondProbs = kCondProbTemp;
-//			}
-//			
-//			NormalDisParameter xNormalDisParameter = null;
-//			if (kCondProbs == null)
-//				xNormalDisParameter = new NormalDisParameter(stat);
-//			else
-//				xNormalDisParameter = new NormalDisParameter(stat, kCondProbs);
-//			parameter.setXNormalDisParameter(xNormalDisParameter);
-//			
-//			return parameter;
-//		}
-//		
 //	}
 
 

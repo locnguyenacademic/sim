@@ -479,34 +479,17 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
 			return Constants.UNUSED;
 		
-		List<Double> coeffs = recalcCoeffs(xStatistic);
-		
-		if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
-			double maxCoeff = -1;
-			double result = 0;
-			for (int i = 0; i < rems.size(); i++) {
-				double value = rems.get(i).executeByXStatistic(xStatistic);
-				if (!Util.isUsed(value)) continue;
-				
-				if (coeffs.get(i) > maxCoeff) {
-					maxCoeff = coeffs.get(i);
-					result = value;
-				}
-			}
-			return result;
+		double result = 0;
+		for (REMImpl rem : this.rems) {
+			ExchangedParameter parameter = (ExchangedParameter)rem.getParameter();
+			
+			double value = rem.executeByXStatistic(xStatistic);
+			if (Util.isUsed(value))
+				result += parameter.getCoeff() * value;
+			else
+				return Constants.UNUSED;
 		}
-		else {
-			double result = 0;
-			for (int i = 0; i < rems.size(); i++) {
-				double value = rems.get(i).executeByXStatistic(xStatistic);
-				
-				if (Util.isUsed(value))
-					result += coeffs.get(i) * value;
-				else
-					return Constants.UNUSED;
-			}
-			return result;
-		}
+		return result;
 	}
 	
 	
@@ -599,7 +582,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
-		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
 		return config;
 	}
 

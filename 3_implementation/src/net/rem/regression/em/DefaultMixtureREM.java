@@ -348,6 +348,49 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
+	@Override
+	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
+		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
+			return Constants.UNUSED;
+		
+		List<Double> coeffs = recalcCoeffs(xStatistic);
+		
+		if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
+			double maxCoeff = -1;
+			double result = 0;
+			for (int i = 0; i < rems.size(); i++) {
+				double value = rems.get(i).executeByXStatistic(xStatistic);
+				if (!Util.isUsed(value)) continue;
+				
+				if (coeffs.get(i) > maxCoeff) {
+					maxCoeff = coeffs.get(i);
+					result = value;
+				}
+			}
+			return result;
+		}
+		else {
+			double result = 0;
+			for (int i = 0; i < rems.size(); i++) {
+				double value = rems.get(i).executeByXStatistic(xStatistic);
+				
+				if (Util.isUsed(value))
+					result += coeffs.get(i) * value;
+				else
+					return Constants.UNUSED;
+			}
+			return result;
+		}
+	}
+
+	
+	@Override
+	public synchronized Object execute(Object input) throws RemoteException {
+		double[] xStatistic = extractRegressorValues(input);
+		return executeByXStatistic(xStatistic);
+	}
+
+
 	/**
 	 * Getting the fitness criterion of this model given large statistics.
 	 * @param stat given large statistics.
