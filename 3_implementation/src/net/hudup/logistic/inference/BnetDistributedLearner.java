@@ -16,9 +16,9 @@ import elvira.potential.PotentialTable;
 import net.hudup.alg.cf.bnet.BnetUtil;
 import net.hudup.core.Util;
 import net.hudup.core.data.Dataset;
+import net.hudup.core.data.DatasetUtil2;
 import net.hudup.core.data.FetcherUtil;
 import net.hudup.core.data.Pair;
-import net.hudup.data.DatasetUtil2;
 import net.hudup.logistic.math.DatasetStatsProcessor;
 
 /**

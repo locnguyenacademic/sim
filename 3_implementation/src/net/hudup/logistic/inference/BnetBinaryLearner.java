@@ -11,9 +11,9 @@ import elvira.learning.DELearning;
 import elvira.learning.K2Learning;
 import elvira.learning.K2Metrics;
 import net.hudup.core.Util;
+import net.hudup.core.data.bit.BitData;
+import net.hudup.core.data.bit.BitMatrix;
 import net.hudup.core.logistic.DSUtil;
-import net.hudup.data.bit.BitData;
-import net.hudup.data.bit.BitMatrix;
 import net.hudup.logistic.mining.Cluster;
 import net.hudup.logistic.mining.Clusterer;
 

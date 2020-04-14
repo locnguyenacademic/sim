@@ -14,11 +14,11 @@ import net.hudup.core.alg.KBase;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Pair;
+import net.hudup.core.data.bit.BitData;
+import net.hudup.core.data.bit.BitItem;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.SystemUtil;
 import net.hudup.core.logistic.UriAdapter;
-import net.hudup.data.bit.BitData;
-import net.hudup.data.bit.BitItem;
 import net.hudup.logistic.inference.BnetBinaryLearner;
 
 /**

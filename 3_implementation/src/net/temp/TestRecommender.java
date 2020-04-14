@@ -12,6 +12,7 @@ import net.hudup.core.alg.cf.NeighborCFUserBased;
  * @version 1.0
  *
  */
+@Deprecated
 public class TestRecommender extends NeighborCFUserBased {
 
 	

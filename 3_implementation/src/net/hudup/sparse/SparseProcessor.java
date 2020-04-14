@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import net.hudup.alg.cf.mf.SvdGradientCF;
-import net.hudup.alg.cf.mf.SvdGradientKB;
 import net.hudup.alg.cf.stat.BayesLookupTableCF;
 import net.hudup.alg.cf.stat.BayesLookupTableKB;
 import net.hudup.core.Constants;
@@ -16,15 +14,17 @@ import net.hudup.core.alg.Recommender;
 import net.hudup.core.alg.cf.CFAnnotation;
 import net.hudup.core.alg.cf.MemoryBasedCF;
 import net.hudup.core.alg.cf.NeighborCFUserBased;
+import net.hudup.core.alg.cf.mf.SvdGradientCF;
+import net.hudup.core.alg.cf.mf.SvdGradientKB;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.FetcherUtil;
 import net.hudup.core.data.Rating;
 import net.hudup.core.data.RatingMatrix;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.data.Snapshot;
+import net.hudup.core.data.SnapshotImpl;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
-import net.hudup.data.SnapshotImpl;
 
 /**
  * This class is a utility class for solving sparse problem. It is now needs to be improved.

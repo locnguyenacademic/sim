@@ -6,6 +6,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import BayesianNetworks.BayesNet;
+import BayesianNetworks.DiscreteVariable;
+import BayesianNetworks.ProbabilityFunction;
+import BayesianNetworks.ProbabilityVariable;
+import InferenceGraphs.InferenceGraphNode;
+import QuasiBayesianNetworks.QuasiBayesNet;
 import net.hudup.alg.cf.bnet.BnetUtil;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
@@ -15,15 +21,9 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Pair;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.data.bit.BitData;
-import net.hudup.data.bit.BitDataUtil;
+import net.hudup.core.data.bit.BitData;
+import net.hudup.core.data.bit.BitDataUtil;
 import net.hudup.logistic.math.BitDatasetStatsProcessor;
-import BayesianNetworks.BayesNet;
-import BayesianNetworks.DiscreteVariable;
-import BayesianNetworks.ProbabilityFunction;
-import BayesianNetworks.ProbabilityVariable;
-import InferenceGraphs.InferenceGraphNode;
-import QuasiBayesianNetworks.QuasiBayesNet;
 
 /**
  * This class is hybrid graph of binary Bayesian network called hybrid binary Bayesian network.

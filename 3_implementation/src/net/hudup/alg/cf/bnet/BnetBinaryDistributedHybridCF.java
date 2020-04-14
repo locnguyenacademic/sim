@@ -8,8 +8,8 @@ import net.hudup.core.alg.KBase;
 import net.hudup.core.data.Pair;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.data.bit.BitData;
 import net.hudup.core.logistic.NextUpdate;
-import net.hudup.data.bit.BitData;
 import net.hudup.logistic.inference.BnetBinaryGraph;
 import net.hudup.logistic.inference.BnetBinaryGraphHybrid;
 

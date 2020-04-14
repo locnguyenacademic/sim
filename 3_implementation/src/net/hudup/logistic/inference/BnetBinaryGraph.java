@@ -22,9 +22,9 @@ import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Pair;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.data.bit.BitData;
+import net.hudup.core.data.bit.BitDataUtil;
 import net.hudup.core.logistic.xURI;
-import net.hudup.data.bit.BitData;
-import net.hudup.data.bit.BitDataUtil;
 import net.hudup.logistic.math.BitAndNotProbItemMatrix;
 import net.hudup.logistic.math.BitDatasetStatsProcessor;
 

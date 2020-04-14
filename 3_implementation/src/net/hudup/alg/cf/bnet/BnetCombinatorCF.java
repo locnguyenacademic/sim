@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
 
-import net.hudup.alg.cf.mf.SvdGradientCF;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.alg.Alg;
@@ -13,6 +12,7 @@ import net.hudup.core.alg.CompositeRecommenderAbstract;
 import net.hudup.core.alg.RecommendFilterParam;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.Recommender;
+import net.hudup.core.alg.cf.mf.SvdGradientCF;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.RatingVector;

@@ -17,10 +17,10 @@ import net.hudup.alg.cf.bnet.BnetUtil;
 import net.hudup.core.Util;
 import net.hudup.core.data.Pair;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.data.bit.BitDataUtil;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.RatingFilter;
 import net.hudup.core.logistic.ValueTriple;
-import net.hudup.data.bit.BitDataUtil;
 
 /**
  * This is utility class for processing binary Bayesian network.
