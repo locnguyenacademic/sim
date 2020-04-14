@@ -6,7 +6,6 @@ import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
-import java.util.Arrays;
 import java.util.List;
 
 import flanagan.math.Fmath;
@@ -20,9 +19,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
-import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
-import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.xURI;
 import net.rem.em.EMRemote;
@@ -32,7 +29,6 @@ import net.rem.regression.RM;
 import net.rem.regression.RMAbstract;
 import net.rem.regression.RMRemote;
 import net.rem.regression.VarWrapper;
-import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 import net.rem.regression.em.ui.graph.Graph;
 import net.rem.regression.em.ui.graph.PlotGraphExt;
 
@@ -423,57 +419,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	}
 
 
-	/**
-	 * Re-calculating regression coefficients given X statistics.
-	 * @param xStatistic given X statistics.
-	 * @return list of regression coefficients given X statistics.
-	 */
-	@SuppressWarnings("unchecked")
-	protected List<Double> recalcCoeffs(double[] xStatistic) {
-		List<ExchangedParameter> parameters = null;
-		try {
-			parameters = (List<ExchangedParameter>)getParameter();
-		} catch (Exception e) {LogUtil.trace(e);}
-		if (parameters == null || parameters.size() == 0) return Util.newList();
-		
-		List<Double> coeffs = Util.newList(parameters.size());
-		double sumCoeff = 0;
-		for (ExchangedParameter parameter : parameters) {
-			double coeff = parameter.getCoeff();
-
-			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter(); 
-			if (xNormalDisParameter != null) {
-				double pdf = ExchangedParameter.normalPDF(
-					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
-					parameter.getXNormalDisParameter().getMean(),
-					parameter.getXNormalDisParameter().getVariance());
-				coeff *= pdf;
-			}
-			
-//			if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
-//				double value = parameter.mean(xStatistic);
-//				double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
-//				coeff *= pdf;
-//			}
-			
-			coeffs.add(coeff);
-			sumCoeff += coeff;
-		}
-		
-		if (sumCoeff != 0) {
-			for (int i = 0; i < coeffs.size(); i++)
-				coeffs.set(i, coeffs.get(i) / sumCoeff);
-		}
-		else {
-			double coeff = 1.0 / (double)coeffs.size();
-			for (int i = 0; i < coeffs.size(); i++)
-				coeffs.set(i, coeff);
-		}
-		
-		return coeffs;
-	}
-
-	
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
 		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)

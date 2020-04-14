@@ -426,6 +426,89 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 
 	
 	/**
+	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
+	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
+	 * This method is as good as the {@link #estimate(Statistics, List, List)} method but it is not stable for long regression model having many regressors.
+	 * because solving a set of many equations can cause approximate solution or non-solution problem.   
+	 * @param stat specified statistics.
+	 * @param alpha specified alpha parameter.
+	 * @param betas specified alpha parameters.
+	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
+	 */
+	@Deprecated
+	protected Statistics estimateInverse(Statistics stat, List<Double> alpha, List<double[]> betas) {
+		double zValue = stat.getZStatistic();
+		double[] xVector = stat.getXStatistic();
+		double zStatistic = Constants.UNUSED;
+		double[] xStatistic = new double[xVector.length];
+		
+		if (Util.isUsed(zValue)) {
+			zStatistic = zValue;
+			//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
+			for (int j = 0; j < xVector.length; j++) {
+				if (Util.isUsed(xVector[j]))
+					xStatistic[j] = xVector[j];
+				else
+					xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
+			}
+			
+			return new Statistics(zStatistic, xStatistic);
+		}
+		
+		List<Integer> U = Util.newList();
+		double b = 0;
+		for (int j = 0; j < xVector.length; j++) {
+			if (Util.isUsed(xVector[j])) {
+				b += alpha.get(j) * xVector[j];
+				xStatistic[j] = xVector[j]; //existent xij
+			}
+			else
+				U.add(j);
+		}
+
+		if (U.size() > 0) {
+			//Estimating missing xij (xStatistic) by equation 8, based on current parameter.
+			List<double[]> A = Util.newList(U.size());
+			List<Double> y = Util.newList(U.size());
+			
+			for (int i = 0; i < U.size(); i++) {
+				double[] aRow = new double[U.size()];
+				A.add(aRow);
+				for (int j = 0; j < U.size(); j++) {
+					if (i == j)
+						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j)) - 1;
+					else
+						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j));
+				}
+				double yi = -betas.get(U.get(i))[0] - betas.get(U.get(i))[1] * b;
+				y.add(yi);
+			}
+			
+			List<Double> solution = RMAbstract.solve(A, y); //solve Ax = y
+			if (solution != null) {
+				for (int j = 0; j < U.size(); j++) {
+					int k = U.get(j);
+					xStatistic[k] = solution.get(j);
+				}
+			}
+			else {
+				LogUtil.info("Cannot estimate statistic for X by expectation (#estimateInverse), stop estimating for this statistic here because use of other method is wrong.");
+				return null;
+			}
+		}
+		
+		//Estimating missing zi (zStatistic) by equation 4, based on current parameter.
+		zStatistic = 0;
+		for (int j = 0; j < xStatistic.length; j++) {
+			zStatistic += alpha.get(j) * xStatistic[j];
+		}
+		
+		//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
+		return new Statistics(zStatistic, xStatistic);
+	}
+
+	
+	/**
 	 * Initialization method of this class does not change internal data.
 	 */
 	@Override
@@ -482,9 +565,8 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 
 		ExchangedParameter parameter = this.getExchangedParameter(); 
 		if (parameter == null) return Constants.UNUSED;
-		List<Double> alpha = parameter.getAlpha();
 
-		Statistics stat = estimate(new Statistics(Constants.UNUSED, xStatistic), alpha, parameter.getBetas());
+		Statistics stat = estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
 		if (stat == null)
 			return Constants.UNUSED;
 		else
@@ -777,158 +859,74 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	}
 
 
-//	/**
-//	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
-//	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
-//	 * This method is as good as than {@link #estimate(Statistics, List, List)} method but it is not stable for long regression model having many regressors
-//	 * because solving a set of many equations can cause approximate solution or non-solution problem.   
-//	 * @param stat specified statistics.
-//	 * @param alpha specified alpha parameter.
-//	 * @param betas specified alpha parameters.
-//	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
-//	 */
-//	@SuppressWarnings("unused")
-//	@Deprecated
-//	private Statistics estimateInverse(Statistics stat, List<Double> alpha, List<double[]> betas) {
-//		double zValue = stat.getZStatistic();
-//		double[] xVector = stat.getXStatistic();
-//		double zStatistic = Constants.UNUSED;
-//		double[] xStatistic = new double[xVector.length];
-//		
-//		if (Util.isUsed(zValue)) {
-//			zStatistic = zValue;
-//			//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
-//			for (int j = 0; j < xVector.length; j++) {
-//				if (Util.isUsed(xVector[j]))
-//					xStatistic[j] = xVector[j];
-//				else
-//					xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
-//			}
-//			
-//			return new Statistics(zStatistic, xStatistic);
-//		}
-//		
-//		List<Integer> U = Util.newList();
-//		double b = 0;
-//		for (int j = 0; j < xVector.length; j++) {
-//			if (Util.isUsed(xVector[j])) {
-//				b += alpha.get(j) * xVector[j];
-//				xStatistic[j] = xVector[j]; //existent xij
-//			}
-//			else
-//				U.add(j);
-//		}
-//
-//		if (U.size() > 0) {
-//			//Estimating missing xij (xStatistic) by equation 8, based on current parameter.
-//			List<double[]> A = Util.newList(U.size());
-//			List<Double> y = Util.newList(U.size());
-//			
-//			for (int i = 0; i < U.size(); i++) {
-//				double[] aRow = new double[U.size()];
-//				A.add(aRow);
-//				for (int j = 0; j < U.size(); j++) {
-//					if (i == j)
-//						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j)) - 1;
-//					else
-//						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j));
-//				}
-//				double yi = -betas.get(U.get(i))[0] - betas.get(U.get(i))[1] * b;
-//				y.add(yi);
-//			}
-//			
-//			List<Double> solution = solve(A, y); //solve Ax = y
-//			if (solution != null) {
-//				for (int j = 0; j < U.size(); j++) {
-//					int k = U.get(j);
-//					xStatistic[k] = solution.get(j);
-//				}
-//			}
-//			else {
-//				LogUtil.info("Cannot estimate statistic for X by expectation (#estimateInverse), stop estimating for this statistic here because use of other method is wrong.");
-//				return null;
-//			}
-//		}
-//		
-//		//Estimating missing zi (zStatistic) by equation 4, based on current parameter.
-//		zStatistic = 0;
-//		for (int j = 0; j < xStatistic.length; j++) {
-//			zStatistic += alpha.get(j) * xStatistic[j];
-//		}
-//		
-//		//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
-//		return new Statistics(zStatistic, xStatistic);
-//	}
-//
-//	
-//	/**
-//	 * Balancing missing values zi (xStatistic) and xij (xValues). This method does not change internal data.
-//	 * @param alpha alpha coefficients.
-//	 * @param betas beta coefficients.
-//	 * @param zStatistic statistic for Z variable.
-//	 * @param xStatistic statistic for X variables.
-//	 * @param U list of missing X values.
-//	 * @param inverse if true, this is inverse mode.
-//	 * @return balanced statistics for Z and X variables. Return null if any error raises.
-//	 */
-//	@SuppressWarnings("unused")
-//	@Deprecated
-//	private Statistics balanceStatistics(List<Double> alpha, List<double[]> betas,
-//			double zStatistic, double[] xStatistic,
-//			List<Integer> U, boolean inverse) {
-//
-//		double zStatisticNext = Constants.UNUSED;
-//		double[] xStatisticNext = new double[xStatistic.length];
-//		int t = 0;
-//		int maxIteration = getConfig().getAsInt(EM_MAX_ITERATION_FIELD);
-//		maxIteration = (maxIteration <= 0) ? EM_MAX_ITERATION : maxIteration;
-//		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
-//		while (t < maxIteration) {
-//			if (!inverse) {
-//				zStatisticNext = 0;
-//				for (int j = 0; j < xStatistic.length; j++)
-//					zStatisticNext += alpha.get(j) * xStatistic[j];
-//				
-//				for (int j = 0; j < xStatistic.length; j++) {
-//					if (!U.contains(j))
-//						xStatisticNext[j] = xStatistic[j];
-//					else
-//						xStatisticNext[j] = betas.get(j)[0] + betas.get(j)[1] * zStatisticNext;
-//				}
-//				
-//			}
-//			else {
-//				for (int j = 0; j < xStatistic.length; j++) {
-//					if (!U.contains(j))
-//						xStatisticNext[j] = xStatistic[j];
-//					else
-//						xStatisticNext[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
-//				}
-//				
-//				zStatisticNext = 0;
-//				for (int j = 0; j < xStatistic.length; j++)
-//					zStatisticNext += alpha.get(j) * xStatisticNext[j];
-//			}
-//			
-//			t++;
-//			
-//			//Testing approximation
-//			boolean approx = !notSatisfy(zStatisticNext, zStatistic, threshold);
-//			for (int j = 0; j < xStatistic.length; j++) {
-//				approx = approx && !notSatisfy(xStatisticNext[j], xStatistic[j], threshold);
-//				if (!approx) break;
-//			}
-//			
-//			zStatistic = zStatisticNext;
-//			xStatistic = xStatisticNext;
-//			zStatisticNext = Constants.UNUSED;
-//			xStatisticNext = new double[xStatistic.length];
-//			
-//			if (approx) break;
-//		} //If the likelihood function is too acute, the loop can be infinite.
-//		
-//		return new Statistics(zStatistic, xStatistic);
-//	}
+	/**
+	 * Balancing missing values zi (xStatistic) and xij (xValues). This method does not change internal data.
+	 * @param alpha alpha coefficients.
+	 * @param betas beta coefficients.
+	 * @param zStatistic statistic for Z variable.
+	 * @param xStatistic statistic for X variables.
+	 * @param U list of missing X values.
+	 * @param inverse if true, this is inverse mode.
+	 * @return balanced statistics for Z and X variables. Return null if any error raises.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private Statistics balanceStatistics(List<Double> alpha, List<double[]> betas,
+			double zStatistic, double[] xStatistic,
+			List<Integer> U, boolean inverse) {
+
+		double zStatisticNext = Constants.UNUSED;
+		double[] xStatisticNext = new double[xStatistic.length];
+		int t = 0;
+		int maxIteration = getConfig().getAsInt(EM_MAX_ITERATION_FIELD);
+		maxIteration = (maxIteration <= 0) ? EM_MAX_ITERATION : maxIteration;
+		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
+		while (t < maxIteration) {
+			if (!inverse) {
+				zStatisticNext = 0;
+				for (int j = 0; j < xStatistic.length; j++)
+					zStatisticNext += alpha.get(j) * xStatistic[j];
+				
+				for (int j = 0; j < xStatistic.length; j++) {
+					if (!U.contains(j))
+						xStatisticNext[j] = xStatistic[j];
+					else
+						xStatisticNext[j] = betas.get(j)[0] + betas.get(j)[1] * zStatisticNext;
+				}
+				
+			}
+			else {
+				for (int j = 0; j < xStatistic.length; j++) {
+					if (!U.contains(j))
+						xStatisticNext[j] = xStatistic[j];
+					else
+						xStatisticNext[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
+				}
+				
+				zStatisticNext = 0;
+				for (int j = 0; j < xStatistic.length; j++)
+					zStatisticNext += alpha.get(j) * xStatisticNext[j];
+			}
+			
+			t++;
+			
+			//Testing approximation
+			boolean approx = !RMAbstract.notSatisfy(zStatisticNext, zStatistic, threshold);
+			for (int j = 0; j < xStatistic.length; j++) {
+				approx = approx && !RMAbstract.notSatisfy(xStatisticNext[j], xStatistic[j], threshold);
+				if (!approx) break;
+			}
+			
+			zStatistic = zStatisticNext;
+			xStatistic = xStatisticNext;
+			zStatisticNext = Constants.UNUSED;
+			xStatisticNext = new double[xStatistic.length];
+			
+			if (approx) break;
+		} //If the likelihood function is too acute, the loop can be infinite.
+		
+		return new Statistics(zStatistic, xStatistic);
+	}
 
 
 }

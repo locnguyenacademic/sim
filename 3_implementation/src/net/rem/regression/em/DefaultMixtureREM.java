@@ -20,6 +20,8 @@ import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.Statistics;
+import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 
 /**
  * This class implements the mixture regression model.
@@ -348,6 +350,59 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
+	/**
+	 * Re-calculating regression coefficients given X statistics. This method is not synchronized because it is called by other methods.
+	 * It is protected in order to be overrided by sub classes.
+	 * @param xStatistic given X statistics.
+	 * @return list of regression coefficients given X statistics.
+	 */
+	protected List<Double> recalcCoeffs(double[] xStatistic) {
+		if (rems == null || rems.size() == 0 || xStatistic == null)
+			return Util.newList();
+
+		List<Double> coeffs = Util.newList(rems.size());
+		double sumCoeff = 0;
+		for (REMImpl rem : rems) {
+			ExchangedParameter parameter = rem.getExchangedParameter();
+			double coeff = parameter.getCoeff();
+			Statistics stat = null;
+
+			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter();
+			if (xNormalDisParameter != null) {
+				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
+				xStatistic = stat.getXStatistic();
+				double pdf = ExchangedParameter.normalPDF(
+					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
+					xNormalDisParameter.getMean(),
+					xNormalDisParameter.getVariance());
+				coeff *= pdf;
+			}
+			
+//			if (stat == null) {
+//				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
+//			}
+//			double value = stat.getZStatistic();
+//			double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
+//			coeff *= pdf;
+			
+			coeffs.add(coeff);
+			sumCoeff += coeff;
+		}
+		
+		if (sumCoeff != 0) {
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeffs.get(i) / sumCoeff);
+		}
+		else {
+			double coeff = 1.0 / (double)coeffs.size();
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeff);
+		}
+		
+		return coeffs;
+	}
+
+	
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
 		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
