@@ -1,14 +1,10 @@
 package net.rem.regression.em;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.List;
 
 import net.hudup.core.Constants;
-import net.hudup.core.Util;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
-import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
 import net.rem.regression.LargeStatistics;
 import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
@@ -60,83 +56,12 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	}
 
 
-	/**
-	 * Determining weights.
-	 * @param xStatistic specified X statistic.
-	 * @return weights.
-	 */
-	@SuppressWarnings("unchecked")
-	private List<Double> calcWeights(double[] xStatistic) {
-		List<ExchangedParameter> parameters = null;
-		try {
-			parameters = (List<ExchangedParameter>)getParameter();
-		} catch (Exception e) {LogUtil.trace(e);}
-		if (parameters == null || parameters.size() == 0) return Util.newList();
-		
-		List<Double> weights = Util.newList(parameters.size());
-		double sumWeight = 0;
-		for (ExchangedParameter parameter : parameters) {
-			double weight = ExchangedParameter.normalPDF(
-				DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
-				parameter.getXNormalDisParameter().getMean(),
-				parameter.getXNormalDisParameter().getVariance());
-			weights.add(weight);
-			sumWeight += weight;
-		}
-		
-		if (sumWeight != 0) {
-			for (int i = 0; i < weights.size(); i++)
-				weights.set(i, weights.get(i) / sumWeight);
-		}
-		else {
-			for (int i = 0; i < weights.size(); i++)
-				weights.set(i, 1.0 / (double)weights.size());
-		}
-		
-		return weights;
-	}
-	
-	
-	@Override
-	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
-			return Constants.UNUSED;
-		
-		List<Double> values = Util.newList(rems.size());
-		List<Double> weights = calcWeights(xStatistic);
-		List<Double> coeffs = Util.newList(rems.size());
-		double sumCoeffs = 0;
-		for (int i = 0; i < rems.size(); i++) {
-			REMImpl rem = rems.get(i);
-			ExchangedParameter parameter = rem.getExchangedParameter();
-			
-			double value = parameter.mean(xStatistic);
-			values.add(value);
-			
-			double pdf = 1; //= ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
-			double coeff = parameter.getCoeff() * pdf;
-			if (weights.size() == rems.size())
-				coeff *= weights.get(i);
-			
-			coeffs.add(coeff);
-			sumCoeffs += coeff;
-		}
-		
-		double result = 0;
-		for (int i = 0; i < rems.size(); i++) {
-			result += (coeffs.get(i)/sumCoeffs) * values.get(i);
-		}
-		
-		return (double)transformResponse(result, true);
-	}
-
-
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		
-		double[] xStatistic = rems.get(0).extractAndTransformRegressorValues(input);
+		double[] xStatistic = rems.get(0).extractRegressorValues(input); //All partial sub-models has the same attribute list.
 		return executeByXStatistic(xStatistic);
 	}
 
@@ -147,7 +72,7 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "weighted_mixrem";
+			return "mixrem_weighted";
 	}
 
 	

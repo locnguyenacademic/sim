@@ -1,6 +1,5 @@
 package net.rem.regression.em;
 
-import static net.rem.regression.RMAbstract.createProfile;
 import static net.rem.regression.RMAbstract.extractNumber;
 import static net.rem.regression.RMAbstract.extractSingleVariables;
 import static net.rem.regression.RMAbstract.extractVariable;
@@ -32,6 +31,7 @@ import net.hudup.core.data.ui.DatasetLoader;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.RMAbstract;
 import net.rem.regression.Statistics;
 import net.rem.regression.VarWrapper;
 import net.rem.regression.ui.RegressResponseChooser;
@@ -498,7 +498,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	 */
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		double[] xStatistic = extractAndTransformRegressorValues(input);
+		double[] xStatistic = extractRegressorValues(input);
 		return executeByXStatistic(xStatistic);
 	}
 	
@@ -660,33 +660,10 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 			return extractVariableValue(input, attList, xIndices, index);
 	}
 
-
-	/**
-	 * Extract regressors from input object.
-	 * @param input specified input object.
-	 * @return list of values of regressors from input object.
-	 * @throws RemoteException if any error raises.
-	 */
-	protected double[] extractAndTransformRegressorValues(Object input) throws RemoteException {
-		Profile profile = null;
-		if (input instanceof Profile)
-			profile = (Profile)input;
-		else
-			profile = createProfile(this.attList, input);
-		if (profile == null)
-			return null;
-		
-		double[] xStatistic = new double[this.xIndices.size()];
-		xStatistic[0] = 1;
-		for (int j = 1; j < this.xIndices.size(); j++) {
-			double xValue = extractRegressorValue(profile, j);
-			if (Util.isUsed(xValue))
-				xStatistic[j] = (double)transformRegressor(xValue, false);
-			else
-				xStatistic[j] = Constants.UNUSED;
-		}
-		
-		return xStatistic;
+	
+	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		return RMAbstract.extractVariableValues(input, attList, xIndices);
 	}
 	
 	

@@ -600,7 +600,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "default_mixrem";
+			return "mixrem_default";
 	}
 
 	
@@ -631,7 +631,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(COMP_NUMBER_FIELD, COMP_NUMBER_DEFAULT);
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);

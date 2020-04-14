@@ -255,7 +255,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public double extractRegressorValue(Object input, int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractRegressorValue(input, index);
 		else
@@ -264,8 +263,16 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 
 	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		if (mixREM != null)
+			return mixREM.extractRegressorValues(input);
+		else
+			return null;
+	}
+
+
+	@Override
 	public VarWrapper extractResponse() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractResponse();
 		else
@@ -275,7 +282,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Object extractResponseValue(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractResponseValue(input);
 		else

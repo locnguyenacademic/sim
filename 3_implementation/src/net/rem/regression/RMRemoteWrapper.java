@@ -38,7 +38,6 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 	 */
 	public RMRemoteWrapper(RMRemote remoteRM) {
 		super(remoteRM);
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -49,153 +48,137 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 	 */
 	public RMRemoteWrapper(RMRemote remoteRM, boolean exclusive) {
 		super(remoteRM, exclusive);
-		// TODO Auto-generated constructor stub
 	}
 
 	
 	@Override
 	public synchronized Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return RMAbstract.getInspector(this);
 	}
 
 
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {RMRemote.class.getName()};
 	}
 
 	
 	@Override
 	public Object extractResponseValue(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractResponseValue(input);
 	}
 
 	
 	@Override
 	public LargeStatistics getLargeStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).getLargeStatistics();
 	}
 
 	
 	@Override
 	public double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).executeByXStatistic(xStatistic);
 	}
 
 	
 	@Override
 	public VarWrapper extractRegressor(int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractRegressor(index);
 	}
 
 	
 	@Override
 	public List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractRegressors();
 	}
 
 	
 	@Override
 	public List<VarWrapper> extractSingleRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractSingleRegressors();
 	}
 
 	
 	@Override
 	public double extractRegressorValue(Object input, int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractRegressorValue(input, index);
 	}
 
 	
 	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		return ((RMRemote)remoteAlg).extractRegressorValues(input);
+	}
+
+
+	@Override
 	public List<Double> extractRegressorStatistic(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractRegressorStatistic(regressor);
 	}
 
 	
 	@Override
 	public VarWrapper extractResponse() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).extractResponse();
 	}
 
 	
 	@Override
 	public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).transformResponse(z, inverse);
 	}
 
 	
 	@Override
 	public Graph createRegressorGraph(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).createRegressorGraph(regressor);
 	}
 
 	
 	@Override
 	public Graph createResponseGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).createResponseGraph();
 	}
 
 	
 	@Override
 	public Graph createErrorGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).createErrorGraph();
 	}
 
 	
 	@Override
 	public List<Graph> createResponseRalatedGraphs() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).createResponseRalatedGraphs();
 	}
 
 	
 	@Override
 	public double calcVariance() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).calcVariance();
 	}
 
 	
 	@Override
 	public double calcR() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).calcR();
 	}
 
 	
 	@Override
 	public double[] calcError() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).calcError();
 	}
 
 	
 	@Override
 	public boolean saveLargeStatistics(xURI uri, int decimal) throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((RMRemote)remoteAlg).saveLargeStatistics(uri, decimal);
 	}
 
 	
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof RMAbstract) {
 			RMAbstract newRM = (RMAbstract) ((RMAbstract)remoteAlg).newInstance();
 			return new RMRemoteWrapper(newRM, exclusive);
@@ -209,7 +192,6 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof RM)
 			return ((RM)remoteAlg).createDefaultConfig();
 		else {

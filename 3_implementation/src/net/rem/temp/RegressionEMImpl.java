@@ -26,8 +26,8 @@ import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.xURI;
 import net.rem.em.ExponentialEM;
-import net.rem.regression.RMAbstract;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.RMAbstract;
 import net.rem.regression.VarWrapper;
 import net.rem.regression.em.REM;
 import net.rem.regression.em.ui.graph.Graph;
@@ -1000,6 +1000,12 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	}
 
 
+	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		return RMAbstract.extractVariableValues(input, attList, xIndices);
+	}
+
+	
 	/**
 	 * Extracting name of response variable (Z).
 	 * In the most general case that each index is an mathematical expression, this method is focused.

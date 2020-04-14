@@ -6,6 +6,7 @@ import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.List;
 
 import flanagan.math.Fmath;
@@ -19,7 +20,9 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
+import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.xURI;
 import net.rem.em.EMRemote;
@@ -29,6 +32,7 @@ import net.rem.regression.RM;
 import net.rem.regression.RMAbstract;
 import net.rem.regression.RMRemote;
 import net.rem.regression.VarWrapper;
+import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 import net.rem.regression.em.ui.graph.Graph;
 import net.rem.regression.em.ui.graph.PlotGraphExt;
 
@@ -48,6 +52,18 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	/**
+	 * Default value of cluster execution mode.
+	 */
+	protected static final String MAX_EXECUTE_FIELD = "max_execute";
+
+	
+	/**
+	 * Default value of cluster execution mode.
+	 */
+	protected static final boolean MAX_EXECUTE_DEFAULT = false;
+	
 	
 	/**
 	 * List of internal regression model as parameter.
@@ -407,44 +423,90 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	}
 
 
+	/**
+	 * Re-calculating regression coefficients given X statistics.
+	 * @param xStatistic given X statistics.
+	 * @return list of regression coefficients given X statistics.
+	 */
+	@SuppressWarnings("unchecked")
+	protected List<Double> recalcCoeffs(double[] xStatistic) {
+		List<ExchangedParameter> parameters = null;
+		try {
+			parameters = (List<ExchangedParameter>)getParameter();
+		} catch (Exception e) {LogUtil.trace(e);}
+		if (parameters == null || parameters.size() == 0) return Util.newList();
+		
+		List<Double> coeffs = Util.newList(parameters.size());
+		double sumCoeff = 0;
+		for (ExchangedParameter parameter : parameters) {
+			double coeff = parameter.getCoeff();
+
+			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter(); 
+			if (xNormalDisParameter != null) {
+				double pdf = ExchangedParameter.normalPDF(
+					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
+					parameter.getXNormalDisParameter().getMean(),
+					parameter.getXNormalDisParameter().getVariance());
+				coeff *= pdf;
+			}
+			
+//			if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
+//				double value = parameter.mean(xStatistic);
+//				double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
+//				coeff *= pdf;
+//			}
+			
+			coeffs.add(coeff);
+			sumCoeff += coeff;
+		}
+		
+		if (sumCoeff != 0) {
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeffs.get(i) / sumCoeff);
+		}
+		else {
+			double coeff = 1.0 / (double)coeffs.size();
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeff);
+		}
+		
+		return coeffs;
+	}
+
+	
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
 		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
 			return Constants.UNUSED;
 		
-//		if (getConfig().getAsBoolean(SMART_EXECUTE_FIELD)) { // This mode is wrong
-//			double maxPDF = -1;
-//			double result = 0;
-//			for (REMImpl rem : this.rems) {
-//				double value = rem.executeByXStatistic(xStatistic);
-//				if (!Util.isUsed(value))
-//					continue;
-//				
-//				ExchangedParameter parameter = rem.getExchangedParameter();
-//				double pdf = ExchangedParameter.normalZPDF(
-//						Arrays.asList(parameter), 
-//						Arrays.asList(xStatistic), 
-//						Arrays.asList(new double[] {1, value}),
-//						0).get(0);
-//				
-//				if (pdf > maxPDF) {
-//					maxPDF = pdf;
-//					result = value;
-//				}
-//			}
-//			return result;
-//		}
-		double result = 0;
-		for (REMImpl rem : this.rems) {
-			ExchangedParameter parameter = rem.getExchangedParameter();
-			
-			double value = rem.executeByXStatistic(xStatistic);
-			if (Util.isUsed(value))
-				result += parameter.getCoeff() * value;
-			else
-				return Constants.UNUSED;
+		List<Double> coeffs = recalcCoeffs(xStatistic);
+		
+		if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
+			double maxCoeff = -1;
+			double result = 0;
+			for (int i = 0; i < rems.size(); i++) {
+				double value = rems.get(i).executeByXStatistic(xStatistic);
+				if (!Util.isUsed(value)) continue;
+				
+				if (coeffs.get(i) > maxCoeff) {
+					maxCoeff = coeffs.get(i);
+					result = value;
+				}
+			}
+			return result;
 		}
-		return result;
+		else {
+			double result = 0;
+			for (int i = 0; i < rems.size(); i++) {
+				double value = rems.get(i).executeByXStatistic(xStatistic);
+				
+				if (Util.isUsed(value))
+					result += coeffs.get(i) * value;
+				else
+					return Constants.UNUSED;
+			}
+			return result;
+		}
 	}
 	
 	
@@ -537,6 +599,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
+		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
 		return config;
 	}
 
@@ -574,6 +637,15 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			return Constants.UNUSED;
 		else
 			return this.rems.get(0).extractRegressorValue(input, index); // Suppose all REMS have the same regressors.
+	}
+
+
+	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		if (this.rems == null || this.rems.size() == 0)
+			return null;
+		else
+			return this.rems.get(0).extractRegressorValues(input); // Suppose all REMS have the same regressors.
 	}
 
 

@@ -338,14 +338,12 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 	@Override
 	public List<VarWrapper> extractSingleRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		return extractSingleVariables(attList, xIndices);
 	}
 
 
 	@Override
 	public double extractRegressorValue(Object input, int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (input == null)
 			return Constants.UNUSED;
 		else if (input instanceof Profile)
@@ -356,8 +354,13 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 
 	@Override
+	public double[] extractRegressorValues(Object input) throws RemoteException {
+		return extractVariableValues(input, attList, xIndices);
+	}
+
+
+	@Override
 	public VarWrapper extractResponse() throws RemoteException {
-		// TODO Auto-generated method stub
 		return extractVariable(attList, zIndices, 1);
 	}
 
@@ -858,7 +861,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
     
     
 	/**
-	 * Extracting value of variable (X) from specified profile.
+	 * Extracting value of variable (X) from specified input which is often a profile.
 	 * @param input specified input. It is often a profile.
 	 * @param attList specified attribute list.
 	 * @param indices specified list of indices.
@@ -914,6 +917,30 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	}
 
 
+	/**
+	 * Extract values regressors from input object.
+	 * @param input specified input object which is often a profile.
+	 * @param attList specified attribute list.
+	 * @param indices specified list of indices.
+	 * @return list of values of regressors from input object. Note that the list has form 1, x1, x2,..., xn in which the started value is always 1.
+	 */
+	public static double[] extractVariableValues(Object input, AttributeList attList, List<Object[]> indices) {
+		if (input == null) return null;
+		
+		double[] xStatistic = new double[indices.size()];
+		xStatistic[0] = 1;
+		for (int j = 1; j < indices.size(); j++) {
+			double xValue = extractVariableValue(input, attList, indices, j);
+			if (Util.isUsed(xValue))
+				xStatistic[j] = xValue;
+			else
+				xStatistic[j] = Constants.UNUSED;
+		}
+		
+		return xStatistic;
+	}
+
+	
     /**
      * Creating graph for response variable given large statistic and regression model.
      * @param rm given regression model.

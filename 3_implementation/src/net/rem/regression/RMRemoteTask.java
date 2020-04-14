@@ -122,6 +122,15 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 
 	
 	/**
+	 * Extract values regressors from input object.
+	 * @param input specified input object which is often a profile.
+	 * @return list of values of regressors from input object. Note that the list has form 1, x1, x2,..., xn in which the started value is always 1.
+	 * @throws RemoteException if any error raises.
+	 */
+	double[] extractRegressorValues(Object input) throws RemoteException;
+
+		
+	/**
 	 * Extracting statistical values of specified regressor.
 	 * @param regressor specified regressor.
 	 * @return statistical values of specified regressor. Note, the returned value is not transformed.
