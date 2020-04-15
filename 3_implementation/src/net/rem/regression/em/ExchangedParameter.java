@@ -73,6 +73,15 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	
 	
 	/**
+	 * Constructor with specified alpha.
+	 * @param alpha specified alpha. It must be not null.
+	 */
+	public ExchangedParameter(List<Double> alpha) {
+		this.alpha = alpha;
+	}
+
+	
+	/**
 	 * Constructor with specified alpha and betas.
 	 * @param alpha specified alpha. It must be not null.
 	 * @param betas specified betas. It must be not null.
@@ -274,7 +283,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	
 	/**
 	 * Testing the terminated condition between this parameter (estimated parameter) and other parameter (current parameter).
-	 * Only internal alpha coefficients and beta coefficients are tested. 
+	 * This method only tests alpha coefficients and mixture coefficients (mixture weights). 
 	 * @param threshold specified threshold
 	 * @param currentParameter other specified parameter (current parameter).
 	 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
@@ -282,7 +291,38 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 * @return true if the terminated condition is satisfied.
 	 */
 	public boolean terminatedCondition(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter) {
-		// TODO Auto-generated method stub
+		List<Double> alpha1 = previousParameter != null ? previousParameter.getAlpha() : null;
+		List<Double> alpha2 = currentParameter.getAlpha();
+		List<Double> alpha3 = this.getAlpha();
+		if (alpha3 != null && alpha2 != null) {
+			for (int i = 0; i < alpha2.size(); i++) {
+				if (notSatisfy(alpha3.get(i), alpha2.get(i), threshold)) {
+					if (alpha1 == null)
+						return false;
+					else if (notSatisfy(alpha3.get(i), alpha1.get(i), threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+						return false;
+				}
+			}
+		}
+		else if(alpha3 != null || alpha2 != null)
+			return false;
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Testing the terminated condition between this parameter (estimated parameter) and other parameter (current parameter).
+	 * This method tests all coefficients and so it is currently not used. It is used for backup.
+	 * @param threshold specified threshold
+	 * @param currentParameter other specified parameter (current parameter).
+	 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
+	 * It also solve the over-fitting problem. Please pay attention to it.
+	 * @return true if the terminated condition is satisfied.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private boolean terminatedCondition0(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter) {
 		List<Double> alpha1 = previousParameter != null ? previousParameter.getAlpha() : null;
 		List<Double> alpha2 = currentParameter.getAlpha();
 		List<Double> alpha3 = this.getAlpha();
@@ -419,7 +459,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 
 	/**
 	 * Calculating the scalar product of internal coefficients and X variable (regressor).
-	 * @param xVector specified X variable (regressor).
+	 * @param xVector specified X variable (regressor), xVector[0] = 1 always.
 	 * @return the scalar product of specified coefficients and X variable (regressor).
 	 */
 	public double mean(double[] xVector) {
@@ -429,8 +469,8 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	
 	/**
 	 * Calculating the scalar product of specified coefficients and X variable (regressor).
-	 * @param alpha specified coefficients
-	 * @param xVector specified X variable (regressor).
+	 * @param alpha specified coefficients.
+	 * @param xVector specified X variable (regressor), xVector[0] = 1 always.
 	 * @return the scalar product of specified coefficients and X variable (regressor).
 	 */
 	public static double mean(List<Double> alpha, double[] xVector) {
@@ -466,8 +506,22 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	public static double normalPDF(List<Double> value, List<Double> mean, List<double[]> variance) {
 		int n = mean.size();
 		
-		double v1 = Math.sqrt(Math.pow(2*Math.PI, n)*RMAbstract.matrixDeterminant(variance));
-//		if (v1 == 0) v1 = v1 + Double.MIN_VALUE; //Solving the problem of zero variance.
+		double det = RMAbstract.matrixDeterminant(variance);
+		if (det == 0) {
+			boolean equal = true;
+			for (int i = 0; i < value.size(); i++) {
+				if (value.get(i) != mean.get(i)) {
+					equal = false;
+					break;
+				}
+			}
+			
+			if (equal)
+				return normalPDF(0, 0, 0);
+			else
+				return 0;
+		}
+		double v1 = Math.sqrt(Math.pow(2*Math.PI, n)*det);
 
 		List<Double> d = DSUtil.initDoubleList(n, 0);
 		for (int i = 0; i < n; i++) {
@@ -476,15 +530,17 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		
 		List<double[]> inverseVariance = RMAbstract.matrixInverse(variance);
 		double v2 = 0;
-		for (int j = 0; j < n; j++) {
-			double sum = 0;
-			for (int i = 0; i < n; i++) {
-				sum += d.get(i)*inverseVariance.get(i)[j];
+		if (inverseVariance != null && inverseVariance.size() > 0) {
+			for (int j = 0; j < n; j++) {
+				double sum = 0;
+				for (int i = 0; i < n; i++) {
+					sum += d.get(i)*inverseVariance.get(i)[j];
+				}
+				v2 += sum*d.get(j);
 			}
-			v2 += sum*d.get(j);
 		}
-
-		return (1.0 / (Double.MIN_VALUE + v1)) * Math.exp(-v2/2.0);
+		
+		return (1.0 / v1) * Math.exp(-v2/2.0);
 	}
 
 	
@@ -497,10 +553,11 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 * @return value evaluated from the normal probability density function.
 	 */
 	public static double normalPDF(double value, double mean, double variance) {
+		if (variance == 0 && mean != value) return 0;
+		
+		variance = variance != 0 ? variance : Float.MIN_VALUE;
 		double d = value - mean;
-//		if (variance == 0)
-//			variance = variance + Double.MIN_VALUE; //Solving the problem of zero variance.
-		return (1.0 / (Double.MIN_VALUE + Math.sqrt(2*Math.PI*variance))) * Math.exp(-(d*d) / (2*variance));
+		return (1.0 / (Math.sqrt(2*Math.PI*variance))) * Math.exp(-(d*d) / (2*variance));
 	}
 
 	
@@ -535,7 +592,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		}
 		
 		for (int i = 0; i < parameterList.size(); i++) {
-			if (denominator == 0) {
+			if (denominator == 0 || !Util.isUsed(denominator)) {
 				condProbs.add(1.0 / (double)parameterList.size());
 				LogUtil.warn("Reset uniform conditional probability of component due to zero denominator");
 			}
@@ -709,6 +766,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 			}
 			
 			
+//			if (!RMAbstract.matrixIsInvertible(xVariance))
+//				xVariance = createDiagonalVariance(n, 1);
+//			if (xVariance.size() > 0) xVariance.get(0)[0] = Double.MIN_VALUE;
+
 			this.mean = xMean;
 			this.variance = xVariance;
 		}
@@ -734,11 +795,17 @@ public class ExchangedParameter implements Cloneable, Serializable {
 			for (int i = 0; i < N; i++) {
 				double[] x = xData.get(i);
 				for (int j = 0; j < n; j++) {
-					xMean.set(j, xMean.get(j) + kCondProbs.get(i)*x[j+1]);
+					if (sumCondProbs != 0)
+						xMean.set(j, xMean.get(j) + kCondProbs.get(i)*x[j+1]);
+					else
+						xMean.set(j, xMean.get(j) + x[j+1]);
 				}
 			}
 			for (int j = 0; j < n; j++) {
-				xMean.set(j, xMean.get(j)/sumCondProbs);
+				if (sumCondProbs != 0)
+					xMean.set(j, xMean.get(j)/sumCondProbs);
+				else
+					xMean.set(j, xMean.get(j)/N);
 			}
 			
 			
@@ -756,7 +823,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 				for (int j = 0; j < n; j++) {
 					double[] x = xVariance.get(j);
 					for (int k = 0; k < n; k++) {
-						x[k] = x[k] + kCondProbs.get(i)*d[j+1]*d[k+1];
+						if (sumCondProbs != 0)
+							x[k] = x[k] + kCondProbs.get(i)*d[j+1]*d[k+1];
+						else
+							x[k] = x[k] + d[j+1]*d[k+1];
 					}
 				}
 			}
@@ -764,10 +834,17 @@ public class ExchangedParameter implements Cloneable, Serializable {
 			for (int j = 0; j < n; j++) {
 				double[] x = xVariance.get(j);
 				for (int k = 0; k < n; k++) {
-					x[k] = x[k]/sumCondProbs;
+					if (sumCondProbs != 0)
+						x[k] = x[k]/sumCondProbs;
+					else
+						x[k] = x[k]/N;
 				}
 			}
 			
+			
+//			if (!RMAbstract.matrixIsInvertible(xVariance))
+//				xVariance = createDiagonalVariance(n, 1);
+//			if (xVariance.size() > 0) xVariance.get(0)[0] = Double.MIN_VALUE;
 			
 			this.mean = xMean;
 			this.variance = xVariance;
@@ -823,6 +900,24 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		}
 		
 		
+		/**
+		 * Creating diagonal co-variance matrix with specified value.
+		 * @param n dimension of the returned diagonal co-variance matrix.
+		 * @param value specified value.
+		 * @return diagonal co-variance matrix with specified value.
+		 */
+		public static List<double[]> createDiagonalVariance(int n, double value) {
+			List<double[]> matrix = Util.newList(n);
+			for (int i = 0; i < n; i++) {
+				double[] row = new double[n];
+				Arrays.fill(row, 0);
+				matrix.add(row);
+				
+				row[i] = value;
+			}
+			
+			return matrix;
+		}
 	}
 
 	

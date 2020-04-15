@@ -76,7 +76,7 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
+		config.put(ON_CLUSTER_EXECUTE_FIELD, ON_CLUSTER_EXECUTE_DEFAULT);
 		return config;
 	}
 	

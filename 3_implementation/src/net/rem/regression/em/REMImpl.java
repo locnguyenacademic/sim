@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -259,8 +260,6 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
 		if (currentParameter == null)
 			return null;
-		List<Double> alpha = ((ExchangedParameter)currentParameter).getAlpha();
-		List<double[]> betas = ((ExchangedParameter)currentParameter).getBetas();
 		LargeStatistics data = null;
 		if (info != null && info.length > 0 && (info[0] instanceof LargeStatistics))
 			data = (LargeStatistics)info[0];
@@ -272,7 +271,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		List<double[]> xStatistic = Util.newList(N);
 		for (int i = 0; i < N; i++) {
 			Statistics stat0 = new Statistics(data.getZData().get(i)[1], data.getXData().get(i));
-			Statistics stat = estimate(stat0, alpha, betas);
+			Statistics stat = estimate(stat0, (ExchangedParameter)currentParameter);
 			if (stat == null)
 				return null;
 			
@@ -366,12 +365,13 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	/**
 	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
 	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
-	 * @param stat specified statistics.
-	 * @param alpha specified alpha parameter.
-	 * @param betas specified alpha parameters.
+	 * @param parameter current parameter.
 	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
 	 */
-	protected Statistics estimate(Statistics stat, List<Double> alpha, List<double[]> betas) {
+	protected Statistics estimate(Statistics stat, ExchangedParameter parameter) {
+		List<Double> alpha = parameter.getAlpha();
+		List<double[]> betas = parameter.getBetas();
+		
 		double zValue = stat.getZStatistic();
 		double[] xVector = stat.getXStatistic();
 		double zStatistic = Constants.UNUSED;
@@ -426,95 +426,11 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 
 	
 	/**
-	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
-	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
-	 * This method is as good as the {@link #estimate(Statistics, List, List)} method but it is not stable for long regression model having many regressors.
-	 * because solving a set of many equations can cause approximate solution or non-solution problem.   
-	 * @param stat specified statistics.
-	 * @param alpha specified alpha parameter.
-	 * @param betas specified alpha parameters.
-	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
-	 */
-	@Deprecated
-	protected Statistics estimateInverse(Statistics stat, List<Double> alpha, List<double[]> betas) {
-		double zValue = stat.getZStatistic();
-		double[] xVector = stat.getXStatistic();
-		double zStatistic = Constants.UNUSED;
-		double[] xStatistic = new double[xVector.length];
-		
-		if (Util.isUsed(zValue)) {
-			zStatistic = zValue;
-			//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
-			for (int j = 0; j < xVector.length; j++) {
-				if (Util.isUsed(xVector[j]))
-					xStatistic[j] = xVector[j];
-				else
-					xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
-			}
-			
-			return new Statistics(zStatistic, xStatistic);
-		}
-		
-		List<Integer> U = Util.newList();
-		double b = 0;
-		for (int j = 0; j < xVector.length; j++) {
-			if (Util.isUsed(xVector[j])) {
-				b += alpha.get(j) * xVector[j];
-				xStatistic[j] = xVector[j]; //existent xij
-			}
-			else
-				U.add(j);
-		}
-
-		if (U.size() > 0) {
-			//Estimating missing xij (xStatistic) by equation 8, based on current parameter.
-			List<double[]> A = Util.newList(U.size());
-			List<Double> y = Util.newList(U.size());
-			
-			for (int i = 0; i < U.size(); i++) {
-				double[] aRow = new double[U.size()];
-				A.add(aRow);
-				for (int j = 0; j < U.size(); j++) {
-					if (i == j)
-						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j)) - 1;
-					else
-						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j));
-				}
-				double yi = -betas.get(U.get(i))[0] - betas.get(U.get(i))[1] * b;
-				y.add(yi);
-			}
-			
-			List<Double> solution = RMAbstract.solve(A, y); //solve Ax = y
-			if (solution != null) {
-				for (int j = 0; j < U.size(); j++) {
-					int k = U.get(j);
-					xStatistic[k] = solution.get(j);
-				}
-			}
-			else {
-				LogUtil.info("Cannot estimate statistic for X by expectation (#estimateInverse), stop estimating for this statistic here because use of other method is wrong.");
-				return null;
-			}
-		}
-		
-		//Estimating missing zi (zStatistic) by equation 4, based on current parameter.
-		zStatistic = 0;
-		for (int j = 0; j < xStatistic.length; j++) {
-			zStatistic += alpha.get(j) * xStatistic[j];
-		}
-		
-		//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
-		return new Statistics(zStatistic, xStatistic);
-	}
-
-	
-	/**
 	 * Initialization method of this class does not change internal data.
 	 */
 	@Override
 	protected Object initializeParameter() {
-		int n = this.data.getXData().get(0).length;
-		ExchangedParameter parameter0 = initializeAlphaBetas(n, false);
+		ExchangedParameter parameter0 = initializeParameterWithoutData(this.data.getXData().get(0).length - 1, false);
 		
 		LargeStatistics completeData = getCompleteData(this.data);
 		if (completeData == null)
@@ -525,13 +441,37 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 			return (parameter != null ? parameter : parameter0); 
 		}
 		catch (Throwable e) {
-			// TODO Auto-generated catch block
 			LogUtil.trace(e);
 		}
 		
 		return parameter0;
 	}
 
+
+	@Override
+	protected ExchangedParameter initializeParameterWithoutData(int regressorNumber, boolean random) {
+		Random rnd = new Random();
+		int n = regressorNumber + 1;
+		List<Double> alpha0 = Util.newList(n);
+		List<double[]> betas0 = Util.newList(n);
+		for (int j = 0; j < n; j++) {
+			alpha0.add(random ? rnd.nextDouble() : 0.0);
+			
+			double[] beta0 = new double[2];
+			if (j == 0) {
+				beta0[0] = 1;
+				beta0[1] = 0;
+			}
+			else {
+				beta0[0] = random ? rnd.nextDouble() : 0.0;
+				beta0[1] = random ? rnd.nextDouble() : 0.0;
+			}
+			betas0.add(beta0);
+		}
+		
+		return new ExchangedParameter(alpha0, betas0);
+	}
+	
 	
 	@Override
 	protected boolean terminatedCondition(Object estimatedParameter, Object currentParameter, Object previousParameter, Object... info) {
@@ -566,7 +506,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		ExchangedParameter parameter = this.getExchangedParameter(); 
 		if (parameter == null) return Constants.UNUSED;
 
-		Statistics stat = estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
+		Statistics stat = estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
 		if (stat == null)
 			return Constants.UNUSED;
 		else
@@ -641,9 +581,9 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 
 	@Override
 	public Alg newInstance() {
-		REMImpl em = new REMImpl();
-		em.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return em;
+		REMImpl rem = new REMImpl();
+		rem.getConfig().putAll((DataConfig)this.getConfig().clone());
+		return rem;
 	}
 
 	
@@ -859,6 +799,93 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	}
 
 
+	/**
+	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
+	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
+	 * This method is as good as the {@link #estimate(Statistics, List, List)} method but it is not stable for long regression model having many regressors.
+	 * because solving a set of many equations can cause approximate solution or non-solution problem.   
+	 * @param stat specified statistics.
+	 * @param alpha specified alpha parameter.
+	 * @param betas specified alpha parameters.
+	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private Statistics estimateInverse(Statistics stat, ExchangedParameter parameter) {
+		List<Double> alpha = parameter.getAlpha();
+		List<double[]> betas = parameter.getBetas();
+		
+		double zValue = stat.getZStatistic();
+		double[] xVector = stat.getXStatistic();
+		double zStatistic = Constants.UNUSED;
+		double[] xStatistic = new double[xVector.length];
+		
+		if (Util.isUsed(zValue)) {
+			zStatistic = zValue;
+			//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
+			for (int j = 0; j < xVector.length; j++) {
+				if (Util.isUsed(xVector[j]))
+					xStatistic[j] = xVector[j];
+				else
+					xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
+			}
+			
+			return new Statistics(zStatistic, xStatistic);
+		}
+		
+		List<Integer> U = Util.newList();
+		double b = 0;
+		for (int j = 0; j < xVector.length; j++) {
+			if (Util.isUsed(xVector[j])) {
+				b += alpha.get(j) * xVector[j];
+				xStatistic[j] = xVector[j]; //existent xij
+			}
+			else
+				U.add(j);
+		}
+
+		if (U.size() > 0) {
+			//Estimating missing xij (xStatistic) by equation 8, based on current parameter.
+			List<double[]> A = Util.newList(U.size());
+			List<Double> y = Util.newList(U.size());
+			
+			for (int i = 0; i < U.size(); i++) {
+				double[] aRow = new double[U.size()];
+				A.add(aRow);
+				for (int j = 0; j < U.size(); j++) {
+					if (i == j)
+						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j)) - 1;
+					else
+						aRow[j] = betas.get(U.get(i))[1] * alpha.get(U.get(j));
+				}
+				double yi = -betas.get(U.get(i))[0] - betas.get(U.get(i))[1] * b;
+				y.add(yi);
+			}
+			
+			List<Double> solution = RMAbstract.solve(A, y); //solve Ax = y
+			if (solution != null) {
+				for (int j = 0; j < U.size(); j++) {
+					int k = U.get(j);
+					xStatistic[k] = solution.get(j);
+				}
+			}
+			else {
+				LogUtil.info("Cannot estimate statistic for X by expectation (#estimateInverse), stop estimating for this statistic here because use of other method is wrong.");
+				return null;
+			}
+		}
+		
+		//Estimating missing zi (zStatistic) by equation 4, based on current parameter.
+		zStatistic = 0;
+		for (int j = 0; j < xStatistic.length; j++) {
+			zStatistic += alpha.get(j) * xStatistic[j];
+		}
+		
+		//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
+		return new Statistics(zStatistic, xStatistic);
+	}
+
+	
 	/**
 	 * Balancing missing values zi (xStatistic) and xij (xValues). This method does not change internal data.
 	 * @param alpha alpha coefficients.

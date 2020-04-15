@@ -135,9 +135,13 @@ public class Test {
 		stats.save(writer, -1);
 		writer.close();
 		
-		
-//		Serializable[] x = new Serializable[] {"a", 1, 1.0};
-//		System.out.print(((Object[])x)[1]);
+//		//NormalDistribution n = new NormalDistribution(0, 0);
+//		System.out.println(Float.MIN_VALUE);
+//		System.out.println(ExchangedParameter.normalPDF(0, 0, Double.MIN_VALUE));
+//		System.out.println(ExchangedParameter.normalPDF(0, 0, 0));
+//		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
+//		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
+//		System.out.println(1.0 / Float.MIN_VALUE);
 	}
 
 	

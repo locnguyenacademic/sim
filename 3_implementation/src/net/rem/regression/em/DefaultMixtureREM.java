@@ -162,7 +162,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 
 	@Override
 	protected REMImpl createREM() {
-		// TODO Auto-generated method stub
 		REMExt rem = new REMExt();
 		rem.getConfig().put(EM_EPSILON_FIELD, this.getConfig().get(EM_EPSILON_FIELD));
 		rem.getConfig().put(EM_MAX_ITERATION_FIELD, this.getConfig().get(EM_MAX_ITERATION_FIELD));
@@ -177,7 +176,8 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> parameters = (List<ExchangedParameter>)currentParameter;
 		@SuppressWarnings("unchecked")
-		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation(currentParameter, info);
+		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation0(currentParameter, info);
+		if (stats == null) return null;
 		
 		//Adjusting large statistics.
 		int N = stats.get(0).getZData().size(); //Suppose all models have the same data.
@@ -303,7 +303,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 						compSample.clear();
 						if (parameter != null) {
 							for (int j = 0; j < k; j++) {
-								if (parameter.alphaEquals(this.rems.get(j).getExchangedParameter())) {
+								if (parameter.alphaEquals(this.rems.get(j).getExchangedParameter())) { //Avoid same alphas
 									parameter = null;
 									break;
 								}
@@ -321,7 +321,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 				
 				if (parameter == null) {
 					while (true) { // This loop avoids same alpha.
-						parameter = REMImpl.initializeAlphaBetas(this.data.getXData().get(0).length, true);
+						parameter = rem.initializeParameterWithoutData(this.data.getXData().get(0).length - 1, true);
 						boolean breakhere = true;
 						for (int j = 0; j < k; j++) {
 							if (parameter.alphaEquals(this.rems.get(j).getExchangedParameter())) {
@@ -366,11 +366,13 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 			ExchangedParameter parameter = rem.getExchangedParameter();
 			double coeff = parameter.getCoeff();
 			Statistics stat = null;
-
+			
 			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter();
 			if (xNormalDisParameter != null) {
-				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
-				xStatistic = stat.getXStatistic();
+				if (!Util.isUsedAll(xStatistic)) {
+					stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
+					xStatistic = stat.getXStatistic();
+				}
 				double pdf = ExchangedParameter.normalPDF(
 					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
 					xNormalDisParameter.getMean(),
@@ -379,7 +381,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 			}
 			
 //			if (stat == null) {
-//				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter.getAlpha(), parameter.getBetas());
+//				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
 //			}
 //			double value = stat.getZStatistic();
 //			double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
@@ -410,7 +412,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		
 		List<Double> coeffs = recalcCoeffs(xStatistic);
 		
-		if (getConfig().getAsBoolean(MAX_EXECUTE_FIELD)) {
+		if (getConfig().getAsBoolean(ON_CLUSTER_EXECUTE_FIELD)) {
 			double maxCoeff = -1;
 			double result = 0;
 			for (int i = 0; i < rems.size(); i++) {
@@ -678,13 +680,11 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 
 		@Override
 		protected Object transformRegressor(Object x, boolean inverse) {
-			// TODO Auto-generated method stub
 			return getMixtureREM().transformRegressor(x, inverse);
 		}
 
 		@Override
 		public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-			// TODO Auto-generated method stub
 			return getMixtureREM().transformResponse(z, inverse);
 		}
 		

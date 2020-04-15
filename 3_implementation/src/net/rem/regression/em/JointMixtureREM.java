@@ -1,5 +1,7 @@
 package net.rem.regression.em;
 
+import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
+
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +42,8 @@ public class JointMixtureREM extends DefaultMixtureREM {
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> parameters = (List<ExchangedParameter>)currentParameter;
 		@SuppressWarnings("unchecked")
-		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation(currentParameter, info);
+		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation0(currentParameter, info);
+		if (stats == null) return null;
 		
 		//Adjusting large statistics.
 		int N = stats.get(0).getZData().size(); //Suppose all models have the same data.
@@ -73,24 +76,17 @@ public class JointMixtureREM extends DefaultMixtureREM {
 			List<Double> mean = parameter.getXNormalDisParameter().getMean();
 			List<double[]> variance = parameter.getXNormalDisParameter().getVariance();
 			for (int i = 0; i < N; i++) {
-				double[] xVector = stat.getXData().get(i);
-				boolean modified = false;
-				for (int j = 1; j < n; j++) {
-					if (!Util.isUsed(this.data.getXData().get(i)[j])) {
-						modified = true;
-						xVector[j] = (xVector[j] + mean.get(j-1)) / 2.0; //Combine mean and inverse regression model. Pay attention here.
-					}
-				}
-				
-				if (modified) {
+				if (!Util.isUsedAll(this.data.getXData().get(i))) {
+					double[] xVector = stat.getXData().get(i);
 					double pdf = ExchangedParameter.normalPDF(
 						DSUtil.toDoubleList(Arrays.copyOfRange(xVector, 1, xVector.length)),
 						mean,
 						variance);
+					
 					kWeights.add(coeff*pdf);
 				}
 				else
-					kWeights.add(1.0);
+					kWeights.add(1.0); //Not necessary to calculate the probabilities.
 			}
 		}
 		
@@ -103,8 +99,17 @@ public class JointMixtureREM extends DefaultMixtureREM {
 			for (int k = 0; k < K; k++) {
 				kSumCoeffs += weights.get(k).get(i);
 			}
-			for (int k = 0; k < K; k++) {
-				kNewCoeffs.add(weights.get(k).get(i) / kSumCoeffs);
+			
+			if (kSumCoeffs == 0 || !Util.isUsed(kSumCoeffs)) {
+				double w = 1.0 / (double)K;
+				for (int k = 0; k < K; k++) {
+					kNewCoeffs.add(w);
+				}
+			}
+			else {
+				for (int k = 0; k < K; k++) {
+					kNewCoeffs.add(weights.get(k).get(i) / kSumCoeffs);
+				}
 			}
 		}
 		weights.clear();
@@ -144,32 +149,96 @@ public class JointMixtureREM extends DefaultMixtureREM {
 
 	@Override
 	protected REMImpl createREM() {
-		return new JointREM();
+		JointREMExt rem = new JointREMExt();
+		rem.getConfig().put(EM_EPSILON_FIELD, this.getConfig().get(EM_EPSILON_FIELD));
+		rem.getConfig().put(EM_MAX_ITERATION_FIELD, this.getConfig().get(EM_MAX_ITERATION_FIELD));
+		rem.getConfig().put(R_INDICES_FIELD, this.getConfig().get(R_INDICES_FIELD));
+		rem.getConfig().put(R_CALC_VARIANCE_FIELD, true);
+		return rem;
 	}
 
 
 	/**
-	 * This class is an extension of regression expectation maximization algorithm with joint distribution of regressors.
+	 * This class is an extension of joint regression expectation maximization algorithm.
 	 * @author Loc Nguyen
 	 * @version 1.0
 	 */
-	protected class JointREM extends REMExt {
+	protected class JointREMExt extends JointREM {
 		
 		/**
 		 * Serial version UID for serializable class.
 		 */
 		private static final long serialVersionUID = 1L;
-
+		
 		@Override
 		protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
-			ExchangedParameter parameter = (ExchangedParameter)super.maximization(currentStatistic, info);
-			
 			LargeStatistics stat = (LargeStatistics)currentStatistic;
+			if (stat == null || stat.isEmpty())
+				return null;
+			List<double[]> xStatistic = stat.getXData();
+			List<double[]> zStatistic = stat.getZData();
+			int N = zStatistic.size();
+			int n = xStatistic.get(0).length; //1, x1, x2,..., x(n-1)
+			ExchangedParameter currentParameter = (ExchangedParameter)getCurrentParameter();
+			
+			List<double[]> uStatistic = xStatistic;
+			List<double[]> vStatistic = zStatistic;
 			List<Double> kCondProbs = null;
 			if (info != null && info.length > 0 && (info[0] instanceof List<?>)) {
 				@SuppressWarnings("unchecked")
 				List<Double> kCondProbTemp = (List<Double>)info[0];
 				kCondProbs = kCondProbTemp;
+				
+				uStatistic = Util.newList(xStatistic.size());
+				vStatistic = Util.newList(zStatistic.size());
+				for (int i = 0; i < N; i++) {
+					double[] uVector = new double[n];
+					uStatistic.add(uVector);
+					double[] vVector = new double[2];
+					vStatistic.add(vVector);
+					
+					for (int j = 0; j < n; j++) {
+						uVector[j] = xStatistic.get(i)[j] * kCondProbs.get(i); 
+					}
+					vVector[0] = 1;
+					vVector[1] = zStatistic.get(i)[1] * kCondProbs.get(i); 
+				}
+			}
+			
+			List<Double> alpha = calcCoeffsByStatistics(uStatistic, vStatistic);
+			if (alpha == null || alpha.size() == 0) { //If cannot calculate alpha by matrix calculation.
+				if (currentParameter != null)
+					alpha = DSUtil.toDoubleList(currentParameter.getAlpha()); //clone alpha
+				else { //Used for initialization so that regression model is always determined.
+					alpha = DSUtil.initDoubleList(n, 0.0);
+					double alpha0 = 0;
+					for (int i = 0; i < N; i++)
+						alpha0 += zStatistic.get(i)[1];
+					alpha.set(0, alpha0 / (double)N); //constant function z = c
+				}
+			}
+			
+			ExchangedParameter newParameter = new ExchangedParameter(alpha);
+			if (kCondProbs == null) {
+				newParameter.setZVariance(newParameter.estimateZVariance(stat));
+			}
+			else {
+				double sumCondProb = 0;
+				for (int i = 0; i < N; i++) {
+					sumCondProb += kCondProbs.get(i);
+				}
+				
+				double sumZVariance = 0;
+				for (int i = 0; i < N; i++) {
+					double d = zStatistic.get(i)[1] - ExchangedParameter.mean(alpha, xStatistic.get(i));
+					sumZVariance += d*d*kCondProbs.get(i);
+				}
+				
+				newParameter.setCoeff(sumCondProb/N);
+				if (sumCondProb != 0)
+					newParameter.setZVariance(sumZVariance/sumCondProb);
+				else
+					newParameter.setZVariance(1.0); //Fixing zero probabilities.
 			}
 			
 			NormalDisParameter xNormalDisParameter = null;
@@ -177,9 +246,19 @@ public class JointMixtureREM extends DefaultMixtureREM {
 				xNormalDisParameter = new NormalDisParameter(stat);
 			else
 				xNormalDisParameter = new NormalDisParameter(stat, kCondProbs);
-			parameter.setXNormalDisParameter(xNormalDisParameter);
-			
-			return parameter;
+			newParameter.setXNormalDisParameter(xNormalDisParameter);
+
+			return newParameter;
+		}
+
+		@Override
+		protected Object transformRegressor(Object x, boolean inverse) {
+			return getMixtureREM().transformRegressor(x, inverse);
+		}
+
+		@Override
+		public Object transformResponse(Object z, boolean inverse) throws RemoteException {
+			return getMixtureREM().transformResponse(z, inverse);
 		}
 		
 	}
@@ -206,7 +285,7 @@ public class JointMixtureREM extends DefaultMixtureREM {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MAX_EXECUTE_FIELD, MAX_EXECUTE_DEFAULT);
+		config.put(ON_CLUSTER_EXECUTE_FIELD, ON_CLUSTER_EXECUTE_DEFAULT);
 		return config;
 	}
 

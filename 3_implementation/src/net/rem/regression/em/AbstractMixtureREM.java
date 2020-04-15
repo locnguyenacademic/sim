@@ -20,6 +20,7 @@ import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.hudup.core.logistic.xURI;
 import net.rem.em.EMRemote;
@@ -50,15 +51,15 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	
 	/**
-	 * Default value of cluster execution mode.
+	 * Default value of on-cluster execution mode.
 	 */
-	protected static final String MAX_EXECUTE_FIELD = "max_execute";
+	protected static final String ON_CLUSTER_EXECUTE_FIELD = "oncluster_execute";
 
 	
 	/**
-	 * Default value of cluster execution mode.
+	 * Default value of on-cluster execution mode.
 	 */
-	protected static final boolean MAX_EXECUTE_DEFAULT = false;
+	protected static final boolean ON_CLUSTER_EXECUTE_DEFAULT = false;
 	
 	
 	/**
@@ -240,6 +241,18 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	@Override
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
+		return expectation0(currentParameter, info);
+	}
+
+	
+	/**
+	 * This method implement expectation step (E-step) of EM in basically.
+	 * @param currentParameter current parameter.
+	 * @param info additional information.
+	 * @return sufficient statistic given current parameter.
+	 * @throws RemoteException if any error raises.
+	 */
+	protected Object expectation0(Object currentParameter, Object...info) throws RemoteException {
 		if (currentParameter == null)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -256,13 +269,13 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			rem.setStatistics(stat);
 			stats.add(stat);
 			
-//			if (stat == null)
-//				logger.error("Some regression models are failed in expectation");
+			if (stat == null)
+				LogUtil.error("Some regression models are failed in expectation");
 		}
 		
 		return stats;
 	}
-
+	
 	
 	/**
 	 * Maximization method of this class changes internal data.

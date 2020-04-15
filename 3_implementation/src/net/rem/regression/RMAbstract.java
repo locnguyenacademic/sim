@@ -544,7 +544,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	/**
 	 * Calculating inverse of the given matrix.
 	 * @param A given matrix.
-	 * @return inverse of the given matrix.
+	 * @return inverse of the given matrix. Return null if the matrix is not invertible.
 	 */
 	public static List<double[]> matrixInverse(List<double[]> A) {
 		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
@@ -576,6 +576,18 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		return Util.newList();
 	}
 
+	
+	/**
+	 * Checking if the given matrix is invertible.
+	 * @param A given matrix.
+	 * @return if the given matrix is invertible.
+	 */
+	public static boolean matrixIsInvertible(List<double[]> A) {
+		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
+		DecompositionSolver solver = new LUDecomposition(M).getSolver();
+		return solver.isNonSingular();
+	}
+	
 	
 	/**
 	 * Solving the equation Ax = b. This method uses firstly LU decomposition to solve exact solution and then uses QR decomposition to solve approximate solution in least square sense.

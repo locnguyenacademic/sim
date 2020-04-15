@@ -5,7 +5,6 @@ import static net.rem.regression.RMAbstract.solve;
 import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Random;
 
 import flanagan.math.Fmath;
 import flanagan.plot.PlotGraph;
@@ -48,6 +47,15 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 	public REMAbstract() {
 	
 	}
+
+	
+	/**
+	 * Initialization parameter without data.
+	 * @param regressorNumber the number of regressors including x1, x2,..., xn.
+	 * @param random if true, randomization is processed.
+	 * @return exchanged parameter.
+	 */
+	protected abstract ExchangedParameter initializeParameterWithoutData(int regressorNumber, boolean random);
 
 	
 	@Override
@@ -320,34 +328,5 @@ public abstract class REMAbstract extends ExponentialEM implements REM, REMRemot
 			return new LargeStatistics(xStatistic, zStatistic);
 	}
 	
-
-	/**
-	 * Initializing coefficients alpha and betas.
-	 * @param regressorNumber the number regressors.
-	 * @param random if true, randomization is processed.
-	 * @return coefficients alpha and betas.
-	 */
-	protected static ExchangedParameter initializeAlphaBetas(int regressorNumber, boolean random) {
-		Random rnd = new Random();
-		List<Double> alpha0 = Util.newList(regressorNumber);
-		List<double[]> betas0 = Util.newList(regressorNumber);
-		for (int j = 0; j < regressorNumber; j++) {
-			alpha0.add(random ? rnd.nextDouble() : 0.0);
-			
-			double[] beta0 = new double[2];
-			if (j == 0) {
-				beta0[0] = 1;
-				beta0[1] = 0;
-			}
-			else {
-				beta0[0] = random ? rnd.nextDouble() : 0.0;
-				beta0[1] = random ? rnd.nextDouble() : 0.0;
-			}
-			betas0.add(beta0);
-		}
-		
-		return new ExchangedParameter(alpha0, betas0);
-	}
-
 
 }
