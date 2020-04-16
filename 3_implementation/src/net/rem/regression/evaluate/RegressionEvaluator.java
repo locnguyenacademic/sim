@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.evaluate;
 
 import java.io.Serializable;
@@ -30,14 +37,12 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 	 * Default constructor.
 	 */
 	public RegressionEvaluator() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 
 	
 	@Override
 	protected Serializable extractTestValue(Alg alg, Profile testingProfile) {
-		// TODO Auto-generated method stub
 		try {
 			return (Serializable) ((RM)alg).extractResponseValue(testingProfile);
 		} catch (Exception e) {LogUtil.trace(e);}
@@ -48,7 +53,6 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 	
 	@Override
 	public boolean acceptAlg(Alg alg) {
-		// TODO Auto-generated method stub
 		if (alg == null) return false;
 //		AlgRemote remoteAlg = (alg instanceof AlgRemoteWrapper) ? ((AlgRemoteWrapper)alg).getRemoteAlg() : null;
 //		if ((remoteAlg != null) && (remoteAlg instanceof Alg))
@@ -60,7 +64,6 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Regression Evaluator";
 	}
 
@@ -71,7 +74,6 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 	 * @throws Exception if there is any error.
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		String regressEvClassName = RegressionEvaluator.class.getName();
 		new Evaluator().run(new String[] {regressEvClassName});
 	}

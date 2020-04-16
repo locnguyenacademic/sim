@@ -1,11 +1,18 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
-import static net.rem.regression.RMAbstract.extractNumber;
 import static net.rem.regression.RMAbstract.splitIndices;
 import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.List;
 
 import flanagan.math.Fmath;
@@ -19,6 +26,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
+import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
@@ -29,7 +37,9 @@ import net.rem.regression.LargeStatistics;
 import net.rem.regression.RM;
 import net.rem.regression.RMAbstract;
 import net.rem.regression.RMRemote;
+import net.rem.regression.Statistics;
 import net.rem.regression.VarWrapper;
+import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 import net.rem.regression.em.ui.graph.Graph;
 import net.rem.regression.em.ui.graph.PlotGraphExt;
 
@@ -51,16 +61,40 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 
 	
 	/**
-	 * Default value of on-cluster execution mode.
+	 * Field of component selection execution mode. If this property is true, the mixture model will select most appropriate component (cluster) for execution instead of making average.
 	 */
-	protected static final String ON_CLUSTER_EXECUTE_FIELD = "oncluster_execute";
+	protected static final String SELECT_COMP_EXECUTE_FIELD = "execute_select_comp";
 
 	
 	/**
-	 * Default value of on-cluster execution mode.
+	 * Default value of component selection execution mode. If this property is true, the mixture model will select most appropriate component (cluster) for execution instead of making average.
 	 */
-	protected static final boolean ON_CLUSTER_EXECUTE_DEFAULT = false;
+	protected static final boolean SELECT_COMP_EXECUTE_DEFAULT = false;
 	
+	
+	/**
+	 * Field of including z probability execution mode. If this property is true, the mixture model will include z probability (response probability) for execution.
+	 */
+	protected static final String INCLUDE_ZPROB_EXECUTE_FIELD = "execute_include_zprob";
+
+	
+	/**
+	 * Default value of including z probability execution mode. If this property is true, the mixture model will include z probability (response probability) for execution.
+	 */
+	protected static final boolean INCLUDE_ZPROB_EXECUTE_DEFAULT = false;
+	
+	
+	/**
+	 * Field of initialization mode. If this property is true, the mixture model will randomize sample with replacement when initializing parameters.
+	 */
+	protected static final String INITIALIZE_GIVEBACK_FIELD = "initialize_giveback";
+
+	
+	/**
+	 * Default value of initialization mode. If this property is true, the mixture model will randomize sample with replacement when initializing parameters.
+	 */
+	protected static final boolean INITIALIZE_GIVEBACK_DEFAULT = false;
+
 	
 	/**
 	 * List of internal regression model as parameter.
@@ -298,8 +332,8 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			rem.setEstimatedParameter(parameter);
 			parameters.add(parameter);
 			
-//			if (parameter == null)
-//				logger.error("Some regression models are failed in expectation");
+			if (parameter == null)
+				LogUtil.error("Some regression models are failed in maximization");
 		}
 		
 		return parameters;
@@ -432,22 +466,122 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	}
 
 
+	/**
+	 * Re-calculating regression coefficients list of given X statistics. This method is not synchronized because it is called by other methods.
+	 * It is protected in order to be overrided by sub classes.
+	 * @param xStatistic list of given X statistics.
+	 * @return list of regression coefficients given X statistics.
+	 */
+	protected List<Double> recalcCoeffs(List<double[]> xStatistics) {
+		if (rems == null || rems.size() == 0 || xStatistics == null || xStatistics.size() != rems.size())
+			return null;
+
+		List<Double> coeffs = Util.newList(rems.size());
+		double sumCoeff = 0;
+		for (int k = 0; k < rems.size(); k++) {
+			REMImpl rem = rems.get(k);
+			ExchangedParameter parameter = rem.getExchangedParameter();
+			double coeff = parameter.getCoeff();
+			double[] xStatistic = xStatistics.get(k); 
+			Statistics stat = null;
+			
+			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter();
+			if (xNormalDisParameter != null) {
+				if (!Util.isUsedAll(xStatistic)) {
+					stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
+					xStatistic = stat.getXStatistic();
+				}
+				double pdf = ExchangedParameter.normalPDF(
+					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
+					xNormalDisParameter.getMean(),
+					xNormalDisParameter.getVariance());
+				coeff *= pdf;
+			}
+			
+			if (getConfig().getAsBoolean(INCLUDE_ZPROB_EXECUTE_FIELD)) {
+				if (stat == null) {
+					stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
+				}
+				double value = stat.getZStatistic();
+				double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
+				coeff *= pdf;
+			}
+			
+			coeffs.add(coeff);
+			sumCoeff += coeff;
+		}
+		
+		if (sumCoeff != 0 && Util.isUsed(sumCoeff)) {
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeffs.get(i) / sumCoeff);
+		}
+		else {
+			double coeff = 1.0 / (double)coeffs.size();
+			for (int i = 0; i < coeffs.size(); i++)
+				coeffs.set(i, coeff);
+		}
+		
+		return coeffs;
+	}
+
+	
+	/**
+	 * Executing by by list of X statistics. This method is not synchronized because it always called by other methods.
+	 * @param xStatistics list of X statistics (regressors). The first element of each X statistics is 1.
+	 * @return result of execution. Return NaN if execution is failed.
+	 */
+	protected double executeByXStatistic(List<double[]> xStatistics) {
+		if (rems == null || rems.size() == 0 || xStatistics == null || xStatistics.size() != rems.size())
+			return Constants.UNUSED;
+		List<Double> coeffs = recalcCoeffs(xStatistics);
+		if (coeffs == null) return Constants.UNUSED;
+		
+		if (getConfig().getAsBoolean(SELECT_COMP_EXECUTE_FIELD)) {
+			double maxCoeff = -1;
+			double result = 0;
+			for (int k = 0; k < rems.size(); k++) {
+				double[] xStatistic = xStatistics.get(k);
+				double value = Constants.UNUSED;
+				try {
+					value = rems.get(k).executeByXStatistic(xStatistic);
+				} catch (RemoteException e) {LogUtil.trace(e);}
+				if (!Util.isUsed(value)) continue;
+				
+				if (coeffs.get(k) > maxCoeff) {
+					maxCoeff = coeffs.get(k);
+					result = value;
+				}
+			}
+			return result;
+		}
+		else {
+			double result = 0;
+			for (int k = 0; k < rems.size(); k++) {
+				double[] xStatistic = xStatistics.get(k);
+				double value = Constants.UNUSED;
+				try {
+					value = rems.get(k).executeByXStatistic(xStatistic);
+				} catch (RemoteException e) {LogUtil.trace(e);}
+				
+				if (Util.isUsed(value))
+					result += coeffs.get(k) * value;
+				else
+					return Constants.UNUSED;
+			}
+			return result;
+		}
+	}
+	
+	
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
 		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
 			return Constants.UNUSED;
 		
-		double result = 0;
-		for (REMImpl rem : this.rems) {
-			ExchangedParameter parameter = (ExchangedParameter)rem.getParameter();
-			
-			double value = rem.executeByXStatistic(xStatistic);
-			if (Util.isUsed(value))
-				result += parameter.getCoeff() * value;
-			else
-				return Constants.UNUSED;
-		}
-		return result;
+		List<double[]> xStatistics = Util.newList(rems.size());
+		for (int k = 0; k < rems.size(); k++) {xStatistics.add(xStatistic);}
+		
+		return executeByXStatistic(xStatistics);
 	}
 	
 	
@@ -456,17 +590,13 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 		if (this.rems == null || this.rems.size() == 0)
 			return Constants.UNUSED;
 		
-		double result = 0;
+		List<double[]> xStatistics = Util.newList(rems.size());
 		for (REMImpl rem : this.rems) {
-			ExchangedParameter parameter = (ExchangedParameter)rem.getParameter();
-			
-			double value = extractNumber(rem.execute(input));
-			if (Util.isUsed(value))
-				result += parameter.getCoeff() * value;
-			else
-				return Constants.UNUSED;
+			double[] xStatistic = rem.extractRegressorValues(input);
+			xStatistics.add(xStatistic);
 		}
-		return result;
+
+		return executeByXStatistic(xStatistics);
 	}
 
 	
@@ -540,6 +670,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
+		config.put(INCLUDE_ZPROB_EXECUTE_FIELD, INCLUDE_ZPROB_EXECUTE_DEFAULT);
 		return config;
 	}
 

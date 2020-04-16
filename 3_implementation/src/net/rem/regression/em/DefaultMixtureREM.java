@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
@@ -20,8 +27,6 @@ import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.MathUtil;
 import net.rem.regression.LargeStatistics;
-import net.rem.regression.Statistics;
-import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 
 /**
  * This class implements the mixture regression model.
@@ -90,7 +95,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	protected boolean prepareInternalData(AbstractMixtureREM other) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (other instanceof DefaultMixtureREM) {
 			DefaultMixtureREM mixREM = (DefaultMixtureREM)other;
 			return prepareInternalData(mixREM.xIndices, mixREM.zIndices, mixREM.attList, mixREM.data);
@@ -149,7 +153,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	protected void clearInternalData() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.clearInternalData();
 		this.xIndices.clear();
 		this.zIndices.clear();
@@ -275,9 +278,21 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Object initializeParameter() {
+		return initializeParameter0(config.getAsBoolean(INITIALIZE_GIVEBACK_FIELD));
+	}
+	
+	
+	/**
+	 * Initialization method of this class changes internal data.
+	 * This method improves the initialization process so that sub-models do not coincide when regression coefficients are made different.
+	 * The diversity is important to converge best solutions.
+	 * @param giveBack if true, the random record is given back to original sample.
+	 * @return initialized parameter at the first iteration of EM process.
+	 */
+	@SuppressWarnings("unchecked")
+	private Object initializeParameter0(boolean giveBack) {
 		List<ExchangedParameter> prevParameters = Util.newList();
 		if (getConfig().containsKey(PREV_PARAMS_FIELD))
 			prevParameters = (List<ExchangedParameter>)getConfig().get(PREV_PARAMS_FIELD);
@@ -285,8 +300,16 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		List<ExchangedParameter> parameters = Util.newList(this.rems.size());
 		LargeStatistics completeData = REMImpl.getCompleteData(this.data);
 		int recordNumber = 0;
-		if ((completeData != null) && (completeData.getZData().size() >= this.rems.size() - prevParameters.size()))
+		if (completeData == null)
+			recordNumber = 0;
+		else if (giveBack)
+			recordNumber = completeData.getZData().size();
+		else if (this.rems.size() == prevParameters.size())
+			recordNumber = 0;
+		else if (completeData.getZData().size() >= this.rems.size() - prevParameters.size())
 			recordNumber = completeData.getZData().size() / (this.rems.size() - prevParameters.size());
+		else
+			recordNumber = 0;
 				
 		for (int k = 0; k < this.rems.size(); k++) {
 			REMImpl rem = this.rems.get(k);
@@ -298,7 +321,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 			else {
 				if (recordNumber > 0) {
 					try {
-						LargeStatistics compSample = randomSampling(completeData, recordNumber, false);
+						LargeStatistics compSample = randomSampling(completeData, recordNumber, giveBack);
 						parameter = (ExchangedParameter) rem.maximization(compSample);
 						compSample.clear();
 						if (parameter != null) {
@@ -350,100 +373,9 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
-	/**
-	 * Re-calculating regression coefficients given X statistics. This method is not synchronized because it is called by other methods.
-	 * It is protected in order to be overrided by sub classes.
-	 * @param xStatistic given X statistics.
-	 * @return list of regression coefficients given X statistics.
-	 */
-	protected List<Double> recalcCoeffs(double[] xStatistic) {
-		if (rems == null || rems.size() == 0 || xStatistic == null)
-			return Util.newList();
-
-		List<Double> coeffs = Util.newList(rems.size());
-		double sumCoeff = 0;
-		for (REMImpl rem : rems) {
-			ExchangedParameter parameter = rem.getExchangedParameter();
-			double coeff = parameter.getCoeff();
-			Statistics stat = null;
-			
-			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter();
-			if (xNormalDisParameter != null) {
-				if (!Util.isUsedAll(xStatistic)) {
-					stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
-					xStatistic = stat.getXStatistic();
-				}
-				double pdf = ExchangedParameter.normalPDF(
-					DSUtil.toDoubleList(Arrays.copyOfRange(xStatistic, 1, xStatistic.length)),
-					xNormalDisParameter.getMean(),
-					xNormalDisParameter.getVariance());
-				coeff *= pdf;
-			}
-			
-//			if (stat == null) {
-//				stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
-//			}
-//			double value = stat.getZStatistic();
-//			double pdf = ExchangedParameter.normalPDF(value, value, parameter.getZVariance());
-//			coeff *= pdf;
-			
-			coeffs.add(coeff);
-			sumCoeff += coeff;
-		}
-		
-		if (sumCoeff != 0) {
-			for (int i = 0; i < coeffs.size(); i++)
-				coeffs.set(i, coeffs.get(i) / sumCoeff);
-		}
-		else {
-			double coeff = 1.0 / (double)coeffs.size();
-			for (int i = 0; i < coeffs.size(); i++)
-				coeffs.set(i, coeff);
-		}
-		
-		return coeffs;
-	}
-
-	
-	@Override
-	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
-			return Constants.UNUSED;
-		
-		List<Double> coeffs = recalcCoeffs(xStatistic);
-		
-		if (getConfig().getAsBoolean(ON_CLUSTER_EXECUTE_FIELD)) {
-			double maxCoeff = -1;
-			double result = 0;
-			for (int i = 0; i < rems.size(); i++) {
-				double value = rems.get(i).executeByXStatistic(xStatistic);
-				if (!Util.isUsed(value)) continue;
-				
-				if (coeffs.get(i) > maxCoeff) {
-					maxCoeff = coeffs.get(i);
-					result = value;
-				}
-			}
-			return result;
-		}
-		else {
-			double result = 0;
-			for (int i = 0; i < rems.size(); i++) {
-				double value = rems.get(i).executeByXStatistic(xStatistic);
-				
-				if (Util.isUsed(value))
-					result += coeffs.get(i) * value;
-				else
-					return Constants.UNUSED;
-			}
-			return result;
-		}
-	}
-
-	
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		double[] xStatistic = extractRegressorValues(input);
+		double[] xStatistic = extractRegressorValues(input); //because all sub-model has the same attribute list.
 		return executeByXStatistic(xStatistic);
 	}
 
@@ -672,7 +604,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 				if (sumCondProb != 0)
 					newParameter.setZVariance(sumZVariance/sumCondProb);
 				else
-					newParameter.setZVariance(1.0); //Fixing zero probabilities.
+					newParameter.setZVariance(newParameter.estimateZVariance(stat)); //Fixing zero probabilities.
 			}
 			
 			return newParameter;
@@ -693,7 +625,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -704,7 +635,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		DefaultMixtureREM mixREM = new DefaultMixtureREM();
 		mixREM.getConfig().putAll((DataConfig)this.getConfig().clone());
 		return mixREM;
@@ -713,14 +643,12 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 
 
 	@Override
 	public String note() {
-		// TODO Auto-generated method stub
 		return note + 
 			"\n" +
 			"Users need to specify the number of components (sub-models) via the attribute \"" + COMP_NUMBER_FIELD + "\"";
@@ -731,6 +659,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(COMP_NUMBER_FIELD, COMP_NUMBER_DEFAULT);
+		config.put(INITIALIZE_GIVEBACK_FIELD, INITIALIZE_GIVEBACK_DEFAULT);
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;
 	}
@@ -771,35 +700,35 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 	}
 
 
-//	/**
-//	 * Getting the fitness criterion of this model given large statistics.
-//	 * @param stat given large statistics.
-//	 * @return the fitness criterion of this model given large statistics. Return NaN if any error raises.
-//	 * @throws RemoteException if any error raises.
-//	 */
-//	@SuppressWarnings("unused")
-//	@Deprecated
-//	private synchronized double getFitness2(LargeStatistics stat) throws RemoteException {
-//		@SuppressWarnings("unchecked")
-//		List<ExchangedParameter> parameters = (List<ExchangedParameter>)getParameter();
-//		if (stat == null || parameters == null || parameters.size() == 0)
-//			return Constants.UNUSED;
-//		
-//		int N = stat.getZData().size();
-//		if (N == 0) return Constants.UNUSED;
-//		double fitness = 0.0;
-//		for (int i = 0; i < N; i++) {
-//			double[] xVector = stat.getXData().get(i);
-//			double[] zVector = stat.getZData().get(i);
-//			
-//			List<Double> probs = ExchangedParameter.normalZCondProbs(parameters, xVector, zVector);
-//			double[] max = MathUtil.findExtremeValue(probs, true);
-//			if (max != null)
-//				fitness += max[0];
-//		}
-//		
-//		return fitness / (double)N;
-//	}
+	/**
+	 * Getting the fitness criterion of this model given large statistics. This method is now deprecated.
+	 * @param stat given large statistics.
+	 * @return the fitness criterion of this model given large statistics. Return NaN if any error raises.
+	 * @throws RemoteException if any error raises.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private synchronized double getFitness2(LargeStatistics stat) throws RemoteException {
+		@SuppressWarnings("unchecked")
+		List<ExchangedParameter> parameters = (List<ExchangedParameter>)getParameter();
+		if (stat == null || parameters == null || parameters.size() == 0)
+			return Constants.UNUSED;
+		
+		int N = stat.getZData().size();
+		if (N == 0) return Constants.UNUSED;
+		double fitness = 0.0;
+		for (int i = 0; i < N; i++) {
+			double[] xVector = stat.getXData().get(i);
+			double[] zVector = stat.getZData().get(i);
+			
+			List<Double> probs = ExchangedParameter.normalZCondProbs(parameters, xVector, zVector);
+			double[] max = MathUtil.findExtremeValue(probs, true);
+			if (max != null)
+				fitness += max[0];
+		}
+		
+		return fitness / (double)N;
+	}
 
 	
 }

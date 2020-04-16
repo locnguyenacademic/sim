@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression;
 
 import java.awt.Color;
@@ -94,13 +101,11 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
      */
 	public RMAbstract() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	
 	@Override
 	public synchronized Object learnStart(Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		Object resulted = null;
 		if (prepareInternalData())
 			resulted = learn0();
@@ -125,7 +130,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @throws RemoteException if any error raises.
 	 */
 	protected boolean prepareInternalData() throws RemoteException {
-		// TODO Auto-generated method stub
 		clearInternalData();
 		
 		Profile profile0 = null;
@@ -194,7 +198,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.coeffs == null || input == null)
 			return null;
 		
@@ -229,14 +232,12 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	@Override
 	public synchronized Object getParameter() throws RemoteException {
-		// TODO Auto-generated method stub
 		return coeffs;
 	}
 
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
 		return config;
@@ -245,7 +246,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 	@Override
 	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (parameter == null || !(parameter instanceof double[]))
 			return "";
 		double[] coeffs = (double[])parameter;
@@ -263,7 +263,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	@Override
 	public synchronized String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (this.coeffs == null)
 			return "";
 		
@@ -288,7 +287,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @return inspector of regression model.
 	 */
 	public static Inspector getInspector(RM rm) {
-		// TODO Auto-generated method stub
 		Object parameter = null;
 		try {
 			parameter = rm.getParameter();
@@ -317,21 +315,18 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {RMRemote.class.getName(), MemoryBasedAlgRemote.class.getName()};
 	}
 
 	
 	@Override
 	public VarWrapper extractRegressor(int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		return extractVariable(attList, xIndices, index);
 	}
 
 	
 	@Override
 	public List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		return extractVariables(attList, xIndices);
 	}
 
@@ -367,7 +362,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 	@Override
 	public synchronized Object extractResponseValue(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (input == null)
 			return Constants.UNUSED;
 		else if (input instanceof Profile)
@@ -385,14 +379,12 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @return transformed value of X.
 	 */
 	protected Object transformRegressor(Object x, boolean inverse) {
-		// TODO Auto-generated method stub
 		return x;
 	}
 
 
 	@Override
 	public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-		// TODO Auto-generated method stub
 		return z;
 	}
 
@@ -577,16 +569,16 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	}
 
 	
-	/**
-	 * Checking if the given matrix is invertible.
-	 * @param A given matrix.
-	 * @return if the given matrix is invertible.
-	 */
-	public static boolean matrixIsInvertible(List<double[]> A) {
-		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
-		DecompositionSolver solver = new LUDecomposition(M).getSolver();
-		return solver.isNonSingular();
-	}
+//	/**
+//	 * Checking if the given matrix is invertible.
+//	 * @param A given matrix.
+//	 * @return if the given matrix is invertible.
+//	 */
+//	public static boolean matrixIsInvertible(List<double[]> A) {
+//		RealMatrix M = MatrixUtils.createRealMatrix(A.toArray(new double[A.size()][A.size()]));
+//		DecompositionSolver solver = new LUDecomposition(M).getSolver();
+//		return solver.isNonSingular();
+//	}
 	
 	
 	/**
@@ -766,7 +758,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @return variable.
 	 */
 	public static VarWrapper extractVariable(AttributeList attList, List<Object[]> indices, int index) {
-		// TODO Auto-generated method stub
 		if (index == 0 || attList == null) return null;
 
 		VarWrapper var = null;
@@ -990,7 +981,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 			@Override
 			public String getGraphFeature() {
-				// TODO Auto-generated method stub
 				try {
 					return "R=" + MathUtil.format(rm.calcR(), 2);
 				} catch (Exception e) {LogUtil.trace(e);}
@@ -1073,7 +1063,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 
 			@Override
 			public String getGraphFeature() {
-				// TODO Auto-generated method stub
 				return MathUtil.format(mean, 2) + " +/- 1.96*" + 
     				MathUtil.format(sd, 2);
 			}
@@ -1121,7 +1110,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
      * @throws RemoteException if any error raises.
      */
 	public static double calcVariance(RM rm, LargeStatistics stats) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (rm == null || stats == null)
 			return Constants.UNUSED;
 		
@@ -1152,7 +1140,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
      * @throws RemoteException if any error raises.
      */
 	public static double calcR(RM rm, LargeStatistics stats) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (rm == null || stats == null)
 			return Constants.UNUSED;
 		
@@ -1178,7 +1165,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
      * @throws RemoteException if any error raises.
      */
 	public static double[] calcError(RM rm, LargeStatistics stats) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (rm == null || stats == null)
 			return null;
 		
@@ -1202,7 +1188,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @return true if saving is successful.
 	 */
 	public static boolean saveLargeStatistics(RM rm, LargeStatistics stats, xURI uri, int decimal) {
-		// TODO Auto-generated method stub
 		if (rm == null || stats == null || stats.size() == 0 || uri == null)
 			return false;
 		

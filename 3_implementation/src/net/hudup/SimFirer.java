@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.hudup;
 
 import net.hudup.core.Firer;
@@ -20,11 +27,10 @@ public class SimFirer extends Firer {
 	
 	@Override
 	public AlgRemoteWrapper wrap(AlgRemote remoteAlg, boolean exclusive) {
-		// TODO Auto-generated method stub
-		if (remoteAlg instanceof EMRemote)
-			return new EMRemoteWrapper((EMRemote)remoteAlg, exclusive);
-		else if (remoteAlg instanceof RMRemote)
+		if (remoteAlg instanceof RMRemote)
 			return new RMRemoteWrapper((RMRemote)remoteAlg, exclusive);
+		else if (remoteAlg instanceof EMRemote)
+			return new EMRemoteWrapper((EMRemote)remoteAlg, exclusive);
 		else
 			return super.wrap(remoteAlg, exclusive);
 	}

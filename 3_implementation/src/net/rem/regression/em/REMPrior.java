@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import java.rmi.RemoteException;
@@ -90,7 +97,7 @@ public class REMPrior extends REMImpl {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "prior_rem";
+			return "rem_prior";
 	}
 
 	

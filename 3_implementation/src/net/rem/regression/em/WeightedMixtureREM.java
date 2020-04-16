@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import java.rmi.RemoteException;
@@ -76,42 +83,9 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(ON_CLUSTER_EXECUTE_FIELD, ON_CLUSTER_EXECUTE_DEFAULT);
+		config.put(SELECT_COMP_EXECUTE_FIELD, SELECT_COMP_EXECUTE_DEFAULT);
 		return config;
 	}
 	
 	
-//	/**
-//	 * Adjusting weights of EM coefficients according to maximum mechanism.
-//	 */
-//	@SuppressWarnings({ "unchecked", "unused" })
-//	@Deprecated
-//	private void adjustWeights0() {
-//		List<ExchangedParameter> parameters = null;
-//		try {
-//			parameters = (List<ExchangedParameter>)getParameter();
-//		} catch (Exception e) {LogUtil.trace(e);}
-//		if (parameters == null || parameters.size() == 0) return;
-//		
-//		int maxIdx = -1;
-//		double maxCoeff = -1;
-//		for (int k = 0; k < parameters.size(); k++) {
-//			double coeff = parameters.get(k).getCoeff();
-//			if (coeff > maxCoeff) {
-//				maxCoeff = coeff;
-//				maxIdx = k;
-//			}
-//		}
-//		
-//		if (maxIdx >= 0) {
-//			for (int k = 0; k < parameters.size(); k++) {
-//				if (k == maxIdx)
-//					parameters.get(k).setCoeff(1);
-//				else
-//					parameters.get(k).setCoeff(0);
-//			}
-//		}
-//	}
-
-
 }

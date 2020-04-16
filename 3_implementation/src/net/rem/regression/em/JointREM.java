@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import java.rmi.RemoteException;
@@ -139,17 +146,12 @@ public class JointREM extends REMImpl {
 			double[] kVariance = new double[regressorNumber];
 			Arrays.fill(kVariance, 0);
 			variance.add(kVariance);
-			mean.add(random ? rnd.nextDouble() : 0.0);
 		}
 		for (int i = 0; i < regressorNumber; i++) {
-			for (int j = 0; j < regressorNumber; j++) {
-				if (j > i)
-					variance.get(i)[j] = random ? rnd.nextDouble() : 0.0;
-				else if (i == j)
-					variance.get(i)[j] = 1;
-				else
-					variance.get(i)[j] = variance.get(j)[i];
-			}
+			if (i == 0)
+				variance.get(i)[i] = 1;
+			else
+				variance.get(i)[i] = random ? rnd.nextDouble() : 1;
 		}
 		
 		NormalDisParameter xNormalDisParameter = new NormalDisParameter(mean, variance);

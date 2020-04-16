@@ -1,7 +1,7 @@
 /**
- * HUDUP: A FRAMEWORK OF E-COMMERCIAL RECOMMENDATION ALGORITHMS
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
  * (C) Copyright by Loc Nguyen's Academic Network
- * Project homepage: http://www.locnguyen.net/st/products/hudup
+ * Project homepage: sim.locnguyen.net
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */

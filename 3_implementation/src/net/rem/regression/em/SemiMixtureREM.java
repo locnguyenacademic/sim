@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import static net.rem.regression.RMAbstract.splitIndices;
@@ -31,7 +38,9 @@ import net.rem.regression.em.ui.graph.PlotGraphExt;
 /**
  * This class implements the semi-mixture regression model.
  * Suppose the dataset is x1, x2,..., xn, z then, this semi-mixture model by default builds up n sub regression models such as
- * (x1, z), (x2, z),..., and (xn, z). The semi mixture model has two modes such as mutual model and uniform mode.<br>
+ * (x1, z), (x2, z),..., and (xn, z). However, semi-mixture model allows users to specify arbitrarily sub-models such as {x1, x2, x3, z}, {x2, x3, x4, z}, {x1, x3, x4,..., xn, z}.
+ * with condition that these sub-models has the same response variable (z). This is unique feature of semi-mixture model.<br>
+ * The semi mixture model has two built-in modes such as mutual model and uniform mode.<br>
  * <br>
  * Let z1, z2,..., zn be n estimated values of z calculated from such
  * n such sub-models, if the mutual mode is set true, the final estimated value of z is (z1 + z2 + ... + zn) / n (please see {@link #expectation(Object, Object...)}).
@@ -40,7 +49,9 @@ import net.rem.regression.em.ui.graph.PlotGraphExt;
  * If the uniform model is set true, EM coefficients of sub-models are 1/n. Otherwise, each EM coefficient is calculated according to conditional probabilities at the last iteration of the algorithm loop
  * (please see {@link #adjustMixtureParameters()}).<br>
  * <br>
- * In general, the feature of this semi mixture model is not to calculate EM coefficients at each iteration of EM loop and so it is faster than normal mixture model. 
+ * In general, the feature of this semi mixture model is not to calculate EM coefficients at each iteration of EM loop and so it is faster than normal mixture model.
+ * Moreover, it is flexible than normal mixture model because users can define arbitrary sub-models via index specification such as {x1, x2, x3, z}, {x2, x3, x4, z}, {x1, x3, x4,..., xn, z}.
+ * 
  * @author Loc Nguyen
  * @version 1.0
  *
@@ -205,7 +216,7 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 			parameter.setZVariance(zVariance);
 			parameter.setCoeff(1.0 / (double)this.rems.size());
 		}
-		//In uniform mode, all coefficients are 1/K. In logistic mode, coefficients are not used. 
+		//In uniform mode, all coefficients are 1/K. 
 		if (getConfig().getAsBoolean(UNIFORM_MODE_FIELD))
 			return true;
 		
@@ -285,20 +296,16 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	@Override
 	public synchronized double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		if (this.rems == null || this.rems.size() == 0 || xStatistic.length != this.rems.size() + 1)
+		if (this.rems == null || this.rems.size() == 0 || xStatistic == null)
 			return Constants.UNUSED;
 		
-		double result = 0;
-		for (int k = 0; k < this.rems.size(); k++) {
-			REMImpl rem = this.rems.get(k);
-			double value = rem.executeByXStatistic(new double[] {1, xStatistic[k + 1]});
-			if (Util.isUsed(value))
-				result += rem.getExchangedParameter().getCoeff() * value;
-			else
-				return Constants.UNUSED;
+		List<double[]> xStatistics = Util.newList(rems.size());
+		for (REMImpl rem : this.rems) {
+			double[] newXStatistic = rem.extractRegressorValues(xStatistic);
+			xStatistics.add(newXStatistic);
 		}
-		
-		return result;
+
+		return executeByXStatistic(xStatistics);
 	}
 
 
@@ -346,7 +353,7 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "semi_mixrem";
+			return "mixrem_semi";
 	}
 
 	

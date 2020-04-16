@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.em;
 
 import java.rmi.RemoteException;
@@ -34,7 +41,6 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	 */
 	public EMRemoteWrapper(EMRemote remoteEM) {
 		super(remoteEM);
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -45,13 +51,11 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	 */
 	public EMRemoteWrapper(EMRemote remoteEM, boolean exclusive) {
 		super(remoteEM, exclusive);
-		// TODO Auto-generated constructor stub
 	}
 
 	
 	@Override
 	public int getCurrentIteration() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof EM)
 			return ((EM)remoteAlg).getCurrentIteration();
 		else {
@@ -63,7 +67,6 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	
 	@Override
 	public Object getCurrentParameter() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof EM)
 			return ((EM)remoteAlg).getCurrentParameter();
 		else {
@@ -75,7 +78,6 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	
 	@Override
 	public Object getEstimatedParameter() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof EM)
 			return ((EM)remoteAlg).getEstimatedParameter();
 		else {
@@ -87,14 +89,12 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	
 	@Override
 	public Object getStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
 		return ((EM)remoteAlg).getStatistics();
 	}
 
 	
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof EMAbstract) {
 			EMAbstract newEM = (EMAbstract) ((EMAbstract)remoteAlg).newInstance();
 			return new EMRemoteWrapper(newEM, exclusive);
@@ -108,14 +108,12 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {EMRemote.class.getName()};
 	}
 
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		if (remoteAlg instanceof EM)
 			return ((EM)remoteAlg).createDefaultConfig();
 		else {

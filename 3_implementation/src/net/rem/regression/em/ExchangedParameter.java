@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import static net.rem.regression.RMAbstract.notSatisfy;
@@ -313,7 +320,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	
 	/**
 	 * Testing the terminated condition between this parameter (estimated parameter) and other parameter (current parameter).
-	 * This method tests all coefficients and so it is currently not used. It is used for backup.
+	 * This method tests all sub-parameters and so it is currently not used. It is used for backup.
 	 * @param threshold specified threshold
 	 * @param currentParameter other specified parameter (current parameter).
 	 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
@@ -389,6 +396,20 @@ public class ExchangedParameter implements Cloneable, Serializable {
 			}
 		}
 		else if (Util.isUsed(zVariance3) || Util.isUsed(zVariance2))
+			return false;
+
+		NormalDisParameter xNormalDisParameter1 = previousParameter != null ? previousParameter.getXNormalDisParameter() : null;
+		NormalDisParameter xNormalDisParameter2 = currentParameter.getXNormalDisParameter();
+		NormalDisParameter xNormalDisParameter3 = this.getXNormalDisParameter();
+		if(xNormalDisParameter3 != null && xNormalDisParameter2 != null) {
+			if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter2, null)) {
+				if (xNormalDisParameter1 == null)
+					return false;
+				else if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter1, null))
+					return false;
+			}
+		}
+		else if(xNormalDisParameter3 != null || xNormalDisParameter2 != null)
 			return false;
 
 		return true;
@@ -509,7 +530,7 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		double det = RMAbstract.matrixDeterminant(variance);
 		if (det == 0) {
 			boolean equal = true;
-			for (int i = 0; i < value.size(); i++) {
+			for (int i = 0; i < n; i++) {
 				if (value.get(i) != mean.get(i)) {
 					equal = false;
 					break;
@@ -592,12 +613,12 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		}
 		
 		for (int i = 0; i < parameterList.size(); i++) {
-			if (denominator == 0 || !Util.isUsed(denominator)) {
+			if (denominator != 0 && Util.isUsed(denominator))
+				condProbs.add(numerators.get(i) / denominator);
+			else {
 				condProbs.add(1.0 / (double)parameterList.size());
 				LogUtil.warn("Reset uniform conditional probability of component due to zero denominator");
 			}
-			else
-				condProbs.add(numerators.get(i) / denominator);
 		}
 		
 		return condProbs;
@@ -621,10 +642,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 * @param parameterList list of specified parameters.
 	 * @param xData given regressor values (X).
 	 * @param zData response values (Z).
-	 * @param vicinity this parameter is depreciated.
+	 * @param vicinity this parameter is depreciated. It is now not used.
 	 * @return condition probabilities of the specified parameters given regressor values (X) and response value Z.
 	 */
-	public static List<Double> normalZPDF(List<ExchangedParameter> parameterList, List<double[]> xData, List<double[]> zData, double vicinity) {
+	private static List<Double> normalZPDF(List<ExchangedParameter> parameterList, List<double[]> xData, List<double[]> zData, double vicinity) {
 		if (parameterList == null || xData == null || parameterList.size() == 0 || xData.size() == 0 || zData.size() == 0)
 			return Util.newList();
 		
@@ -690,12 +711,12 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		/**
 		 * Mean.
 		 */
-		protected List<Double> mean = Util.newList();
+		private List<Double> mean = null;
 		
 		/**
 		 * Variance.
 		 */
-		protected List<double[]> variance = Util.newList();
+		private List<double[]> variance = null;
 		
 		/**
 		 * Default constructor.
@@ -866,6 +887,56 @@ public class ExchangedParameter implements Cloneable, Serializable {
 			return variance;
 		}
 
+		/**
+		 * Testing the terminated condition between this parameter (estimated parameter) and other parameter (current parameter).
+		 * @param threshold specified threshold
+		 * @param currentParameter other specified parameter (current parameter).
+		 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
+		 * It also solve the over-fitting problem. Please pay attention to it.
+		 * @return true if the terminated condition is satisfied.
+		 */
+		public boolean terminatedCondition(double threshold, NormalDisParameter currentParameter, NormalDisParameter previousParameter) {
+			List<Double> mean1 = previousParameter != null ? previousParameter.getMean() : null;
+			List<Double> mean2 = currentParameter.getMean();
+			List<Double> mean3 = this.getMean();
+			if (mean3 != null && mean2 != null) {
+				for (int i = 0; i < mean2.size(); i++) {
+					if (notSatisfy(mean3.get(i), mean2.get(i), threshold)) {
+						if (mean1 == null)
+							return false;
+						else if (notSatisfy(mean3.get(i), mean1.get(i), threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+							return false;
+					}
+				}
+			}
+			else if(mean3 != null || mean2 != null)
+				return false;
+			
+			List<double[]> variance1 = previousParameter != null ? previousParameter.getVariance() : null;
+			List<double[]> variance2 = currentParameter.getVariance();
+			List<double[]> variance3 = this.getVariance();
+			if(variance3 != null && variance2 != null) {
+				for (int i = 0; i < variance2.size(); i++) {
+					double[]  v1 = variance1 != null ? variance1.get(i) : null;  
+					double[]  v2 = variance2.get(i);
+					double[]  v3 = variance3.get(i);
+					
+					for (int j = 0; j < v2.length; j++) {
+						if (notSatisfy(v3[j], v2[j], threshold)) {
+							if (v1 == null)
+								return false;
+							else if (notSatisfy(v3[j], v1[j], threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+								return false;
+						}
+					}
+				}
+			}
+			else if(variance3 != null || variance2 != null)
+				return false;
+			
+			return true;
+		}
+
 		@Override
 		public Object clone() {
 			NormalDisParameter newParameter = new NormalDisParameter();
@@ -887,14 +958,16 @@ public class ExchangedParameter implements Cloneable, Serializable {
 				return "";
 			
 			StringBuffer buffer = new StringBuffer();
-			buffer.append("mean=(" + DSUtil.shortenVerbalName(TextParserUtil.toTextFormatted(mean, ",")) + "), ");
+//			buffer.append("mean=(" + DSUtil.shortenVerbalName(TextParserUtil.toTextFormatted(mean, ",")) + "), ");
+			buffer.append("mean=(" + TextParserUtil.toTextFormatted(mean, ",") + "), ");
 			buffer.append("variance=(");
 			StringBuffer var = new StringBuffer();
 			for (int i = 0; i < variance.size(); i++) {
 				if (i > 0) var.append(", ");
 				var.append(TextParserUtil.toTextFormatted(variance.get(i), ","));
 			}
-			buffer.append(DSUtil.shortenVerbalName(var.toString()) + ")");
+//			buffer.append(DSUtil.shortenVerbalName(var.toString()) + ")");
+			buffer.append(var.toString() + ")");
 			
 			return buffer.toString();
 		}

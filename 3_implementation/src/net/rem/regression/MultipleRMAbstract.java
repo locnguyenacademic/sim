@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression;
 
 import java.rmi.RemoteException;
@@ -38,7 +45,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public void setup(Dataset dataset, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> additionalInfo = Util.newList();
 		List<RM> regressions = Util.newList();
 		for (Object el : info) {
@@ -53,7 +59,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 
 	@Override
 	public void setup(Fetcher<Profile> sample, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> additionalInfo = Util.newList();
 		List<RM> regressions = Util.newList();
 		for (Object el : info) {
@@ -76,7 +81,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	 */
 	@SuppressWarnings("unchecked")
 	public /*synchronized*/ void setup(Dataset dataset, Object[] info, RM...regressions) throws RemoteException {
-		// TODO Auto-generated method stub
 		unsetup();
 		for (RM regression : regressions) {
 			this.regressions.add(regression);
@@ -116,7 +120,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	 * @throws RemoteException if any error raises.
 	 */
 	public void setup(Fetcher<Profile> sample, Object[] info, RM...regressions) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> additionalInfo = Util.newList();
 		additionalInfo.add(sample);
 		additionalInfo.addAll(Arrays.asList(info));
@@ -127,7 +130,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public synchronized void unsetup() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.unsetup();
 		this.regressions.clear();
 	}
@@ -135,7 +137,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> parameterList = Util.newList();
 		boolean success = false;
 		for (RM regression : this.regressions) {
@@ -154,7 +155,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> resultList = Util.newList();
 		boolean success = false;
 		for (RM regression : this.regressions) {
@@ -184,7 +184,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public synchronized Object getParameter() throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> parameterList = Util.newList();
 		boolean success = false;
 		for (RM regression : this.regressions) {
@@ -203,7 +202,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
 		return config;
@@ -212,7 +210,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public synchronized String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (parameter == null || !(parameter instanceof List<?>))
 			return "";
 		
@@ -232,7 +229,6 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	@Override
 	public synchronized String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		StringBuffer buffer = new StringBuffer();
 		
 		for (int i = 0; i < this.regressions.size(); i++) {
@@ -249,14 +245,12 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {MultipleRMRemote.class.getName(), MemoryBasedAlgRemote.class.getName()};
 	}
 
 	
 	@Override
 	public synchronized Object extractResponseValue(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> valueList = Util.newList();
 		boolean success = false;
 		for (RM regression : this.regressions) {

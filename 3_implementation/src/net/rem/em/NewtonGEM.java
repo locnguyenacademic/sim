@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.em;
 
 import java.rmi.RemoteException;
@@ -48,7 +55,6 @@ public abstract class NewtonGEM extends GEM {
 	 * Default constructor.
 	 */
 	public NewtonGEM() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 
@@ -73,7 +79,6 @@ public abstract class NewtonGEM extends GEM {
 	
 	@Override
 	protected Object argmaxQ(Object currentParameter, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		int newtonType = getConfig().getAsInt(GEM_NEWTON_TYPE_FIELD);
 		RealVector theta = new ArrayRealVector((double[])currentParameter);
 		RealVector phi = new ArrayRealVector((double[])currentParameter);
@@ -99,7 +104,6 @@ public abstract class NewtonGEM extends GEM {
 	
 	@Override
 	protected boolean terminatedCondition(Object estimatedParameter, Object currentParameter, Object previousParameter, Object... info) {
-		// TODO Auto-generated method stub
 		double[] parameter1 = (double[])currentParameter;
 		double[] parameter2 = (double[])estimatedParameter;
 		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
@@ -123,7 +127,6 @@ public abstract class NewtonGEM extends GEM {
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(GEM_NEWTON_TYPE_FIELD, GEM_NEWTON_TYPE_DEFAULT);
 		return config;
@@ -132,7 +135,6 @@ public abstract class NewtonGEM extends GEM {
 	
 	@Override
 	public String parameterToShownText(Object parameter, Object...info) {
-		// TODO Auto-generated method stub
 		if (parameter == null || !(parameter instanceof double[]))
 			return "";
 		

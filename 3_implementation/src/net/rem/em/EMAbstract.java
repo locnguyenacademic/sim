@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.em;
 
 import java.rmi.RemoteException;
@@ -79,7 +86,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	 */
 	public EMAbstract() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -109,7 +115,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public void setup(Fetcher<Profile> sample, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Object> additionalInfo = Util.newList();
 		additionalInfo.add(sample);
 		additionalInfo.addAll(Arrays.asList(info));
@@ -140,7 +145,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public synchronized int getCurrentIteration() {
-		// TODO Auto-generated method stub
 		return currentIteration;
 	}
 
@@ -159,7 +163,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	 * @return previous parameter.
 	 */
 	public synchronized Object getPreviousParameter() {
-		// TODO Auto-generated method stub
 		return previousParameter;
 	}
 
@@ -175,7 +178,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public synchronized Object getCurrentParameter() {
-		// TODO Auto-generated method stub
 		return currentParameter;
 	}
 
@@ -191,7 +193,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public synchronized Object getEstimatedParameter() {
-		// TODO Auto-generated method stub
 		return estimatedParameter;
 	}
 
@@ -207,7 +208,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public Object getParameter() throws RemoteException {
-		// TODO Auto-generated method stub
 		return getEstimatedParameter();
 	}
 	
@@ -254,7 +254,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public synchronized Object getStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
 		return statistics;
 	}
 
@@ -270,14 +269,12 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {EMRemote.class.getName()};
 	}
 
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(EM_EPSILON_FIELD, EM_DEFAULT_EPSILON);
 		config.put(EM_MAX_ITERATION_FIELD, EM_MAX_ITERATION);

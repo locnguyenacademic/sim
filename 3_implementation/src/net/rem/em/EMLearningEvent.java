@@ -1,11 +1,21 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.em;
 
 import java.io.Serializable;
+import java.rmi.Remote;
 
 import net.hudup.core.PluginStorage;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.Dataset;
+import net.hudup.core.data.DatasetUtil;
+import net.hudup.core.data.Exportable;
 import net.hudup.core.logistic.LogUtil;
 
 /**
@@ -49,33 +59,79 @@ public class EMLearningEvent extends SetupAlgEvent {
 
 	
 	/**
-	 * Default constructor with the source as EM algorithm.
+	 * Constructor with some important parameters.
 	 * @param em the EM algorithm as the source of this event. This EM algorithm is invalid in remote call because the source is transient variable.
 	 * @param type event type.
 	 * @param trainingDataset training dataset.
 	 * @param currentIteration current iteration.
-	 * @param currentStatistic current sufficient statistic.
+	 * @param currentStatistics current sufficient statistic.
 	 * @param currentParameter current parameter.
 	 * @param estimatedParameter estimated parameter of algorithm as setup result.
 	 */
 	public EMLearningEvent(EM em, Type type, Dataset trainingDataset,
-			int currentIteration, int maxIteration, Serializable currentStatistic,
+			int currentIteration, int maxIteration, Serializable currentStatistics,
 			Serializable currentParameter, Serializable estimatedParameter) {
-		// TODO Auto-generated constructor stub
-		super(em, type, em.getName(), trainingDataset, estimatedParameter, currentIteration, maxIteration);
+		this(em, type, -1, trainingDataset, currentIteration, maxIteration, currentStatistics, currentParameter, estimatedParameter);
+	}
+
+	
+	/**
+	 * Constructor with some important parameters.
+	 * @param em the EM algorithm as the source of this event. This EM algorithm is invalid in remote call because the source is transient variable.
+	 * @param type event type.
+	 * @param trainingDatasetId training dataset identifier.
+	 * @param trainingDataset training dataset.
+	 * @param currentIteration current iteration.
+	 * @param currentStatistics current sufficient statistic.
+	 * @param currentParameter current parameter.
+	 * @param estimatedParameter estimated parameter of algorithm as setup result.
+	 */
+	public EMLearningEvent(EM em, Type type, int trainingDatasetId, Dataset trainingDataset,
+			int currentIteration, int maxIteration, Serializable currentStatistics,
+			Serializable currentParameter, Serializable estimatedParameter) {
+		super(em, type, em.getName(), trainingDatasetId, trainingDataset, estimatedParameter, currentIteration, maxIteration);
 		this.currentIteration = currentIteration;
-		this.currentStatistics = currentStatistic;
+		this.currentStatistics = currentStatistics;
 		this.currentParameter = currentParameter; 
 		this.estimatedParameter = estimatedParameter;
 	}
 
 	
+	@Override
+	public SetupAlgEvent transferForRemote() {
+		EMLearningEvent evt = new EMLearningEvent(
+				getEM(),
+				this.type,
+				this.trainingDatasetId,
+				null,
+				this.currentIteration, 
+				this.progressTotalEstimated, 
+				this.currentStatistics,
+				this.currentParameter,
+				this.estimatedParameter);
+		if (this.trainingDataset == null) return evt;
+		
+		if (this.trainingDatasetId < 0)
+			evt.trainingDatasetId = DatasetUtil.getDatasetId(getTrainingDataset());
+		
+		Dataset dataset = DatasetUtil.getMostInnerDataset2(this.trainingDataset);
+		if ((dataset != null) && (dataset instanceof Exportable)) {
+			Remote stub = null;
+			try {
+				stub = ((Exportable)dataset).getExportedStub();
+			} catch (Exception e) {LogUtil.trace(e);}
+			
+			if (stub != null) evt.trainingDataset = this.trainingDataset;
+		}
+		
+		return evt;
+	}
+
+
 	/**
 	 * Getting source as EM algorithm. This method cannot be called remotely because the source is transient variable.
 	 * @return source as EM algorithm.
 	 */
-	@SuppressWarnings("unused")
-	@Deprecated
 	private EM getEM() {
 		Object source = getSource();
 		if (source == null)

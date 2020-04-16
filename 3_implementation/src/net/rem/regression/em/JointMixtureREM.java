@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression.em;
 
 import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
@@ -100,15 +107,15 @@ public class JointMixtureREM extends DefaultMixtureREM {
 				kSumCoeffs += weights.get(k).get(i);
 			}
 			
-			if (kSumCoeffs == 0 || !Util.isUsed(kSumCoeffs)) {
-				double w = 1.0 / (double)K;
+			if (kSumCoeffs != 0 && Util.isUsed(kSumCoeffs)) {
 				for (int k = 0; k < K; k++) {
-					kNewCoeffs.add(w);
+					kNewCoeffs.add(weights.get(k).get(i) / kSumCoeffs);
 				}
 			}
 			else {
+				double w = 1.0 / (double)K;
 				for (int k = 0; k < K; k++) {
-					kNewCoeffs.add(weights.get(k).get(i) / kSumCoeffs);
+					kNewCoeffs.add(w);
 				}
 			}
 		}
@@ -285,7 +292,7 @@ public class JointMixtureREM extends DefaultMixtureREM {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(ON_CLUSTER_EXECUTE_FIELD, ON_CLUSTER_EXECUTE_DEFAULT);
+		config.put(SELECT_COMP_EXECUTE_FIELD, SELECT_COMP_EXECUTE_DEFAULT);
 		return config;
 	}
 

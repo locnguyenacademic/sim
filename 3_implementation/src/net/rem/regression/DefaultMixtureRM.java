@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.rem.regression;
 
 import static net.rem.em.EM.EM_DEFAULT_EPSILON;
@@ -182,20 +189,18 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "cluster_mixrm";
+			return "mixrm_cluster";
 	}
 
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		// TODO Auto-generated method stub
 		return new String[] {RMRemote.class.getName(), MemoryBasedAlgRemote.class.getName()};
 	}
 
 	
 	@Override
 	public LargeStatistics getLargeStatistics() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.getLargeStatistics();
 		else
@@ -205,7 +210,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public double executeByXStatistic(double[] xStatistic) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.executeByXStatistic(xStatistic);
 		else
@@ -215,7 +219,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.execute(input);
 		else
@@ -225,7 +228,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public VarWrapper extractRegressor(int index) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractRegressor(index);
 		else
@@ -235,7 +237,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractRegressors();
 		else
@@ -245,7 +246,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public List<VarWrapper> extractSingleRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractSingleRegressors();
 		else
@@ -291,7 +291,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public List<Double> extractRegressorStatistic(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.extractRegressorStatistic(regressor);
 		else
@@ -301,7 +300,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Object transformResponse(Object z, boolean inverse) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.transformResponse(z, inverse);
 		else
@@ -311,7 +309,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Object getParameter() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.getParameter();
 		else
@@ -321,7 +318,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.parameterToShownText(parameter, info);
 		else
@@ -331,7 +327,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.getDescription();
 		else
@@ -341,7 +336,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public synchronized Inspector getInspector() {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.getInspector();
 		else {
@@ -353,7 +347,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Alg newInstance() {
-		// TODO Auto-generated method stub
 		DefaultMixtureRM mixRegress = new DefaultMixtureRM();
 		mixRegress.getConfig().putAll((DataConfig)this.getConfig().clone());
 		return mixRegress;
@@ -362,14 +355,12 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 
 
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(EM_EPSILON_FIELD, EM_DEFAULT_EPSILON);
 		config.put(EM_MAX_ITERATION_FIELD, EM_MAX_ITERATION);
@@ -383,7 +374,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Graph createRegressorGraph(VarWrapper regressor) throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.createRegressorGraph(regressor);
 		else
@@ -393,7 +383,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Graph createResponseGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.createResponseGraph();
 		else
@@ -403,7 +392,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public Graph createErrorGraph() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.createErrorGraph();
 		else
@@ -413,7 +401,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public List<Graph> createResponseRalatedGraphs() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.createResponseRalatedGraphs();
 		else
@@ -423,7 +410,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public double calcVariance() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.calcVariance();
 		else
@@ -433,7 +419,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public double calcR() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.calcR();
 		else
@@ -443,7 +428,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public double[] calcError() throws RemoteException {
-		// TODO Auto-generated method stub
 		if (mixREM != null)
 			return mixREM.calcError();
 		else
@@ -453,14 +437,12 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 
 	@Override
 	public boolean saveLargeStatistics(xURI uri, int decimal) throws RemoteException {
-		// TODO Auto-generated method stub
 		return RMAbstract.saveLargeStatistics(this, getLargeStatistics(), uri, decimal);
 	}
 
 
 	@Override
 	public void receivedSetup(SetupAlgEvent evt) throws RemoteException {
-		// TODO Auto-generated method stub
 		fireSetupEvent(evt);
 	}
 
