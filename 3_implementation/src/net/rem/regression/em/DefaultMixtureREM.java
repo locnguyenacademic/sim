@@ -169,6 +169,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		rem.getConfig().put(EM_EPSILON_FIELD, this.getConfig().get(EM_EPSILON_FIELD));
 		rem.getConfig().put(EM_MAX_ITERATION_FIELD, this.getConfig().get(EM_MAX_ITERATION_FIELD));
 		rem.getConfig().put(R_INDICES_FIELD, this.getConfig().get(R_INDICES_FIELD));
+		rem.getConfig().put(REMImpl.ESTIMATE_MODE_FIELD, this.getConfig().get(REMImpl.ESTIMATE_MODE_FIELD));
 		rem.getConfig().put(R_CALC_VARIANCE_FIELD, true);
 		return rem;
 	}
@@ -179,7 +180,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		@SuppressWarnings("unchecked")
 		List<ExchangedParameter> parameters = (List<ExchangedParameter>)currentParameter;
 		@SuppressWarnings("unchecked")
-		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation0(currentParameter, info);
+		List<LargeStatistics> stats = (List<LargeStatistics>)super.expectation(currentParameter, info);
 		if (stats == null) return null;
 		
 		//Adjusting large statistics.
@@ -198,28 +199,105 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 			zVector[1] = 0;
 			zData.add(zVector);
 		}
-		for (int k = 0; k < this.rems.size(); k++) {
-			double coeff = parameters.get(k).getCoeff();
-			LargeStatistics stat = stats.get(k);
-			
-			for (int i = 0; i < N; i++) {
-				double[] zVector = zData.get(i);
-				double zValue = stat.getZData().get(i)[1];
-				if (!Util.isUsed(this.data.getZData().get(i)[1]))
-					zVector[1] += coeff * zValue;
-				else
-					zVector[1] = zValue; 
-
-				double[] xVector = xData.get(i);
-				for (int j = 1; j < n; j++) {
-					double xValue = stat.getXData().get(i)[j];
-					if (!Util.isUsed(this.data.getXData().get(i)[j]))
-						xVector[j] += coeff * xValue; // This assignment is right with assumption of same P(Y=k).
+		
+		
+		String estimateMode = getConfig().getAsString(REMImpl.ESTIMATE_MODE_FIELD);
+		int K = this.rems.size();
+		if (estimateMode.equals(REMImpl.REVERSIBLE)) {
+			for (int k = 0; k < K; k++) {
+				double coeff = parameters.get(k).getCoeff();
+				LargeStatistics stat = stats.get(k);
+				
+				for (int i = 0; i < N; i++) {
+					double[] zVector = zData.get(i);
+					double zValue = stat.getZData().get(i)[1];
+					if (!Util.isUsed(this.data.getZData().get(i)[1]))
+						zVector[1] += coeff * zValue;
 					else
-						xVector[j] = xValue;
+						zVector[1] = zValue; 
+	
+					double[] xVector = xData.get(i);
+					for (int j = 1; j < n; j++) {
+						double xValue = stat.getXData().get(i)[j];
+						if (!Util.isUsed(this.data.getXData().get(i)[j]))
+							xVector[j] += coeff * xValue; // This assignment is right with assumption of same P(Y=k).
+						else
+							xVector[j] = xValue;
+					}
 				}
 			}
-		}
+		} //End if (estimateMode.equals(REMImpl.REVERSIBLE))
+		else if (estimateMode.equals(REMImpl.GAUSSIAN)) {
+			List<List<Double>> weights = Util.newList(K); //K lists of weights.
+			for (int k = 0; k < K; k++) {
+				ExchangedParameter parameter = parameters.get(k); 
+				LargeStatistics stat = stats.get(k);
+				List<Double> kWeights = Util.newList(N); //The kth list of weights.
+				weights.add(kWeights);
+				
+				double coeff = parameter.getCoeff();
+				List<Double> mean = parameter.getXNormalDisParameter().getMean();
+				List<double[]> variance = parameter.getXNormalDisParameter().getVariance();
+				for (int i = 0; i < N; i++) {
+					if (!Util.isUsedAll(this.data.getXData().get(i))) {
+						double[] xVector = stat.getXData().get(i);
+						double pdf = ExchangedParameter.normalPDF(
+							DSUtil.toDoubleList(Arrays.copyOfRange(xVector, 1, xVector.length)),
+							mean,
+							variance);
+						kWeights.add(coeff*pdf);
+					}
+					else
+						kWeights.add(1.0); //Not necessary to calculate the probabilities.
+				}
+			}
+			
+			List<List<Double>> newCoeffs = Util.newList(N);
+			for (int i = 0; i < N; i++) {
+				List<Double> kNewCoeffs = Util.newList(K);
+				newCoeffs.add(kNewCoeffs);
+				
+				double kSumCoeffs = 0;
+				for (int k = 0; k < K; k++) {
+					kSumCoeffs += weights.get(k).get(i);
+				}
+				
+				if (kSumCoeffs != 0 && Util.isUsed(kSumCoeffs)) {
+					for (int k = 0; k < K; k++) {
+						kNewCoeffs.add(weights.get(k).get(i) / kSumCoeffs);
+					}
+				}
+				else {
+					double w = 1.0 / (double)K;
+					for (int k = 0; k < K; k++) {
+						kNewCoeffs.add(w);
+					}
+				}
+			}
+			weights.clear();
+
+			for (int k = 0; k < K; k++) {
+				LargeStatistics stat = stats.get(k);
+				for (int i = 0; i < N; i++) {
+					double[] zVector = zData.get(i);
+					double zValue = stat.getZData().get(i)[1];
+					if (!Util.isUsed(this.data.getZData().get(i)[1]))
+						zVector[1] += newCoeffs.get(i).get(k) * zValue;
+					else
+						zVector[1] = zValue; 
+					
+					double[] xVector = xData.get(i);
+					for (int j = 1; j < n; j++) {
+						double xValue = stat.getXData().get(i)[j];
+						if (!Util.isUsed(this.data.getXData().get(i)[j]))
+							xVector[j] += newCoeffs.get(i).get(k) * xValue; // This assignment is right with assumption of same P(Y=k).
+						else
+							xVector[j] = xValue;
+					}
+				}
+			}
+		} //End if (estimateMode.equals(REMImpl.GAUSSIAN))
+		
 		
 		//All regression models have the same large statistics.
 		stats.clear();
@@ -506,108 +584,12 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		private static final long serialVersionUID = 1L;
 		
 		@Override
-		protected Object maximization(Object currentStatistic, Object... info) throws RemoteException {
-			LargeStatistics stat = (LargeStatistics)currentStatistic;
-			if (stat == null || stat.isEmpty())
+		public synchronized Object learnStart(Object...info) throws RemoteException {
+			boolean prepared = prepareInternalData(sample);
+			if (prepared)
+				return prepared;
+			else
 				return null;
-			List<double[]> xStatistic = stat.getXData();
-			List<double[]> zStatistic = stat.getZData();
-			int N = zStatistic.size();
-			int n = xStatistic.get(0).length; //1, x1, x2,..., x(n-1)
-			ExchangedParameter currentParameter = (ExchangedParameter)getCurrentParameter();
-			
-			List<double[]> uStatistic = xStatistic;
-			List<double[]> vStatistic = zStatistic;
-			List<Double> kCondProbs = null;
-			if (info != null && info.length > 0 && (info[0] instanceof List<?>)) {
-				@SuppressWarnings("unchecked")
-				List<Double> kCondProbTemp = (List<Double>)info[0];
-				kCondProbs = kCondProbTemp;
-				
-				uStatistic = Util.newList(xStatistic.size());
-				vStatistic = Util.newList(zStatistic.size());
-				for (int i = 0; i < N; i++) {
-					double[] uVector = new double[n];
-					uStatistic.add(uVector);
-					double[] vVector = new double[2];
-					vStatistic.add(vVector);
-					
-					for (int j = 0; j < n; j++) {
-						uVector[j] = xStatistic.get(i)[j] * kCondProbs.get(i); 
-					}
-					vVector[0] = 1;
-					vVector[1] = zStatistic.get(i)[1] * kCondProbs.get(i); 
-				}
-			}
-			
-			List<Double> alpha = calcCoeffsByStatistics(uStatistic, vStatistic);
-			if (alpha == null || alpha.size() == 0) { //If cannot calculate alpha by matrix calculation.
-				if (currentParameter != null)
-					alpha = DSUtil.toDoubleList(currentParameter.getAlpha()); //clone alpha
-				else { //Used for initialization so that regression model is always determined.
-					alpha = DSUtil.initDoubleList(n, 0.0);
-					double alpha0 = 0;
-					for (int i = 0; i < N; i++)
-						alpha0 += zStatistic.get(i)[1];
-					alpha.set(0, alpha0 / (double)N); //constant function z = c
-				}
-			}
-			
-			List<double[]> betas = Util.newList(n);
-			for (int j = 0; j < n; j++) {
-				if (j == 0) {
-					double[] beta0 = new double[2];
-					beta0[0] = 1;
-					beta0[1] = 0;
-					betas.add(beta0);
-					continue;
-				}
-				
-				List<double[]> Z = Util.newList(N);
-				List<Double> x = Util.newList(N);
-				for (int i = 0; i < N; i++) {
-					Z.add(zStatistic.get(i));
-					x.add(xStatistic.get(i)[j]);
-				}
-				List<Double> beta = calcCoeffs(Z, x);
-				if (beta == null || beta.size() == 0) {
-					if (currentParameter != null)
-						beta = DSUtil.toDoubleList(currentParameter.getBetas().get(j));
-					else { //Used for initialization so that regression model is always determined.
-						beta = DSUtil.initDoubleList(2, 0);
-						double beta0 = 0;
-						for (int i = 0; i < N; i++)
-							beta0 += xStatistic.get(i)[j];
-						beta.set(0, beta0 / (double)N); //constant function x = c
-					}
-				}
-				betas.add(DSUtil.toDoubleArray(beta));
-			}
-			
-			ExchangedParameter newParameter = new ExchangedParameter(alpha, betas);
-			if (kCondProbs == null) {
-				newParameter.setZVariance(newParameter.estimateZVariance(stat));
-			}
-			else {
-				double sumCondProb = 0;
-				for (int i = 0; i < N; i++) {
-					sumCondProb += kCondProbs.get(i);
-				}
-				
-				double sumZVariance = 0;
-				for (int i = 0; i < N; i++) {
-					double d = zStatistic.get(i)[1] - ExchangedParameter.mean(alpha, xStatistic.get(i));
-					sumZVariance += d*d*kCondProbs.get(i);
-				}
-				
-				newParameter.setCoeff(sumCondProb/N);
-				if (sumCondProb != 0)
-					newParameter.setZVariance(sumZVariance/sumCondProb);
-				else
-					newParameter.setZVariance(newParameter.estimateZVariance(stat)); //Fixing zero probabilities.
-			}
-			
-			return newParameter;
 		}
 
 		@Override
@@ -629,7 +611,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "mixrem_default";
+			return "mixrem";
 	}
 
 	
@@ -660,6 +642,7 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		DataConfig config = super.createDefaultConfig();
 		config.put(COMP_NUMBER_FIELD, COMP_NUMBER_DEFAULT);
 		config.put(INITIALIZE_GIVEBACK_FIELD, INITIALIZE_GIVEBACK_DEFAULT);
+		config.put(EXECUTE_SELECT_COMP_FIELD, EXECUTE_SELECT_COMP_DEFAULT);
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;
 	}

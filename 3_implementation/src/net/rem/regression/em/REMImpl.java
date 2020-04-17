@@ -42,11 +42,22 @@ import net.rem.regression.LargeStatistics;
 import net.rem.regression.RMAbstract;
 import net.rem.regression.Statistics;
 import net.rem.regression.VarWrapper;
+import net.rem.regression.em.ExchangedParameter.NormalDisParameter;
 import net.rem.regression.ui.RegressResponseChooser;
 
 /**
  * This class implements default expectation maximization algorithm for regression model in case of missing data, called REM algorithm {@link REM}.
- * Exactly, it is default implementation of REM algorithm {@link REM}.
+ * Exactly, it is default implementation of REM algorithm.
+ * The model estimates missing values according to approaches:<br>
+ * <br>
+ * The first approach (<a href="http://dx.doi.org/10.5281/zenodo.2528978">http://dx.doi.org/10.5281/zenodo.2528978</a>) called reversible (mutual) mode tries to build up two opposite sub regression models such as alpha sub-model and beta sub-models.
+ * Missing values are estimated based on such two sub-models.<br>
+ * <br>
+ * The second approach (<a href="https://arxiv.org/pdf/1307.0170">http://dx.doi.org/10.5281/zenodo.2528978</a>) called Gaussian mode tries to estimate missing values based on multivariate Gaussian distribution of regressor variables.
+ * Actually, the second approach optimizes the joint distribution P(Z, X) instead of optimizing the conditional distribution P(Z|X) where Z is response variable and X are regressor variables.<br>
+ * <br>
+ * In general, the first approach is better than the second approach because the first approach concerns much more on the relationship between regressor variables and response variable.
+ * The second approach is only better when data varies according to regressor variables.
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -72,6 +83,39 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	 */
 	public final static boolean R_CALC_VARIANCE_DEFAULT = false;
 
+	
+	/**
+	 * Reversible estimation mode.
+	 */
+	public final static String REVERSIBLE = "reversible";
+	
+	
+	/**
+	 * Gaussian estimation mode.
+	 */
+	public final static String GAUSSIAN = "gaussian";
+
+
+	/**
+	 * Array of estimation modes.
+	 */
+	protected static String[] estimateModes = new String[] {
+		GAUSSIAN,
+		REVERSIBLE,
+	};
+	
+	
+	/**
+	 * Field of estimation mode.
+	 */
+	public final static String ESTIMATE_MODE_FIELD = "estimate_mode";
+	
+	
+	/**
+	 * Field of estimation mode.
+	 */
+	public final static String ESTIMATE_MODE_DEFAULT = REVERSIBLE;
+	
 	
 	/**
 	 * Internal data is the original data for learning. It can have missing values.
@@ -294,7 +338,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 
 	
 	/**
-	 * Expectation method of this class does not change internal data.
+	 * Maximization method of this class does not change internal data.
 	 */
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
@@ -307,7 +351,31 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		int n = xStatistic.get(0).length; //1, x1, x2,..., x(n-1)
 		ExchangedParameter currentParameter = (ExchangedParameter)getCurrentParameter();
 		
-		List<Double> alpha = calcCoeffsByStatistics(xStatistic, zStatistic);
+		List<double[]> uStatistic = xStatistic;
+		List<double[]> vStatistic = zStatistic;
+		List<Double> kCondProbs = null;
+		if (info != null && info.length > 0 && (info[0] instanceof List<?>)) {
+			@SuppressWarnings("unchecked")
+			List<Double> kCondProbTemp = (List<Double>)info[0];
+			kCondProbs = kCondProbTemp;
+			
+			uStatistic = Util.newList(xStatistic.size());
+			vStatistic = Util.newList(zStatistic.size());
+			for (int i = 0; i < N; i++) {
+				double[] uVector = new double[n];
+				uStatistic.add(uVector);
+				double[] vVector = new double[2];
+				vStatistic.add(vVector);
+				
+				for (int j = 0; j < n; j++) {
+					uVector[j] = xStatistic.get(i)[j] * kCondProbs.get(i); 
+				}
+				vVector[0] = 1;
+				vVector[1] = zStatistic.get(i)[1] * kCondProbs.get(i); 
+			}
+		}
+		
+		List<Double> alpha = calcCoeffsByStatistics(uStatistic, vStatistic);
 		if (alpha == null || alpha.size() == 0) { //If cannot calculate alpha by matrix calculation.
 			if (currentParameter != null)
 				alpha = DSUtil.toDoubleList(currentParameter.getAlpha()); //clone alpha
@@ -319,51 +387,98 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 				alpha.set(0, alpha0 / (double)N); //constant function z = c
 			}
 		}
+
 		
-		List<double[]> betas = Util.newList(n);
-		for (int j = 0; j < n; j++) {
-			if (j == 0) {
-				double[] beta0 = new double[2];
-				beta0[0] = 1;
-				beta0[1] = 0;
-				betas.add(beta0);
-				continue;
+		ExchangedParameter newParameter = null;
+		String estimateMode = getConfig().getAsString(ESTIMATE_MODE_FIELD);
+		if (estimateMode.equals(REVERSIBLE)) {
+			List<double[]> betas = Util.newList(n);
+			for (int j = 0; j < n; j++) {
+				if (j == 0) {
+					double[] beta0 = new double[2];
+					beta0[0] = 1;
+					beta0[1] = 0;
+					betas.add(beta0);
+					continue;
+				}
+				
+				List<double[]> Z = Util.newList(N);
+				List<Double> x = Util.newList(N);
+				for (int i = 0; i < N; i++) {
+					//This estimation seems theoretically reasoning but is more accurate. Why?
+					//Answer: the mixture model is built up on P(Z|X) not P(X|Z) and so betas are estimated normally.
+					Z.add(zStatistic.get(i));
+					x.add(xStatistic.get(i)[j]);
+					
+//					//This estimation seems theoretically reasoning but is less accurate. Why?
+//					//Answer: the mixture model is built up on P(Z|X) not P(X|Z) and so betas are estimated normally.
+//					Z.add(vStatistic.get(i));
+//					x.add(uStatistic.get(i)[j]);
+				}
+				List<Double> beta = calcCoeffs(Z, x);
+				if (beta == null || beta.size() == 0) {
+					if (currentParameter != null)
+						beta = DSUtil.toDoubleList(currentParameter.getBetas().get(j));
+					else { //Used for initialization so that regression model is always determined.
+						beta = DSUtil.initDoubleList(2, 0);
+						double beta0 = 0;
+						for (int i = 0; i < N; i++)
+							beta0 += xStatistic.get(i)[j];
+						beta.set(0, beta0 / (double)N); //constant function x = c
+					}
+				}
+				betas.add(DSUtil.toDoubleArray(beta));
 			}
 			
-			List<double[]> Z = Util.newList(N);
-			List<Double> x = Util.newList(N);
-			for (int i = 0; i < N; i++) {
-				Z.add(zStatistic.get(i));
-				x.add(xStatistic.get(i)[j]);
-			}
-			List<Double> beta = calcCoeffs(Z, x);
-			if (beta == null || beta.size() == 0) {
-				if (currentParameter != null)
-					beta = DSUtil.toDoubleList(currentParameter.getBetas().get(j));
-				else { //Used for initialization so that regression model is always determined.
-					beta = DSUtil.initDoubleList(2, 0);
-					double beta0 = 0;
-					for (int i = 0; i < N; i++)
-						beta0 += xStatistic.get(i)[j];
-					beta.set(0, beta0 / (double)N); //constant function x = c
-				}
-			}
-			betas.add(DSUtil.toDoubleArray(beta));
+			newParameter = new ExchangedParameter(alpha, betas);
 		}
-		
-		ExchangedParameter newParameter = new ExchangedParameter(alpha, betas);
-		if (currentParameter != null)
-			newParameter.setCoeff(currentParameter.getCoeff());
-		if (getConfig().getAsBoolean(R_CALC_VARIANCE_FIELD))
-			newParameter.setZVariance(newParameter.estimateZVariance(stat));
-		else {
-			if (currentParameter == null)
-				newParameter.setZVariance(Constants.UNUSED);
-			else if (Util.isUsed(currentParameter.getZVariance()))
-				newParameter.setZVariance(newParameter.estimateZVariance(stat));
+		else if (estimateMode.equals(GAUSSIAN)) {
+			newParameter = new ExchangedParameter(alpha);
+			
+			NormalDisParameter xNormalDisParameter = null;
+			if (kCondProbs == null)
+				xNormalDisParameter = new NormalDisParameter(stat);
 			else
-				newParameter.setZVariance(Constants.UNUSED);
+				xNormalDisParameter = new NormalDisParameter(stat, kCondProbs);
+			newParameter.setXNormalDisParameter(xNormalDisParameter);
 		}
+		else
+			newParameter = new ExchangedParameter(alpha);
+			
+		
+		if (kCondProbs == null) {
+			if (currentParameter != null)
+				newParameter.setCoeff(currentParameter.getCoeff());
+			if (getConfig().getAsBoolean(R_CALC_VARIANCE_FIELD))
+				newParameter.setZVariance(newParameter.estimateZVariance(stat));
+			else {
+				if (currentParameter == null)
+					newParameter.setZVariance(Constants.UNUSED);
+				else if (Util.isUsed(currentParameter.getZVariance()))
+					newParameter.setZVariance(newParameter.estimateZVariance(stat));
+				else
+					newParameter.setZVariance(Constants.UNUSED);
+			}
+		}
+		else {
+			double sumCondProb = 0;
+			for (int i = 0; i < N; i++) {
+				sumCondProb += kCondProbs.get(i);
+			}
+			
+			double sumZVariance = 0;
+			for (int i = 0; i < N; i++) {
+				double d = zStatistic.get(i)[1] - ExchangedParameter.mean(alpha, xStatistic.get(i));
+				sumZVariance += d*d*kCondProbs.get(i);
+			}
+			
+			newParameter.setCoeff(sumCondProb/N);
+			if (sumCondProb != 0)
+				newParameter.setZVariance(sumZVariance/sumCondProb);
+			else
+				newParameter.setZVariance(newParameter.estimateZVariance(stat)); //Fixing zero probabilities.
+		}
+
 		
 		return newParameter;
 	}
@@ -376,18 +491,52 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
 	 */
 	protected Statistics estimate(Statistics stat, ExchangedParameter parameter) {
-		List<Double> alpha = parameter.getAlpha();
-		List<double[]> betas = parameter.getBetas();
-		
 		double zValue = stat.getZStatistic();
 		double[] xVector = stat.getXStatistic();
 		double zStatistic = Constants.UNUSED;
 		double[] xStatistic = new double[xVector.length];
-		
-		if (Util.isUsed(zValue)) {
-			zStatistic = zValue;
+
+		String estimateMode = getConfig().getAsString(ESTIMATE_MODE_FIELD);
+		if (estimateMode.equals(REVERSIBLE)) {
+			List<Double> alpha = parameter.getAlpha();
+			List<double[]> betas = parameter.getBetas();
 			
-			//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
+			if (Util.isUsed(zValue)) {
+				zStatistic = zValue;
+				
+				//Estimating missing xij (xStatistic) by equation 5 and zi (zStatistic) above, based on current parameter.
+				for (int j = 0; j < xVector.length; j++) {
+					if (Util.isUsed(xVector[j]))
+						xStatistic[j] = xVector[j];
+					else
+						xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
+				}
+				
+				return new Statistics(zStatistic, xStatistic);
+			}
+			
+			//Estimating missing zi (zStatistic) by equation 7, based on current parameter.
+			double a = 0, b = 0, c = 0;
+			List<Integer> U = Util.newList(); //Indices of missing values.
+			for (int j = 0; j < xVector.length; j++) {
+				if (Util.isUsed(xVector[j])) {
+					b += alpha.get(j) * xVector[j];
+				}
+				else {
+					a += alpha.get(j) * betas.get(j)[0];
+					c += alpha.get(j) * betas.get(j)[1];
+					U.add(j);
+				}
+			}
+			if (c != 1) {
+				zStatistic = (a + b) / (1.0 - c);
+			}
+			else {
+				LogUtil.info("Cannot estimate statistic for Z by expectation (#estimate), stop estimating for this statistic here because use of other method is wrong.");
+				return null;
+			}
+			
+			//Estimating missing xij (xStatistic) by equation 5 and estimated zi (zStatistic) above, based on current parameter.
 			for (int j = 0; j < xVector.length; j++) {
 				if (Util.isUsed(xVector[j]))
 					xStatistic[j] = xVector[j];
@@ -395,40 +544,28 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 					xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
 			}
 			
+			//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
 			return new Statistics(zStatistic, xStatistic);
 		}
-		
-		//Estimating missing zi (zStatistic) by equation 7, based on current parameter.
-		double a = 0, b = 0, c = 0;
-		List<Integer> U = Util.newList(); //Indices of missing values.
-		for (int j = 0; j < xVector.length; j++) {
-			if (Util.isUsed(xVector[j])) {
-				b += alpha.get(j) * xVector[j];
+		else if (estimateMode.equals(GAUSSIAN)) {
+			NormalDisParameter xNormalDisParameter = parameter.getXNormalDisParameter();
+
+			for (int j = 0; j < xVector.length; j++) {
+				if (j == 0 || Util.isUsed(xVector[j]))
+					xStatistic[j] = xVector[j]; // xVector[j] = 1 always
+				else
+					xStatistic[j] = xNormalDisParameter.getMean().get(j-1);
 			}
-			else {
-				a += alpha.get(j) * betas.get(j)[0];
-				c += alpha.get(j) * betas.get(j)[1];
-				U.add(j);
-			}
-		}
-		if (c != 1) {
-			zStatistic = (a + b) / (1.0 - c);
-		}
-		else {
-			LogUtil.info("Cannot estimate statistic for Z by expectation (#estimate), stop estimating for this statistic here because use of other method is wrong.");
-			return null;
-		}
-		
-		//Estimating missing xij (xStatistic) by equation 5 and estimated zi (zStatistic) above, based on current parameter.
-		for (int j = 0; j < xVector.length; j++) {
-			if (Util.isUsed(xVector[j]))
-				xStatistic[j] = xVector[j];
+
+			if (Util.isUsed(zValue))
+				zStatistic = zValue;
 			else
-				xStatistic[j] = betas.get(j)[0] + betas.get(j)[1] * zStatistic;
+				zStatistic = parameter.mean(xStatistic);
+			
+			return new Statistics(zStatistic, xStatistic);
 		}
-		
-		//Balance process is removed because it is not necessary. Balance process is the best in some cases. So list U is not used.
-		return new Statistics(zStatistic, xStatistic);
+		else
+			return null;
 	}
 
 	
@@ -458,25 +595,56 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	@Override
 	protected ExchangedParameter initializeParameterWithoutData(int regressorNumber, boolean random) {
 		Random rnd = new Random();
-		int n = regressorNumber + 1;
-		List<Double> alpha0 = Util.newList(n);
-		List<double[]> betas0 = Util.newList(n);
-		for (int j = 0; j < n; j++) {
+		
+		List<Double> alpha0 = Util.newList(regressorNumber + 1);
+		for (int j = 0; j < regressorNumber + 1; j++) {
 			alpha0.add(random ? rnd.nextDouble() : 0.0);
-			
-			double[] beta0 = new double[2];
-			if (j == 0) {
-				beta0[0] = 1;
-				beta0[1] = 0;
-			}
-			else {
-				beta0[0] = random ? rnd.nextDouble() : 0.0;
-				beta0[1] = random ? rnd.nextDouble() : 0.0;
-			}
-			betas0.add(beta0);
 		}
 		
-		return new ExchangedParameter(alpha0, betas0);
+		String estimateMode = getConfig().getAsString(ESTIMATE_MODE_FIELD);
+		if (estimateMode.equals(REVERSIBLE)) {
+			List<double[]> betas0 = Util.newList(regressorNumber + 1);
+			for (int j = 0; j < regressorNumber + 1; j++) {
+				double[] beta0 = new double[2];
+				if (j == 0) {
+					beta0[0] = 1;
+					beta0[1] = 0;
+				}
+				else {
+					beta0[0] = random ? rnd.nextDouble() : 0.0;
+					beta0[1] = random ? rnd.nextDouble() : 0.0;
+				}
+				betas0.add(beta0);
+			}
+		
+			return new ExchangedParameter(alpha0, betas0);
+		}
+		else if (estimateMode.equals(GAUSSIAN)) {
+			ExchangedParameter parameter = new ExchangedParameter(alpha0);
+			
+			List<Double> mean = Util.newList(regressorNumber);
+			for (int j = 0; j < regressorNumber; j++) {
+				mean.add(random ? rnd.nextDouble() : 0.0);
+			}
+
+			List<double[]> variance = Util.newList(regressorNumber);
+			for (int i = 0; i < regressorNumber; i++) {
+				double[] kVariance = new double[regressorNumber];
+				Arrays.fill(kVariance, 0);
+				variance.add(kVariance);
+			}
+			for (int i = 0; i < regressorNumber; i++) {
+				variance.get(i)[i] = random ? 1 + rnd.nextDouble() : 1;
+			}
+			
+			NormalDisParameter xNormalDisParameter = new NormalDisParameter(mean, variance);
+			parameter.setXNormalDisParameter(xNormalDisParameter);
+			
+			return parameter;
+		}
+		else
+			return new ExchangedParameter(alpha0);
+		
 	}
 	
 	
@@ -598,7 +766,8 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	public DataConfig createDefaultConfig() {
 		DataConfig tempConfig = super.createDefaultConfig();
 		tempConfig.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
-		tempConfig.put(R_CALC_VARIANCE_FIELD, R_CALC_VARIANCE_DEFAULT); //This attribute is used for testing
+		tempConfig.put(R_CALC_VARIANCE_FIELD, R_CALC_VARIANCE_DEFAULT);
+		tempConfig.put(ESTIMATE_MODE_FIELD, getDefaultEstimateMode());
 		tempConfig.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		
 		DataConfig config = new DataConfig() {
@@ -621,7 +790,6 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 						loadDataset = answer == JOptionPane.YES_OPTION;
 					}
 						
-					
 					if (!loadDataset) {
 						RegressResponseChooser chooser = new RegressResponseChooser(comp, attList);
 						return chooser.getIndices();
@@ -650,6 +818,19 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 					RegressResponseChooser chooser = new RegressResponseChooser(comp, attributes);
 					return chooser.getIndices();
 				}
+				else if (key.equals(ESTIMATE_MODE_FIELD)) {
+					String estimateMode = getAsString(key);
+					estimateMode = estimateMode == null ? getDefaultEstimateMode() : estimateMode;
+					return (Serializable) JOptionPane.showInputDialog(
+							comp, 
+							"Please choose one estimation mode", 
+							"Choosing estimation mode", 
+							JOptionPane.INFORMATION_MESSAGE, 
+							null, 
+							getSupportedEstimateModes(), 
+							estimateMode);
+					
+				}
 				else
 					return super.userEdit(comp, key, defaultValue);
 			}
@@ -660,6 +841,24 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		return config;
 	}
 
+	
+	/**
+	 * Getting supported estimation modes.
+	 * @return array of supported estimation modes.
+	 */
+	protected String[] getSupportedEstimateModes() {
+		return estimateModes;
+	}
+	
+	
+	/**
+	 * Getting default estimation mode.
+	 * @return default estimation mode.
+	 */
+	protected String getDefaultEstimateMode() {
+		return ESTIMATE_MODE_DEFAULT;
+	}
+	
 	
 	@Override
 	public VarWrapper extractRegressor(int index) throws RemoteException {

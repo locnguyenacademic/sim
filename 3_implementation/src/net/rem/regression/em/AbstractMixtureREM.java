@@ -11,9 +11,13 @@ import static net.rem.regression.RMAbstract.splitIndices;
 import static net.rem.regression.em.REMImpl.R_CALC_VARIANCE_FIELD;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import flanagan.math.Fmath;
 import flanagan.plot.PlotGraph;
@@ -63,25 +67,25 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	/**
 	 * Field of component selection execution mode. If this property is true, the mixture model will select most appropriate component (cluster) for execution instead of making average.
 	 */
-	protected static final String SELECT_COMP_EXECUTE_FIELD = "execute_select_comp";
+	protected static final String EXECUTE_SELECT_COMP_FIELD = "execute_select_comp";
 
 	
 	/**
 	 * Default value of component selection execution mode. If this property is true, the mixture model will select most appropriate component (cluster) for execution instead of making average.
 	 */
-	protected static final boolean SELECT_COMP_EXECUTE_DEFAULT = false;
+	protected static final boolean EXECUTE_SELECT_COMP_DEFAULT = false;
 	
 	
 	/**
 	 * Field of including z probability execution mode. If this property is true, the mixture model will include z probability (response probability) for execution.
 	 */
-	protected static final String INCLUDE_ZPROB_EXECUTE_FIELD = "execute_include_zprob";
+	protected static final String EXECUTE_INCLUDE_ZPROB_FIELD = "execute_include_zprob";
 
 	
 	/**
 	 * Default value of including z probability execution mode. If this property is true, the mixture model will include z probability (response probability) for execution.
 	 */
-	protected static final boolean INCLUDE_ZPROB_EXECUTE_DEFAULT = false;
+	protected static final boolean EXECUTE_INCLUDE_ZPROB_DEFAULT = false;
 	
 	
 	/**
@@ -104,7 +108,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	/**
 	 * Setting up this model from other model.
-	 * @param other other model.
+	 * @param other other model. When the other model was specified, this method will call method {@link #learnStart(Object...)} which in turn calls {@link #prepareInternalData(AbstractMixtureREM)}.
 	 * @throws RemoteException if any error raises.
 	 */
 	public void setup(DefaultMixtureREM other) throws RemoteException {
@@ -275,18 +279,6 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 */
 	@Override
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
-		return expectation0(currentParameter, info);
-	}
-
-	
-	/**
-	 * This method implement expectation step (E-step) of EM in basically.
-	 * @param currentParameter current parameter.
-	 * @param info additional information.
-	 * @return sufficient statistic given current parameter.
-	 * @throws RemoteException if any error raises.
-	 */
-	protected Object expectation0(Object currentParameter, Object...info) throws RemoteException {
 		if (currentParameter == null)
 			return null;
 		@SuppressWarnings("unchecked")
@@ -498,7 +490,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 				coeff *= pdf;
 			}
 			
-			if (getConfig().getAsBoolean(INCLUDE_ZPROB_EXECUTE_FIELD)) {
+			if (getConfig().getAsBoolean(EXECUTE_INCLUDE_ZPROB_FIELD)) {
 				if (stat == null) {
 					stat = rem.estimate(new Statistics(Constants.UNUSED, xStatistic), parameter);
 				}
@@ -536,7 +528,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 		List<Double> coeffs = recalcCoeffs(xStatistics);
 		if (coeffs == null) return Constants.UNUSED;
 		
-		if (getConfig().getAsBoolean(SELECT_COMP_EXECUTE_FIELD)) {
+		if (getConfig().getAsBoolean(EXECUTE_SELECT_COMP_FIELD)) {
 			double maxCoeff = -1;
 			double result = 0;
 			for (int k = 0; k < rems.size(); k++) {
@@ -668,9 +660,40 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		DataConfig config = super.createDefaultConfig();
-		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
-		config.put(INCLUDE_ZPROB_EXECUTE_FIELD, INCLUDE_ZPROB_EXECUTE_DEFAULT);
+		DataConfig tempConfig = super.createDefaultConfig();
+		tempConfig.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
+		tempConfig.put(REMImpl.ESTIMATE_MODE_FIELD, REMImpl.ESTIMATE_MODE_DEFAULT);
+		tempConfig.put(EXECUTE_INCLUDE_ZPROB_FIELD, EXECUTE_INCLUDE_ZPROB_DEFAULT);
+		
+		DataConfig config = new DataConfig() {
+
+			/**
+			 * Default serial version UID.
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
+				if (key.equals(REMImpl.ESTIMATE_MODE_FIELD)) {
+					String estimateMode = getAsString(key);
+					estimateMode = estimateMode == null ? REMImpl.ESTIMATE_MODE_DEFAULT : estimateMode;
+					return (Serializable) JOptionPane.showInputDialog(
+							comp, 
+							"Please choose one estimation mode", 
+							"Choosing estimation mode", 
+							JOptionPane.INFORMATION_MESSAGE, 
+							null, 
+							REMImpl.estimateModes, 
+							estimateMode);
+					
+				}
+				else
+					return super.userEdit(comp, key, defaultValue);
+			}
+			
+		};
+		
+		config.putAll(tempConfig);
 		return config;
 	}
 

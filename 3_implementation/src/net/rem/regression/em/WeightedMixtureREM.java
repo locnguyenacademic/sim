@@ -83,7 +83,8 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(SELECT_COMP_EXECUTE_FIELD, SELECT_COMP_EXECUTE_DEFAULT);
+		config.put(REMImpl.ESTIMATE_MODE_FIELD, REMImpl.REVERSIBLE);
+		config.addInvisible(REMImpl.ESTIMATE_MODE_FIELD);
 		return config;
 	}
 	
