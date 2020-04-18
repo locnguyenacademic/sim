@@ -1,0 +1,1 @@
+.\lightcp.bat console

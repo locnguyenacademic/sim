@@ -1,3 +1,3 @@
-./env.sh
+. env.sh
 
-$JAVA_CMD net.hudup.EvaluatorRemote
+eval $JAVA_CMD net.hudup.EvaluatorRemote

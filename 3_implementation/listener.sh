@@ -1,8 +1,8 @@
-./env.sh
+. env.sh
 
 if [ "$1" == "service" ]
 then
-	$JAVAW_CMD net.hudup.Listener &
+	eval $JAVAW_CMD net.hudup.Listener &
 else
-	$JAVA_CMD net.hudup.Listener
+	eval $JAVA_CMD net.hudup.Listener
 fi

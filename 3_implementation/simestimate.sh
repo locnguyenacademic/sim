@@ -1,3 +1,3 @@
-./env.sh
+. env.sh
 
-$JAVA_CMD net.hudup.evaluate.SimestimateEvaluator
+eval $JAVA_CMD net.hudup.evaluate.SimestimateEvaluator

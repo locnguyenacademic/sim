@@ -1,3 +1,3 @@
-./env.sh
+. env.sh
 
-$JAVA_CMD net.rem.regression.evaluate.RegressionEvaluator
+eval $JAVA_CMD net.rem.regression.evaluate.RegressionEvaluator

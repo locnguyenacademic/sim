@@ -1,3 +1,3 @@
-./env.sh
+. env.sh
 
-$JAVA_CMD net.hudup.Starter $1
+eval $JAVA_CMD net.hudup.Starter $1

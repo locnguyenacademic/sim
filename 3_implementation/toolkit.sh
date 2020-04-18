@@ -1,3 +1,3 @@
-./env.sh
+. env.sh
 
-$JAVA_CMD net.hudup.Toolkit
+eval $JAVA_CMD net.hudup.Toolkit
