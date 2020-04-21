@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.Recommender;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the estimation evaluator for similarity measures.
@@ -33,26 +34,30 @@ public class SimestimateEvaluator extends EstimateEvaluator {
 	 * Default constructor.
 	 */
 	public SimestimateEvaluator() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public String getName() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Simestimate Evaluator";
 	}
 
 
 	@Override
-	public boolean acceptAlg(Alg alg) throws RemoteException {
-		// TODO Auto-generated method stub
+	public boolean acceptAlg(Alg alg) {
 		if (alg == null) return false;
-//		AlgRemote remoteAlg = (alg instanceof AlgRemoteWrapper) ? ((AlgRemoteWrapper)alg).getRemoteAlg() : null;
-//		if ((remoteAlg != null) && (remoteAlg instanceof Alg))
-//			alg = (Alg)remoteAlg;
+		
+		try {
+			return acceptAlg(alg.getClass());
+		} catch (Exception e) {LogUtil.trace(e);}
+		return false;
+	}
 
-		return (alg instanceof Recommender);
+
+	@Override
+	public boolean acceptAlg(Class<? extends Alg> algClass) throws RemoteException {
+		return Recommender.class.isAssignableFrom(algClass);
 	}
 
 
@@ -62,7 +67,6 @@ public class SimestimateEvaluator extends EstimateEvaluator {
 	 * @throws Exception if there is any error.
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		String regressEvClassName = SimestimateEvaluator.class.getName();
 		new Evaluator().run(new String[] {regressEvClassName});
 	}

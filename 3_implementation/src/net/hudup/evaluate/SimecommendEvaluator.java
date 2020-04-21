@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.Recommender;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the recommendation evaluator for similarity measures.
@@ -45,24 +46,28 @@ public class SimecommendEvaluator extends RecommendEvaluator {
 
 
 	@Override
-	public boolean acceptAlg(Alg alg) throws RemoteException {
-		// TODO Auto-generated method stub
+	public boolean acceptAlg(Alg alg) {
 		if (alg == null) return false;
-//		AlgRemote remoteAlg = (alg instanceof AlgRemoteWrapper) ? ((AlgRemoteWrapper)alg).getRemoteAlg() : null;
-//		if ((remoteAlg != null) && (remoteAlg instanceof Alg))
-//			alg = (Alg)remoteAlg;
-
-		return (alg instanceof Recommender);
+		
+		try {
+			return acceptAlg(alg.getClass());
+		} catch (Exception e) {LogUtil.trace(e);}
+		return false;
 	}
 
 
+	@Override
+	public boolean acceptAlg(Class<? extends Alg> algClass) throws RemoteException {
+		return Recommender.class.isAssignableFrom(algClass);
+	}
+
+	
 	/**
 	 * The main method to start evaluator.
 	 * @param args The argument parameter of main method. It contains command line arguments.
 	 * @throws Exception if there is any error.
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		String regressEvClassName = SimecommendEvaluator.class.getName();
 		new Evaluator().run(new String[] {regressEvClassName});
 	}
