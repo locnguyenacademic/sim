@@ -15,10 +15,13 @@
 	<property name="src.home" value="src"/>
 	<property name="temp.home" value="${working.home}/temp"/>
 	<property name="tools.home" value="tools"/>
+	<property name="launch4j.home.win" value="${tools.home}/launch4j-win"/>
+	<property name="launch4j.home.unix" value="${tools.home}/launch4j-unix"/>
 
 	<property name="doctype" value="*.txt, *.pdf, *.doc, *.docx"/>
 	<property name="product" value="sim"/>
 	<property name="version" value="v2"/>
+
 
 
 	<!--
@@ -243,12 +246,73 @@
 	</target>
 
 
+	<taskdef name="launch4j-win" classname="net.sf.launch4j.ant.Launch4jTask"
+		classpath="${launch4j.home.win}/launch4j.jar:${launch4j.home.win}/lib/xstream.jar"/>
+	
+	<taskdef name="launch4j-unix" classname="net.sf.launch4j.ant.Launch4jTask"
+		classpath="${launch4j.home.unix}/launch4j.jar:${launch4j.home.win}/lib/xstream.jar"/>
+
+	<target name="setup-launcher" depends="compile" description="Create framework setup launcher">
+		<property name="product.win" value="${product}-${version}-jre${java.version}.exe"/>
+		<property name="product.unix" value="${product}-${version}-jre${java.version}"/>
+
+		<mkdir dir="${archive.home}"/>
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="*" excludes="jre, ${product}.jar"/>
+		</delete>
+		
+		<if>
+		<not><available file="${archive.home}/${product}.jar"/></not>
+		<then>
+			<jar destfile="${archive.home}/${product}.jar">
+				<fileset dir="${bin.home}"/>
+				<restrict>
+					<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="*.jar, *.zip"/>
+						</zips>
+					</archives>
+				</restrict>
+			</jar>
+		</then>
+		</if>
+
+		<if>
+		<equals arg1="${os}" arg2="win"/>
+		<then>
+			<launch4j-win>
+				<config headerType="gui" dontWrapJar="false"
+						outfile="${archive.home}/${product.win}" jarPath="${archive.home}/${product}.jar" >
+					<classPath mainClass="net.hudup.Starter"/>
+					<jre path="jre" minVersion="${java.version}" jdkPreference="preferJre"/>
+				</config>
+			</launch4j-win>
+		</then>
+		<elseif>
+		<equals arg1="${os}" arg2="unix"/>
+		<then>
+			<launch4j-unix>
+				<config headerType="gui" dontWrapJar="false"
+						outfile="${archive.home}/${product.unix}" jarPath="${archive.home}/${product}.jar" >
+					<classPath mainClass="net.hudup.Starter"/>
+					<jre path="jre" minVersion="${java.version}" jdkPreference="preferJre"/>
+				</config>
+			</launch4j-unix>
+		</then>
+		</elseif>
+		</if>
+
+		<delete quiet="true" file="${archive.home}/${product}.jar"/>
+	</target>
+
+
 	<target name="jar-bayescf" depends="compile" description="Create collaborative filtering based on Bayesian network package">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
 		
 		<if>
-		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<equals arg1="${include-runtime-lib}" arg2="embed"/>
 		<then>
 			<jar destfile="${archive.home}/${product}-bayescf.jar">
 	    		<fileset dir="${bin.home}" includes="net/bayescf/**"/>
@@ -349,7 +413,7 @@
 	</target>
 
 
-	<target name="jar-rem" depends="compile" description="Create REM package">
+	<target name="jar-rem" depends="compile" description="Create REM package including EM algorithm and regression model">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
 
