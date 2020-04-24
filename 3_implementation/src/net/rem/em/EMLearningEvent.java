@@ -64,6 +64,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 	 * @param type event type.
 	 * @param trainingDataset training dataset.
 	 * @param currentIteration current iteration.
+	 * @param maxIteration maximum iteration.
 	 * @param currentStatistics current sufficient statistic.
 	 * @param currentParameter current parameter.
 	 * @param estimatedParameter estimated parameter of algorithm as setup result.
@@ -82,6 +83,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 	 * @param trainingDatasetId training dataset identifier.
 	 * @param trainingDataset training dataset.
 	 * @param currentIteration current iteration.
+	 * @param maxIteration maximum iteration.
 	 * @param currentStatistics current sufficient statistic.
 	 * @param currentParameter current parameter.
 	 * @param estimatedParameter estimated parameter of algorithm as setup result.

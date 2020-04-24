@@ -1249,13 +1249,13 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * Following is a code snippet to generate normal data for regression model:<br>
 	 * <br>
 	 * <code>
-	 * List<double[]> alphas = Util.newList(2);<br>
+	 * List&lt;double[]&gt; alphas = Util.newList(2);<br>
 	 * alphas.add(new double[] {0, 1});<br>
 	 * alphas.add(new double[] {1, -1});<br>
-	 * List<Double> probs = Util.newList(2);<br>
+	 * List&lt;Double&gt; probs = Util.newList(2);<br>
 	 * probs.add(0.5);<br>
 	 * probs.add(0.5);<br>
-	 * List<Double> variances = Util.newList(2);<br>
+	 * List&lt;Double&gt; variances = Util.newList(2);<br>
 	 * variances.add(0.001);<br>
 	 * variances.add(0.001);<br>
 	 * LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianData2(alphas, probs, variances, 10000);
@@ -1327,13 +1327,13 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * Following is a code snippet to generate normal data for regression model:<br>
 	 * <br>
 	 * <code>
-	 * List<double[]> alphas = Util.newList(2);<br>
+	 * List&lt;double[]&gt; alphas = Util.newList(2);<br>
 	 * alphas.add(new double[] {0, 1});<br>
 	 * alphas.add(new double[] {1, -1});<br>
-	 * List<Double> probs = Util.newList(2);<br>
+	 * List&lt;Double&gt; probs = Util.newList(2);<br>
 	 * probs.add(0.5);<br>
 	 * probs.add(0.5);<br>
-	 * List<Double> variances = Util.newList(2);<br>
+	 * List&lt;Double&gt; variances = Util.newList(2);<br>
 	 * variances.add(0.001);<br>
 	 * variances.add(0.001);<br>
 	 * LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianData2(alphas, probs, variances, 10000);

@@ -487,6 +487,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	/**
 	 * Estimating statistics with specified parameters alpha and beta. This method does not change internal data.
 	 * Balance process is removed because it is over-fitting or not stable. Balance process is the best in some cases.
+	 * @param stat statistic of X and Z.
 	 * @param parameter current parameter.
 	 * @return estimated statistics with specified parameters alpha and beta. Return null if any error raises.
 	 */

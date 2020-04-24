@@ -461,7 +461,7 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	/**
 	 * Re-calculating regression coefficients list of given X statistics. This method is not synchronized because it is called by other methods.
 	 * It is protected in order to be overrided by sub classes.
-	 * @param xStatistic list of given X statistics.
+	 * @param xStatistics list of given X statistics.
 	 * @return list of regression coefficients given X statistics.
 	 */
 	protected List<Double> recalcCoeffs(List<double[]> xStatistics) {

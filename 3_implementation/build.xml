@@ -246,6 +246,22 @@
 	</target>
 
 
+	<target name="deploy-in-one" depends="compile" description="Create framework deployment">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<!--Deployment needs source to rebuild immediately-->
+		<zip destfile="${archive.home}/${product}-${version}-deploy-in-one.zip" basedir="." 
+			includes="${bin.home}/**, 
+				${lib.home}/**, 
+				${plugins.home}/**, 
+				${src.home}/**, 
+				${tools.home}/**, *" 
+			excludes="${working.home}, ${datasets.home}, ${docs.home}">
+		</zip>
+	</target>
+
+
 	<taskdef name="launch4j-win" classname="net.sf.launch4j.ant.Launch4jTask"
 		classpath="${launch4j.home.win}/launch4j.jar:${launch4j.home.win}/lib/xstream.jar"/>
 	
@@ -253,8 +269,7 @@
 		classpath="${launch4j.home.unix}/launch4j.jar:${launch4j.home.win}/lib/xstream.jar"/>
 
 	<target name="setup-launcher" depends="compile" description="Create framework setup launcher">
-		<property name="product.win" value="${product}-${version}-jre${java.version}.exe"/>
-		<property name="product.unix" value="${product}-${version}-jre${java.version}"/>
+		<property name="product.zip" value="${product}-${version}-jre${java.version}.zip"/>
 
 		<mkdir dir="${archive.home}"/>
 		<delete quiet="true" includeEmptyDirs="true">
@@ -283,7 +298,7 @@
 		<then>
 			<launch4j-win>
 				<config headerType="gui" dontWrapJar="false"
-						outfile="${archive.home}/${product.win}" jarPath="${archive.home}/${product}.jar" >
+						outfile="${archive.home}/${product}.exe" jarPath="${archive.home}/${product}.jar" >
 					<classPath mainClass="net.hudup.Starter"/>
 					<jre path="jre" minVersion="${java.version}" jdkPreference="preferJre"/>
 				</config>
@@ -294,7 +309,7 @@
 		<then>
 			<launch4j-unix>
 				<config headerType="gui" dontWrapJar="false"
-						outfile="${archive.home}/${product.unix}" jarPath="${archive.home}/${product}.jar" >
+						outfile="${archive.home}/${product}" jarPath="${archive.home}/${product}.jar" >
 					<classPath mainClass="net.hudup.Starter"/>
 					<jre path="jre" minVersion="${java.version}" jdkPreference="preferJre"/>
 				</config>
@@ -304,6 +319,16 @@
 		</if>
 
 		<delete quiet="true" file="${archive.home}/${product}.jar"/>
+		
+		<if>
+		<available file="${archive.home}/jre"/>
+		<then>
+			<zip destfile="${archive.home}/${product.zip}" basedir="${archive.home}"/>
+			<delete quiet="true" includeEmptyDirs="true">
+				<fileset dir="${archive.home}" includes="**" excludes="${product.zip}"/>
+			</delete>
+		</then>
+		</if>
 	</target>
 
 
