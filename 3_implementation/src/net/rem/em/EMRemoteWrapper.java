@@ -35,6 +35,14 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 	private static final long serialVersionUID = 1L;
 
 	
+    /**
+     * Default constructor.
+     */
+    public EMRemoteWrapper() {
+
+    }
+
+    
 	/**
 	 * Constructor with specified EM algorithm.
 	 * @param remoteEM remote EM algorithm.

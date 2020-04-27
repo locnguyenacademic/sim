@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
 
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.AlgDesc2;
 import net.hudup.core.data.Profile;
 import net.hudup.core.evaluate.execute.ExecuteEvaluator;
 import net.hudup.core.logistic.LogUtil;
@@ -53,19 +52,8 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 
 	
 	@Override
-	public boolean acceptAlg(Alg alg) {
-		if (alg == null) return false;
-		
-		try {
-			return acceptAlg(alg.getClass()) && (!(AlgDesc2.isForTest(alg)));
-		} catch (Exception e) {LogUtil.trace(e);}
-		return false;
-	}
-
-	
-	@Override
-	public boolean acceptAlg(Class<? extends Alg> algClass) throws RemoteException {
-		return RM.class.isAssignableFrom(algClass);
+	public boolean acceptAlg(Alg alg) throws RemoteException {
+		return (alg != null) && (alg instanceof RM);
 	}
 
 

@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.Recommender;
-import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the estimation evaluator for similarity measures.
@@ -45,19 +44,8 @@ public class SimestimateEvaluator extends EstimateEvaluator {
 
 
 	@Override
-	public boolean acceptAlg(Alg alg) {
-		if (alg == null) return false;
-		
-		try {
-			return acceptAlg(alg.getClass());
-		} catch (Exception e) {LogUtil.trace(e);}
-		return false;
-	}
-
-
-	@Override
-	public boolean acceptAlg(Class<? extends Alg> algClass) throws RemoteException {
-		return Recommender.class.isAssignableFrom(algClass);
+	public boolean acceptAlg(Alg alg) throws RemoteException {
+		return (alg != null) && (alg instanceof Recommender);
 	}
 
 
