@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.util.List;
 
 import net.hudup.core.Util;
+import net.hudup.core.logistic.NetUtil;
 import net.hudup.core.logistic.UriAssoc;
 import net.hudup.core.logistic.xURI;
 import net.rem.regression.LargeStatistics;
@@ -119,21 +120,21 @@ public class Test {
 //				d1.smtp(d2, 0, new double[] {1, 1, 1}));
 
 		
-		List<double[]> alphas = Util.newList(2);
-		alphas.add(new double[] {0, 1});
-		alphas.add(new double[] {1, -1});
-		List<Double> probs = Util.newList(2);
-		probs.add(0.5);
-		probs.add(0.5);
-		List<Double> variances = Util.newList(2);
-		variances.add(0.001);
-		variances.add(0.001);
-		
-		LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianDataWithXIntervals(alphas, probs, variances, 1000);
-		UriAssoc uriAssoc = Util.getFactory().createUriAssoc(xURI.create(new File(".")));
-		Writer writer = uriAssoc.getWriter(xURI.create(new File("/a.csv")), false);
-		stats.save(writer, -1);
-		writer.close();
+//		List<double[]> alphas = Util.newList(2);
+//		alphas.add(new double[] {0, 1});
+//		alphas.add(new double[] {1, -1});
+//		List<Double> probs = Util.newList(2);
+//		probs.add(0.5);
+//		probs.add(0.5);
+//		List<Double> variances = Util.newList(2);
+//		variances.add(0.001);
+//		variances.add(0.001);
+//		
+//		LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianDataWithXIntervals(alphas, probs, variances, 1000);
+//		UriAssoc uriAssoc = Util.getFactory().createUriAssoc(xURI.create(new File(".")));
+//		Writer writer = uriAssoc.getWriter(xURI.create(new File("/a.csv")), false);
+//		stats.save(writer, -1);
+//		writer.close();
 		
 //		//NormalDistribution n = new NormalDistribution(0, 0);
 //		System.out.println(Float.MIN_VALUE);
@@ -142,6 +143,8 @@ public class Test {
 //		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
 //		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
 //		System.out.println(1.0 / Float.MIN_VALUE);
+		
+		System.out.println(NetUtil.testPort(80));
 	}
 
 	
