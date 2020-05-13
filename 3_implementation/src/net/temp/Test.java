@@ -1,15 +1,6 @@
 package net.temp;
 
-import java.io.File;
-import java.io.Writer;
-import java.util.List;
-
-import net.hudup.core.Util;
 import net.hudup.core.logistic.NetUtil;
-import net.hudup.core.logistic.UriAssoc;
-import net.hudup.core.logistic.xURI;
-import net.rem.regression.LargeStatistics;
-import net.rem.regression.RMAbstract;
 
 /**
  * This is temporal testing class.
