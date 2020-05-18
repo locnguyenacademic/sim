@@ -38,9 +38,9 @@ wrapper.tray.port = 15002
 #wrapper.tray.icon=
 
 wrapper.on_exit.0=SHUTDOWN
-wrapper.on_exit.default=RESTART
-wrapper.on_signal.9=SHUTDOWN
-wrapper.on_signal.default=RESTART
+wrapper.on_exit.default=SHUTDOWN
+#wrapper.on_signal.9=SHUTDOWN
+#wrapper.on_signal.default=RESTART
 
 wrapper.filter.trigger.0=Exception
 wrapper.filter.script.0=scripts\/trayMessage.gv
