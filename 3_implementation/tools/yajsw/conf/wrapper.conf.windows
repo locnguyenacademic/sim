@@ -28,6 +28,11 @@ wrapper.ntservice.description=Sim server implements and evaluates recommendation
 #wrapper.ntservice.account=
 #wrapper.ntservice.password=
 
+#wrapper.daemon.dir = 
+#wrapper.daemon.pid.dir = 
+wrapper.daemon.run_level_dir=${if (new File('/etc/rc0.d').exists()) return '/etc/rcX.d' else return '/etc/init.d/rcX.d'}
+#wrapper.daemon.update_rc = start 20 2 3 4 . start 30 5 . stop 80 0 1 6
+
 wrapper.tray = true
 wrapper.tray.port = 15002
 #wrapper.tray.icon=
