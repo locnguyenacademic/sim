@@ -1,0 +1,63 @@
+wrapper.working.dir=E:/GoogleDrive/todo/working/projects/sim/3_implementation
+
+wrapper.tmp.path = ${jna_tmpdir}
+
+wrapper.java.app.mainclass=net.hudup.Server
+
+#********************************************************************
+# Application Account
+# Equivalent to Posix sudo or windows runas
+# Note Posix: 
+#     <group>\<user> (note: use \\ in configuration file). 
+#     If no group is configured default group of the user is used
+#********************************************************************
+#wrapper.app.account=
+#wrapper.app.password=
+
+wrapper.console.loglevel=INFO
+wrapper.logfile=${wrapper_home}/log/wrapper.log
+wrapper.logfile.maxsize=10m
+wrapper.logfile.maxfiles=10
+
+wrapper.console.title=Sim server
+
+wrapper.ntservice.name=simserver
+wrapper.ntservice.displayname=Sim server
+wrapper.ntservice.description=Sim server implements and evaluates recommendation and machine learning algorithms
+#wrapper.ntservice.starttype=AUTO_START
+#wrapper.ntservice.account=
+#wrapper.ntservice.password=
+
+wrapper.tray = true
+wrapper.tray.port = 15002
+#wrapper.tray.icon=
+
+wrapper.on_exit.0=SHUTDOWN
+wrapper.on_exit.default=RESTART
+wrapper.on_signal.9=SHUTDOWN
+wrapper.on_signal.default=RESTART
+
+wrapper.filter.trigger.0=Exception
+wrapper.filter.script.0=scripts\/trayMessage.gv
+wrapper.filter.script.0.args=Exception
+
+wrapper.startup.timeout = 60
+wrapper.shutdown.timeout = 60
+wrapper.ping.timeout = 60
+
+
+wrapper.java.command = java
+wrapper.java.classpath.1 = ./hudup.jar
+wrapper.java.classpath.2 = ./hudup-server.jar
+wrapper.java.classpath.3 = ./hudup-evaluator.jar
+wrapper.java.classpath.4 = ./hudup-listener.jar
+wrapper.java.classpath.5 = ./hudup-toolkit.jar
+wrapper.java.classpath.6 = ./hudup-core.jar
+wrapper.java.classpath.7 = ./hudup-runtime-lib.jar
+wrapper.java.classpath.8 = ./bin
+wrapper.java.classpath.9 = ./lib/*.jar
+wrapper.java.classpath.10 = ./sim.jar
+wrapper.java.classpath.11 = ./sim-bayescf.jar
+wrapper.java.classpath.12 = ./sim-hudup.jar
+wrapper.java.classpath.13 = ./sim-rem.jar
+wrapper.java.classpath.14 = ./sim-runtime-lib.jar
