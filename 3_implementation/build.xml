@@ -309,7 +309,7 @@
 		<then>
 			<launch4j-unix>
 				<config headerType="gui" dontWrapJar="false"
-						outfile="${archive.home}/${product}" jarPath="${archive.home}/${product}.jar" >
+						outfile="${archive.home}/${product}.exe" jarPath="${archive.home}/${product}.jar" >
 					<classPath mainClass="net.hudup.Starter"/>
 					<jre path="jre" minVersion="${java.version}" jdkPreference="preferJre"/>
 				</config>
