@@ -16,7 +16,6 @@ import java.util.Set;
 
 import elvira.Bnet;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
@@ -101,13 +100,6 @@ public class BnetBinaryClusteredCF extends BnetBinaryCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetBinaryClusteredCF();
-	}
-
-	
 }
 
 

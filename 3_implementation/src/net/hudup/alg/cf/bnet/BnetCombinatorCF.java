@@ -13,7 +13,6 @@ import java.util.Set;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.AlgList;
 import net.hudup.core.alg.CompositeRecommenderAbstract;
 import net.hudup.core.alg.RecommendFilterParam;
@@ -161,11 +160,11 @@ public class BnetCombinatorCF extends CompositeRecommenderAbstract {
 		try {
 			AlgList algList = new AlgList();
 
-			BnetCFAbstract bnetCF = BNET_CF_CLASS.newInstance();
+			BnetCFAbstract bnetCF = BNET_CF_CLASS.getDeclaredConstructor().newInstance();
 			bnetCF.getConfig().setStoreUri(config.getStoreUri().concat(bnetCF.getName()));
 			algList.add(bnetCF);
 			
-			Recommender otherRecommender = OTHER_RECOMMENDER_CLASS.newInstance();
+			Recommender otherRecommender = OTHER_RECOMMENDER_CLASS.getDeclaredConstructor().newInstance();
 			otherRecommender.getConfig().setStoreUri(config.getStoreUri().concat(otherRecommender.getName()));
 			algList.add(otherRecommender);
 
@@ -224,22 +223,13 @@ public class BnetCombinatorCF extends CompositeRecommenderAbstract {
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetCombinatorCF();
-	}
-
-
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "bayesnet_combinator";
 	}
 
 
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Collaborative filtering algorithm by combining other Bayesian network collaborative filtering algorithms";
 	}
 

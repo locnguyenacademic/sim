@@ -1,9 +1,8 @@
 package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFExtUserBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 public class TAN extends NeighborCFExtUserBased implements ForTest {
 
@@ -31,7 +30,6 @@ public class TAN extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -41,18 +39,7 @@ public class TAN extends NeighborCFExtUserBased implements ForTest {
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		TAN cf = new TAN();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(TA_NORMALIZED_FIELD, true);
 		return config;

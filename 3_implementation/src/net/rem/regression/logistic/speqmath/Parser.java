@@ -124,7 +124,7 @@ public class Parser
 			}
 
 			// add the answer to memory as variable "Ans"
-			user_var.put(new String("ANS"), new Double(ans));
+			user_var.put(new String("ANS"), Double.valueOf(ans));
 
 			ans_str = String.format("Ans = %g", ans);
 		}
@@ -171,7 +171,7 @@ public class Parser
 		}
 
 		//Add the answer to memory as variable "Ans"
-		user_var.put(new String("ANS"), new Double(ans));
+		user_var.put(new String("ANS"), Double.valueOf(ans));
 
 		ans_str = String.format("Ans = %g", ans);
 		
@@ -444,7 +444,7 @@ public class Parser
 				// check whether the token is a legal name
 				if (isLegalVariableName(var_name))
 				{
-					user_var.put(var_name.toUpperCase(), new Double(ans));
+					user_var.put(var_name.toUpperCase(), Double.valueOf(ans));
 				}
 				else
 				{

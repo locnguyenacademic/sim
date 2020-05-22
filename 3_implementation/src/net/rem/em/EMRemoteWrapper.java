@@ -9,7 +9,6 @@ package net.rem.em;
 
 import java.rmi.RemoteException;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.ExecutableAlgRemoteWrapper;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.BaseClass;
@@ -38,7 +37,7 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
     /**
      * Default constructor.
      */
-    public EMRemoteWrapper() {
+    protected EMRemoteWrapper() {
 
     }
 
@@ -100,19 +99,6 @@ public class EMRemoteWrapper extends ExecutableAlgRemoteWrapper implements EM, E
 		return ((EM)remoteAlg).getStatistics();
 	}
 
-	
-	@Override
-	public Alg newInstance() {
-		if (remoteAlg instanceof EMAbstract) {
-			EMAbstract newEM = (EMAbstract) ((EMAbstract)remoteAlg).newInstance();
-			return new EMRemoteWrapper(newEM, exclusive);
-		}
-		else {
-			LogUtil.warn("newInstance() returns itselfs and so does not return new object");
-			return this;
-		}
-	}
-	
 	
 	@Override
 	public String[] getBaseRemoteInterfaceNames() throws RemoteException {

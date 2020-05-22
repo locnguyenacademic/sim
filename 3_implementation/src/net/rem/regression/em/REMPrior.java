@@ -13,7 +13,6 @@ import java.util.List;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.LogUtil;
@@ -101,14 +100,6 @@ public class REMPrior extends REMImpl {
 	}
 
 	
-	@Override
-	public Alg newInstance() {
-		REMPrior priorREM = new REMPrior();
-		priorREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return priorREM;
-	}
-
-
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
 		LargeStatistics stat = (LargeStatistics)currentStatistic;

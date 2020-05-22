@@ -10,7 +10,6 @@ package net.hudup.alg.cf.stat;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.BaseClass;
@@ -36,21 +35,18 @@ public class MeanItemCF extends StatCF {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "mean_item";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Mean item collaborative filtering algorithm";
 	}
 
 
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
 		StatKB sKb = (StatKB)kb;
 		
 		RatingVector result = param.ratingVector.newInstance(true);
@@ -71,11 +67,4 @@ public class MeanItemCF extends StatCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new MeanItemCF();
-	}
-
-	
 }

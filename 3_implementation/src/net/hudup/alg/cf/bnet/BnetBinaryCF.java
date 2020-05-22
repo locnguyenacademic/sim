@@ -18,7 +18,6 @@ import java.util.Set;
 import elvira.Bnet;
 import elvira.Evidence;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.DataConfig;
@@ -147,13 +146,6 @@ public class BnetBinaryCF extends BnetCF2 {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetBinaryCF();
-	}
-
-	
 }
 
 

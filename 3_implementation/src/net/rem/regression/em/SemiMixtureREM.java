@@ -20,7 +20,6 @@ import flanagan.math.Fmath;
 import flanagan.plot.PlotGraph;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.NoteAlg;
 import net.hudup.core.data.AttributeList;
@@ -358,14 +357,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 	
 	@Override
-	public Alg newInstance() {
-		SemiMixtureREM semiMixREM = new SemiMixtureREM();
-		semiMixREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return semiMixREM;
-	}
-
-	
-	@Override
 	public void setName(String name) {
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
@@ -513,7 +504,6 @@ public class SemiMixtureREM extends AbstractMixtureREM implements DuplicatableAl
 
 			@Override
 			public String getGraphFeature() {
-				// TODO Auto-generated method stub
 				try {
 					return "R=" + MathUtil.format(calcR(), 2);
 				} catch (Exception e) {LogUtil.trace(e);}

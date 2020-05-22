@@ -84,10 +84,10 @@ public class BnetCF2 extends BnetCF {
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		
-		config.put(BnetKB2.DIM_REDUCE_RATIO, new Double(DEFAULT_DIM_REDUCE_RATIO));
+		config.put(BnetKB2.DIM_REDUCE_RATIO, DEFAULT_DIM_REDUCE_RATIO);
 		
 		try {
-			Alg completeMethod = DEFAULT_COMPLETE_METHOD_CLASS.newInstance();
+			Alg completeMethod = DEFAULT_COMPLETE_METHOD_CLASS.getDeclaredConstructor().newInstance();
 			DataConfig completeMethodConfig = completeMethod.getConfig();
 			xURI subStore = config.getStoreUri().concat(completeMethod.getName());
 			completeMethodConfig.setStoreUri(subStore);
@@ -103,13 +103,6 @@ public class BnetCF2 extends BnetCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetCF2();
-	}
-
-	
 }
 
 

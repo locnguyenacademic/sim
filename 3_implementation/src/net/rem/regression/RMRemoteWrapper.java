@@ -10,7 +10,6 @@ package net.rem.regression;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.ExecutableAlgRemoteWrapper;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.BaseClass;
@@ -192,19 +191,6 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 	}
 
 	
-	@Override
-	public Alg newInstance() {
-		if (remoteAlg instanceof RMAbstract) {
-			RMAbstract newRM = (RMAbstract) ((RMAbstract)remoteAlg).newInstance();
-			return new RMRemoteWrapper(newRM, exclusive);
-		}
-		else {
-			LogUtil.warn("newInstance() returns itselfs and so does not return new object");
-			return this;
-		}
-	}
-
-
 	@Override
 	public DataConfig createDefaultConfig() {
 		if (remoteAlg instanceof RM)

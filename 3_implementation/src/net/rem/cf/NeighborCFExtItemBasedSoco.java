@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
 import net.hudup.core.Constants;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Profile;
@@ -49,7 +48,6 @@ public class NeighborCFExtItemBasedSoco extends NeighborCFExtItemBased {
 	 * Default constructor.
 	 */
 	public NeighborCFExtItemBasedSoco() {
-		// TODO Auto-generated constructor stub
 		soco = new Soco() {
 
 			/**
@@ -59,7 +57,6 @@ public class NeighborCFExtItemBasedSoco extends NeighborCFExtItemBased {
 
 			@Override
 			protected double sim(RatingVector vRating1, RatingVector vRating2) {
-				// TODO Auto-generated method stub
 				return getThisNeighborCF().sim0(getThisNeighborCF().getMeasure(), vRating1, vRating2, (Profile)null, (Profile)null);
 			}
 			
@@ -86,7 +83,6 @@ public class NeighborCFExtItemBasedSoco extends NeighborCFExtItemBased {
 	@Override
 	public synchronized double sim(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2,
 			Object... parameters) {
-		// TODO Auto-generated method stub
 		try {
 			return soco.getRowSim(vRating1.id(), vRating2.id());
 		}
@@ -107,19 +103,11 @@ public class NeighborCFExtItemBasedSoco extends NeighborCFExtItemBased {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
 		else
 			return "neighborcf_itembased_softcosine";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new NeighborCFExtItemBasedSoco();
 	}
 
 

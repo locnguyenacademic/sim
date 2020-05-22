@@ -1,9 +1,8 @@
 package net.hudup.alg.cf.test.multcombined.userbased;
 
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 public class PearsonS extends NeighborCFTwosCombinedMultUserBased implements ForTest {
 
@@ -41,18 +40,7 @@ public class PearsonS extends NeighborCFTwosCombinedMultUserBased implements For
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		PearsonS cf = new PearsonS();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, PEARSON);
 		config.put(OTHER_MEASURE, AMER);

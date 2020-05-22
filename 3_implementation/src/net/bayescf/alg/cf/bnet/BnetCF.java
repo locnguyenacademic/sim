@@ -10,7 +10,6 @@ package net.bayescf.alg.cf.bnet;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.cf.ModelBasedCFAbstract;
@@ -74,15 +73,7 @@ public class BnetCF extends ModelBasedCFAbstract {
 
 	@Override
 	public Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return EvaluateGUI.createInspector(this);
-	}
-
-	
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetCF();
 	}
 
 	

@@ -9,7 +9,6 @@ package net.rem.regression.em;
 
 import java.rmi.RemoteException;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.LogUtil;
 import net.rem.regression.LargeStatistics;
@@ -72,14 +71,6 @@ public class WeightedMixtureREM extends DefaultMixtureREM {
 	}
 
 	
-	@Override
-	public Alg newInstance() {
-		WeightedMixtureREM weightedREM = new WeightedMixtureREM();
-		weightedREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return weightedREM;
-	}
-
-
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();

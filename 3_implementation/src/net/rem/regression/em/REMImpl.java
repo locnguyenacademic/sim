@@ -26,7 +26,6 @@ import javax.swing.JOptionPane;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
@@ -755,14 +754,6 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		REMImpl rem = new REMImpl();
-		rem.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return rem;
-	}
-
-	
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig tempConfig = super.createDefaultConfig();

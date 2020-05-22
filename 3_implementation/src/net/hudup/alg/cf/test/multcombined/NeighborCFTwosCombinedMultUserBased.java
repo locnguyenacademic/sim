@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.hudup.alg.cf.NeighborCFExt;
 import net.hudup.alg.cf.NeighborCFExtUserBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.cf.NeighborCFUserBased;
@@ -106,18 +105,7 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		NeighborCFTwosCombinedMultUserBased cf = new NeighborCFTwosCombinedMultUserBased();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;
@@ -126,7 +114,6 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 	
 	@Override
 	protected NeighborCFExt createDualCF() {
-		// TODO Auto-generated method stub
 		return new NeighborCFExtUserBased();
 	}
 

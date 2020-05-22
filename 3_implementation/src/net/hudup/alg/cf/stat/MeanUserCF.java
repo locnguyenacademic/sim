@@ -10,7 +10,6 @@ package net.hudup.alg.cf.stat;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.RatingVector;
 
@@ -33,21 +32,18 @@ public class MeanUserCF extends StatCF {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "mean_user";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Mean user collaborative filtering algorithm";
 	}
 
 
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
 		StatKB sKb = (StatKB)kb;
 		
 		RatingVector result = param.ratingVector.newInstance(true);
@@ -68,12 +64,4 @@ public class MeanUserCF extends StatCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new MeanUserCF();
-	}
-
-	
-	
 }

@@ -178,13 +178,6 @@ public class BnetBinaryDistributedExtCF extends BnetBinaryDistributedCF {
 	}
 	
 	
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetBinaryDistributedExtCF();
-	}
-
-	
 }
 
 
@@ -266,7 +259,7 @@ abstract class BnetBinaryDistributedExtKB extends KBaseAbstract {
 			if (minmax != null)
 				minprob = minmax.min();
 		}
-		config.put(BnetBinaryDistributedExtCF.MIN_PROB, new Double(minprob));
+		config.put(BnetBinaryDistributedExtCF.MIN_PROB, minprob);
 
 		Set<Integer> bitIds = bitData.bitItemIds();
 		for (int bitId : bitIds) {

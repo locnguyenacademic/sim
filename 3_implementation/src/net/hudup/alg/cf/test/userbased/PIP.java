@@ -1,9 +1,7 @@
 package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFExtUserBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.logistic.ForTest;
-import net.hudup.core.data.DataConfig;
 
 public class PIP extends NeighborCFExtUserBased implements ForTest {
 
@@ -37,16 +35,6 @@ public class PIP extends NeighborCFExtUserBased implements ForTest {
 			return name;
 		else
 			return "u14.01.pip";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		PIP cf = new PIP();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

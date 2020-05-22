@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.alg.RecommendFilterParam;
 import net.hudup.core.alg.RecommendParam;
@@ -64,20 +63,17 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 	 */
 	public BayesLookupTableCF() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 
 	@Override
 	public KBase newKB() throws RemoteException {
-		// TODO Auto-generated method stub
 		return BayesLookupTableKB.create(this);
 	}
 
 	
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
 		BayesLookupTableKB kb = (BayesLookupTableKB) getKBase();
 		if (kb.isEmpty())
 			return null;
@@ -100,7 +96,6 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 
 	@Override
 	public synchronized RatingVector recommend(RecommendParam param, int maxRecommend) throws RemoteException {
-		// TODO Auto-generated method stub
 		BayesLookupTableKB kb = (BayesLookupTableKB) getKBase();
 		if (kb.isEmpty())
 			return null;
@@ -174,7 +169,6 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 //	 */
 //	@SuppressWarnings("unused")
 //	private synchronized RatingVector recommend0(RecommendParam param, int maxRecommend) throws RemoteException {
-//		// TODO Auto-generated method stub
 //		BayesLookupTableKB kb = (BayesLookupTableKB) getKBase();
 //		if (kb.isEmpty())
 //			return null;
@@ -243,29 +237,19 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "bayes_lookup_table";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Bayesian lookup table collaborative filtering algorithm";
 	}
 
 
 	@Override
 	public Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return EvaluateGUI.createInspector(this);
-	}
-
-	
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BayesLookupTableCF();
 	}
 
 	
@@ -299,7 +283,7 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 //		config.setStoreUri(store);
 		config.putAll(tempConfig);
 		
-		config.put(SvdGradientKB.PRECISION, new Double(DEFAULT_PRECISION));
+		config.put(SvdGradientKB.PRECISION, DEFAULT_PRECISION);
 		config.put(SvdGradientKB.MAX_ITERATION, DEFAULT_MAX_ITERATION);
 		
 		return config;

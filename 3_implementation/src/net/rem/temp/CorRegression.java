@@ -12,14 +12,13 @@ import java.util.List;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.xURI;
-import net.rem.regression.RMAbstract;
 import net.rem.regression.LargeStatistics;
+import net.rem.regression.RMAbstract;
 import net.rem.regression.VarWrapper;
 import net.rem.regression.em.ui.graph.Graph;
 
@@ -248,17 +247,7 @@ public class CorRegression extends RMAbstract implements DuplicatableAlg {
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		CorRegression cor = new CorRegression();
-		cor.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return cor;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;
@@ -267,7 +256,6 @@ public class CorRegression extends RMAbstract implements DuplicatableAlg {
 
 	@Override
 	public List<VarWrapper> extractRegressors() throws RemoteException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

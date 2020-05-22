@@ -13,8 +13,6 @@ import java.util.List;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.rem.regression.LargeStatistics;
@@ -43,14 +41,12 @@ public class RegressionEMPriorExt extends REMPrior {
 	 * Default constructor.
 	 */
 	public RegressionEMPriorExt() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 	
 	
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		LargeStatistics stat = (LargeStatistics)currentStatistic;
 		if (stat.isEmpty())
 			return null;
@@ -149,7 +145,6 @@ public class RegressionEMPriorExt extends REMPrior {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -157,14 +152,5 @@ public class RegressionEMPriorExt extends REMPrior {
 			return "prior_rem_ext";
 	}
 
-	
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		RegressionEMPriorExt priorREMExt = new RegressionEMPriorExt();
-		priorREMExt.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return priorREMExt;
-	}
-	
 	
 }

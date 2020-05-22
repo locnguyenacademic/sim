@@ -15,7 +15,6 @@ import java.util.Map;
 
 import elvira.Bnet;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
@@ -109,13 +108,6 @@ public class BnetClusteredCF extends BnetCF2 {
 	public String getDescription() throws RemoteException {
 		// TODO Auto-generated method stub
 		return "Clustered Bayesian network collaborative filtering algorithm";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetClusteredCF();
 	}
 
 

@@ -1,9 +1,8 @@
 package net.hudup.alg.cf.test.itembased.temp;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 @Deprecated
 public class Amer2Smtp extends NeighborCFTwosCombinedItemBased implements ForTest {
@@ -42,18 +41,7 @@ public class Amer2Smtp extends NeighborCFTwosCombinedItemBased implements ForTes
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		Amer2Smtp cf = new Amer2Smtp();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, AMER2);
 		config.put(OTHER_MEASURE, SMTP);

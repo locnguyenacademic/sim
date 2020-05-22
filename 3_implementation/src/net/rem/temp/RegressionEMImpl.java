@@ -20,7 +20,6 @@ import java.util.List;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
@@ -756,17 +755,7 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		RegressionEMImpl em = new RegressionEMImpl();
-		em.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return em;
-	}
-
-	
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
 		config.put(REM_LOOP_BALANCE_MODE_FIELD, REM_LOOP_BALANCE_MODE_DEFAULT); //The new version of this REM algorithm uses one-loop balance.

@@ -10,7 +10,6 @@ package net.hudup.alg.cf;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.cf.NeighborCFItemBased;
@@ -132,18 +131,7 @@ public class NeighborCFExtItemBased extends NeighborCFExt implements Duplicatabl
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		NeighborCFExtItemBased cf = new NeighborCFExtItemBased();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;

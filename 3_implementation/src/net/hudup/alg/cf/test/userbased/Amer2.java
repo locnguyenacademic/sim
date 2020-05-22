@@ -1,9 +1,7 @@
 package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFExtUserBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.logistic.ForTest;
-import net.hudup.core.data.DataConfig;
 
 public class Amer2 extends NeighborCFExtUserBased implements ForTest {
 
@@ -37,16 +35,6 @@ public class Amer2 extends NeighborCFExtUserBased implements ForTest {
 			return name;
 		else
 			return "u09.01.amer2";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		Amer2 cf = new Amer2();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

@@ -10,8 +10,6 @@ package net.rem.temp;
 import java.rmi.RemoteException;
 
 import net.hudup.core.Constants;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.data.DataConfig;
 import net.rem.regression.em.DefaultMixtureREM;
 
 /**
@@ -77,17 +75,7 @@ public class DefaultMixtureREM2 extends DefaultMixtureREM {
 
 	
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		DefaultMixtureREM2 mixREM = new DefaultMixtureREM2();
-		mixREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return mixREM;
-	}
-
-	
-	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 

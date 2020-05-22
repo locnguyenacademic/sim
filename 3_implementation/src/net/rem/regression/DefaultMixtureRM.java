@@ -21,7 +21,6 @@ import java.util.List;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.ExecutableAlgAbstract;
 import net.hudup.core.alg.MemoryBasedAlg;
@@ -184,7 +183,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -345,14 +343,6 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		DefaultMixtureRM mixRegress = new DefaultMixtureRM();
-		mixRegress.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return mixRegress;
-	}
-
-	
 	@Override
 	public void setName(String name) {
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);

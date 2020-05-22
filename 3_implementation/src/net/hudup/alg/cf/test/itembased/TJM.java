@@ -1,9 +1,7 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.logistic.ForTest;
-import net.hudup.core.data.DataConfig;
 
 public class TJM extends NeighborCFExtItemBased implements ForTest {
 
@@ -37,16 +35,6 @@ public class TJM extends NeighborCFExtItemBased implements ForTest {
 			return name;
 		else
 			return "i17.02.tjm";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		TJM cf = new TJM();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

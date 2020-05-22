@@ -16,7 +16,6 @@ import java.util.Random;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.NoteAlg;
 import net.hudup.core.data.AttributeList;
@@ -612,14 +611,6 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 			return name;
 		else
 			return "mixrem";
-	}
-
-	
-	@Override
-	public Alg newInstance() {
-		DefaultMixtureREM mixREM = new DefaultMixtureREM();
-		mixREM.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return mixREM;
 	}
 
 	

@@ -14,7 +14,6 @@ import java.util.Set;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
@@ -75,13 +74,12 @@ public class Soco extends ExponentialEM {
 	 * Default constructor.
 	 */
 	public Soco() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public Object learnStart(Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		String mainUnit = config.getAsString(DataConfig.MAIN_UNIT);
 		boolean prepared = false;
 		if (mainUnit.equals(DataConfig.RATING_UNIT))
@@ -404,21 +402,12 @@ public class Soco extends ExponentialEM {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "soco";
 	}
 
 	
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new Soco();
-	}
-
-	
-	@Override
 	public synchronized Object execute(Object input) throws RemoteException {
-		// TODO Auto-generated method stub
 		List<Double> ids = DSUtil.toDoubleList(input, true);
 		if (ids.size() < 2)
 			return null;
@@ -429,21 +418,18 @@ public class Soco extends ExponentialEM {
 	
 	@Override
 	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Too large to show";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Soft cosine similarity with missing values, based on expectation-maximization (EM) algorithm";
 	}
 
 
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		if (!config.containsKey(DataConfig.MAIN_UNIT))
 			config.put(DataConfig.MAIN_UNIT, MAIN_UNIT_DEEFAULT);

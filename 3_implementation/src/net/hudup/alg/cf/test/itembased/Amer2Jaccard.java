@@ -1,7 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
@@ -37,16 +36,6 @@ public class Amer2Jaccard extends NeighborCFTwosCombinedItemBased implements For
 			return name;
 		else
 			return "i09.09.amer2_jaccard";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		Amer2Jaccard cf = new Amer2Jaccard();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

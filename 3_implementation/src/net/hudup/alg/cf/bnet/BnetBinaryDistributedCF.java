@@ -150,13 +150,6 @@ public class BnetBinaryDistributedCF extends BnetCFAbstract {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetBinaryDistributedCF();
-	}
-
-	
 }
 
 

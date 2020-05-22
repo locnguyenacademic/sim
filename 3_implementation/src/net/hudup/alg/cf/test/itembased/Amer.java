@@ -1,8 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
@@ -24,20 +22,18 @@ public class Amer extends NeighborCFExtItemBased implements ForTest {
 	 * Default constructor.
 	 */
 	public Amer() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	
 	@Override
 	public String getDefaultMeasure() {
-		// TODO Auto-generated method stub
 		return AMER;
 	}
 
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -46,14 +42,4 @@ public class Amer extends NeighborCFExtItemBased implements ForTest {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		Amer cf = new Amer();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-	
 }

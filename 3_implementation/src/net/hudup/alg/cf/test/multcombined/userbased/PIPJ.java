@@ -1,9 +1,8 @@
 package net.hudup.alg.cf.test.multcombined.userbased;
 
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 public class PIPJ extends NeighborCFTwosCombinedMultUserBased implements ForTest {
 
@@ -41,18 +40,7 @@ public class PIPJ extends NeighborCFTwosCombinedMultUserBased implements ForTest
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		PIPJ cf = new PIPJ();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, PIP);
 		config.put(OTHER_MEASURE, JACCARD);

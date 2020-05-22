@@ -1,9 +1,7 @@
 package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFExtUserBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.logistic.ForTest;
-import net.hudup.core.data.DataConfig;
 
 public class QTIJ extends NeighborCFExtUserBased implements ForTest {
 
@@ -37,16 +35,6 @@ public class QTIJ extends NeighborCFExtUserBased implements ForTest {
 			return name;
 		else
 			return "u12.02.qtij";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		QTIJ cf = new QTIJ();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

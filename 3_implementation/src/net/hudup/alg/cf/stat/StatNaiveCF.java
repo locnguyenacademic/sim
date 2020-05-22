@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Set;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.data.Rating;
 import net.hudup.core.data.RatingVector;
@@ -38,27 +37,23 @@ public class StatNaiveCF extends StatCF {
 	 */
 	public StatNaiveCF() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "stat_naive";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Naive statistical collaborative filtering algorithm";
 	}
 
 
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
 		
 		StatKB sKb = (StatKB)kb;
 		double overMean = sKb.generalStat.mean;
@@ -97,11 +92,4 @@ public class StatNaiveCF extends StatCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new StatNaiveCF();
-	}
-
-	
 }

@@ -469,7 +469,7 @@ public class REMInspector extends JDialog implements Inspector {
 		for (VarWrapper regressor : regressors) {
 			Vector<Object> rowData = new Vector<Object>();
 			rowData.add(regressor);
-			rowData.add(new Double(0));
+			rowData.add(Double.valueOf(0));
 			tbm.addRow(rowData);
 		}
 		this.tblRegression = new JTable(tbm);

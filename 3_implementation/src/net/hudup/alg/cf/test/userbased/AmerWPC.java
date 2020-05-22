@@ -1,9 +1,8 @@
 package net.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedUserBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.logistic.ForTest;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 public class AmerWPC extends NeighborCFTwosCombinedUserBased implements ForTest {
 
@@ -41,18 +40,7 @@ public class AmerWPC extends NeighborCFTwosCombinedUserBased implements ForTest 
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		AmerWPC cf = new AmerWPC();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, AMER);
 		config.put(OTHER_MEASURE, WPC);

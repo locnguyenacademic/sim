@@ -13,10 +13,8 @@ import java.util.Set;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.cf.NeighborCF2d;
-import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
@@ -47,13 +45,12 @@ public class NeighborCF3d extends NeighborCF2d {
 	 * Default constructor.
 	 */
 	public NeighborCF3d() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		// TODO Auto-generated method stub
 		/*
 		 * There are three cases of param.ratingVector:
 		 * 1. Its id is < 0, which indicates it is not stored in training dataset then, caching does not work even though this is cached algorithm.
@@ -176,7 +173,6 @@ public class NeighborCF3d extends NeighborCF2d {
 			itemRatings.close();
 		} 
 		catch (Throwable e) {
-			// TODO Auto-generated catch block
 			LogUtil.trace(e);
 		}
 		localUserSimCache.clear();
@@ -187,7 +183,6 @@ public class NeighborCF3d extends NeighborCF2d {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -198,26 +193,14 @@ public class NeighborCF3d extends NeighborCF2d {
 
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Three-dimension nearest neighbors collaborative filtering algorithm";
 	}
 
 
 	@Override
 	public Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return EvaluateGUI.createInspector(this);
 	}
 
 	
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		NeighborCF3d cf = new NeighborCF3d();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
 }

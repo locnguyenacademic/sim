@@ -115,22 +115,13 @@ public class BnetDistributedCF extends BnetCFAbstract {
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetDistributedCF();
-	}
-
-	
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "bayesnet_distributed";
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "Distributed Bayesian network collaborative filtering algorithm";
 	}
 

@@ -10,7 +10,6 @@ package net.hudup.alg.cf.bnet;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.KBase;
 import net.hudup.core.data.Pair;
 import net.hudup.core.data.Profile;
@@ -74,13 +73,6 @@ public class BnetBinaryDistributedHybridCF extends BnetBinaryDistributedExtCF {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		return new BnetBinaryDistributedHybridCF();
-	}
-	
-	
 }
 
 

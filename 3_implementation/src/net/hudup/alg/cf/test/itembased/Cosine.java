@@ -1,8 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 public class Cosine extends NeighborCFExtItemBased implements ForTest {
@@ -31,7 +29,6 @@ public class Cosine extends NeighborCFExtItemBased implements ForTest {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -40,14 +37,4 @@ public class Cosine extends NeighborCFExtItemBased implements ForTest {
 	}
 
 
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		Cosine cf = new Cosine();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-	
 }

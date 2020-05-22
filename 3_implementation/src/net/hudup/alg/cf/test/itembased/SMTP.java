@@ -1,9 +1,7 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFExtItemBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.logistic.ForTest;
-import net.hudup.core.data.DataConfig;
 
 public class SMTP extends NeighborCFExtItemBased implements ForTest {
 
@@ -37,16 +35,6 @@ public class SMTP extends NeighborCFExtItemBased implements ForTest {
 			return name;
 		else
 			return "i07.01.smtp";
-	}
-
-
-	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		SMTP cf = new SMTP();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
 	}
 
 

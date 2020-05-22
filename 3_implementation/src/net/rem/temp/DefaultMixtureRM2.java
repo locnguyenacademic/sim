@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.hudup.core.Util;
-import net.hudup.core.alg.Alg;
-import net.hudup.core.data.DataConfig;
 import net.rem.regression.DefaultMixtureRM;
 import net.rem.regression.em.DefaultMixtureREM;
 import net.rem.regression.em.ExchangedParameter;
@@ -137,17 +135,7 @@ public class DefaultMixtureRM2 extends DefaultMixtureRM {
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		DefaultMixtureRM2 mixRegress = new DefaultMixtureRM2();
-		mixRegress.getConfig().putAll((DataConfig)this.getConfig().clone());
-		return mixRegress;
-	}
-
-	
-	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 

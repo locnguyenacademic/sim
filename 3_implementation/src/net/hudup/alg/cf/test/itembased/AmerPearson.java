@@ -1,7 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
-import net.hudup.core.alg.Alg;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
@@ -41,18 +40,7 @@ public class AmerPearson extends NeighborCFTwosCombinedItemBased implements ForT
 
 
 	@Override
-	public Alg newInstance() {
-		// TODO Auto-generated method stub
-		AmerPearson cf = new AmerPearson();
-		cf.getConfig().putAll((DataConfig)this.getConfig().clone());
-		
-		return cf;
-	}
-
-
-	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, AMER);
 		config.put(OTHER_MEASURE, PEARSON);
