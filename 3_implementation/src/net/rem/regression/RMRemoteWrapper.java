@@ -38,14 +38,6 @@ public class RMRemoteWrapper extends ExecutableAlgRemoteWrapper implements RM, R
 	private static final long serialVersionUID = 1L;
 
 	
-    /**
-     * Default constructor.
-     */
-    public RMRemoteWrapper() {
-
-    }
-
-    
 	/**
 	 * Constructor with specified remote regression model.
 	 * @param remoteRM specified remote regression model.
