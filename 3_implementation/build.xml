@@ -269,7 +269,7 @@
 		classpath="${launch4j.home.unix}/launch4j.jar:${launch4j.home.win}/lib/xstream.jar"/>
 
 	<target name="setup-launcher" depends="compile" description="Create framework setup launcher">
-		<property name="product.zip" value="${product}-${version}-jre${java.version}.zip"/>
+		<property name="product.zip" value="${product}-${version}-windows-jre${java.version}.zip"/>
 
 		<mkdir dir="${archive.home}"/>
 		<delete quiet="true" includeEmptyDirs="true">
