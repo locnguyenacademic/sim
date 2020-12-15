@@ -124,6 +124,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
+		config.put(NeighborCFUserBased.KNN, NeighborCFUserBased.KNN_DEFAULT);
 		config.addReadOnly(DUPLICATED_ALG_NAME_FIELD);
 		return config;
 	}
