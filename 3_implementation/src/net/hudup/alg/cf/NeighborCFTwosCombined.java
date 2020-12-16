@@ -110,14 +110,12 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	 * Default constructor.
 	 */
 	public NeighborCFTwosCombined() {
-		// TODO Auto-generated constructor stub
 		this.dualCF.setConfig(this.getConfig());
 	}
 
 	
 	@Override
 	public synchronized void setup(Dataset dataset, Object...params) throws RemoteException {
-		// TODO Auto-generated method stub
 		super.setup(dataset, params);
 		this.dualCF.setup(dataset, params);
 	}
@@ -125,7 +123,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 
 	@Override
 	public synchronized void unsetup() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.unsetup();
 		this.dualCF.unsetup();
 	}
@@ -155,7 +152,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	
 	@Override
 	public boolean requireDiscreteRatingBins() {
-		// TODO Auto-generated method stub
 		return requireDiscreteRatingBins(getMeasure())
 				|| requireDiscreteRatingBins(getOtherSimilarMeasure());
 	}
@@ -166,7 +162,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	 * @return list of supported combined types.
 	 */
 	public List<Integer> getSupportedCombinedTypes() {
-		// TODO Auto-generated method stub
 		Set<Integer> ctSet = Util.newSet();
 		ctSet.add(COMBINED_TYPE_ADD);
 		ctSet.add(COMBINED_TYPE_MULTIPLY);
@@ -180,7 +175,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object...params) {
-		// TODO Auto-generated method stub
 		double similar = super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 		String otherMeasure = config.getAsString(OTHER_MEASURE);
 		if (otherMeasure == null) return similar;
@@ -241,7 +235,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig tempConfig = super.createDefaultConfig();
 		tempConfig.put(MEASURE, AMER);
 		tempConfig.put(COMBINED_WEIGHT1_FIELD, COMBINED_WEIGHT1_DEFAULT);
@@ -259,7 +252,6 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 
 			@Override
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
-				// TODO Auto-generated method stub
 				if (key.equals(OTHER_MEASURE)) {
 					String measure = getAsString(OTHER_MEASURE);
 					measure = measure == null ? getDefaultMeasure() : measure;
@@ -269,7 +261,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 							"Choosing similar measure", 
 							JOptionPane.INFORMATION_MESSAGE, 
 							null, 
-							getSupportedMeasures().toArray(), 
+							getMainMeasures().toArray(), 
 							measure);
 				}
 				else if (key.equals(COMBINED_TYPE_FIELD)) {

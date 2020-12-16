@@ -46,14 +46,12 @@ public abstract class WaspWaistCF extends NeighborCFExt {
 	 * Default constructor.
 	 */
 	public WaspWaistCF() {
-		// TODO Auto-generated constructor stub
 		this.dualCF.setConfig(this.getConfig());
 	}
 
 
 	@Override
 	public synchronized void setup(Dataset dataset, Object...params) throws RemoteException {
-		// TODO Auto-generated method stub
 		super.setup(dataset, params);
 		this.columnCrushedCache.clear();
 		this.dualCF.setup(dataset, params);
@@ -62,7 +60,6 @@ public abstract class WaspWaistCF extends NeighborCFExt {
 
 	@Override
 	public synchronized void unsetup() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.unsetup();
 		this.columnCrushedCache.clear();
 		this.dualCF.unsetup();

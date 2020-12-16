@@ -285,13 +285,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * Default constructor.
 	 */
 	public NeighborCFExt() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 
 	@Override
 	public synchronized void setup(Dataset dataset, Object...params) throws RemoteException {
-		// TODO Auto-generated method stub
 		super.setup(dataset, params);
 		
 		this.valueBins = extractConfigValueBins();
@@ -303,7 +302,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	@Override
 	public synchronized void unsetup() throws RemoteException {
-		// TODO Auto-generated method stub
 		super.unsetup();
 		
 		this.rankBins.clear();
@@ -314,28 +312,39 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 
 	@Override
-	public List<String> getSupportedMeasures() {
-		// TODO Auto-generated method stub
-		List<String> measures = super.getSupportedMeasures();
+	public List<String> getAllMeasures() {
+		Set<String> mSet = Util.newSet();
+		mSet.addAll(getMainMeasures());
+		mSet.add(NHSM);
+		mSet.add(BCFJ);
+		mSet.add(CJACMD);
+		mSet.add(AMER2J);
+		mSet.add(QUASI_TFIDF_JACCARD);
+		mSet.add(TAJ);
+		
+		List<String> measures = Util.newList();
+		measures.addAll(mSet);
+		Collections.sort(measures);
+		return measures;
+	}
+	
+	
+	@Override
+	public List<String> getMainMeasures() {
+		List<String> measures = super.getMainMeasures();
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(measures);
 		mSet.add(PSS);
-//		mSet.add(NHSM);
 		mSet.add(BCF);
-//		mSet.add(BCFJ);
 		mSet.add(SRC);
 		mSet.add(PIP);
 		mSet.add(PC);
 		mSet.add(MMD);
-//		mSet.add(CJACMD);
 		mSet.add(SMTP);
 		mSet.add(AMER);
 		mSet.add(AMER2);
-//		mSet.add(AMER2J);
 		mSet.add(QUASI_TFIDF);
-//		mSet.add(QUASI_TFIDF_JACCARD);
 		mSet.add(TA);
-//		mSet.add(TAJ);
 		mSet.add(COCO);
 		mSet.add(NNMS);
 		mSet.add(IJ);
@@ -373,7 +382,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	@Override
 	protected boolean isCachedSim() {
-		// TODO Auto-generated method stub
 		String measure = getMeasure();
 		if (measure == null)
 			return false;
@@ -386,7 +394,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object...params) {
-		// TODO Auto-generated method stub
 		if (measure.equals(PSS))
 			return pss(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(NHSM))
@@ -1766,81 +1773,14 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 
 	
-//	/**
-//	 * Computing similarity matrix.
-//	 * @param cf referred neighbor collaborative filtering.
-//	 * @param vFetcher fetcher of ratings.
-//	 * @return similarity matrix.
-//	 */
-//	protected static Map<Integer, Map<Integer, Double>> computeSimMatrix(NeighborCF cf, Fetcher<RatingVector> vFetcher) {
-//		if (vFetcher == null) return Util.newMap();
-//		int size = -1;
-//		try {
-//			size = vFetcher.getMetadata().getSize();
-//		}
-//		catch (Throwable e) {
-//			LogUtil.trace(e);
-//			size = -1;
-//		}
-//		List<RatingVector> vRatings = size <= 0 ? Util.newList() : Util.newList(size);
-//		FetcherUtil.fillCollection(vRatings, vFetcher, false);
-//		try {
-//			vFetcher.reset();
-//		}
-//		catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			LogUtil.trace(e);
-//		}
-//		if (vRatings.size() < 2) return Util.newMap();
-//		
-//		int n = vRatings.size();
-//		Map<Integer, Map<Integer, Double>> simMatrix = Util.newMap(n);
-//		for (int i = 0; i < n; i++) {
-//			RatingVector v1 = vRatings.get(i);
-//			if (v1 == null || v1.size() == 0) continue;
-//			
-//			for (int j = i; j < n; j++) {
-//				RatingVector v2 = vRatings.get(j);
-//				if (v2 == null || v2.size() == 0) continue;
-//				
-//				double sim = cf.similar(v1, v2, null, null);
-//				if (!Util.isUsed(sim)) continue;
-//				
-//				if (simMatrix.containsKey(v1.id()))
-//					simMatrix.get(v1.id()).put(v2.id(), sim);
-//				else {
-//					Map<Integer, Double> map = Util.newMap(n);
-//					simMatrix.put(v1.id(), map);
-//					map.put(v2.id(), sim);
-//				}
-//				
-//				if (i != j) {
-//					if (simMatrix.containsKey(v2.id()))
-//						simMatrix.get(v2.id()).put(v1.id(), sim);
-//					else {
-//						Map<Integer, Double> map = Util.newMap(n);
-//						simMatrix.put(v2.id(), map);
-//						map.put(v1.id(), sim);
-//					}
-//				}
-//			}
-//		}
-//		
-//		vRatings.clear();
-//		return simMatrix;
-//	}
-
-	
 	@Override
 	public Inspector getInspector() {
-		// TODO Auto-generated method stub
 		return EvaluateGUI.createInspector(this);
 	}
 
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
 		config.put(VALUE_BINS_FIELD, VALUE_BINS_DEFAULT);
 		config.put(BCF_MEDIAN_MODE_FIELD, BCF_MEDIAN_MODE_DEFAULT);
