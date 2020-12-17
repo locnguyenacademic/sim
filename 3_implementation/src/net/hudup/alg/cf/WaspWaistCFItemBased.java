@@ -49,19 +49,14 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 	
 	@Override
 	public RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		/*
-		 * There are three cases of param.ratingVector:
-		 * 1. Its id is < 0, which indicates it is not stored in training dataset then, caching does not work even though this is cached algorithm.
-		 * 2. Its id is >= 0 and, it must be empty or the same to the existing one in training dataset. If it is empty, it will be fulfilled as the same to the existing one in training dataset.
-		 * 3. Its id is >= 0 but, it is not stored in training dataset then, it must be a full rating vector of a user.
-		 */
 		if (param.ratingVector == null) return null;
 		
 		RatingVector result = param.ratingVector.newInstance(true);
 		boolean hybrid = config.getAsBoolean(HYBRID);
 		RatingVector thisUser = param.ratingVector;
-		double minValue = config.getMinRating();
-		double maxValue = config.getMaxRating();
+		double minValue = getMinRating();
+		double maxValue = getMaxRating();
+		boolean isUsedMinMax = isUsedMinMaxRating();; 
 		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
 		RatingVector crushedUser = crush(thisUser.id(), thisUser);
 		for (int itemId : queryIds) {
@@ -107,8 +102,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 					double sim = sim(thisItem, thatItem, thisItemProfile, thatItemProfile, thisUser.id());
 					if (!Util.isUsed(sim)) continue;
 					
-					double thatMean = thatItem.mean();
-					double deviate = thatValue - thatMean;
+					double deviate = thatValue - thatItem.mean();
 					accum += sim * deviate;
 					simTotal += Math.abs(sim);
 					
@@ -122,9 +116,8 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 			if (!calculated) continue;
 			
 			double value = simTotal == 0 ? thisMean : thisMean + accum / simTotal;
-			value = (Util.isUsed(maxValue)) && (!Double.isNaN(maxValue)) ? Math.min(value, maxValue) : value;
-			value = (Util.isUsed(minValue)) && (!Double.isNaN(minValue)) ? Math.max(value, minValue) : value;
-
+			value = isUsedMinMax ? Math.min(value, maxValue) : value;
+			value = isUsedMinMax ? Math.max(value, minValue) : value;
 			result.put(itemId, value);
 		}
 		
@@ -181,8 +174,9 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 		
 		if (simList.size() == 0) return result;
 		
-		double minValue = config.getMinRating();
-		double maxValue = config.getMaxRating();
+		double minValue = getMinRating();
+		double maxValue = getMaxRating();
+		boolean isUsedMinMax = isUsedMinMaxRating(); 
 		double thisMean = thisUser.mean();
 		Set<Integer> itemIds = Util.newSet();
 		itemIds.addAll(this.itemIds);
@@ -206,9 +200,8 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 			if (!calculated) continue;
 			
 			double value = simTotal == 0 ? thisMean : thisMean + accum / simTotal;
-			value = (Util.isUsed(maxValue)) && (!Double.isNaN(maxValue)) ? Math.min(value, maxValue) : value;
-			value = (Util.isUsed(minValue)) && (!Double.isNaN(minValue)) ? Math.max(value, minValue) : value;
-			
+			value = isUsedMinMax ? Math.min(value, maxValue) : value;
+			value = isUsedMinMax ? Math.max(value, minValue) : value;
 			result.put(itemId, value);
 		}
 		

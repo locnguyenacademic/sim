@@ -24,7 +24,7 @@ import net.hudup.core.logistic.LogUtil;
 import net.hudup.evaluate.ui.EvaluateGUI;
 
 /**
- * This class sets up an advanced version of 3-dimensional neighbor collaborative filtering (Neighbor CF) algorithm.
+ * This class sets up an advanced version of 3-dimensional nearest neighbors collaborative filtering algorithm.
  * Note that similarity for this algorithm must be normalized in interval [0, 1].
  * 
  * @author Loc Nguyen
@@ -51,12 +51,6 @@ public class NeighborCF3d extends NeighborCF2d {
 	
 	@Override
 	public synchronized RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		/*
-		 * There are three cases of param.ratingVector:
-		 * 1. Its id is < 0, which indicates it is not stored in training dataset then, caching does not work even though this is cached algorithm.
-		 * 2. Its id is >= 0 and, it must be empty or the same to the existing one in training dataset. If it is empty, it will be fulfilled as the same to the existing one in training dataset.
-		 * 3. Its id is >= 0 but, it is not stored in training dataset then, it must be a full rating vector of a user.
-		 */
 		if (param.ratingVector == null) return null;
 		
 		RatingVector thisUser = param.ratingVector;
@@ -75,8 +69,9 @@ public class NeighborCF3d extends NeighborCF2d {
 		RatingVector result = thisUser.newInstance(true);
 		boolean hybrid = config.getAsBoolean(HYBRID);
 		Profile thisUserProfile = hybrid ? param.profile : null;
-		double minValue = config.getMinRating();
-		double maxValue = config.getMaxRating();
+		double minValue = getMinRating();
+		double maxValue = getMaxRating();
+		boolean isUsedMinMax = isUsedMinMaxRating(); 
 		Map<Integer, Double> localUserSimCache = Util.newMap();
 		Fetcher<RatingVector> userRatings = dataset.fetchUserRatings();
 		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
@@ -111,8 +106,7 @@ public class NeighborCF3d extends NeighborCF2d {
 							userSim = sim(thisUser, thatUser, thisUserProfile, thatUserProfile, itemId);
 						
 						if (Util.isUsed(userSim)) {
-							double thatUserValue = thatUser.get(itemId).value;
-							accum += userSim * thatUserValue;
+							accum += userSim * thatUser.get(itemId).value;
 							simTotal += Math.abs(userSim);
 						}
 					}
@@ -163,8 +157,8 @@ public class NeighborCF3d extends NeighborCF2d {
 			if (simTotal == 0) continue;
 			
 			double value = accum / simTotal;
-			value = (Util.isUsed(maxValue)) && (!Double.isNaN(maxValue)) ? Math.min(value, maxValue) : value;
-			value = (Util.isUsed(minValue)) && (!Double.isNaN(minValue)) ? Math.max(value, minValue) : value;
+			value = isUsedMinMax ? Math.min(value, maxValue) : value;
+			value = isUsedMinMax ? Math.max(value, minValue) : value;
 			result.put(itemId, value);
 		}
 		

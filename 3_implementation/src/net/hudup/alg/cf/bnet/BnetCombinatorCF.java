@@ -130,7 +130,7 @@ public class BnetCombinatorCF extends CompositeRecommenderAbstract {
 				queryIds.add(itemId);
 		}
 		
-		double avgRating = (config.getMaxRating() + config.getMinRating()) / 2.0; 
+		double avgRating = (getMaxRating() + getMinRating()) / 2.0; 
 		List<ValueTriple> triples = estimate(param, queryIds, avgRating, new RatingFilter() {
 
 			@Override

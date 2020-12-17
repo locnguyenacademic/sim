@@ -24,7 +24,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This abstract class implements basically the combined collaborative filtering algorithm that combines two measures.<br>
+ * This abstract class implements basically the combined nearest neighbors collaborative filtering algorithm that combines two measures.<br>
  * Author Ali Amer proposed such combination.
  * 
  * @author Ali Amer

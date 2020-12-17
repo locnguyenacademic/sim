@@ -18,7 +18,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This class sets up an advanced version of user-based neighbor collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
  * <br>
  * There are many authors who contributed measure to this class.<br>
  * Authors Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu contributed PSS measures and NHSM measure.<br>

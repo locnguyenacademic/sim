@@ -62,7 +62,7 @@ public class BnetDistributedCF extends BnetCFAbstract {
 		List<ValueTriple> result = Util.newList();
 		
 		BnetDistributedKB bdKb = (BnetDistributedKB)kb;
-		double minRating = config.getMinRating();
+		double minRating = getMinRating();
 		
 		for (int queryId : queryIds) {
 			Bnet bnet = bdKb.getBnet(queryId);

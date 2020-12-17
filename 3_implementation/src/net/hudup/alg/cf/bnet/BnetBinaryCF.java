@@ -91,8 +91,8 @@ public class BnetBinaryCF extends BnetCF2 {
 		itemIdSet.addAll(queryIds);
 		
 		BnetBinaryKB bbKb = (BnetBinaryKB)kb;
-		int minRating = (int) (config.getMinRating() + 0.5f);
-		int maxRating = (int) (config.getMaxRating() + 0.5f);
+		int minRating = (int) (getMinRating() + 0.5f);
+		int maxRating = (int) (getMaxRating() + 0.5f);
 		Map<Integer, Pair> bitItemMap = bbKb.bitItemMap;
 		Set<Integer> bitItemIdSet = Util.newSet();
 		for (int itemId : itemIdSet) {

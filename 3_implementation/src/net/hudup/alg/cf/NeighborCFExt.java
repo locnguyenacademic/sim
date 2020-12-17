@@ -30,7 +30,7 @@ import net.hudup.data.DocumentVector;
 import net.hudup.evaluate.ui.EvaluateGUI;
 
 /**
- * This class sets up an advanced version of neighbor collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an advanced version of nearest neighbors collaborative filtering algorithm with more similarity measures.
  * <br>
  * There are many authors who contributed measure to this class.<br>
  * Authors Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu contributed PSS measures and NHSM measure.<br>
@@ -734,7 +734,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			boolean agreed = agree(r1, r2);
 			
 			double d = agreed ? Math.abs(r1-r2) : 2*Math.abs(r1-r2);
-			double pro = (2*(config.getMaxRating()-config.getMinRating())+1) - d;
+			double pro = (2*(getMaxRating()-getMinRating())+1) - d;
 			pro = pro*pro;
 			
 			double impact = (Math.abs(r1-ratingMedian)+1) * (Math.abs(r2-ratingMedian)+1);
@@ -1208,11 +1208,11 @@ public abstract class NeighborCFExt extends NeighborCF {
 		
 		Vector2 v1 = new Vector2(common.size(), 0);
 		Vector2 v2 = new Vector2(common.size(), 0);
-		boolean normalized = getConfig().getAsBoolean(TA_NORMALIZED_FIELD);
+		boolean normalized = getConfig().getAsBoolean(TA_NORMALIZED_FIELD) && Util.isUsed(ratingMedian);
 		if (normalized) {//Normalized mode
 			for (int id : common) {
-				v1.add(vRating1.get(id).value - this.ratingMedian);
-				v2.add(vRating2.get(id).value - this.ratingMedian);
+				v1.add(vRating1.get(id).value - ratingMedian);
+				v2.add(vRating2.get(id).value - ratingMedian);
 			}
 		}
 		else {

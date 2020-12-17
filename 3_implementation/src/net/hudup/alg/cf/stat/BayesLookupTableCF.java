@@ -113,7 +113,7 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 				queryIds.add(itemId);
 		}
 		
-		double maxRating = config.getMaxRating();
+		double maxRating = getMaxRating();
 		int userId = param.ratingVector.id();
 		
 		List<Pair> pairs = Util.newList();
@@ -186,7 +186,7 @@ public class BayesLookupTableCF extends ModelBasedCFAbstract {
 //				queryIds.add(itemId);
 //		}
 //		
-//		double maxRating = config.getMaxRating();
+//		double maxRating = getMaxRating();
 //		int userId = param.ratingVector.id();
 //		
 //		List<Pair> pairs = Util.newList();
