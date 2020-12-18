@@ -56,7 +56,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 		RatingVector thisUser = param.ratingVector;
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
-		boolean isUsedMinMax = isUsedMinMaxRating();; 
+		boolean isBoundedMinMax = isBoundedMinMaxRating();; 
 		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
 		RatingVector crushedUser = crush(thisUser.id(), thisUser);
 		for (int itemId : queryIds) {
@@ -116,8 +116,8 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 			if (!calculated) continue;
 			
 			double value = simTotal == 0 ? thisMean : thisMean + accum / simTotal;
-			value = isUsedMinMax ? Math.min(value, maxValue) : value;
-			value = isUsedMinMax ? Math.max(value, minValue) : value;
+			value = isBoundedMinMax ? Math.min(value, maxValue) : value;
+			value = isBoundedMinMax ? Math.max(value, minValue) : value;
 			result.put(itemId, value);
 		}
 		
@@ -176,7 +176,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 		
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
-		boolean isUsedMinMax = isUsedMinMaxRating(); 
+		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
 		double thisMean = thisUser.mean();
 		Set<Integer> itemIds = Util.newSet();
 		itemIds.addAll(this.itemIds);
@@ -200,8 +200,8 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 			if (!calculated) continue;
 			
 			double value = simTotal == 0 ? thisMean : thisMean + accum / simTotal;
-			value = isUsedMinMax ? Math.min(value, maxValue) : value;
-			value = isUsedMinMax ? Math.max(value, minValue) : value;
+			value = isBoundedMinMax ? Math.min(value, maxValue) : value;
+			value = isBoundedMinMax ? Math.max(value, minValue) : value;
 			result.put(itemId, value);
 		}
 		
