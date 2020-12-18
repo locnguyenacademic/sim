@@ -488,7 +488,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			//Moreover, in fact, general user mean is equal to general item mean.
 			//However, I still use rating median because of respecting authors' ideas.
 			double sig = 1.0 / (1.0 + Math.exp(
-					-Math.abs(r1-ratingMedian)*Math.abs(r2-ratingMedian)));
+					-Math.abs(r1-this.ratingMedian)*Math.abs(r2-this.ratingMedian)));
 			double singular = 1.0 - 1.0 / (1.0 + Math.exp(-Math.abs((r1+r2)/2.0 - fieldMeans.get(id))));
 			
 			pss += pro * sig * singular;
@@ -737,7 +737,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			double pro = (2*(getMaxRating()-getMinRating())+1) - d;
 			pro = pro*pro;
 			
-			double impact = (Math.abs(r1-ratingMedian)+1) * (Math.abs(r2-ratingMedian)+1);
+			double impact = (Math.abs(r1-this.ratingMedian)+1) * (Math.abs(r2-this.ratingMedian)+1);
 			if (!agreed)
 				impact = 1 / impact;
 			
@@ -1208,11 +1208,11 @@ public abstract class NeighborCFExt extends NeighborCF {
 		
 		Vector2 v1 = new Vector2(common.size(), 0);
 		Vector2 v2 = new Vector2(common.size(), 0);
-		boolean normalized = getConfig().getAsBoolean(TA_NORMALIZED_FIELD) && Util.isUsed(ratingMedian);
+		boolean normalized = getConfig().getAsBoolean(TA_NORMALIZED_FIELD);
 		if (normalized) {//Normalized mode
 			for (int id : common) {
-				v1.add(vRating1.get(id).value - ratingMedian);
-				v2.add(vRating2.get(id).value - ratingMedian);
+				v1.add(vRating1.get(id).value - this.ratingMedian);
+				v2.add(vRating2.get(id).value - this.ratingMedian);
 			}
 		}
 		else {
@@ -1468,9 +1468,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 			if (vRating1.isRated(id) && vRating2.isRated(id)) {
 				double v1 = vRating1.get(id).value;
 				double v2 = vRating2.get(id).value;
-				if (Accuracy.isRelevant(v1, ratingMedian) && Accuracy.isRelevant(v2, ratingMedian))
+				if (Accuracy.isRelevant(v1, this.ratingMedian) && Accuracy.isRelevant(v2, this.ratingMedian))
 					PA.add(id);
-				else if ((!Accuracy.isRelevant(v1, ratingMedian)) && (!Accuracy.isRelevant(v2, ratingMedian)))
+				else if ((!Accuracy.isRelevant(v1, this.ratingMedian)) && (!Accuracy.isRelevant(v2, this.ratingMedian)))
 					NA.add(id);
 				else
 					D.add(id);
@@ -1479,13 +1479,13 @@ public abstract class NeighborCFExt extends NeighborCF {
 				double v1 = vRating1.isRated(id) ? vRating1.get(id).value : Constants.UNUSED;
 				double v2 = vRating2.isRated(id) ? vRating2.get(id).value : Constants.UNUSED;
 				if (Util.isUsed(v1)) {
-					if (Accuracy.isRelevant(v1, ratingMedian))
+					if (Accuracy.isRelevant(v1, this.ratingMedian))
 						PO.add(id);
 					else
 						NO.add(id);
 				}
 				else if (Util.isUsed(v2)) {
-					if (Accuracy.isRelevant(v2, ratingMedian))
+					if (Accuracy.isRelevant(v2, this.ratingMedian))
 						PO.add(id);
 					else
 						NO.add(id);
