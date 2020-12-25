@@ -16,6 +16,7 @@ import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.DatasetUtil;
 import net.hudup.core.data.Exportable;
+import net.hudup.core.data.Simplify;
 import net.hudup.core.logistic.LogUtil;
 
 /**
@@ -25,7 +26,7 @@ import net.hudup.core.logistic.LogUtil;
  * @version 1.0
  *
  */
-public class EMLearningEvent extends SetupAlgEvent {
+public class EMLearningEvent extends SetupAlgEvent implements Simplify {
 
 	
 	/**
@@ -123,6 +124,7 @@ public class EMLearningEvent extends SetupAlgEvent {
 				stub = ((Exportable)dataset).getExportedStub();
 			} catch (Exception e) {LogUtil.trace(e);}
 			
+			//It assures that only light remote dataset is transferred via network.
 			if (stub != null) evt.trainingDataset = this.trainingDataset;
 		}
 		
@@ -209,4 +211,21 @@ public class EMLearningEvent extends SetupAlgEvent {
 	}
 	
 	
+	@Override
+	public Object simplify() throws Exception {
+		Dataset trainingDataset = DatasetUtil.getMostInnerDataset2(this.trainingDataset);
+		if ((trainingDataset == null) && (this.trainingDataset instanceof Dataset))
+			trainingDataset = (Dataset)this.trainingDataset;
+		
+		SetupAlgEvent evt = new SetupAlgEvent(
+			Integer.valueOf(0), this.type, this.algName,
+			this.trainingDatasetId,
+			trainingDataset,
+			this.setupResult != null ? this.setupResult.toString() : "",
+			this.progressStep, progressTotalEstimated);
+		
+		return evt;
+	}
+
+
 }

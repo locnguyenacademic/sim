@@ -16,7 +16,7 @@ import java.util.Set;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.KBaseAbstract;
+import net.hudup.core.alg.KBaseRecommend;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Rating;
@@ -32,7 +32,7 @@ import net.hudup.core.logistic.NextUpdate;
  *
  */
 @NextUpdate
-public abstract class BayesLookupTableKB extends KBaseAbstract {
+public abstract class BayesLookupTableKB extends KBaseRecommend {
 
 	
 	/**
@@ -70,16 +70,10 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 	 */
 	public BayesLookupTableKB() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	
-	/**
-	 * Estimating rating value given specified user identifier and item identifier.
-	 * @param userId specified user identifier (user ID).
-	 * @param itemId specified item identifier (item ID).
-	 * @return estimated rating value.
-	 */
+	@Override
 	public double estimate(int userId, int itemId) {
 		if (!parameters.containsKey(userId))
 			return Constants.UNUSED;
@@ -113,10 +107,7 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 	}
 
 	
-	/**
-	 * Getting item identifiers.
-	 * @return list of item id (s).
-	 */
+	@Override
 	public List<Integer> getItemIds() {
 		return itemIds;
 	}
@@ -124,7 +115,6 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 	
 	@Override
 	public void learn(Dataset dataset, Alg alg) throws RemoteException {
-		// TODO Auto-generated method stub
 		super.learn(dataset, alg);
 		
 		destroyDataStructure();
@@ -160,7 +150,6 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 				userRatings.close();
 			} 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				LogUtil.trace(e);
 			}
 		}
@@ -227,7 +216,6 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 				userRatings.close();
 			} 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				LogUtil.trace(e);
 			}
 		}
@@ -300,7 +288,6 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 				itemRatings.close();
 			} 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				LogUtil.trace(e);
 			}
 		}
@@ -407,14 +394,12 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 
 	@Override
 	public boolean isEmpty() throws RemoteException {
-		// TODO Auto-generated method stub
 		return parameters.size() == 0;
 	}
 
 
 	@Override
 	public void close() throws Exception {
-		// TODO Auto-generated method stub
 		super.close();
 		destroyDataStructure();
 	}
@@ -445,7 +430,6 @@ public abstract class BayesLookupTableKB extends KBaseAbstract {
 
 			@Override
 			public String getName() {
-				// TODO Auto-generated method stub
 				return cf.getName();
 			}
 		};
