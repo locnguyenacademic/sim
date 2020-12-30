@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.multcombined.userbased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
@@ -24,7 +25,7 @@ public class CosineS extends NeighborCFTwosCombinedMultUserBased implements ForT
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return COSINE;
+		return Measure.COSINE;
 	}
 
 	
@@ -42,8 +43,8 @@ public class CosineS extends NeighborCFTwosCombinedMultUserBased implements ForT
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, COSINE);
-		config.put(OTHER_MEASURE, AMER);
+		config.put(MEASURE, Measure.COSINE);
+		config.put(OTHER_MEASURE, Measure.SMD);
 		
 		return config;
 	}

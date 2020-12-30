@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.userbased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.NeighborCFExtUserBased;
 import net.hudup.core.logistic.ForTest;
 
@@ -22,7 +23,7 @@ public class SPC extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return SPC;
+		return Measure.SPC;
 	}
 
 	

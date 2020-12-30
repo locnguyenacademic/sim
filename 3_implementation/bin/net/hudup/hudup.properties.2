@@ -15,12 +15,15 @@ additional_packages=net.bayescf, net.rem, net.temp
 
 #If flag is true, the framework supports compressed file (zip, jar) as storage.
 #Currently, Hudup used TrueZip (https://christian-schlichtherle.bitbucket.io/truezip) developed by Christian Schlichtherle to process compressed files.
-#When this flag is false, TrueZip is not used.
-#compressed_file_support=true
+#When this flag is false, TrueZip is not used. It is more stable if setting this flag to be false. 
+#compressed_file_support=false
+compressed_file_support=true
 
 #Setting debug mode. If this flag is true, Hudup framework runs in debug mode in which thrown exceptions are printed traced, for example.
-#Otherwise, only error meassages are printed in console.
+#Otherwise, thrown exceptions are not traced and so only error meassages are printed.
+#It is faster if setting this flag to be false.
 #debug=false
+debug=true
 
 #Global address is often static internet address or WAN address. When deploying Hudup on WAN or internet, global address must be set.
 #global_address=hudup.locnguyen.net
@@ -32,15 +35,15 @@ additional_packages=net.bayescf, net.rem, net.temp
 #Plug-in manager.
 plugin_manager=net.hudup.SimFirer
 
-#Setting pull mode requirement. If this property is true, connection to server must be in pull mode to prevent server from unexpected deadlock.
-#require_pull_mode=false
+#Setting pull mode advice. If this property is true, connection to server is advised to be in pull mode to prevent server from unexpected deadlock.
+#It is better if setting this flag to be true.
+#pull_mode_advice=true
+pull_mode_advice=false
 
-#If flag is true, server is responsible for purging disconnected listeners. Otherwise, each evaluator or service is responsible for purging disconnected listeners.
-#server_purge_listeners=true
-
-#If flag is true, server has UI. Otherwise, server has no UI.
+#If flag is true, server has UI. Otherwise, server has no UI, in this case, server is automatically set up at the first time running.
 #server_ui=true
 
 #Try to use random port if the default port was in used. Value here is true, which means that ports are flexible.
+#It is better if setting this flag to be false.
+#try_random_port=false
 try_random_port=true
-

@@ -378,14 +378,14 @@ public class DocumentVector extends Profile {
 	
 	
 //	/**
-//	 * Computing Amer measure with other document. Amer measure is developed by Ali Amer, and implemented by Loc Nguyen.
+//	 * Computing SMD measure with other document. SMD measure is developed by Ali Amer, and implemented by Loc Nguyen.
 //	 * @param other other document vector.
 //	 * @param binThreshold binary threshold.
 //	 * @param N the number of common fields.
 //	 * @author Ali Amer.
-//	 * @return Amer measure with other document.
+//	 * @return SMD measure with other document.
 //	 */
-//	public double amer(DocumentVector other, double binThreshold, int N) {
+//	public double smd(DocumentVector other, double binThreshold, int N) {
 //		int n = this.getAttCount();
 //		if (n == 0 || N <= 0) return Constants.UNUSED;
 //		

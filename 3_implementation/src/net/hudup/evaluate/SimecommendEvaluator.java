@@ -39,7 +39,7 @@ public class SimecommendEvaluator extends RecommendEvaluator {
 	
 	@Override
 	public String getName() throws RemoteException {
-		return "Simecommend Evaluator";
+		return "simecommend";
 	}
 
 

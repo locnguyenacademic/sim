@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.NeighborCFExtItemBased;
 import net.hudup.core.logistic.ForTest;
 
@@ -23,7 +24,7 @@ public class MSDJ extends NeighborCFExtItemBased implements ForTest {
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return MSDJ;
+		return Measure.MSDJ;
 	}
 
 	

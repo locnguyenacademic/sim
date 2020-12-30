@@ -196,6 +196,12 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	}
 
 
+	@Override
+	protected void updateConfig(String measure) {
+		//Do nothing.
+	}
+
+
 	/**
 	 * Operating on two similarity measures with two weights.
 	 * @param sim1 similarity measure 1.
@@ -236,9 +242,9 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig tempConfig = super.createDefaultConfig();
-		tempConfig.put(MEASURE, AMER);
+		tempConfig.put(MEASURE, Measure.SMD);
 		tempConfig.put(COMBINED_WEIGHT1_FIELD, COMBINED_WEIGHT1_DEFAULT);
-		tempConfig.put(OTHER_MEASURE, AMER2); tempConfig.addReadOnly(OTHER_MEASURE);
+		tempConfig.put(OTHER_MEASURE, Measure.SMD2); tempConfig.addReadOnly(OTHER_MEASURE);
 		tempConfig.put(COMBINED_WEIGHT2_FIELD, COMBINED_WEIGHT2_DEFAULT);
 		tempConfig.put(COMBINED_MINMAX_MODE_FIELD, COMBINED_MINMAX_MODE_DEFAULT);
 		tempConfig.put(COMBINED_TYPE_FIELD, COMBINED_TYPE_ADD); tempConfig.addReadOnly(COMBINED_TYPE_FIELD);

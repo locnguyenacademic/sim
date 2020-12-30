@@ -59,7 +59,7 @@ public class RegressionEvaluator extends ExecuteEvaluator {
 
 	@Override
 	public String getName() {
-		return "Regression Evaluator";
+		return "regress";
 	}
 
 

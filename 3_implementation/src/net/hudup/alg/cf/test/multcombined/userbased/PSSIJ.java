@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.multcombined.userbased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
@@ -24,7 +25,7 @@ public class PSSIJ extends NeighborCFTwosCombinedMultUserBased implements ForTes
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return PSS;
+		return Measure.PSS;
 	}
 
 	
@@ -42,8 +43,8 @@ public class PSSIJ extends NeighborCFTwosCombinedMultUserBased implements ForTes
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, PSS);
-		config.put(OTHER_MEASURE, IJ);
+		config.put(MEASURE, Measure.PSS);
+		config.put(OTHER_MEASURE, Measure.IJ);
 		
 		return config;
 	}

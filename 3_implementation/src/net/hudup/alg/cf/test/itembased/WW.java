@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.WaspWaistCFItemBased;
 import net.hudup.core.logistic.ForTest;
 
@@ -23,7 +24,7 @@ public class WW extends WaspWaistCFItemBased implements ForTest {
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return COSINE;
+		return Measure.COSINE;
 	}
 
 	

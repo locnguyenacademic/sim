@@ -29,9 +29,10 @@ import net.hudup.core.data.RatingVector;
  * Authors Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
  * Authors Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
  * Authors Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
- * Author Ali Amer contributed Amer and Amer2 measures.<br>
+ * Author Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
  * Author Loc Nguyen contributed TA (triangle area) measure.<br>
- * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of Amer2 measure and the ideology of TF and IDF.
+ * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
+ * Authors Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0

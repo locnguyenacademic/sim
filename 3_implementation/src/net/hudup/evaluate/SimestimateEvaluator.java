@@ -39,7 +39,7 @@ public class SimestimateEvaluator extends EstimateEvaluator {
 	
 	@Override
 	public String getName() throws RemoteException {
-		return "Simestimate Evaluator";
+		return "simestimate";
 	}
 
 

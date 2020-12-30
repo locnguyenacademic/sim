@@ -41,10 +41,10 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * Authors Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
  * Authors Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
  * Authors Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
- * Author Ali Amer contributed Amer and Amer2 measures.<br>
+ * Author Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
  * Author Loc Nguyen contributed TA (triangle area) measure.<br>
- * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of Amer2 measure and the ideology of TF and IDF.<br>
- * Author Ali Amer contributed numerical nearby similarity measure (MMNS).
+ * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
+ * Authors Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -60,207 +60,75 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Name of PSS measure.
-	 */
-	public static final String PSS = "pss";
-
-	
-	/**
-	 * Name of NHSM measure.
-	 */
-	public static final String NHSM = "nhsm";
-
-	
-	/**
-	 * Name of BCF measure.
-	 */
-	public static final String BCF = "bcf";
-
-	
-	/**
-	 * Name of BCFJ measure (BCF + Jaccard).
-	 */
-	public static final String BCFJ = "bcfj";
-
-	
-	/**
-	 * Name of SRC measure.
-	 */
-	public static final String SRC = "src";
-
-	
-	/**
-	 * Name of PIP measure.
-	 */
-	public static final String PIP = "pip";
-
-	
-	/**
-	 * Name of PC measure.
-	 */
-	public static final String PC = "pc";
-
-	
-	/**
-	 * Name of MMD measure.
-	 */
-	public static final String MMD = "mmd";
-
-	
-	/**
-	 * Name of CjacMD measure which is developed by Suryakant and Tripti Mahara.
-	 */
-	public static final String CJACMD = "cjacmd";
-
-	
-	/**
-	 * Name of Feng measure.
-	 */
-	public static final String FENG = "feng";
-
-	
-	/**
-	 * Name of Mu measure.
-	 */
-	public static final String MU = "mu";
-
-	
-	/**
-	 * Name of SMTP measure.
-	 */
-	public static final String SMTP = "smtp";
-
-	
-	/**
-	 * Name of Amer measure.
-	 */
-	public static final String AMER = "amer";
-
-	
-	/**
-	 * Name of Amer2 measure.
-	 */
-	public static final String AMER2 = "amer2";
-
-	
-	/**
-	 * Name of Amer2 + Jaccard measure.
-	 */
-	public static final String AMER2J = "amer2j";
-
-	
-	/**
-	 * Name of Quasi-TfIdf measure.
-	 */
-	public static final String QUASI_TFIDF = "qti";
-
-	
-	/**
-	 * Name of Quasi-TfIdf + Jaccard measure.
-	 */
-	public static final String QUASI_TFIDF_JACCARD = "qtij";
-
-	
-	/**
-	 * Name of triangle area measure.
-	 */
-	public static final String TA = "ta";
-
-	
-	/**
-	 * Name of triangle area + Jaccard measure.
-	 */
-	public static final String TAJ = "taj";
-
-	
-	/**
-	 * Name of Coco measure.
-	 */
-	public static final String COCO = "coco";
-
-	
-	/**
-	 * Name of numerical nearby similarity measure (MMNS).
-	 */
-	public static final String NNMS = "mmns";
-
-	
-	/**
-	 * Name of improved Jaccard (IJ) measure.
-	 */
-	public static final String IJ = "ij";
-
-	
-	/**
 	 * Value bins.
 	 */
-	public static final String VALUE_BINS_FIELD = "value_bins";
+	protected static final String VALUE_BINS_FIELD = "value_bins";
 
 	
 	/**
 	 * Default value bins.
 	 */
-	public static final String VALUE_BINS_DEFAULT = "1, 2, 3, 4, 5";
+	protected static final String VALUE_BINS_DEFAULT = "1, 2, 3, 4, 5";
 
 	
 	/**
 	 * BCF median mode.
 	 */
-	public static final String BCF_MEDIAN_MODE_FIELD = "bcf_median";
+	protected static final String BCF_MEDIAN_MODE_FIELD = "bcf_median";
 
 	
 	/**
 	 * Default BCF median mode.
 	 */
-	public static final boolean BCF_MEDIAN_MODE_DEFAULT = true;
+	protected static final boolean BCF_MEDIAN_MODE_DEFAULT = true;
 
 	
 	/**
 	 * Mu alpha field.
 	 */
-	public static final String MU_ALPHA_FIELD = "mu_alpha";
+	protected static final String MU_ALPHA_FIELD = "mu_alpha";
 
 	
 	/**
 	 * Default Mu alpha.
 	 */
-	public static final double MU_ALPHA_DEFAULT = 0.5;
+	protected static final double MU_ALPHA_DEFAULT = 0.5;
 
 	
 	/**
 	 * Name of lambda field.
 	 */
-	public static final String SMTP_LAMBDA_FIELD = "smtp_lambda";
+	protected static final String SMTP_LAMBDA_FIELD = "smtp_lambda";
 
 	
 	/**
 	 * Default lambda field.
 	 */
-	public static final double SMTP_LAMBDA_DEFAULT = 0.5;
+	protected static final double SMTP_LAMBDA_DEFAULT = 0.5;
 
 	
 	/**
 	 * Name of general variance field.
 	 */
-	public static final String SMTP_GENERAL_VAR_FIELD = "smtp_general_var";
+	protected static final String SMTP_GENERAL_VAR_FIELD = "smtp_general_var";
 
 	
 	/**
 	 * Default general variance field.
 	 */
-	public static final boolean SMTP_GENERAL_VAR_DEFAULT = false;
+	protected static final boolean SMTP_GENERAL_VAR_DEFAULT = false;
 
 	
 	/**
 	 * TA normalized mode.
 	 */
-	public static final String TA_NORMALIZED_FIELD = "ta_normalized";
+	protected static final String TA_NORMALIZED_FIELD = "ta_normalized";
 
 	
 	/**
 	 * Default TA normalized mode.
 	 */
-	public static final boolean TA_NORMALIZED_DEFAULT = false;
+	protected static final boolean TA_NORMALIZED_DEFAULT = false;
 
 	
 	/**
@@ -315,12 +183,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 	public List<String> getAllMeasures() {
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(getMainMeasures());
-		mSet.add(NHSM);
-		mSet.add(BCFJ);
-		mSet.add(CJACMD);
-		mSet.add(AMER2J);
-		mSet.add(QUASI_TFIDF_JACCARD);
-		mSet.add(TAJ);
+		mSet.add(Measure.NHSM);
+		mSet.add(Measure.BCFJ);
+		mSet.add(Measure.CJACMD);
+		mSet.add(Measure.SMD2J);
+		mSet.add(Measure.QUASI_TFIDF_JACCARD);
+		mSet.add(Measure.TAJ);
 		
 		List<String> measures = Util.newList();
 		measures.addAll(mSet);
@@ -334,20 +202,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 		List<String> measures = super.getMainMeasures();
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(measures);
-		mSet.add(PSS);
-		mSet.add(BCF);
-		mSet.add(SRC);
-		mSet.add(PIP);
-		mSet.add(PC);
-		mSet.add(MMD);
-		mSet.add(SMTP);
-		mSet.add(AMER);
-		mSet.add(AMER2);
-		mSet.add(QUASI_TFIDF);
-		mSet.add(TA);
-		mSet.add(COCO);
-		mSet.add(NNMS);
-		mSet.add(IJ);
+		mSet.add(Measure.PSS);
+		mSet.add(Measure.BCF);
+		mSet.add(Measure.SRC);
+		mSet.add(Measure.PIP);
+		mSet.add(Measure.PC);
+		mSet.add(Measure.MMD);
+		mSet.add(Measure.SMTP);
+		mSet.add(Measure.SMD);
+		mSet.add(Measure.SMD2);
+		mSet.add(Measure.QUASI_TFIDF);
+		mSet.add(Measure.TA);
+		mSet.add(Measure.COCO);
+		mSet.add(Measure.NNSM);
+		mSet.add(Measure.IJ);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -373,7 +241,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected boolean requireDiscreteRatingBins(String measure) {
 		if (measure == null)
 			return false;
-		else if (measure.equals(BCF) || measure.equals(BCFJ) ||  measure.equals(MMD))
+		else if (measure.equals(Measure.BCF) || measure.equals(Measure.BCFJ) ||  measure.equals(Measure.MMD))
 			return true;
 		else
 			return false;
@@ -385,7 +253,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		String measure = getMeasure();
 		if (measure == null)
 			return false;
-		else if (measure.equals(PC))
+		else if (measure.equals(Measure.PC))
 			return false;
 		else
 			return super.isCachedSim();
@@ -394,19 +262,19 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object...params) {
-		if (measure.equals(PSS))
+		if (measure.equals(Measure.PSS))
 			return pss(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(NHSM))
+		else if (measure.equals(Measure.NHSM))
 			return nhsm(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(BCF))
+		else if (measure.equals(Measure.BCF))
 			return bcf(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(BCFJ))
+		else if (measure.equals(Measure.BCFJ))
 			return bcfj(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(SRC))
+		else if (measure.equals(Measure.SRC))
 			return src(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(PIP))
+		else if (measure.equals(Measure.PIP))
 			return pip(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(PC)) {
+		else if (measure.equals(Measure.PC)) {
 			if ((params == null) || (params.length < 1) || !(params[0] instanceof Number))
 				return Constants.UNUSED;
 			else {
@@ -414,41 +282,232 @@ public abstract class NeighborCFExt extends NeighborCF {
 				return pc(vRating1, vRating2, profile1, profile2, fixedColumnId);
 			}
 		}
-		else if (measure.equals(MMD))
+		else if (measure.equals(Measure.MMD))
 			return mmd(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(CJACMD))
+		else if (measure.equals(Measure.CJACMD))
 			return cosine(vRating1, vRating2, profile1, profile2) + mmd(vRating1, vRating2, profile1, profile2) + jaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(FENG))
+		else if (measure.equals(Measure.FENG))
 			return feng(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(MU))
+		else if (measure.equals(Measure.MU))
 			return mu(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(SMTP))
+		else if (measure.equals(Measure.SMTP))
 			return smtp(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(AMER))
-			return amer(vRating1, vRating2, profile1, profile2, this.itemIds);
-		else if (measure.equals(AMER2))
-			return amer2(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(AMER2J))
-			return amer2j(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(QUASI_TFIDF))
+		else if (measure.equals(Measure.SMD))
+			return smd(vRating1, vRating2, profile1, profile2, this.itemIds);
+		else if (measure.equals(Measure.SMD2))
+			return smd2(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.SMD2J))
+			return smd2j(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.QUASI_TFIDF))
 			return quasiTfIdf(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(QUASI_TFIDF_JACCARD))
+		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD))
 			return quasiTfIdfJaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(TA))
+		else if (measure.equals(Measure.TA))
 			return triangleArea(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(TAJ))
+		else if (measure.equals(Measure.TAJ))
 			return triangleAreaJaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(COCO))
+		else if (measure.equals(Measure.COCO))
 			return coco(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(NNMS))
-			return mmns(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(IJ))
+		else if (measure.equals(Measure.NNSM))
+			return nnsm(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.IJ))
 			return improvedJaccard(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
 
 	
+	@Override
+	protected void updateConfig(String measure) {
+		if (measure == null) return;
+		
+		config.removeReadOnly(VALUE_BINS_FIELD);
+		config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
+		config.removeReadOnly(MU_ALPHA_FIELD);
+		config.removeReadOnly(SMTP_LAMBDA_FIELD);
+		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
+		config.removeReadOnly(TA_NORMALIZED_FIELD);
+		if (measure.equals(Measure.PSS)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.NHSM)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.BCF)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.BCFJ)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.SRC)) {
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.PIP)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.PC)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.MMD)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.CJACMD)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.FENG)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.MU)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.SMTP)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.SMD)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.SMD2)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.SMD2J)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.QUASI_TFIDF)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.TA)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+		}
+		else if (measure.equals(Measure.TAJ)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+		}
+		else if (measure.equals(Measure.COCO)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.NNSM)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.IJ)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		
+		super.updateConfig(measure);
+	}
+
+
 	/**
 	 * Calculating the PSS measure between two pairs. PSS measure is developed by Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu, and implemented by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
@@ -988,7 +1047,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
-	 * Calculating the Amer measure between two pairs. Amer measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * Calculating the SMD measure between two pairs. SMD measure is developed by Ali Amer, and implemented by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * 
@@ -998,9 +1057,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile2 second profile.
 	 * @param itemIds set of all item identifiers
 	 * @author Ali Amer.
-	 * @return Amer measure between both two rating vectors and profiles.
+	 * @return SMD measure between both two rating vectors and profiles.
 	 */
-	protected double amer(
+	protected double smd(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2, Set<Integer> itemIds) {
 		if (itemIds == null)
@@ -1025,8 +1084,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
-	 * Calculating the Amer2 measure between two pairs. Amer2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
-	 * Amer2 measure is only applied into positive ratings.
+	 * Calculating the SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * SMD2 measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * 
@@ -1035,9 +1094,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer.
-	 * @return Amer2 measure between both two rating vectors and profiles.
+	 * @return SMD2 measure between both two rating vectors and profiles.
 	 */
-	protected double amer2(
+	protected double smd2(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
@@ -1067,8 +1126,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Calculating the Amer2 + Jaccard measure between two pairs. Amer2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
-	 * Amer2 + Jaccard measure is only applied into positive ratings.
+	 * Calculating the SMD2 + Jaccard measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * SMD2 + Jaccard measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * 
@@ -1077,18 +1136,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer.
-	 * @return Amer2 + Jaccard measure between both two rating vectors and profiles.
+	 * @return SMD2 + Jaccard measure between both two rating vectors and profiles.
 	 */
-	protected double amer2j(
+	protected double smd2j(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return amer2(vRating1, vRating2, profile1, profile2) * jaccard(vRating1, vRating2, profile1, profile2);
+		return smd2(vRating1, vRating2, profile1, profile2) * jaccard(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
 	/**
 	 * Calculating the quasi-TfIdf measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
-	 * Quasi-TfIdf measure is an extension of Amer2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.
 	 * Quasi-TfIdf measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
@@ -1137,7 +1196,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	/**
 	 * Calculating the quasi-TfIdf + Jaccard measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
-	 * Quasi-TfIdf + Jaccard measure is an extension of Amer2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf + Jaccard measure is an extension of SMD2 measure and the ideology of TF and IDF.
 	 * Quasi-TfIdf + Jaccard measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
@@ -1415,15 +1474,15 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Calculating the numerical nearby similarity measure (MMNS) between two pairs. MMNS is developed by Ali Amer.
+	 * Calculating the numerical nearby similarity measure (NNSM) between two pairs. NNSM is developed by Ali Amer.
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer
-	 * @return numerical nearby similarity measure (MMNS) between both two rating vectors and profiles.
+	 * @return numerical nearby similarity measure (NNSM) between both two rating vectors and profiles.
 	 */
-	protected double mmns(
+	protected double nnsm(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		
@@ -1528,8 +1587,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	/**
 	 * Calculating singularities for improved Jaccard measure given column identifier.
+	 * The improved Jaccard measure was developed by Shunpan Liang, Lin Ma, Fuyong Yuan.
 	 * @param columnId given column identifier.
 	 * @return singularities for improved Jaccard measure.
+	 * @author Shunpan Liang, Lin Ma, Fuyong Yuan
 	 */
 	protected double[] improvedJaccardCalcSingularities(int columnId) {
 		Task task = new Task() {

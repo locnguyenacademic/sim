@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.NeighborCFExtItemBased;
 import net.hudup.core.logistic.ForTest;
 
@@ -16,13 +17,13 @@ public class BCF extends NeighborCFExtItemBased implements ForTest {
 	 * Default constructor.
 	 */
 	public BCF() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public String getDefaultMeasure() {
-		return BCF;
+		return Measure.BCF;
 	}
 
 	

@@ -2,7 +2,7 @@
 
 cd ..\..
 call .\env.bat
-%JAVA_CMD% net.hudup.server.ui.PowerServerCP
+%JAVA_CMD% net.hudup.server.ext.ExtendedServerCP
 cd tools\cp
 
 @echo on

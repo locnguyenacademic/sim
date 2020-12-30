@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.itembased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.NeighborCFExtItemBased;
 import net.hudup.core.logistic.ForTest;
 
@@ -22,7 +23,7 @@ public class CjacMD extends NeighborCFExtItemBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return CJACMD;
+		return Measure.CJACMD;
 	}
 
 	

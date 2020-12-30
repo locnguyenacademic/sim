@@ -1,5 +1,6 @@
 package net.hudup.alg.cf.test.userbased;
 
+import net.hudup.alg.cf.Measure;
 import net.hudup.alg.cf.NeighborCFExtUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
@@ -24,7 +25,7 @@ public class TANJ extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return TAJ;
+		return Measure.TAJ;
 	}
 
 	
