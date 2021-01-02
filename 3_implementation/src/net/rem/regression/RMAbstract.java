@@ -423,9 +423,9 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 */
 	public static boolean parseIndices(String cfgIndices, int maxVariables, List<Object[]> xIndicesOutput, List<Object[]> zIndicesOutput) {
 		xIndicesOutput.clear();
-		xIndicesOutput.add(new Object[] {new Integer(-1)}); // due to X = (1, x1, x2,..., x(n-1)) and there is no 1 in real data.
+		xIndicesOutput.add(new Object[] {Integer.valueOf(-1)}); // due to X = (1, x1, x2,..., x(n-1)) and there is no 1 in real data.
 		zIndicesOutput.clear();
-		zIndicesOutput.add(new Object[] {new Integer(-1)}); // due to Z = (1, z) and there is no 1 in real data.
+		zIndicesOutput.add(new Object[] {Integer.valueOf(-1)}); // due to Z = (1, z) and there is no 1 in real data.
 		
 		//Begin extracting indices from configuration.
 		//The pattern is {#x1, 2}, {3, 4, 5), {log(#x5), 6}, {5, 6, 7, 8}, {9, 10}
@@ -449,8 +449,8 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		
 		if (indices.size() < 2) { //The case: 1, 2, 3, #x4, 5, 5, 6, 5, 6, 7, 8, 9, 10
 			for (int j = 0; j < maxVariables - 1; j++)
-				xIndicesOutput.add(new Object[] {new Integer(j)});
-			zIndicesOutput.add(new Object[] {new Integer(maxVariables - 1)}); //The last index is Z index.
+				xIndicesOutput.add(new Object[] {Integer.valueOf(j)});
+			zIndicesOutput.add(new Object[] {Integer.valueOf(maxVariables - 1)}); //The last index is Z index.
 		}
 		else { //The case: {#x1, 2}, {3, 4, 5), {log(#x5), 6}, {5, 6, 7, 8}, {9, 10}
 			for (int j = 0; j < indices.size() - 1; j++)
@@ -493,7 +493,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 				parseSuccess = false;
 			}
 			if (parseSuccess)
-				indices.add(new Integer(index - 1)); //Index begins 1. Please pay attention to this line.
+				indices.add(Integer.valueOf(index - 1)); //Index begins 1. Please pay attention to this line.
 			else
 				indices.add(el);
 		}
@@ -1294,7 +1294,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 			if (counts[index] > 0)
 				counts[index] = counts[index] - 1;
 			if (counts[index] == 0) {
-				Object o = new Integer(index);
+				Object o = Integer.valueOf(index);
 				numbers.remove(o);
 			}
 			indices.add(index);
@@ -1372,7 +1372,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 			if (counts[index] > 0)
 				counts[index] = counts[index] - 1;
 			if (counts[index] == 0) {
-				Object o = new Integer(index);
+				Object o = Integer.valueOf(index);
 				numbers.remove(o);
 			}
 			indices.add(index);
