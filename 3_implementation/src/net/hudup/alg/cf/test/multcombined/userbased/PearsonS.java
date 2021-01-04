@@ -1,6 +1,6 @@
 package net.hudup.alg.cf.test.multcombined.userbased;
 
-import net.hudup.alg.cf.Measure;
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;

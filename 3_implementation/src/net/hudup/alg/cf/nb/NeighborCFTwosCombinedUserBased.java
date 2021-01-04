@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf;
+package net.hudup.alg.cf.nb;
 
 import java.rmi.RemoteException;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package net.hudup.alg.cf.test.multcombined;
 
-import net.hudup.alg.cf.NeighborCFTwosCombined;
+import net.hudup.alg.cf.nb.NeighborCFTwosCombined;
 import net.hudup.core.data.DataConfig;
 
 public abstract class NeighborCFTwosCombinedMult extends NeighborCFTwosCombined {

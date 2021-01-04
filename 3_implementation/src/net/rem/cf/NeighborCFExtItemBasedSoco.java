@@ -9,7 +9,7 @@ package net.rem.cf;
 
 import java.rmi.RemoteException;
 
-import net.hudup.alg.cf.NeighborCFExtItemBased;
+import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
 import net.hudup.core.Constants;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;

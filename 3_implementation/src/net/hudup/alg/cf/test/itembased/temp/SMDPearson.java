@@ -1,7 +1,7 @@
 package net.hudup.alg.cf.test.itembased.temp;
 
-import net.hudup.alg.cf.Measure;
-import net.hudup.alg.cf.NeighborCFTwosCombinedItemBased;
+import net.hudup.alg.cf.nb.Measure;
+import net.hudup.alg.cf.nb.NeighborCFTwosCombinedItemBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 

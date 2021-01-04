@@ -3,8 +3,8 @@ package net.hudup.alg.cf.test.multcombined;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-import net.hudup.alg.cf.NeighborCFExt;
-import net.hudup.alg.cf.NeighborCFExtUserBased;
+import net.hudup.alg.cf.nb.NeighborCFExt;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
 import net.hudup.core.alg.cf.NeighborCFUserBased;

@@ -1,7 +1,7 @@
 package net.hudup.alg.cf.test.userbased;
 
-import net.hudup.alg.cf.Measure;
-import net.hudup.alg.cf.NeighborCFExtUserBased;
+import net.hudup.alg.cf.nb.Measure;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.logistic.ForTest;
 
 public class PearsonJ extends NeighborCFExtUserBased implements ForTest {

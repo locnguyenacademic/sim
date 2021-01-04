@@ -1,7 +1,7 @@
 package net.hudup.alg.cf.test.userbased;
 
-import net.hudup.alg.cf.Measure;
-import net.hudup.alg.cf.WaspWaistCFUserBased;
+import net.hudup.alg.cf.nb.Measure;
+import net.hudup.alg.cf.nb.WaspWaistCFUserBased;
 import net.hudup.core.logistic.ForTest;
 
 public class WW extends WaspWaistCFUserBased implements ForTest {

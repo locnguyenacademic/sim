@@ -5,11 +5,10 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf;
+package net.hudup.alg.cf.nb;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.hudup.core.Constants;
@@ -24,14 +23,14 @@ import net.hudup.core.logistic.BaseClass;
 import net.hudup.core.logistic.LogUtil;
 
 /**
- * This abstract class implements the user-based Wasp Waist (WW) collaborative filtering algorithm.
+ * This abstract class implements the item-based Wasp Waist (WW) collaborative filtering algorithm.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
 @BaseClass //It is not base class. The notation is used for later update.
-public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg {
+public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg {
 
 	
 	/**
@@ -43,7 +42,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 	/**
 	 * Default constructor.
 	 */
-	public WaspWaistCFUserBased() {
+	public WaspWaistCFItemBased() {
 
 	}
 
@@ -52,77 +51,64 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 	public RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
 		if (param.ratingVector == null) return null;
 		
-		RatingVector thisUser = param.ratingVector;
-		RatingVector innerUser = dataset.getUserRating(thisUser.id());
-		if (innerUser != null) {
-			Set<Integer> itemIds = innerUser.fieldIds(true);
-			itemIds.removeAll(thisUser.fieldIds(true));
-			if (itemIds.size() > 0) thisUser = (RatingVector)thisUser.clone();
-			for (int itemId : itemIds) {
-				if (!thisUser.isRated(itemId))
-					thisUser.put(itemId, innerUser.get(itemId));
-			}
-		}
-		if (thisUser.size() == 0) return null;
-		
-		RatingVector result = thisUser.newInstance(true);
+		RatingVector result = param.ratingVector.newInstance(true);
 		boolean hybrid = config.getAsBoolean(HYBRID);
-		Profile thisUserProfile = hybrid ? param.profile : null;
+		RatingVector thisUser = param.ratingVector;
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
-		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
-		double thisMean = thisUser.mean();
-		Map<Integer, Double> localUserSimCache = Util.newMap();
-		Fetcher<RatingVector> userRatings = dataset.fetchUserRatings();
+		boolean isBoundedMinMax = isBoundedMinMaxRating();; 
+		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
+		RatingVector crushedUser = crush(thisUser.id(), thisUser);
 		for (int itemId : queryIds) {
-			if (thisUser.isRated(itemId)) {
-				result.put(itemId, thisUser.get(itemId));
+			RatingVector thisItem = dataset.getItemRating(itemId);
+			if (thisItem == null) continue;
+			if (thisUser.isRated(itemId) && !thisItem.isRated(thisUser.id())) {
+				thisItem = (RatingVector)thisItem.clone();
+				thisItem.put(thisUser.id(), thisUser.get(itemId));
+			}
+
+			if (thisItem.isRated(thisUser.id())) {
+				result.put(itemId, thisItem.get(thisUser.id()));
 				continue;
 			}
 			
+			Profile thisItemProfile = hybrid ? dataset.getItemProfile(itemId) : null;
+			double thisMean = thisItem.mean();
 			double accum = 0;
 			double simTotal = 0;
-			RatingVector crushedItem = crush(itemId, thisUser);
 			boolean calculated = false;
 			try {
-				while (userRatings.next()) {
-					RatingVector thatUser = userRatings.pick();
-					//That user can be this user because the crushed item can have estimated value for this user.
-					//In the case that this user is that user, their similarity of course is highest.
-					if (thatUser == null) continue;
+				while (itemRatings.next()) {
+					RatingVector thatItem = itemRatings.pick();
+					//That item can be this item because the crushed user can have estimated value for this item.
+					//In the case that this item is that item, their similarity of course is highest.
+					if (thatItem == null) continue;
+					if (thisUser.isRated(thatItem.id()) && !thatItem.isRated(thisUser.id())) {
+						thatItem = (RatingVector)thatItem.clone();
+						thatItem.put(thisUser.id(), thisUser.get(thatItem.id()));
+					}
 					
 					double thatValue = Constants.UNUSED;
-					if (thatUser.isRated(itemId))
-						thatValue = thatUser.get(itemId).value;
-					else if (crushedItem != null && crushedItem.isRated(thatUser.id()))
-						thatValue = crushedItem.get(thatUser.id()).value;
+					if (thatItem.isRated(thisUser.id()))
+						thatValue = thatItem.get(thisUser.id()).value;
+					else if (crushedUser != null && crushedUser.isRated(thatItem.id()))
+						thatValue = crushedUser.get(thatItem.id()).value;
 					else
 						continue;
 
-					Profile thatUserProfile = hybrid ? dataset.getUserProfile(thatUser.id()) : null;
+					Profile thatItemProfile = hybrid ? dataset.getItemProfile(thatItem.id()) : null;
 					
-					// computing similarity
-					double sim = Constants.UNUSED;
-					if (isCached() && thisUser.id() < 0) { //Local caching
-						if (localUserSimCache.containsKey(thatUser.id()))
-							sim = localUserSimCache.get(thatUser.id());
-						else {
-							sim = sim(thisUser, thatUser, thisUserProfile, thatUserProfile, itemId);
-							localUserSimCache.put(thatUser.id(), sim);
-						}
-					}
-					else
-						sim = sim(thisUser, thatUser, thisUserProfile, thatUserProfile, itemId);
+					//Computing similarity
+					double sim = sim(thisItem, thatItem, thisItemProfile, thatItemProfile, thisUser.id());
 					if (!Util.isUsed(sim)) continue;
 					
-					double thatMean = thatUser.mean();
-					double deviate = thatValue - thatMean;
+					double deviate = thatValue - thatItem.mean();
 					accum += sim * deviate;
 					simTotal += Math.abs(sim);
 					
 					calculated = true;
 				}
-				userRatings.reset();
+				itemRatings.reset();
 			}
 			catch (Throwable e) {
 				LogUtil.trace(e);
@@ -136,43 +122,44 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		}
 		
 		try {
-			userRatings.close();
+			itemRatings.close();
 		} 
 		catch (Throwable e) {
 			LogUtil.trace(e);
 		}
-		localUserSimCache.clear();
 		
 		return result.size() == 0 ? null : result;
 	}
 
-	
+
 	@Override
 	protected RatingVector crushAsUsual(int columnId, RatingVector userRating) {
-		RatingVector thisItem = this.dataset.getItemRating(columnId);
-		if (thisItem == null) return null;
-		RatingVector result = thisItem.compactClone();
+		RatingVector thisUser = this.dataset.getUserRating(columnId);
+		if (thisUser == null) return null;
+		if ((!isCached()) && (userRating != null)) {
+			Set<Integer> rowIds = userRating.fieldIds(true);
+			rowIds.removeAll(thisUser.fieldIds(true));
+			if (rowIds.size() > 0) thisUser = (RatingVector)thisUser.clone();
+			for (int rowId : rowIds) {
+				if (!thisUser.isRated(rowId))
+					thisUser.put(rowId, userRating.get(rowId));
+			}
+		}
+		RatingVector result = thisUser.compactClone();
 		if (result.size() == 0) return null;
 		
-		Fetcher<RatingVector> vRatings = this.dataset.fetchItemRatings();
+		Fetcher<RatingVector> vRatings = this.dataset.fetchUserRatings();
 		List<Object[]> simList = Util.newList(0);
-		boolean fulfill = (!isCached()) && (userRating != null);
 		try {
 			while (vRatings.next()) {
 				//That rating vector is often considered as to be not empty and not to have unrated value.
-				RatingVector thatItem = vRatings.pick();
-				if (thatItem == null || thatItem.id() == columnId)
+				RatingVector thatUser = vRatings.pick();
+				if (thatUser == null || thatUser.id() == columnId)
 					continue;
 				
-				if (fulfill &&
-						userRating.isRated(thatItem.id()) && !thatItem.isRated(userRating.id())) {
-					thatItem = (RatingVector)thatItem.clone();
-					thatItem.put(userRating.id(), userRating.get(thatItem.id()));
-				}
-
-				double sim = dualCF.sim(thisItem, thatItem, null, null, userRating.id());
+				double sim = dualCF.sim(thisUser, thatUser, (Profile)null, (Profile)null);
 				if (Util.isUsed(sim))
-					simList.add(new Object[] {thatItem, sim});
+					simList.add(new Object[] {thatUser, sim});
 			}
 		}
 		catch (Throwable e) {
@@ -184,25 +171,26 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		catch (Throwable e) {
 			LogUtil.trace(e);
 		}
+		
 		if (simList.size() == 0) return result;
 		
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
-		boolean isBoundedMinMax = isBoundedMinMaxRating();; 
-		double thisMean = thisItem.mean();
-		Set<Integer> userIds = Util.newSet();
-		userIds.addAll(this.userIds);
-		userIds.removeAll(thisItem.fieldIds(true));
-		for (int userId : userIds) {
+		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
+		double thisMean = thisUser.mean();
+		Set<Integer> itemIds = Util.newSet();
+		itemIds.addAll(this.itemIds);
+		itemIds.removeAll(thisUser.fieldIds(true));
+		for (int itemId : itemIds) {
 			double accum = 0;
 			double simTotal = 0;
 			boolean calculated = false;
 			for (Object[] aSim : simList) {
-				RatingVector thatItem = (RatingVector)aSim[0];
-				if (!thatItem.isRated(userId)) continue;
+				RatingVector thatUser = (RatingVector)aSim[0];
+				if (!thatUser.isRated(itemId)) continue;
 				
-				double thatValue = thatItem.get(userId).value;
-				double thatMean = thatItem.mean();
+				double thatValue = thatUser.get(itemId).value;
+				double thatMean = thatUser.mean();
 				double deviate = thatValue - thatMean;
 				accum += (double)(aSim[1]) * deviate;
 				simTotal += Math.abs((double)(aSim[1]));
@@ -214,7 +202,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 			double value = simTotal == 0 ? thisMean : thisMean + accum / simTotal;
 			value = isBoundedMinMax ? Math.min(value, maxValue) : value;
 			value = isBoundedMinMax ? Math.max(value, minValue) : value;
-			result.put(userId, value);
+			result.put(itemId, value);
 		}
 		
 		return result;
@@ -223,7 +211,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 	
 	@Override
 	protected NeighborCFExt createDualCF() {
-		return new NeighborCFExtItemBased();
+		return new NeighborCFExtUserBased();
 	}
 
 
@@ -231,38 +219,38 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 	protected double cod(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return cod(vRating1, vRating2, this.itemMeans);
+		return cod(vRating1, vRating2, this.userMeans);
 	}
 
 	
 	@Override
 	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, this.itemMeans);
+		return pip(vRating1, vRating2, this.userMeans);
 	}
 
 
 	@Override
 	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, this.itemMeans);
+		return pss(vRating1, vRating2, this.userMeans);
 	}
 
 
 	@Override
 	protected double pc(RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, int fixedColumnId) {
-		return pc(vRating1, vRating2, fixedColumnId, this.itemMeans);
+		return pc(vRating1, vRating2, fixedColumnId, this.userMeans);
 	}
 
 
 	@Override
 	protected RatingVector getColumnRating(int fieldId) {
-		return this.dataset.getItemRating(fieldId);
+		return this.dataset.getUserRating(fieldId);
 	}
 
 	
 	@Override
 	protected Set<Integer> getColumnIds() {
-		return this.itemIds;
+		return this.userIds;
 	}
 
 	
@@ -272,7 +260,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "wwcf_userbased";
+			return "wwcf_itembased";
 	}
 
 
@@ -284,7 +272,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		return "User-based Wasp Waist algorithm";
+		return "Item-based Wasp Waist algorithm";
 	}
 
 
