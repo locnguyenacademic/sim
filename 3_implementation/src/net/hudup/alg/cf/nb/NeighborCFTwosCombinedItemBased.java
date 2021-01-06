@@ -12,7 +12,7 @@ import java.util.Set;
 
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
-import net.hudup.core.alg.cf.NeighborCFItemBased;
+import net.hudup.core.alg.cf.nb.NeighborCFItemBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;

@@ -7,7 +7,7 @@ import net.hudup.alg.cf.nb.NeighborCFExt;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
-import net.hudup.core.alg.cf.NeighborCFUserBased;
+import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;

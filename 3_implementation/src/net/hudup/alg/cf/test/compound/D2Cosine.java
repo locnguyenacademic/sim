@@ -1,7 +1,7 @@
 package net.hudup.alg.cf.test.compound;
 
 import net.hudup.alg.cf.nb.Measure;
-import net.hudup.core.alg.cf.NeighborCF2d;
+import net.hudup.core.alg.cf.nb.NeighborCF2d;
 import net.hudup.core.logistic.ForTest;
 
 public class D2Cosine extends NeighborCF2d implements ForTest {

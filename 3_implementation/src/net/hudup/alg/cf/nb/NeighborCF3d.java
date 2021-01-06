@@ -14,7 +14,7 @@ import java.util.Set;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.alg.RecommendParam;
-import net.hudup.core.alg.cf.NeighborCF2d;
+import net.hudup.core.alg.cf.nb.NeighborCF2d;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;

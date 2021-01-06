@@ -2,7 +2,7 @@ package net.temp;
 
 import java.rmi.RemoteException;
 
-import net.hudup.core.alg.cf.NeighborCFUserBased;
+import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
 
 /**
  * Temporal test recommender algorithm.

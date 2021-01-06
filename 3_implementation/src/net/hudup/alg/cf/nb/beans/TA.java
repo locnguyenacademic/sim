@@ -12,13 +12,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * PSS measure.
+ * TA measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class PSS extends NeighborCFExtUserBased {
+public class TA extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -30,7 +30,7 @@ public class PSS extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public PSS() {
+	public TA() {
 
 	}
 
@@ -48,14 +48,13 @@ public class PSS extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
-		config.remove(TA_NORMALIZED_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return pss(vRating1, vRating2, profile1, profile2);
+		return triangleArea(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -65,7 +64,7 @@ public class PSS extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_pss";
+			return "neighborcf_ta";
 	}
 
 

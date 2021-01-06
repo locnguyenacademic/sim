@@ -12,13 +12,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * PSS measure.
+ * SMTP measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class PSS extends NeighborCFExtUserBased {
+public class SMTP extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -30,7 +30,7 @@ public class PSS extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public PSS() {
+	public SMTP() {
 
 	}
 
@@ -40,14 +40,11 @@ public class PSS extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
-		config.remove(CALC_STATISTICS);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(MU_ALPHA_FIELD);
-		config.remove(SMTP_LAMBDA_FIELD);
-		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
 	}
 
@@ -55,7 +52,7 @@ public class PSS extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return pss(vRating1, vRating2, profile1, profile2);
+		return smtp(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -65,7 +62,7 @@ public class PSS extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_pss";
+			return "neighborcf_smtp";
 	}
 
 

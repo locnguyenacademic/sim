@@ -14,7 +14,7 @@ package net.hudup.alg.cf.nb;
  * @version 1.0
  *
  */
-public class Measure extends net.hudup.core.alg.cf.Measure {
+public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	
 	
 	/**

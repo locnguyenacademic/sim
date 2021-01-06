@@ -12,13 +12,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * PSS measure.
+ * IJ measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class PSS extends NeighborCFExtUserBased {
+public class IJ extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -30,7 +30,7 @@ public class PSS extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public PSS() {
+	public IJ() {
 
 	}
 
@@ -55,7 +55,7 @@ public class PSS extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return pss(vRating1, vRating2, profile1, profile2);
+		return improvedJaccard(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -65,7 +65,7 @@ public class PSS extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_pss";
+			return "neighborcf_ij";
 	}
 
 
