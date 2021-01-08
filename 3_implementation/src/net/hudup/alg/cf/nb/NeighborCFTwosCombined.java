@@ -55,7 +55,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	/**
 	 * Name of other measure field.
 	 */
-	public static final String OTHER_MEASURE = "other_measure";
+	public static final String OTHER_MEASURE = "measure_other";
 
 	
 	/**
@@ -258,29 +258,29 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 
 			@Override
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
-				if (key.equals(OTHER_MEASURE)) {
-					String measure = getAsString(OTHER_MEASURE);
+				if (key.equals(MEASURE) || key.equals(OTHER_MEASURE)) {
+					String measure = key.equals(MEASURE) ? getAsString(MEASURE) : getAsString(OTHER_MEASURE);
 					measure = measure == null ? getDefaultMeasure() : measure;
 					return (Serializable) JOptionPane.showInputDialog(
-							comp, 
-							"Please choose one similar measure", 
-							"Choosing similar measure", 
-							JOptionPane.INFORMATION_MESSAGE, 
-							null, 
-							getMainMeasures().toArray(), 
-							measure);
+						comp, 
+						"Please choose one similar measure", 
+						"Choosing similar measure", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						getMainMeasures().toArray(), 
+						measure);
 				}
 				else if (key.equals(COMBINED_TYPE_FIELD)) {
 					int combinedType = getAsInt(COMBINED_TYPE_FIELD);
 					combinedType = combinedType < 0 ? COMBINED_TYPE_ADD : combinedType;
 					return (Serializable) JOptionPane.showInputDialog(
-							comp, 
-							"Please choose one combined type", 
-							"Choosing combined type", 
-							JOptionPane.INFORMATION_MESSAGE, 
-							null, 
-							getSupportedCombinedTypes().toArray(), 
-							combinedType);
+						comp,
+						"Please choose one combined type", 
+						"Choosing combined type",
+						JOptionPane.INFORMATION_MESSAGE, 
+						null,
+						getSupportedCombinedTypes().toArray(),
+						combinedType);
 				}
 				else 
 					return tempConfig.userEdit(comp, key, defaultValue);
