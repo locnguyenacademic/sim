@@ -74,6 +74,7 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 
 	/**
 	 * Setting up this multiple regression algorithm based on specified dataset and many partial regressions.
+	 * In the this version, the setup method is not marked synchronized because it calls learnStart method.
 	 * @param dataset specified dataset.
 	 * @param info additional parameters to set up this algorithm.
 	 * @param regressions many specified partial regressions. 
@@ -135,6 +136,9 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	}
 
 
+	/*
+	 * This method is not marked synchronized because it is called by setup method.
+	 */
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		List<Object> parameterList = Util.newList();

@@ -7,6 +7,7 @@
  */
 package net.hudup.alg.cf.nb.beans;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.Constants;
 import net.hudup.core.data.Profile;
@@ -33,6 +34,12 @@ public class PC extends NeighborCFExtUserBased {
 	 */
 	public PC() {
 
+	}
+
+
+	@Override
+	public String getMeasure() {
+		return Measure.PC;
 	}
 
 

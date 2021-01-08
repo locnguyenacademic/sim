@@ -59,6 +59,9 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 	protected List<Double> weights = Util.newList();
 	
 	
+	/*
+	 * This method is not marked synchronized because it is called by setup method.
+	 */
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -302,6 +305,9 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 				 */
 				private static final long serialVersionUID = 1L;
 
+				/*
+				 * This method is not marked synchronized because it is called by setup method.
+				 */
 				@Override
 				public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 					// TODO Auto-generated method stub

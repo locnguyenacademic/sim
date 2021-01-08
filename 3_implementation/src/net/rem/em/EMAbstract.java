@@ -89,6 +89,9 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	}
 
 	
+	/*
+	 * In the this version, the setup method is not marked synchronized because it calls learnStart method.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ void setup(Dataset dataset, Object...info) throws RemoteException {

@@ -39,6 +39,9 @@ public class DefaultMixtureRM2 extends DefaultMixtureRM {
 	private static final long serialVersionUID = 1L;
 
 	
+	/*
+	 * This method is not marked synchronized because it is called by setup method.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ Object learnStart(Object... info) throws RemoteException {

@@ -7,6 +7,7 @@
  */
 package net.hudup.alg.cf.nb.beans;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
@@ -32,6 +33,12 @@ public class SMTP extends NeighborCFExtUserBased {
 	 */
 	public SMTP() {
 
+	}
+
+
+	@Override
+	public String getMeasure() {
+		return Measure.SMTP;
 	}
 
 

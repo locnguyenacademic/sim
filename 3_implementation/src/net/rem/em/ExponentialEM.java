@@ -59,7 +59,7 @@ public abstract class ExponentialEM extends EMAbstract {
 	
 	
 	/*
-	 * In the this version, the learn method is not marked synchronized.
+	 * In the this version, the learn method is not marked synchronized because it is called by setup method.
 	 */
 	@Override
 	public Object learnStart(Object...info) throws RemoteException {

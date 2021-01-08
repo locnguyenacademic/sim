@@ -7,6 +7,7 @@
  */
 package net.hudup.alg.cf.nb.beans;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
@@ -32,6 +33,12 @@ public class PSS extends NeighborCFExtUserBased {
 	 */
 	public PSS() {
 
+	}
+
+
+	@Override
+	public String getMeasure() {
+		return Measure.PSS;
 	}
 
 

@@ -108,6 +108,9 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	}
 	
 	
+	/*
+	 * This method is not marked synchronized because it is called by setup method.
+	 */
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -235,7 +238,6 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	
 	@Override
 	protected Object expectation(Object currentParameter, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		double[] alpha = ((ExchangedParameter)currentParameter).getVector();
 		List<double[]> betas = ((ExchangedParameter)currentParameter).getMatrix();
 		Statistics additionalMean = null;
@@ -276,7 +278,6 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	
 	@Override
 	protected Object maximization(Object currentStatistic, Object...info) throws RemoteException {
-		// TODO Auto-generated method stub
 		double[] zStatistics = ((ExchangedParameter)currentStatistic).getVector();
 		List<double[]> xStatistics = ((ExchangedParameter)currentStatistic).getMatrix();
 		if (zStatistics.length == 0 || xStatistics.size() != zStatistics.length)
@@ -566,7 +567,6 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	
 	@Override
 	protected Object initializeParameter() {
-		// TODO Auto-generated method stub
 		int N = this.zData.size();
 		int n = this.xData.get(0).length;
 		
