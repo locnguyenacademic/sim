@@ -47,7 +47,7 @@ public class SRC extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
-		config.remove(CALC_STATISTICS);
+		config.remove(CALC_STATISTICS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);

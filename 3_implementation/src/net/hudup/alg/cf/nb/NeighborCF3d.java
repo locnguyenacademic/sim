@@ -72,6 +72,7 @@ public class NeighborCF3d extends NeighborCF2d {
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
 		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
+		double simThreshold = getSimThreshold(config);
 		Map<Integer, Double> localUserSimCache = Util.newMap();
 		Fetcher<RatingVector> userRatings = dataset.fetchUserRatings();
 		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
@@ -105,7 +106,7 @@ public class NeighborCF3d extends NeighborCF2d {
 						else
 							userSim = sim(thisUser, thatUser, thisUserProfile, thatUserProfile, itemId);
 						
-						if (Util.isUsed(userSim)) {
+						if (Util.isUsed(userSim) && (!Util.isUsed(simThreshold) || userSim >= simThreshold)) {
 							accum += userSim * thatUser.get(itemId).value;
 							simTotal += Math.abs(userSim);
 						}
@@ -129,7 +130,8 @@ public class NeighborCF3d extends NeighborCF2d {
 
 						//Computing similarity
 						double itemSim = itemBasedCF.sim(thisItem, thatItem, thisItemProfile, thatItemProfile, thisUser.id());
-						if (!Util.isUsed(itemSim)) continue;
+						if (!Util.isUsed(itemSim) || (Util.isUsed(simThreshold) && itemSim < simThreshold))
+							continue;
 
 						double thatItemValue = thatItem.get(thatUser.id()).value;
 						if (thatUser.id() == thisUser.id()) {

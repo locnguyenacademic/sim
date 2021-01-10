@@ -71,6 +71,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
 		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
+		double simThreshold = getSimThreshold(config);
 		double thisMean = thisUser.mean();
 		Map<Integer, Double> localUserSimCache = Util.newMap();
 		Fetcher<RatingVector> userRatings = dataset.fetchUserRatings();
@@ -113,7 +114,8 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 					}
 					else
 						sim = sim(thisUser, thatUser, thisUserProfile, thatUserProfile, itemId);
-					if (!Util.isUsed(sim)) continue;
+					if (!Util.isUsed(sim) || (Util.isUsed(simThreshold) && sim < simThreshold))
+						continue;
 					
 					double thatMean = thatUser.mean();
 					double deviate = thatValue - thatMean;

@@ -57,6 +57,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
 		boolean isBoundedMinMax = isBoundedMinMaxRating();; 
+		double simThreshold = getSimThreshold(config);
 		Fetcher<RatingVector> itemRatings = dataset.fetchItemRatings();
 		RatingVector crushedUser = crush(thisUser.id(), thisUser);
 		for (int itemId : queryIds) {
@@ -100,7 +101,8 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 					
 					//Computing similarity
 					double sim = sim(thisItem, thatItem, thisItemProfile, thatItemProfile, thisUser.id());
-					if (!Util.isUsed(sim)) continue;
+					if (!Util.isUsed(sim) || (Util.isUsed(simThreshold) && sim < simThreshold))
+						continue;
 					
 					double deviate = thatValue - thatItem.mean();
 					accum += sim * deviate;
