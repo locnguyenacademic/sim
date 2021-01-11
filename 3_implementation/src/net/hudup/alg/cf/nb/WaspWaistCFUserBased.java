@@ -72,7 +72,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		double maxValue = getMaxRating();
 		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
 		double simThreshold = getSimThreshold(config);
-		double thisMean = thisUser.mean();
+		double thisMean = calcRowMean(thisUser);
 		Map<Integer, Double> localUserSimCache = Util.newMap();
 		Fetcher<RatingVector> userRatings = dataset.fetchUserRatings();
 		for (int itemId : queryIds) {
@@ -117,7 +117,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 					if (!Util.isUsed(sim) || (Util.isUsed(simThreshold) && sim < simThreshold))
 						continue;
 					
-					double thatMean = thatUser.mean();
+					double thatMean = calcRowMean(thatUser);
 					double deviate = thatValue - thatMean;
 					accum += sim * deviate;
 					simTotal += Math.abs(sim);
@@ -191,7 +191,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 		double minValue = getMinRating();
 		double maxValue = getMaxRating();
 		boolean isBoundedMinMax = isBoundedMinMaxRating();; 
-		double thisMean = thisItem.mean();
+		double thisMean = calcColumnMean(thisItem);
 		Set<Integer> userIds = Util.newSet();
 		userIds.addAll(this.userIds);
 		userIds.removeAll(thisItem.fieldIds(true));
@@ -204,7 +204,7 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 				if (!thatItem.isRated(userId)) continue;
 				
 				double thatValue = thatItem.get(userId).value;
-				double thatMean = thatItem.mean();
+				double thatMean = calcColumnMean(thatItem);
 				double deviate = thatValue - thatMean;
 				accum += (double)(aSim[1]) * deviate;
 				simTotal += Math.abs((double)(aSim[1]));
@@ -257,14 +257,38 @@ public class WaspWaistCFUserBased extends WaspWaistCF implements DuplicatableAlg
 
 
 	@Override
-	protected RatingVector getColumnRating(int fieldId) {
-		return this.dataset.getItemRating(fieldId);
+	protected Set<Integer> getRowIds() {
+		return userIds;
+	}
+
+
+	@Override
+	protected RatingVector getRowRating(int rowId) {
+		return dataset.getUserRating(rowId);
+	}
+
+
+	@Override
+	protected double calcRowMean(RatingVector vRating) {
+		return calcMean(this, userMeans, vRating);
+	}
+
+
+	@Override
+	protected Set<Integer> getColumnIds() {
+		return itemIds;
 	}
 
 	
 	@Override
-	protected Set<Integer> getColumnIds() {
-		return this.itemIds;
+	protected RatingVector getColumnRating(int columnId) {
+		return dataset.getItemRating(columnId);
+	}
+
+
+	@Override
+	protected double calcColumnMean(RatingVector vRating) {
+		return calcMean(this, itemMeans, vRating);
 	}
 
 	

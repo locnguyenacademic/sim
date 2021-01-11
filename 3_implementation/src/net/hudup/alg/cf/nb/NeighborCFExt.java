@@ -1711,21 +1711,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 
 	
-	/**
-	 * Getting rating vector given column ID (item ID or user ID) for BCF measure.
-	 * @param columnId specified column ID (item ID or user ID).
-	 * @return rating vector given column ID (item ID or user ID).
-	 */
-	protected abstract RatingVector getColumnRating(int columnId);
-
-	
-	/**
-	 * Getting set of column identifiers.
-	 * @return set of column identifiers.
-	 */
-	protected abstract Set<Integer> getColumnIds();
-	
-	
 //	/**
 //	 * Calculating the ITA (inverse triangle area) measure between two pairs. ITA is developed by Loc Nguyen.
 //	 * The first pair includes the first rating vector and the first profile.

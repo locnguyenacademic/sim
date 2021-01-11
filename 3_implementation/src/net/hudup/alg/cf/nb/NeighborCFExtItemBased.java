@@ -90,14 +90,38 @@ public class NeighborCFExtItemBased extends NeighborCFExt implements Duplicatabl
 
 
 	@Override
-	protected RatingVector getColumnRating(int columnId) {
-		return this.dataset.getUserRating(columnId);
+	protected Set<Integer> getRowIds() {
+		return itemIds;
 	}
 
 	
 	@Override
+	protected RatingVector getRowRating(int rowId) {
+		return dataset.getItemRating(rowId);
+	}
+
+	
+	@Override
+	protected double calcRowMean(RatingVector vRating) {
+		return calcMean(this, itemMeans, vRating);
+	}
+
+
+	@Override
 	protected Set<Integer> getColumnIds() {
-		return this.userIds;
+		return userIds;
+	}
+
+	
+	@Override
+	protected RatingVector getColumnRating(int columnId) {
+		return dataset.getUserRating(columnId);
+	}
+
+
+	@Override
+	protected double calcColumnMean(RatingVector vRating) {
+		return calcMean(this, userMeans, vRating);
 	}
 
 	

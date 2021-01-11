@@ -25,7 +25,6 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 	 * Default constructor.
 	 */
 	public NeighborCFTwosCombinedMultUserBased() {
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -45,14 +44,12 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 	
 	@Override
 	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		// TODO Auto-generated method stub
 		return pip(vRating1, vRating2, this.itemMeans);
 	}
 
 
 	@Override
 	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		// TODO Auto-generated method stub
 		return pss(vRating1, vRating2, this.itemMeans);
 	}
 
@@ -60,28 +57,48 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 	@Override
 	protected double pc(RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, int fixedColumnId) {
-		// TODO Auto-generated method stub
 		return pc(vRating1, vRating2, fixedColumnId, this.itemMeans);
 	}
 
 
 	@Override
+	protected Set<Integer> getRowIds() {
+		return userIds;
+	}
+
+
+	@Override
+	protected RatingVector getRowRating(int rowId) {
+		return dataset.getUserRating(rowId);
+	}
+
+
+	@Override
+	protected double calcRowMean(RatingVector vRating) {
+		return calcMean(this, userMeans, vRating);
+	}
+
+
+	@Override
 	protected RatingVector getColumnRating(int columnId) {
-		// TODO Auto-generated method stub
 		return this.dataset.getItemRating(columnId);
 	}
 
 
 	@Override
 	protected Set<Integer> getColumnIds() {
-		// TODO Auto-generated method stub
 		return this.itemIds;
+	}
+
+
+	@Override
+	protected double calcColumnMean(RatingVector vRating) {
+		return calcMean(this, itemMeans, vRating);
 	}
 
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -92,14 +109,12 @@ public class NeighborCFTwosCombinedMultUserBased extends NeighborCFTwosCombinedM
 
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
 		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
 	}
 
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		// TODO Auto-generated method stub
 		return "User-based collaborative filtering algorithm by multiplicated combination of two other ones";
 	}
 

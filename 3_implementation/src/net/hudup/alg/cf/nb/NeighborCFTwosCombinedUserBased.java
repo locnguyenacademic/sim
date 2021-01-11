@@ -76,14 +76,38 @@ public class NeighborCFTwosCombinedUserBased extends NeighborCFTwosCombined impl
 
 
 	@Override
-	protected RatingVector getColumnRating(int columnId) {
-		return this.dataset.getItemRating(columnId);
+	protected Set<Integer> getRowIds() {
+		return userIds;
+	}
+
+
+	@Override
+	protected RatingVector getRowRating(int rowId) {
+		return dataset.getUserRating(rowId);
+	}
+
+
+	@Override
+	protected double calcRowMean(RatingVector vRating) {
+		return calcMean(this, userMeans, vRating);
 	}
 
 
 	@Override
 	protected Set<Integer> getColumnIds() {
-		return this.itemIds;
+		return itemIds;
+	}
+
+	
+	@Override
+	protected RatingVector getColumnRating(int columnId) {
+		return dataset.getItemRating(columnId);
+	}
+
+
+	@Override
+	protected double calcColumnMean(RatingVector vRating) {
+		return calcMean(this, itemMeans, vRating);
 	}
 
 	
