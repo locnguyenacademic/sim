@@ -7,6 +7,9 @@
  */
 package net.hudup.alg.cf.nb.beans;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.Constants;
@@ -34,6 +37,24 @@ public class PC extends NeighborCFExtUserBased {
 	 */
 	public PC() {
 
+	}
+
+
+	@Override
+	public List<String> getAllMeasures() {
+		return getMainMeasures();
+	}
+
+
+	@Override
+	public List<String> getMainMeasures() {
+		return Arrays.asList(Measure.PC);
+	}
+
+
+	@Override
+	protected String getDefaultMeasure() {
+		return Measure.PC;
 	}
 
 
