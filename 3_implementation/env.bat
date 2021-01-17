@@ -11,7 +11,7 @@ set PATH=.;%JDK_HOME%\bin;%JAVA_HOME%\bin;%ANT_HOME%\bin;%HUDUP_OLD_PATH%
 
 echo PATH=%PATH%
 
-set CLASSPATH=./hudup.jar;./hudup-server.jar;./hudup-evaluator.jar;./hudup-listener.jar;./hudup-toolkit.jar;./hudup-core.jar;./hudup-runtime-lib.jar;./bin;./lib/*;./sim.jar;./sim-bayescf.jar;./sim-hudup.jar;./sim-rem.jar;./sim-runtime-lib.jar;./working/lib/*
+set CLASSPATH=./hudup.jar;./hudup-server.jar;./hudup-evaluator.jar;./hudup-listener.jar;./hudup-toolkit.jar;./hudup-core.jar;./hudup-runtime-lib.jar;./bin;./lib/*;./sim.jar;./sim-bayescf.jar;./sim-hudup.jar;./sim-rem.jar;./sim-hmm.jar;./sim-runtime-lib.jar;./working/lib/*
 
 echo CLASSPATH=%CLASSPATH%
 

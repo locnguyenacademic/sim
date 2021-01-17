@@ -99,7 +99,7 @@ public class MonoObs implements Obs {
 	
 	@Override
 	public String toString() {
-		return Util.format(value);
+		return String.format(Util.DECIMAL_FORMAT, value);
 	}
 	
 	

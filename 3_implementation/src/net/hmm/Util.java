@@ -7,10 +7,8 @@
  */
 package net.hmm;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import net.hudup.core.Constants;
+import java.util.Map;
 
 /**
  * This is utility class to provide static utility methods.
@@ -19,29 +17,13 @@ import net.hudup.core.Constants;
  * @version 1.0
  *
  */
-final public class Util {
+public class Util {
 	
 	
 	/**
-	 * Probability epsilon.
+	 * Decimal format.
 	 */
-	public final static double PROB_EPSILON = 0.01f;
-
-	
-	/**
-	 * The maximum number digits in decimal precision.
-	 */
-	public final static int DECIMAL_PRECISION = 12;
-
-	
-	/**
-	 * Creating a new list.
-	 * @param <T> type of elements in list.
-	 * @return new empty list.
-	 */
-	public static <T> List<T> newList() {
-	    return new ArrayList<T>();
-	}
+	public static String DECIMAL_FORMAT = "%." + net.hmm.adapter.Util.DECIMAL_PRECISION + "f";
 
 	
 	/**
@@ -51,7 +33,7 @@ final public class Util {
 	 * @return new list with initial capacity.
 	 */
 	public static <T> List<T> newList(int initialCapacity) {
-	    return new ArrayList<T>(initialCapacity);
+	    return net.hmm.adapter.Util.newList(initialCapacity);
 	}
 	
 	
@@ -90,23 +72,14 @@ final public class Util {
 
 
 	/**
-	 * Converting the specified number into a string. The number of decimal digits is specified by the parameter {@code decimal}. 
-	 * @param number specified number.
-	 * @param decimal the number of decimal digits.
-	 * @return text format of the specified number.
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
 	 */
-	public static String format(double number, int decimal) {
-		return String.format("%." + decimal + "f", number);
-	}
-
-
-	/**
-	 * Converting the specified number into a string. The number of decimal digits is specified by {@link Constants#DECIMAL_PRECISION}.
-	 * @param number specified number.
-	 * @return text format of number of the specified number.
-	 */
-	public static String format(double number) {
-		return format(number, DECIMAL_PRECISION);
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+	    return net.hmm.adapter.Util.newMap(initialCapacity);
 	}
 
 
