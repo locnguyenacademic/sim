@@ -546,6 +546,61 @@
 	</target>
 
 
+	<target name="jar-pso" depends="compile" description="Create PSO package including particle swarm optimization (PSO) algorithm">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-pso.jar">
+	    		<fileset dir="${bin.home}" includes="net/pso/**"/>
+				<!--
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="${commons-math3.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+				-->
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.pso.PSO"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-pso.jar">
+	    		<fileset dir="${bin.home}" includes="net/pso/**"/>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.pso.PSO"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, pso*.*, *.script"/>
+		</copy>
+
+		<zip destfile="${archive.home}/${product}-${version}-pso.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-pso.zip"/>
+		</delete>
+	</target>
+
+
 	<target name="jar-all" depends="compile" description="Create all packages">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />

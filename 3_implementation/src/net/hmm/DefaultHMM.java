@@ -8,14 +8,9 @@
 package net.hmm;
 
 import java.io.Serializable;
-import java.rmi.NoSuchObjectException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Random;
-
-import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class is the default hidden Markov model {@link HMM}.
@@ -31,30 +26,6 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-	/**
-	 * Maximum iteration of expectation maximization (EM) algorithm for learning hidden Markov model (HMM).
-	 */
-	public final static String EM_MAX_ITERATION_FIELD = "learn_max_iteration";
-	
-	
-	/**
-	 * Default value for maximum iteration of expectation maximization (EM) algorithm for learning hidden Markov model (HMM).
-	 */
-	public final static int EM_MAX_ITERATION_DEFAULT = 1000;
-
-	
-	/**
-	 * Terminated threshold of expectation maximization (EM) algorithm for learning hidden Markov model (HMM).
-	 */
-	public final static String EM_EPSILON_FIELD = "learn_terminated_threshold";
-
-	
-	/**
-	 * Default value for terminated threshold of expectation maximization (EM) algorithm for learning hidden Markov model (HMM).
-	 */
-	public final static double EM_EPSILON_DEFAULT = 0.001;
-
 	
 	/**
 	 * Variable A represents transition probability matrix.
@@ -1670,7 +1641,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			defaultHMM.B.add(dist); 
 		}
 		
-		return new HMMWrapper(defaultHMM);
+		return new HMMWrapperImpl(defaultHMM);
 	}
 
 
@@ -1760,7 +1731,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			defaultHMM.B.add(dist); 
 		}
 		
-		return new HMMWrapper(defaultHMM);
+		return new HMMWrapperImpl(defaultHMM);
 	}
 
 
@@ -1785,7 +1756,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			defaultHMM.B.add(dist); 
 		}
 		
-		return new HMMWrapper(defaultHMM);
+		return new HMMWrapperImpl(defaultHMM);
 	}
 
 
@@ -1817,7 +1788,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			defaultHMM.B.add(dist);
 		}
 		
-		return new HMMWrapper(defaultHMM);
+		return new HMMWrapperImpl(defaultHMM);
 	}
 
 
@@ -1845,7 +1816,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 
 
 /**
- * This is the wrapper of standard hidden Markov model (HMM) specified by the interface {@link HMM}.
+ * This is the full wrapper of standard hidden Markov model (HMM) specified by the interface {@link HMM}.
  * In other words, it is an implementation of the interface {@link HMM}.
  * The core of this wrapper is the default hidden Markov model specified by {@link DefaultHMM}.
  * 
@@ -1853,7 +1824,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
  * @version 1.0
  *
  */
-class HMMWrapper implements HMM {
+class HMMWrapperImpl extends HMMWrapper {
 
 	
 	/**
@@ -1863,155 +1834,80 @@ class HMMWrapper implements HMM {
 	
 	
 	/**
-	 * Core default hidden Markov model (HMM).
-	 */
-	protected DefaultHMM defaultHMM = null;
-	
-	
-	/**
-	 * Flag to indicate whether this hidden Markov model was exported.
-	 */
-	protected boolean exported = false;
-	
-	
-	/**
 	 * Constructor with the default hidden Markov model (HMM).
 	 * @param defaultHMM the default hidden Markov model (HMM).
 	 */
-	public HMMWrapper(DefaultHMM defaultHMM) {
-		this.defaultHMM = defaultHMM;
+	public HMMWrapperImpl(DefaultHMM defaultHMM) {
+		super(defaultHMM);
 	}
 
 
 	@Override
 	public int n() throws RemoteException {
-		return defaultHMM.getStateNumber();
+		return ((DefaultHMM)hmm).getStateNumber();
 	}
 
 
 	@Override
 	public double a(int stateI, int stateJ) throws RemoteException {
-		return defaultHMM.getA(stateI, stateJ);
+		return ((DefaultHMM)hmm).getA(stateI, stateJ);
 	}
 
 
 	@Override
 	public double pi(int stateI) throws RemoteException {
-		return defaultHMM.getPI(stateI);
+		return ((DefaultHMM)hmm).getPI(stateI);
 	}
 
 
 	@Override
 	public double b(int stateI, Obs obs) throws RemoteException {
-		return defaultHMM.getB(stateI, obs, -1);
+		return ((DefaultHMM)hmm).getB(stateI, obs, -1);
 	}
 
 
 	@Override
 	public double evaluate(List<Obs> obsSeq) throws RemoteException {
-		return defaultHMM.probObs(obsSeq);
+		return ((DefaultHMM)hmm).probObs(obsSeq);
 	}
 
 
 	@Override
 	public List<Integer> uncover(List<Obs> obsSeq) throws RemoteException {
-		return defaultHMM.viterbi(obsSeq);
+		return ((DefaultHMM)hmm).viterbi(obsSeq);
 	}
 
 
 	@Override
 	public synchronized void learn(List<Obs> obsSeq) throws RemoteException {
-		defaultHMM.em(obsSeq, DefaultHMM.EM_EPSILON_DEFAULT, DefaultHMM.EM_MAX_ITERATION_DEFAULT);
+		int maxIteration = config.getAsInt(LEARN_MAX_ITERATION_FIELD);
+		maxIteration = maxIteration >= 0 ? maxIteration :  LEARN_MAX_ITERATION_DEFAULT;
+		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
+		terminatedThreshold = Double.isNaN(terminatedThreshold) ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold; 
+		
+		((DefaultHMM)hmm).em(obsSeq, terminatedThreshold, maxIteration);
 	}
 	
 	
 	@Override
 	public void addListener(HMMListener listener) throws RemoteException {
-		defaultHMM.addListener(listener);
+		((DefaultHMM)hmm).addListener(listener);
 	}
 
 
 	@Override
 	public void removeListener(HMMListener listener) throws RemoteException {
-		defaultHMM.removeListener(listener);
+		((DefaultHMM)hmm).removeListener(listener);
 	}
 
 
-	@Override
-	public synchronized Remote export(int serverPort) throws RemoteException {
-		if (exported) return null;
-		
-		Remote stub = null;
-		try {
-			stub = UnicastRemoteObject.exportObject(this, serverPort);
-		}
-		catch (Exception e) {
-			try {
-				if (stub != null) UnicastRemoteObject.unexportObject(this, true);
-			}
-			catch (Exception e2) {}
-			stub = null;
-		}
-	
-		exported = stub != null;
-		return stub;
-	}
-
-
-	@Override
-	public synchronized void unexport() throws RemoteException {
-		if (!exported) return;
-
-		try {
-        	UnicastRemoteObject.unexportObject(this, true);
-			exported = false;
-		}
-		catch (NoSuchObjectException e) {
-			exported = false;
-		}
-		catch (Throwable e) {
-			LogUtil.trace(e);
-		}
-	}
-
-	
-	@Override
-	public void close() throws Exception {
-		try {
-			defaultHMM.close();
-		}
-		catch (Throwable e) {}
-		
-		try {
-			unexport();
-		}
-		catch (Throwable e) {}
-	}
-
-
-	@Override
-	protected void finalize() throws Throwable {
-		try {
-			close();
-		} catch (Throwable e) {}
-		
-//		super.finalize();
-	}
-
-	
 	/**
 	 * Getting the default hidden Markov model (HMM).
 	 * @return the default hidden Markov model (HMM).
 	 */
 	public DefaultHMM getHMMImpl() {
-		return defaultHMM;
+		return ((DefaultHMM)hmm);
 	}
 
 
-	@Override
-	public String toString() {
-		return defaultHMM.toString();
-	}
-	
-	
 }

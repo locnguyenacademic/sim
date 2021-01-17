@@ -7,6 +7,8 @@
  */
 package net.hmm.adapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +27,19 @@ public class Util {
 	/**
 	 * The maximum number digits in decimal precision.
 	 */
-	public static int DECIMAL_PRECISION = Constants.DECIMAL_PRECISION;
+	public static int DECIMAL_PRECISION = 12;
 
+	
+	/**
+	 * Static code.
+	 */
+	static {
+		try {
+			DECIMAL_PRECISION = Constants.DECIMAL_PRECISION;
+		}
+		catch (Throwable e) {}
+	}
+	
 	
 	/**
 	 * Creating a new list with initial capacity.
@@ -35,7 +48,12 @@ public class Util {
 	 * @return new list with initial capacity.
 	 */
 	public static <T> List<T> newList(int initialCapacity) {
-	    return net.hudup.core.Util.newList(initialCapacity);
+		try {
+		    return net.hudup.core.Util.newList(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new ArrayList<T>(initialCapacity);
 	}
 	
 	
@@ -47,7 +65,12 @@ public class Util {
 	 * @return new map.
 	 */
 	public static <K, V> Map<K, V> newMap(int initialCapacity) {
-	    return net.hudup.core.Util.newMap(initialCapacity);
+		try {
+		    return net.hudup.core.Util.newMap(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new HashMap<K, V>(initialCapacity);
 	}
 
 

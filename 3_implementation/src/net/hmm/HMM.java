@@ -25,6 +25,30 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
 
 	
 	/**
+	 * Maximum iteration of learning hidden Markov model (HMM).
+	 */
+	final static String LEARN_MAX_ITERATION_FIELD = "learn_max_iteration";
+	
+	
+	/**
+	 * Default value for maximum iteration of learning hidden Markov model (HMM).
+	 */
+	final static int LEARN_MAX_ITERATION_DEFAULT = 1000;
+
+	
+	/**
+	 * Terminated threshold of learning hidden Markov model (HMM).
+	 */
+	final static String LEARN_TERMINATED_THRESHOLD_FIELD = "learn_terminated_threshold";
+
+	
+	/**
+	 * Default value for terminated threshold of learning hidden Markov model (HMM).
+	 */
+	final static double LEARN_TERMINATED_THRESHOLD_DEFAULT = 0.001;
+
+	
+	/**
 	 * Getting the number of states. Each state is coded by an integer.
 	 * @return the number of states.
 	 * @throws RemoteException if any error raises.
@@ -103,6 +127,22 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
     void removeListener(HMMListener listener) throws RemoteException;
 
 
+	/**
+	 * Getting configuration of this model.
+	 * @return configuration of this model.
+	 * @throws RemoteException if any error raises.
+	 */
+	HMMConfig getConfig() throws RemoteException;
+
+	
+	/**
+	 * Setting configuration of this model.
+	 * @param config specified configuration.
+	 * @throws RemoteException if any error raises.
+	 */
+	void setConfig(HMMConfig config) throws RemoteException;
+	
+	
 	/**
      * Exporting this hidden Markov model (HMM).
      * @param serverPort server port. Using port 0 if not concerning registry or naming.

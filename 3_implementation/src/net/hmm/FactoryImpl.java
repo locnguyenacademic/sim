@@ -61,7 +61,7 @@ public class FactoryImpl implements Factory {
 	public static void main(String[] args) {
 		Factory factory = new FactoryImpl();
 		
-		DefaultHMM discreteHMM = ((HMMWrapper)factory.createDiscreteHMM(
+		DefaultHMM discreteHMM = ((HMMWrapperImpl)factory.createDiscreteHMM(
 				new double[][] {
 					{0.50f, 0.25f, 0.25f},
 					{0.30f, 0.40f, 0.30f},
@@ -75,10 +75,10 @@ public class FactoryImpl implements Factory {
 		discreteHMM.setObsNames(Arrays.asList("dry", "dryish", "damp", "soggy"));
 		
 		@SuppressWarnings("unused")
-		DefaultHMM randomDiscreteHMM = ((HMMWrapper)factory.createDiscreteHMM(50, 100)).
+		DefaultHMM randomDiscreteHMM = ((HMMWrapperImpl)factory.createDiscreteHMM(50, 100)).
 				getHMMImpl();
 		
-		DefaultHMM normalHMM = ((HMMWrapper)factory.createNormalHMM(
+		DefaultHMM normalHMM = ((HMMWrapperImpl)factory.createNormalHMM(
 				new double[][] {
 					{0.50f, 0.25f, 0.25f},
 					{0.30f, 0.40f, 0.30f},
@@ -88,7 +88,7 @@ public class FactoryImpl implements Factory {
 				new double[] {0.9f, 0.9f, 0.9f})).getHMMImpl(); 
 		normalHMM.setStateNames(Arrays.asList("sunny", "cloudy", "rainy"));
 		
-		DefaultHMM exponentialHMM = ((HMMWrapper)factory.createExponentialHMM(
+		DefaultHMM exponentialHMM = ((HMMWrapperImpl)factory.createExponentialHMM(
 				new double[][] {
 					{0.50f, 0.25f, 0.25f},
 					{0.30f, 0.40f, 0.30f},
@@ -97,7 +97,7 @@ public class FactoryImpl implements Factory {
 				new double[] {1.0f/0.87f, 1.0f/0.14f, 1.0f/0.39f})).getHMMImpl(); 
 		exponentialHMM.setStateNames(Arrays.asList("sunny", "cloudy", "rainy"));
 		
-		DefaultHMM normalMixtureHMM = ((HMMWrapper)factory.createNormalMixtureHMM(
+		DefaultHMM normalMixtureHMM = ((HMMWrapperImpl)factory.createNormalMixtureHMM(
 				new double[][] {
 					{0.50f, 0.25f, 0.25f},
 					{0.30f, 0.40f, 0.30f},
@@ -128,7 +128,7 @@ public class FactoryImpl implements Factory {
 		}
 		Printer printer = new Printer("working/hmm-testresult.txt");
 		hmm.addListener(printer);
-		hmm.em(O, DefaultHMM.EM_EPSILON_DEFAULT, DefaultHMM.EM_MAX_ITERATION_DEFAULT);
+		hmm.em(O, HMM.LEARN_TERMINATED_THRESHOLD_DEFAULT, HMM.LEARN_MAX_ITERATION_DEFAULT);
 //		hmm.viterbi(O);
 
 		try {
