@@ -7,7 +7,6 @@
  */
 package net.rem.temp;
 
-import static net.rem.regression.RMAbstract.defaultAttributeList;
 import static net.rem.regression.RMAbstract.extractNumber;
 import static net.rem.regression.RMAbstract.splitIndices;
 import static net.rem.temp.RegressionEMImpl.REM_LOOP_BALANCE_MODE_DEFAULT;
@@ -192,7 +191,7 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 			weights0.add(1.0 / (double)rems.size());
 
 		//Learning weights by regression model.
-		AttributeList attRef = defaultAttributeList(rems.size() + 1);
+		AttributeList attRef = AttributeList.defaultRealAttributeList(rems.size() + 1);
 		List<Profile> profiles = Util.newList();
 		while (inputSample.next()) {
 			Profile profile = inputSample.pick();

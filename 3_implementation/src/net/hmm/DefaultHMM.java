@@ -12,6 +12,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Random;
 
+import net.hmm.HMMLearnEvent.Type;
+
 /**
  * This class is the default hidden Markov model {@link HMM}.
  * 
@@ -1019,7 +1021,8 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			fireInfoEvent(new HMMInfoEventImpl(this, String.format("\nGiven current parameters, terminating criterion is P(O)=" + Util.DECIMAL_FORMAT, curCriterion)));
 			
 			if (preCriterion >= 0) {
-				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+//				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
 				if (satisfied) {
 					fireInfoEvent(new HMMInfoEventImpl(this, "\nThe resulted estimate is:\n" + this));
 					break;
@@ -1090,9 +1093,12 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 				
 			}//End for j
 			
-			fireInfoEvent(new HMMInfoEventImpl(this, "\nThe resulted estimate is:\n" + this));
-		
 			iteration ++;
+
+			String info = "\nThe resulted estimate is:\n" + this;
+			fireInfoEvent(new HMMInfoEventImpl(this, info));
+			fireLearnEvent(new HMMLearnEventImpl(this, Type.doing, "hmm_em", "At iteration " + iteration + info, iteration, maxIteration));
+		
 			if (maxIteration > 0 && iteration >= maxIteration)
 				break;
 		}
@@ -1101,6 +1107,9 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		betas.clear();
 		numerators.clear();
 		glist.clear();
+		
+		fireLearnEvent(new HMMLearnEventImpl(this, Type.done, "hmm_em",
+			"At final iteration " + iteration + "\nThe final resulted estimate is:\n" + this, iteration, maxIteration));
 	}
 
 	
@@ -1497,6 +1506,23 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		for (HMMListener listener : listeners) {
 			try {
 				listener.receivedInfo(evt);
+			}
+			catch (Throwable e) { }
+		}
+	}
+
+	
+	/**
+	 * Firing learning event.
+	 * @param evt learning event.
+	 */
+	protected void fireLearnEvent(HMMLearnEvent evt) {
+		if (listenerList == null) return;
+		
+		HMMListener[] listeners = getHMMListeners();
+		for (HMMListener listener : listeners) {
+			try {
+				listener.receivedLearn(evt);
 			}
 			catch (Throwable e) { }
 		}

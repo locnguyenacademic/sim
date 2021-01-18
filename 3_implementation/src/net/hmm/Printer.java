@@ -206,6 +206,12 @@ public class Printer implements HMMListener, AutoCloseable {
 
 
 	@Override
+	public void receivedLearn(HMMLearnEvent evt) throws RemoteException {
+		
+	}
+
+
+	@Override
 	public void close() {
 		if (printer == null) return;
 		

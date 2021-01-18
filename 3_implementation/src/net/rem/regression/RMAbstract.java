@@ -12,9 +12,7 @@ import java.io.Writer;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.DecompositionSolver;
@@ -35,7 +33,6 @@ import net.hudup.core.alg.ExecutableAlgAbstract;
 import net.hudup.core.alg.MemoryBasedAlg;
 import net.hudup.core.alg.MemoryBasedAlgRemote;
 import net.hudup.core.data.Attribute;
-import net.hudup.core.data.Attribute.Type;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
@@ -205,7 +202,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		if (input instanceof Profile)
 			profile = (Profile)input;
 		else
-			profile = createProfile(this.attList, input);
+			profile = Profile.createProfile(this.attList, input);
 		if (profile == null)
 			return null;
 		
@@ -651,69 +648,6 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	
 	/**
-	 * Creating default attribute list for sample to learn regression model.
-	 * By default, all variables are real numbers.
-	 * @param maxVarNumber maximum number of variables.
-	 * @return default attribute list for sample to learn regression model.
-	 */
-	public static AttributeList defaultAttributeList(int maxVarNumber) {
-		AttributeList attList = new AttributeList();
-		for (int i = 0; i < maxVarNumber; i++) {
-			Attribute att = new Attribute("var" + i, Type.real);
-			attList.add(att);
-		}
-		
-		return attList;
-	}
-
-	
-	/**
-	 * Creating profile from specified attribute list and object.
-	 * @param attList specified attribute list
-	 * @param object specified object.
-	 * @return profile from specified attribute list and object.
-	 */
-	public static Profile createProfile(AttributeList attList, Object object) {
-		if (attList == null || attList.size() == 0)
-			return null;
-		
-		List<Double> values = null;
-		Map<String, Object> mapValues = null;
-		if (object == null)
-			values = Util.newList();
-		else {
-			if (object instanceof Map<?, ?>) {
-				Map<?, ?> map = (Map<?, ?>)object;
-				Set<?> keys = map.keySet();
-				mapValues = Util.newMap();
-				for (Object key : keys) {
-					mapValues.put(key.toString(), map.get(key));
-				}
-			}
-			else
-				values = DSUtil.toDoubleList(object, false);
-		}
-		
-		Profile profile = new Profile(attList);
-		if (values != null) {
-			int n = Math.min(values.size(), attList.size());
-			for (int j = 0; j < n; j++) {
-				int start = values.size() > attList.size() ? 1 : 0;
-				profile.setValue(j, values.get(j + start));
-			}
-		}
-		else if (mapValues != null) {
-			Set<String> keys = mapValues.keySet();
-			for (String key : keys) {
-				profile.setValue(key, mapValues.get(key));
-			}
-		}
-		
-		return profile;
-	}
-	
-	
-	/**
 	 * Extracting real number from specified object.
 	 * @param value specified object.
 	 * @return real number extracted from specified object.
@@ -881,8 +815,8 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		if (!(input instanceof Profile)) {
 			List<Double> values = DSUtil.toDoubleList(input, false);
 			if (attList == null)
-				attList = defaultAttributeList(values.size());
-			Profile profile = createProfile(attList, values);
+				attList = AttributeList.defaultRealAttributeList(values.size());
+			Profile profile = Profile.createProfile(attList, values);
 			return extractVariableValue(profile, null, indices, index);
 		}
 		

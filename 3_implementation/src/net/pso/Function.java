@@ -9,6 +9,9 @@ package net.pso;
 
 import java.io.Serializable;
 
+import net.hudup.core.data.Attribute;
+import net.hudup.core.data.ProfileVector;
+
 /**
  * This interface represents function.
  * 
@@ -21,10 +24,10 @@ public interface Function extends Serializable, Cloneable {
 	
 	/**
 	 * Evaluating this function given arguments.
-	 * @param args array of arguments.
+	 * @param arg argument.
 	 * @return evaluated value.
 	 */
-	double evaluate(Object...args);
+	double eval(ProfileVector arg);
 	
 	
 	/**
@@ -32,6 +35,28 @@ public interface Function extends Serializable, Cloneable {
 	 * @return number of variables.
 	 */
 	int getVarNum();
+	
+	
+	/**
+	 * Getting variable at specified index.
+	 * @param index specified index.
+	 * @return variable at specified index.
+	 */
+	Attribute getVar(int index);
+	
+	
+	/**
+	 * Getting optimizer.
+	 * @return optimizer.
+	 */
+	Optimizer getOptimizer();
+	
+	
+	/**
+	 * Setting optimizer.
+	 * @param optimizer specified optimizer.
+	 */
+	void setOptimizer(Optimizer optimizer);
 	
 	
 }
