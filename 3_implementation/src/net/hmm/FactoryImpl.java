@@ -7,7 +7,6 @@
  */
 package net.hmm;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -122,8 +121,9 @@ public class FactoryImpl implements Factory {
 		if (!Files.exists(workingDir)) {
 			try {
 				Files.createDirectory(workingDir);
-			} catch (IOException e) {
-				e.printStackTrace();
+			}
+			catch (Exception e) {
+				Util.trace(e);
 			}
 		}
 		Printer printer = new Printer("working/hmm-testresult.txt");
@@ -133,8 +133,9 @@ public class FactoryImpl implements Factory {
 
 		try {
 			hmm.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		catch (Exception e) {
+			Util.trace(e);
 		}
 		printer.close();
 	}

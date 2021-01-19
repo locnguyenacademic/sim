@@ -85,7 +85,7 @@ public abstract class ExponentialEM extends EMAbstract {
 		
 		this.currentIteration = 1;
 		int maxIteration = getMaxIteration();
-		while (learnStarted && this.currentIteration < maxIteration) {
+		while (learnStarted && (maxIteration <= 0 || this.currentIteration < maxIteration)) {
 			Object tempStatistics = expectation(this.currentParameter);
 			if (tempStatistics == null)
 				break;

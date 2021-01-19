@@ -83,4 +83,13 @@ public class Util {
 	}
 
 
+	/**
+	 * Tracing error.
+	 * @param e throwable error.
+	 */
+	public static void trace(Throwable e) {
+		e.printStackTrace();
+	}
+	
+	
 }

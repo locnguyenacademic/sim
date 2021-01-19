@@ -17,7 +17,7 @@ import java.util.EventObject;
  * @version 1.0
  *
  */
-public class HMMLearnEventImpl extends EventObject implements HMMLearnEvent {
+public class HMMDoEventImpl extends EventObject implements HMMDoEvent {
 
 	
 	/**
@@ -65,7 +65,7 @@ public class HMMLearnEventImpl extends EventObject implements HMMLearnEvent {
 	 * @param progressStep progress step.
 	 * @param progressTotalEstimated progress total estimated.
 	 */
-	public HMMLearnEventImpl(Object source, Type type, String algName, Serializable learnResult, int progressStep, int progressTotalEstimated) {
+	public HMMDoEventImpl(Object source, Type type, String algName, Serializable learnResult, int progressStep, int progressTotalEstimated) {
 		super(source);
 		this.type = type;
 		this.algName = algName;

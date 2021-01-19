@@ -10,6 +10,7 @@ package net.pso;
 import java.io.Serializable;
 
 import net.hudup.core.alg.SetupAlgEvent;
+import net.hudup.core.data.Simplify;
 
 /**
  * This class represents learning event of particle swarm optimization (PSO) algorithm.
@@ -18,7 +19,7 @@ import net.hudup.core.alg.SetupAlgEvent;
  * @version 1.0
  *
  */
-public class PSOLearnEvent extends SetupAlgEvent {
+public class PSOLearnEvent extends SetupAlgEvent implements Simplify {
 
 	
 	/**
@@ -38,6 +39,12 @@ public class PSOLearnEvent extends SetupAlgEvent {
 	 */
 	public PSOLearnEvent(Object source, Type type, String algName, Serializable learnResult, int progressStep, int progressTotalEstimated) {
 		super(source, type, algName, null, learnResult, progressStep, progressTotalEstimated);
+	}
+
+
+	@Override
+	public Object simplify() throws Exception {
+		return new SetupAlgEvent(Integer.valueOf(0), type, algName, setupResult, progressStep, progressTotalEstimated);
 	}
 
 	

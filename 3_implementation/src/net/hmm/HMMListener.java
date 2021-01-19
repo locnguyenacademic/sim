@@ -35,7 +35,7 @@ public interface HMMListener extends EventListener, Remote, Serializable, Clonea
 	 * @param evt learning event.
 	 * @throws RemoteException if any error raises.
 	 */
-	void receivedLearn(HMMLearnEvent evt) throws RemoteException;
+	void receivedDo(HMMDoEvent evt) throws RemoteException;
 
 
 }

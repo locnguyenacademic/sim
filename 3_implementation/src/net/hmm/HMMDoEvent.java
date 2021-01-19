@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @version 1.0
  *
  */
-public interface HMMLearnEvent extends Cloneable, Serializable {
+public interface HMMDoEvent extends Cloneable, Serializable {
 
 	
 	/**

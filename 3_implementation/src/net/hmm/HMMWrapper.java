@@ -12,8 +12,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import net.hudup.core.logistic.LogUtil;
-
 /**
  * This abstract is the partial wrapper of standard hidden Markov model (HMM) specified by the interface {@link HMM}.
  * In other words, it is an partial implementation of the interface {@link HMM}.
@@ -58,6 +56,7 @@ public abstract class HMMWrapper implements HMM {
 		this.hmm = hmm;
 		this.config.put(LEARN_MAX_ITERATION_FIELD, LEARN_MAX_ITERATION_DEFAULT);
 		this.config.put(LEARN_TERMINATED_THRESHOLD_FIELD, LEARN_TERMINATED_THRESHOLD_DEFAULT);
+//		this.config.put(LEARN_TERMINATED_RATIO_FIELD, LEARN_TERMINATED_RATIO_DEFAULT);
 	}
 
 
@@ -104,9 +103,10 @@ public abstract class HMMWrapper implements HMM {
 		}
 		catch (NoSuchObjectException e) {
 			exported = false;
+			Util.trace(e);
 		}
 		catch (Throwable e) {
-			LogUtil.trace(e);
+			Util.trace(e);
 		}
 	}
 
@@ -118,12 +118,16 @@ public abstract class HMMWrapper implements HMM {
 				((AutoCloseable)hmm).close();
 			hmm = null;
 		}
-		catch (Throwable e) {}
+		catch (Throwable e) {
+			Util.trace(e);
+		}
 		
 		try {
 			unexport();
 		}
-		catch (Throwable e) {}
+		catch (Throwable e) {
+			Util.trace(e);
+		}
 	}
 
 

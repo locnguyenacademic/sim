@@ -150,8 +150,8 @@ public class Printer implements HMMListener, AutoCloseable {
 			system = false;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			close();
+			Util.trace(e);
 		}
 	}
 
@@ -168,8 +168,8 @@ public class Printer implements HMMListener, AutoCloseable {
 			system = false;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			close();
+			Util.trace(e);
 		}
 	}
 	
@@ -206,7 +206,7 @@ public class Printer implements HMMListener, AutoCloseable {
 
 
 	@Override
-	public void receivedLearn(HMMLearnEvent evt) throws RemoteException {
+	public void receivedDo(HMMDoEvent evt) throws RemoteException {
 		
 	}
 
@@ -223,8 +223,8 @@ public class Printer implements HMMListener, AutoCloseable {
 			paused = false;
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
 			printer = null;
+			Util.trace(e);
 		}
 	}
 

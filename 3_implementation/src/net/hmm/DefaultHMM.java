@@ -12,7 +12,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Random;
 
-import net.hmm.HMMLearnEvent.Type;
+import net.hmm.HMMDoEvent.Type;
+import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class is the default hidden Markov model {@link HMM}.
@@ -65,7 +66,19 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
     protected transient HMMListenerList listenerList = new HMMListenerList();
 
     
-	/**
+    /**
+     * Flag to indicate whether algorithm learning process was started.
+     */
+    protected volatile boolean doStarted = false;
+    
+    
+    /**
+     * Flag to indicate whether algorithm learning process was paused.
+     */
+    protected volatile boolean doPaused = false;
+
+    
+    /**
 	 * Default constructor
 	 */
 	protected DefaultHMM() {
@@ -1008,7 +1021,8 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		List<Double> glist = Util.newList(T+1, 0d);
 		double preCriterion = -1;
 		int iteration = 0;
-		while (true) {
+		doStarted = true;
+		while (doStarted && (maxIteration <= 0 || iteration < maxIteration)) {
 			alphaBetaAll(O, alphas, betas, -1);
 			
 			double curCriterion = 0;
@@ -1021,8 +1035,8 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			fireInfoEvent(new HMMInfoEventImpl(this, String.format("\nGiven current parameters, terminating criterion is P(O)=" + Util.DECIMAL_FORMAT, curCriterion)));
 			
 			if (preCriterion >= 0) {
-//				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
-				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
+				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+//				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
 				if (satisfied) {
 					fireInfoEvent(new HMMInfoEventImpl(this, "\nThe resulted estimate is:\n" + this));
 					break;
@@ -1097,10 +1111,16 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 
 			String info = "\nThe resulted estimate is:\n" + this;
 			fireInfoEvent(new HMMInfoEventImpl(this, info));
-			fireLearnEvent(new HMMLearnEventImpl(this, Type.doing, "hmm_em", "At iteration " + iteration + info, iteration, maxIteration));
+			fireDoEvent(new HMMDoEventImpl(this, Type.doing, "hmm_em", "At iteration " + iteration + info, iteration, maxIteration));
 		
-			if (maxIteration > 0 && iteration >= maxIteration)
-				break;
+			synchronized (this) {
+				while (doPaused) {
+					notifyAll();
+					try {
+						wait();
+					} catch (Exception e) {LogUtil.trace(e);}
+				}
+			}
 		}
 		
 		alphas.clear();
@@ -1108,8 +1128,16 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		numerators.clear();
 		glist.clear();
 		
-		fireLearnEvent(new HMMLearnEventImpl(this, Type.done, "hmm_em",
-			"At final iteration " + iteration + "\nThe final resulted estimate is:\n" + this, iteration, maxIteration));
+		synchronized (this) {
+			doStarted = false;
+			doPaused = false;
+			
+			fireDoEvent(new HMMDoEventImpl(this, Type.done, "hmm_em",
+					"At final iteration " + iteration + "\nThe final resulted estimate is:\n" + this, iteration, maxIteration));
+
+			notifyAll();
+		}
+
 	}
 
 	
@@ -1507,7 +1535,9 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			try {
 				listener.receivedInfo(evt);
 			}
-			catch (Throwable e) { }
+			catch (Throwable e) { 
+				Util.trace(e);
+			}
 		}
 	}
 
@@ -1516,19 +1546,107 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 * Firing learning event.
 	 * @param evt learning event.
 	 */
-	protected void fireLearnEvent(HMMLearnEvent evt) {
+	protected void fireDoEvent(HMMDoEvent evt) {
 		if (listenerList == null) return;
 		
 		HMMListener[] listeners = getHMMListeners();
 		for (HMMListener listener : listeners) {
 			try {
-				listener.receivedLearn(evt);
+				listener.receivedDo(evt);
 			}
-			catch (Throwable e) { }
+			catch (Throwable e) {
+				Util.trace(e);
+			}
 		}
 	}
 
 	
+	/**
+	 * Pause doing.
+	 * @return true if pausing is successful.
+	 */
+	public synchronized boolean doPause() {
+		if (!isDoRunning()) return false;
+		
+		doPaused  = true;
+		
+		try {
+			wait();
+		} 
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+		
+		return true;
+	}
+
+
+	/**
+	 * Resume doing.
+	 * @return true if resuming is successful.
+	 */
+	public synchronized boolean doResume() {
+		if (!isDoPaused()) return false;
+		
+		doPaused = false;
+		notifyAll();
+		
+		return true;
+	}
+
+
+	/**
+	 * Stop doing.
+	 * @return true if stopping is successful.
+	 */
+	public synchronized boolean doStop() {
+		if (!isDoStarted()) return false;
+		
+		doStarted = false;
+		
+		if (doPaused) {
+			doPaused = false;
+			notifyAll();
+		}
+		
+		try {
+			wait();
+		} 
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+		
+		return true;
+	}
+
+
+	/**
+	 * Checking whether in doing mode.
+	 * @return whether in doing mode.
+	 */
+	public boolean isDoStarted() {
+		return doStarted;
+	}
+
+
+	/**
+	 * Checking whether in paused mode.
+	 * @return whether in paused mode.
+	 */
+	public boolean isDoPaused() {
+		return doStarted && doPaused;
+	}
+
+
+	/**
+	 * Checking whether in running mode.
+	 * @return whether in running mode.
+	 */
+	public boolean isDoRunning() {
+		return doStarted && !doPaused;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -1638,7 +1756,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			if (B != null) B.clear();
 		}
 		catch (Throwable e) {
-			e.printStackTrace();
+			Util.trace(e);
 		}
 	}
 
@@ -1924,6 +2042,42 @@ class HMMWrapperImpl extends HMMWrapper {
 	@Override
 	public void removeListener(HMMListener listener) throws RemoteException {
 		((DefaultHMM)hmm).removeListener(listener);
+	}
+
+
+	@Override
+	public boolean doPause() throws RemoteException {
+		return ((DefaultHMM)hmm).doPause();
+	}
+
+
+	@Override
+	public boolean doResume() throws RemoteException {
+		return ((DefaultHMM)hmm).doResume();
+	}
+
+
+	@Override
+	public boolean doStop() throws RemoteException {
+		return ((DefaultHMM)hmm).doStop();
+	}
+
+
+	@Override
+	public boolean isDoStarted() throws RemoteException {
+		return ((DefaultHMM)hmm).isDoStarted();
+	}
+
+
+	@Override
+	public boolean isDoPaused() throws RemoteException {
+		return ((DefaultHMM)hmm).isDoPaused();
+	}
+
+
+	@Override
+	public boolean isDoRunning() throws RemoteException {
+		return ((DefaultHMM)hmm).isDoRunning();
 	}
 
 

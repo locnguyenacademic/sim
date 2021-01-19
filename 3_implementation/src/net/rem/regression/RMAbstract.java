@@ -680,6 +680,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 */
 	public static boolean notSatisfy(double estimatedValue, double currentValue, double threshold) {
 		return Math.abs(estimatedValue - currentValue) > threshold * Math.abs(currentValue);
+//		return Math.abs(estimatedValue - currentValue) > threshold;
 	}
 	
 	

@@ -97,7 +97,7 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 	/**
 	 * Default value for lower bound of position.
 	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "0, 0";
+	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
 
 
 	/**
@@ -122,6 +122,18 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 	 * Default value for terminated threshold .
 	 */
 	public final static double TERMINATED_THRESHOLD_DEFAULT = 0.001;
+	
+	
+	/**
+	 * Terminated ratio mode.
+	 */
+	public final static String TERMINATED_RATIO_FIELD = "terminated_ratio";
+
+	
+	/**
+	 * Default value for terminated ratio mode.
+	 */
+	public final static boolean TERMINATED_RATIO_DEFAULT = false;
 
 	
 	/**
@@ -205,7 +217,9 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 
 	
 	@Override
-	public synchronized Object learnStart(Object... info) throws RemoteException {
+	public Object learnStart(Object... info) throws RemoteException {
+		if (isLearnStarted()) return null;
+
 		swarm.clear();
 		
 		String expr = config.getAsString(FUNC_EXPR_FIELD);
@@ -240,6 +254,7 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 		maxIteration = maxIteration < 0 ? 0 : maxIteration;  
 		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
 		terminatedThreshold = Util.isUsed(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
+		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_FIELD);
 		double phi1 = config.getAsReal(PHI1_FIELD);
 		phi1 = Util.isUsed(phi1) && phi1 > 0 ? phi1 : PHI1_DEFAULT;
 		double phi2 = config.getAsReal(PHI2_FIELD);
@@ -249,7 +264,8 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 		
 		int iteration = 0;
 		Optimizer preOptimizer = null;
-		while (true) {
+		learnStarted = true;
+		while (learnStarted && (maxIteration <= 0 || iteration < maxIteration)) {
 			for (Particle x : swarm) {
 				ProfileVector force1 = Particle.makeRandom(dim, 0, phi1).multiplyWise(
 					((ProfileVector)x.bestPosition.clone()).subtract(x.position));
@@ -296,23 +312,40 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 					iteration, maxIteration));
 			
 			if (preOptimizer != null) {
-//				boolean satisfied = Math.abs(optimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold * Math.abs(preOptimizer.bestValue);
-				boolean satisfied = Math.abs(preOptimizer.bestValue - optimizer.bestValue) <= terminatedThreshold;
+				boolean satisfied = false;
+				if (terminatedRatio)
+					satisfied = Math.abs(optimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold * Math.abs(preOptimizer.bestValue);
+				else
+					satisfied = Math.abs(preOptimizer.bestValue - optimizer.bestValue) <= terminatedThreshold;
+				
 				if (satisfied) {
-					break;
+					learnStarted = false;
 				}
 			}
 			
-			if (maxIteration > 0 && iteration >= maxIteration) {
-				break;
+			synchronized (this) {
+				while (learnPaused) {
+					notifyAll();
+					try {
+						wait();
+					} catch (Exception e) {LogUtil.trace(e);}
+				}
 			}
+
 		}
 		
 		func.setOptimizer(optimizer);
 		
-		fireSetupEvent(new PSOLearnEvent(this, Type.done, getName(),
+		synchronized (this) {
+			learnStarted = false;
+			learnPaused = false;
+			
+			fireSetupEvent(new PSOLearnEvent(this, Type.done, getName(),
 				"At final iteration " + iteration + ": final optimizer is " + optimizer.toString(),
 				iteration, maxIteration));
+
+			notifyAll();
+		}
 
 		return func;
 	}
@@ -392,6 +425,7 @@ public class PSO extends NonexecutableAlgAbstract implements AllowNullTrainingSe
 		config.put(POSITION_LOWER_BOUND_FIELD, POSITION_LOWER_BOUND_DEFAULT);
 		config.put(POSITION_UPPER_BOUND_FIELD, POSITION_UPPER_BOUND_DEFAULT);
 		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
+		config.put(TERMINATED_RATIO_FIELD, TERMINATED_RATIO_DEFAULT);
 		config.put(PHI1_FIELD, PHI1_DEFAULT);
 		config.put(PHI2_FIELD, PHI2_DEFAULT);
 		config.put(CHI_FIELD, CHI_DEFAULT);

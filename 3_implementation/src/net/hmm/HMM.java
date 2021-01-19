@@ -49,6 +49,18 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
 
 	
 	/**
+	 * Terminated ratio mode of learning hidden Markov model (HMM).
+	 */
+	final static String LEARN_TERMINATED_RATIO_FIELD = "learn_terminated_ratio";
+
+	
+	/**
+	 * Default value for terminated ratio mode of learning hidden Markov model (HMM).
+	 */
+	final static boolean LEARN_TERMINATED_RATIO_DEFAULT = false;
+
+	
+	/**
 	 * Getting the number of states. Each state is coded by an integer.
 	 * @return the number of states.
 	 * @throws RemoteException if any error raises.
@@ -144,6 +156,53 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
 	
 	
 	/**
+	 * Pause doing.
+	 * @return true if pausing is successful.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean doPause() throws RemoteException;
+
+
+	/**
+	 * Resume doing.
+	 * @return true if resuming is successful.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean doResume() throws RemoteException;
+
+
+	/**
+	 * Stop doing.
+	 * @return true if stopping is successful.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean doStop() throws RemoteException;
+
+	/**
+	 * Checking whether in doing mode.
+	 * @return whether in doing mode.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean isDoStarted() throws RemoteException;
+
+
+	/**
+	 * Checking whether in paused mode.
+	 * @return whether in paused mode.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean isDoPaused() throws RemoteException;
+
+
+	/**
+	 * Checking whether in running mode.
+	 * @return whether in running mode.
+	 * @throws RemoteException if any error raises.
+	 */
+	boolean isDoRunning() throws RemoteException;
+
+	
+	/**
      * Exporting this hidden Markov model (HMM).
      * @param serverPort server port. Using port 0 if not concerning registry or naming.
      * @return stub as remote object. Return null if exporting fails.
@@ -159,7 +218,7 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
     void unexport() throws RemoteException;
 
     
-    @Override
+	@Override
     void close() throws Exception;
 
 
