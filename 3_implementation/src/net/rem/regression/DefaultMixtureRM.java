@@ -7,9 +7,11 @@
  */
 package net.rem.regression;
 
-import static net.rem.em.EM.EM_DEFAULT_EPSILON;
+import static net.rem.em.EM.EM_EPSILON;
+import static net.rem.em.EM.EM_EPSILON_RATIO_MODE;
 import static net.rem.em.EM.EM_MAX_ITERATION;
 import static net.rem.em.EMAbstract.EM_EPSILON_FIELD;
+import static net.rem.em.EMAbstract.EM_EPSILON_RATIO_MODE_FIELD;
 import static net.rem.em.EMAbstract.EM_MAX_ITERATION_FIELD;
 import static net.rem.regression.em.DefaultMixtureREM.COMP_NUMBER_FIELD;
 import static net.rem.regression.em.DefaultMixtureREM.PREV_PARAMS_FIELD;
@@ -81,6 +83,7 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 		DefaultMixtureREM prevMixREM = null;
 		double prevFitness = -1;
 		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
+		boolean ratioMode = getConfig().getAsBoolean(EM_EPSILON_RATIO_MODE_FIELD);
 		int maxK = getConfig().getAsInt(COMP_MAX_NUMBER_FIELD);
 		maxK = maxK <= 0 ? Integer.MAX_VALUE : maxK;
 		while (learnStarted) {
@@ -123,7 +126,7 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 			double fitness = mixREM.getFitness();
 			if (Util.isUsed(fitness)
 					&& fitness > prevFitness
-					&& RMAbstract.notSatisfy(fitness, prevFitness, threshold)) {
+					&& RMAbstract.notSatisfy(fitness, prevFitness, threshold, ratioMode)) {
 				prevFitness = fitness;
 				if (prevMixREM != null)
 					prevMixREM.unsetup();
@@ -352,7 +355,8 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(EM_EPSILON_FIELD, EM_DEFAULT_EPSILON);
+		config.put(EM_EPSILON_FIELD, EM_EPSILON);
+		config.put(EM_EPSILON_RATIO_MODE_FIELD, EM_EPSILON_RATIO_MODE);
 		config.put(EM_MAX_ITERATION_FIELD, EM_MAX_ITERATION);
 		config.put(R_INDICES_FIELD, R_INDICES_DEFAULT);
 		config.put(COMP_MAX_NUMBER_FIELD, COMP_MAX_NUMBER_DEFAULT);

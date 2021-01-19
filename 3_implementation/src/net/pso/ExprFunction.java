@@ -1,13 +1,17 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.pso;
 
 import java.util.List;
 
-import net.hudup.core.Constants;
 import net.hudup.core.Util;
-import net.hudup.core.data.AttributeList;
-import net.hudup.core.data.ProfileVector;
 import net.hudup.core.logistic.LogUtil;
-import net.rem.regression.logistic.speqmath.Parser;
+import net.pso.logistic.speqmath.Parser;
 
 /**
  * This class represents the function is specified by mathematical expression.
@@ -16,7 +20,7 @@ import net.rem.regression.logistic.speqmath.Parser;
  * @version 1.0
  *
  */
-public class ExprFunction extends FunctionAbstract {
+public class ExprFunction extends FunctionReal {
 
 
 	/**
@@ -39,19 +43,22 @@ public class ExprFunction extends FunctionAbstract {
 	
 	/**
 	 * Default constructor.
+	 * @param varNames variable names.
+	 * @param expr mathematical expression.
 	 */
 	public ExprFunction(List<String> varNames, String expr) {
-		this.expr = expr != null ? expr : "";
-		this.vars = AttributeList.defaultRealAttributeList(varNames.size());
+		super(varNames.size());
 		
-		for (int i = 0; i < this.vars.size(); i++) {
+		this.expr = expr != null ? expr : "";
+		int dim = this.vars.size();
+		for (int i = 0; i < dim; i++) {
 			this.vars.get(i).setName(varNames.get(i));
 		}
 	}
 
 	
 	@Override
-	public double eval(ProfileVector arg) {
+	public Double eval(Vector<Double> arg) {
 		int n = arg.getAttCount();
 		String expr = this.expr;
 		for (int i = 0; i < n; i++) {
@@ -61,23 +68,27 @@ public class ExprFunction extends FunctionAbstract {
 				continue;
 			
 			if(arg.isMissing(i))
-				return Constants.UNUSED; //Cannot evaluate
+				return null; //Cannot evaluate
 			Double value = arg.getValueAsReal(attName);
 			if(!Util.isUsed(value))
-				return Constants.UNUSED; //Cannot evaluate
+				return null; //Cannot evaluate
 			
 			expr = expr.replaceAll(replacedText, value.toString());
 		}
 		
 		try {
 			Parser parser = new Parser();
-			return parser.parse2(expr);
+			double value = parser.parse2(expr);
+			if (Util.isUsed(value))
+				return value;
+			else
+				return null;
 		}
 		catch (Throwable e) {
 			LogUtil.trace(e);
 		}
 		
-		return Constants.UNUSED;
+		return null;
 	}
 
 	

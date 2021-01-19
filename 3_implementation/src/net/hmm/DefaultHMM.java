@@ -1004,9 +1004,10 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 * This method is very important to solve the learning problem.
 	 * @param O observation sequence.
 	 * @param terminatedThreshold terminated threshold.
+	 * @param terminatedRatioMode flag to indicate whether terminated threshold is for ratio.
 	 * @param maxIteration maximum number of iterations.
 	 */
-	public void em(List<Obs> O, double terminatedThreshold, int maxIteration) {
+	public void em(List<Obs> O, double terminatedThreshold, boolean terminatedRatioMode, int maxIteration) {
 		int n = getStateNumber();
 		int T = O.size() - 1;
 
@@ -1035,8 +1036,11 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			fireInfoEvent(new HMMInfoEventImpl(this, String.format("\nGiven current parameters, terminating criterion is P(O)=" + Util.DECIMAL_FORMAT, curCriterion)));
 			
 			if (preCriterion >= 0) {
-				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
-//				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
+				boolean satisfied = false;
+				if (terminatedRatioMode)
+					satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+				else
+					satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
 				if (satisfied) {
 					fireInfoEvent(new HMMInfoEventImpl(this, "\nThe resulted estimate is:\n" + this));
 					break;
@@ -1291,10 +1295,11 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 * This method has the same to the {@link #em(List, int)} method but it calls the {@link #emOneLoop(List)} for each iteration.
 	 * @param O observation sequence.
 	 * @param terminatedThreshold terminated threshold.
+	 * @param terminatedRatioMode flag to indicate whether terminated threshold is for ratio.
 	 * @param maxIteration maximum number of iterations.
 	 */
 	@Deprecated
-	public void em2(List<Obs> O, double terminatedThreshold, int maxIteration) {
+	public void em2(List<Obs> O, double terminatedThreshold, boolean terminatedRatioMode, int maxIteration) {
 		fireInfoEvent(new HMMInfoEventImpl(this,
 			"EM learning algorithm on observation sequence O=" + toObsString(O) + " with HMM:" + "\n" + this));
 		
@@ -1309,7 +1314,11 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			fireInfoEvent(new HMMInfoEventImpl(this, String.format("Given resulted estimate, terminating criterion is P(O)=" + Util.DECIMAL_FORMAT, curCriterion)));
 			
 			if (preCriterion >= 0) {
-				boolean satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+				boolean satisfied = false;
+				if (terminatedRatioMode)
+					satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold * Math.abs(preCriterion);
+				else
+					satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
 				if (satisfied) break;
 			}
 			preCriterion = curCriterion;
@@ -2028,8 +2037,9 @@ class HMMWrapperImpl extends HMMWrapper {
 		maxIteration = maxIteration >= 0 ? maxIteration :  LEARN_MAX_ITERATION_DEFAULT;
 		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
 		terminatedThreshold = Double.isNaN(terminatedThreshold) ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold; 
+		boolean terminatedRatio = config.getAsBoolean(LEARN_TERMINATED_RATIO_MODE_FIELD);
 		
-		((DefaultHMM)hmm).em(obsSeq, terminatedThreshold, maxIteration);
+		((DefaultHMM)hmm).em(obsSeq, terminatedThreshold, terminatedRatio, maxIteration);
 	}
 	
 	

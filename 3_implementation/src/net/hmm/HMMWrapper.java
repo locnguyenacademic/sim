@@ -22,12 +22,29 @@ import java.rmi.server.UnicastRemoteObject;
  *
  */
 public abstract class HMMWrapper implements HMM {
-
-	
 	/**
 	 * Serial version UID for serializable class. 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	
+	/**
+	 * Maximum iteration of learning hidden Markov model (HMM).
+	 */
+	public final static String LEARN_MAX_ITERATION_FIELD = "learn_max_iteration";
+	
+	
+	/**
+	 * Terminated threshold of learning hidden Markov model (HMM).
+	 */
+	public final static String LEARN_TERMINATED_THRESHOLD_FIELD = "learn_terminated_threshold";
+
+	
+	/**
+	/**
+	 * Terminated ratio mode of learning hidden Markov model (HMM).
+	 */
+	public final static String LEARN_TERMINATED_RATIO_MODE_FIELD = "learn_terminated_ratio_mode";
 
 	
 	/**
@@ -56,7 +73,7 @@ public abstract class HMMWrapper implements HMM {
 		this.hmm = hmm;
 		this.config.put(LEARN_MAX_ITERATION_FIELD, LEARN_MAX_ITERATION_DEFAULT);
 		this.config.put(LEARN_TERMINATED_THRESHOLD_FIELD, LEARN_TERMINATED_THRESHOLD_DEFAULT);
-//		this.config.put(LEARN_TERMINATED_RATIO_FIELD, LEARN_TERMINATED_RATIO_DEFAULT);
+		this.config.put(LEARN_TERMINATED_RATIO_MODE_FIELD, LEARN_TERMINATED_RATIO_MODE_DEFAULT);
 	}
 
 

@@ -294,19 +294,20 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 * @param threshold specified threshold
 	 * @param currentParameter other specified parameter (current parameter).
 	 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
+	 * @param ratioMode flag to indicate whether the threshold is for ratio.
 	 * It also solve the over-fitting problem. Please pay attention to it.
 	 * @return true if the terminated condition is satisfied.
 	 */
-	public boolean terminatedCondition(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter) {
+	public boolean terminatedCondition(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter, boolean ratioMode) {
 		List<Double> alpha1 = previousParameter != null ? previousParameter.getAlpha() : null;
 		List<Double> alpha2 = currentParameter.getAlpha();
 		List<Double> alpha3 = this.getAlpha();
 		if (alpha3 != null && alpha2 != null) {
 			for (int i = 0; i < alpha2.size(); i++) {
-				if (notSatisfy(alpha3.get(i), alpha2.get(i), threshold)) {
+				if (notSatisfy(alpha3.get(i), alpha2.get(i), threshold, ratioMode)) {
 					if (alpha1 == null)
 						return false;
-					else if (notSatisfy(alpha3.get(i), alpha1.get(i), threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+					else if (notSatisfy(alpha3.get(i), alpha1.get(i), threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 						return false;
 				}
 			}
@@ -324,21 +325,22 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 * @param threshold specified threshold
 	 * @param currentParameter other specified parameter (current parameter).
 	 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
+	 * @param ratioMode flag to indicate whether the threshold is for ratio.
 	 * It also solve the over-fitting problem. Please pay attention to it.
 	 * @return true if the terminated condition is satisfied.
 	 */
 	@SuppressWarnings("unused")
 	@Deprecated
-	private boolean terminatedCondition0(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter) {
+	private boolean terminatedCondition0(double threshold, ExchangedParameter currentParameter, ExchangedParameter previousParameter, boolean ratioMode) {
 		List<Double> alpha1 = previousParameter != null ? previousParameter.getAlpha() : null;
 		List<Double> alpha2 = currentParameter.getAlpha();
 		List<Double> alpha3 = this.getAlpha();
 		if (alpha3 != null && alpha2 != null) {
 			for (int i = 0; i < alpha2.size(); i++) {
-				if (notSatisfy(alpha3.get(i), alpha2.get(i), threshold)) {
+				if (notSatisfy(alpha3.get(i), alpha2.get(i), threshold, ratioMode)) {
 					if (alpha1 == null)
 						return false;
-					else if (notSatisfy(alpha3.get(i), alpha1.get(i), threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+					else if (notSatisfy(alpha3.get(i), alpha1.get(i), threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 						return false;
 				}
 			}
@@ -357,10 +359,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 				double[]  beta3 = betas3.get(i);
 				
 				for (int j = 0; j < beta2.length; j++) {
-					if (notSatisfy(beta3[j], beta2[j], threshold)) {
+					if (notSatisfy(beta3[j], beta2[j], threshold, ratioMode)) {
 						if (beta1 == null)
 							return false;
-						else if (notSatisfy(beta3[j], beta1[j], threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+						else if (notSatisfy(beta3[j], beta1[j], threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 							return false;
 					}
 				}
@@ -374,10 +376,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		double coeff2 = currentParameter.coeff;
 		double coeff3 = this.coeff;
 		if (Util.isUsed(coeff3) && Util.isUsed(coeff2)) {
-			if (notSatisfy(coeff3, coeff2, threshold)) {
+			if (notSatisfy(coeff3, coeff2, threshold, ratioMode)) {
 				if (!Util.isUsed(coeff1))
 					return false;
-				else if (notSatisfy(coeff3, coeff1, threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+				else if (notSatisfy(coeff3, coeff1, threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 					return false;
 			}
 		}
@@ -388,10 +390,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		double zVariance2 = currentParameter.zVariance;
 		double zVariance3 = this.zVariance;
 		if (Util.isUsed(zVariance3) && Util.isUsed(zVariance2)) {
-			if (notSatisfy(zVariance3, zVariance2, threshold)) {
+			if (notSatisfy(zVariance3, zVariance2, threshold, ratioMode)) {
 				if (!Util.isUsed(zVariance1))
 					return false;
-				else if (notSatisfy(zVariance3, zVariance1, threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+				else if (notSatisfy(zVariance3, zVariance1, threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 					return false;
 			}
 		}
@@ -402,10 +404,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		NormalDisParameter xNormalDisParameter2 = currentParameter.getXNormalDisParameter();
 		NormalDisParameter xNormalDisParameter3 = this.getXNormalDisParameter();
 		if(xNormalDisParameter3 != null && xNormalDisParameter2 != null) {
-			if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter2, null)) {
+			if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter2, null, ratioMode)) {
 				if (xNormalDisParameter1 == null)
 					return false;
-				else if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter1, null))
+				else if (!xNormalDisParameter3.terminatedCondition(threshold, xNormalDisParameter1, null, ratioMode))
 					return false;
 			}
 		}
@@ -892,19 +894,20 @@ public class ExchangedParameter implements Cloneable, Serializable {
 		 * @param threshold specified threshold
 		 * @param currentParameter other specified parameter (current parameter).
 		 * @param previousParameter previous parameter is used to avoid skip-steps in optimization for too acute function.
+		 * @param ratioMode flag to indicate whether the threshold is for ratio.
 		 * It also solve the over-fitting problem. Please pay attention to it.
 		 * @return true if the terminated condition is satisfied.
 		 */
-		public boolean terminatedCondition(double threshold, NormalDisParameter currentParameter, NormalDisParameter previousParameter) {
+		public boolean terminatedCondition(double threshold, NormalDisParameter currentParameter, NormalDisParameter previousParameter, boolean ratioMode) {
 			List<Double> mean1 = previousParameter != null ? previousParameter.getMean() : null;
 			List<Double> mean2 = currentParameter.getMean();
 			List<Double> mean3 = this.getMean();
 			if (mean3 != null && mean2 != null) {
 				for (int i = 0; i < mean2.size(); i++) {
-					if (notSatisfy(mean3.get(i), mean2.get(i), threshold)) {
+					if (notSatisfy(mean3.get(i), mean2.get(i), threshold, ratioMode)) {
 						if (mean1 == null)
 							return false;
-						else if (notSatisfy(mean3.get(i), mean1.get(i), threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+						else if (notSatisfy(mean3.get(i), mean1.get(i), threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 							return false;
 					}
 				}
@@ -922,10 +925,10 @@ public class ExchangedParameter implements Cloneable, Serializable {
 					double[]  v3 = variance3.get(i);
 					
 					for (int j = 0; j < v2.length; j++) {
-						if (notSatisfy(v3[j], v2[j], threshold)) {
+						if (notSatisfy(v3[j], v2[j], threshold, ratioMode)) {
 							if (v1 == null)
 								return false;
-							else if (notSatisfy(v3[j], v1[j], threshold)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
+							else if (notSatisfy(v3[j], v1[j], threshold, ratioMode)) //previous parameter is used to avoid skip-steps in optimization for too acute function.
 								return false;
 						}
 					}

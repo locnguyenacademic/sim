@@ -29,8 +29,14 @@ public interface EM extends EMRemoteTask, ExecutableAlg {
 	/**
 	 * Default epsilon for terminated condition, which is the bias between current parameter and estimated parameter. 
 	 */
-	final static double EM_DEFAULT_EPSILON = 0.001;
+	final static double EM_EPSILON = 0.001;
 	
+	
+	/**
+	 * Default value for epsilon ratio mode.
+	 */
+	final static boolean EM_EPSILON_RATIO_MODE = true;
+
 	
 	/**
 	 * Getting current iteration.

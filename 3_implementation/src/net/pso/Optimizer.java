@@ -9,21 +9,19 @@ package net.pso;
 
 import java.io.Serializable;
 
-import net.hudup.core.Constants;
-import net.hudup.core.Util;
 import net.hudup.core.data.Attribute;
 import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.data.ProfileVector;
 import net.hudup.core.logistic.MathUtil;
 
 /**
  * This class implements the optimizer of a function, which is also called optimal point.
  * 
+ * @param <T> type of evaluated object.
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class Optimizer implements Serializable, Cloneable {
+public class Optimizer<T> implements Serializable, Cloneable {
 	
 
 	/**
@@ -35,13 +33,13 @@ public class Optimizer implements Serializable, Cloneable {
 	/**
 	 * Best position.
 	 */
-	public ProfileVector bestPosition = null;
+	public Vector<T> bestPosition = null;
 	
 	
 	/**
 	 * Best value.
 	 */
-	public double bestValue = Constants.UNUSED;
+	public T bestValue = null;
 	
 	
 	/**
@@ -57,7 +55,7 @@ public class Optimizer implements Serializable, Cloneable {
 	 * @param bestPosition best position.
 	 * @param bestValue best value.
 	 */
-	public Optimizer(ProfileVector bestPosition, double bestValue) {
+	public Optimizer(Vector<T> bestPosition, T bestValue) {
 		this.bestPosition = bestPosition;
 		this.bestValue = bestValue;
 	}
@@ -89,9 +87,14 @@ public class Optimizer implements Serializable, Cloneable {
 			buffer.append("}");
 		}
 		
-		if (Util.isUsed(bestValue)) {
+		if (bestValue != null) {
 			if (bestPosition != null) buffer.append(", ");
-			buffer.append("best value = " + MathUtil.format(bestValue));
+			buffer.append("best value = ");
+			
+			if ((bestValue instanceof Double) || (bestValue instanceof Float))
+				buffer.append(MathUtil.format(((Number)bestValue).doubleValue()));
+			else
+				buffer.append(bestValue.toString());
 		}
 		
 		return buffer.toString();
@@ -100,38 +103,40 @@ public class Optimizer implements Serializable, Cloneable {
 
 	/**
 	 * Extract optimizer from particle.
+	 * @param <T> type of evaluated object.
 	 * @param particle specified particle.
 	 * @return optimizer extracted from particle.
 	 */
-	public static Optimizer extract(Particle particle) {
+	public static <T> Optimizer<T> extract(Particle<T> particle) {
 		return extract(particle, null);
 	}
 	
 	
 	/**
 	 * Extract optimizer from particle.
+	 * @param <T> type of evaluated object.
 	 * @param particle specified particle.
 	 * @param func specified function.
 	 * @return optimizer extracted from particle.
 	 */
-	public static Optimizer extract(Particle particle, Function func) {
-		if (func == null) return new Optimizer(particle.bestPosition, particle.bestValue);
+	public static <T> Optimizer<T> extract(Particle<T> particle, Function<T> func) {
+		if (func == null) return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 
 		if (particle.bestPosition == null) {
 			if (particle.position == null)
-				return new Optimizer(particle.bestPosition, particle.bestValue);
+				return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 			else {
-				double value = func.eval(particle.position);
-				if (!Util.isUsed(value))
-					return new Optimizer(particle.bestPosition, particle.bestValue);
+				T value = func.eval(particle.position);
+				if (value != null)
+					return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 				else
-					return new Optimizer(particle.position, value);
+					return new Optimizer<T>(particle.position, value);
 			}
 		}
-		else if (Util.isUsed(particle.bestValue))
-			return new Optimizer(particle.bestPosition, particle.bestValue);
+		else if (particle.bestValue != null)
+			return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 		else
-			return new Optimizer(particle.bestPosition, func.eval(particle.bestPosition));
+			return new Optimizer<T>(particle.bestPosition, func.eval(particle.bestPosition));
 	}
 
 

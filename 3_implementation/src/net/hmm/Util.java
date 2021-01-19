@@ -88,7 +88,7 @@ public class Util {
 	 * @param e throwable error.
 	 */
 	public static void trace(Throwable e) {
-		e.printStackTrace();
+		net.hmm.adapter.Util.trace(e);
 	}
 	
 	

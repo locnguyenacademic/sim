@@ -70,8 +70,8 @@ public class Parser
 	}
 
 	/**
-	 * finalructor.
-	 * Initializes all data with zeros and empty strings
+	 * Default constructor.
+	 * Initializes all data with zeros and empty strings.
 	 */
 	public Parser()
 	{

@@ -676,11 +676,14 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @param estimatedValue estimated value.
 	 * @param currentValue current value.
 	 * @param threshold specified threshold.
+	 * @param ratioMode flag to indicate whether the threshold is for ratio.
 	 * @return true if the deviation between estimated value and current value is not satisfied a threshold.
 	 */
-	public static boolean notSatisfy(double estimatedValue, double currentValue, double threshold) {
-		return Math.abs(estimatedValue - currentValue) > threshold * Math.abs(currentValue);
-//		return Math.abs(estimatedValue - currentValue) > threshold;
+	public static boolean notSatisfy(double estimatedValue, double currentValue, double threshold, boolean ratioMode) {
+		if (ratioMode)
+			return Math.abs(estimatedValue - currentValue) > threshold * Math.abs(currentValue);
+		else
+			return Math.abs(estimatedValue - currentValue) > threshold;
 	}
 	
 	
@@ -816,7 +819,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		if (!(input instanceof Profile)) {
 			List<Double> values = DSUtil.toDoubleList(input, false);
 			if (attList == null)
-				attList = AttributeList.defaultRealAttributeList(values.size());
+				attList = AttributeList.defaultRealVarAttributeList(values.size());
 			Profile profile = Profile.createProfile(attList, values);
 			return extractVariableValue(profile, null, indices, index);
 		}

@@ -52,6 +52,12 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 
 	
 	/**
+	 * Default value for epsilon ratio mode.
+	 */
+	public final static String EM_EPSILON_RATIO_MODE_FIELD = "em_epsilon_ratio_mode";
+
+	
+	/**
 	 * Current iteration.
 	 */
 	protected int currentIteration = 0;
@@ -279,7 +285,8 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(EM_EPSILON_FIELD, EM_DEFAULT_EPSILON);
+		config.put(EM_EPSILON_FIELD, EM_EPSILON);
+		config.put(EM_EPSILON_RATIO_MODE_FIELD, EM_EPSILON_RATIO_MODE);
 		config.put(EM_MAX_ITERATION_FIELD, EM_MAX_ITERATION);
 		return config;
 	}

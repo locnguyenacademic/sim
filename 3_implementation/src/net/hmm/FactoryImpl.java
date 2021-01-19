@@ -128,7 +128,7 @@ public class FactoryImpl implements Factory {
 		}
 		Printer printer = new Printer("working/hmm-testresult.txt");
 		hmm.addListener(printer);
-		hmm.em(O, HMM.LEARN_TERMINATED_THRESHOLD_DEFAULT, HMM.LEARN_MAX_ITERATION_DEFAULT);
+		hmm.em(O, HMM.LEARN_TERMINATED_THRESHOLD_DEFAULT, HMM.LEARN_TERMINATED_RATIO_MODE_DEFAULT, HMM.LEARN_MAX_ITERATION_DEFAULT);
 //		hmm.viterbi(O);
 
 		try {

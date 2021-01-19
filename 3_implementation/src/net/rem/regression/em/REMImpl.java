@@ -651,11 +651,13 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	@Override
 	protected boolean terminatedCondition(Object estimatedParameter, Object currentParameter, Object previousParameter, Object... info) {
 		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
+		boolean ratioMode = getConfig().getAsBoolean(EM_EPSILON_RATIO_MODE_FIELD);
 		
 		return ((ExchangedParameter)estimatedParameter).terminatedCondition(
-				threshold, 
-				(ExchangedParameter)currentParameter, 
-				(ExchangedParameter)previousParameter);
+			threshold, 
+			(ExchangedParameter)currentParameter, 
+			(ExchangedParameter)previousParameter,
+			ratioMode);
 	}
 
 	
@@ -1106,6 +1108,7 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 		int maxIteration = getConfig().getAsInt(EM_MAX_ITERATION_FIELD);
 		maxIteration = (maxIteration <= 0) ? EM_MAX_ITERATION : maxIteration;
 		double threshold = getConfig().getAsReal(EM_EPSILON_FIELD);
+		boolean ratioMode = getConfig().getAsBoolean(EM_EPSILON_RATIO_MODE_FIELD);
 		while (t < maxIteration) {
 			if (!inverse) {
 				zStatisticNext = 0;
@@ -1136,9 +1139,9 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 			t++;
 			
 			//Testing approximation
-			boolean approx = !RMAbstract.notSatisfy(zStatisticNext, zStatistic, threshold);
+			boolean approx = !RMAbstract.notSatisfy(zStatisticNext, zStatistic, threshold, ratioMode);
 			for (int j = 0; j < xStatistic.length; j++) {
-				approx = approx && !RMAbstract.notSatisfy(xStatisticNext[j], xStatistic[j], threshold);
+				approx = approx && !RMAbstract.notSatisfy(xStatisticNext[j], xStatistic[j], threshold, ratioMode);
 				if (!approx) break;
 			}
 			

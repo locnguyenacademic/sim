@@ -25,21 +25,9 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
 
 	
 	/**
-	 * Maximum iteration of learning hidden Markov model (HMM).
-	 */
-	final static String LEARN_MAX_ITERATION_FIELD = "learn_max_iteration";
-	
-	
-	/**
 	 * Default value for maximum iteration of learning hidden Markov model (HMM).
 	 */
 	final static int LEARN_MAX_ITERATION_DEFAULT = 1000;
-
-	
-	/**
-	 * Terminated threshold of learning hidden Markov model (HMM).
-	 */
-	final static String LEARN_TERMINATED_THRESHOLD_FIELD = "learn_terminated_threshold";
 
 	
 	/**
@@ -49,15 +37,9 @@ public interface HMM extends Remote, Serializable, Cloneable, AutoCloseable {
 
 	
 	/**
-	 * Terminated ratio mode of learning hidden Markov model (HMM).
-	 */
-	final static String LEARN_TERMINATED_RATIO_FIELD = "learn_terminated_ratio";
-
-	
-	/**
 	 * Default value for terminated ratio mode of learning hidden Markov model (HMM).
 	 */
-	final static boolean LEARN_TERMINATED_RATIO_DEFAULT = false;
+	final static boolean LEARN_TERMINATED_RATIO_MODE_DEFAULT = true;
 
 	
 	/**
