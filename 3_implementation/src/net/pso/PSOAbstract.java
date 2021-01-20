@@ -265,7 +265,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 				if (value == null)
 					continue;
 				else if (checkABetterThanB(value, x.bestValue)) {
-					x.bestPosition = x.position;
+					x.bestPosition = x.position.duplicate();
 					x.bestValue = value;
 					
 					if (checkABetterThanB(x.bestValue, optimizer.bestValue)) {

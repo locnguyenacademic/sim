@@ -79,7 +79,12 @@ public class Util {
 	 * @param e throwable error.
 	 */
 	public static void trace(Throwable e) {
-		net.hudup.core.logistic.LogUtil.trace(e);
+		try {
+			net.hudup.core.logistic.LogUtil.trace(e);
+		}
+		catch (Throwable ex) {
+			e.printStackTrace();
+		}
 	}
 
 

@@ -56,7 +56,7 @@ public class Particle<T> implements Serializable, Cloneable {
 	public Particle(T initialValue, Function<T> func) {
 		this.position = func.createVector(initialValue);
 		this.velocity = func.createVector(initialValue);
-		this.bestPosition = this.position;
+		this.bestPosition = this.position != null ? this.position.duplicate() : null;
 		
 		if (func != null && this.bestPosition != null)
 			this.bestValue = func.eval(this.bestPosition);
@@ -72,7 +72,7 @@ public class Particle<T> implements Serializable, Cloneable {
 	public Particle(Vector<T> position, Vector<T> velocity, Function<T> func) {
 		this.position = position;
 		this.velocity = velocity;
-		this.bestPosition = this.position;
+		this.bestPosition = this.position != null ? this.position.duplicate() : null;
 		
 		if (this.bestPosition != null)
 			this.bestValue = func.eval(this.bestPosition);
