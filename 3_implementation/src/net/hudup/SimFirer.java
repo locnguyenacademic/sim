@@ -10,6 +10,8 @@ package net.hudup;
 import net.hudup.core.Firer;
 import net.hudup.core.alg.AlgRemote;
 import net.hudup.core.alg.AlgRemoteWrapper;
+import net.pso.PSORemote;
+import net.pso.PSORemoteWrapper;
 import net.rem.em.EMRemote;
 import net.rem.em.EMRemoteWrapper;
 import net.rem.regression.RMRemote;
@@ -31,6 +33,8 @@ public class SimFirer extends Firer {
 			return new RMRemoteWrapper((RMRemote)remoteAlg, exclusive);
 		else if (remoteAlg instanceof EMRemote)
 			return new EMRemoteWrapper((EMRemote)remoteAlg, exclusive);
+		else if (remoteAlg instanceof PSORemote)
+			return new PSORemoteWrapper((PSORemote)remoteAlg, exclusive);
 		else
 			return super.wrap(remoteAlg, exclusive);
 	}

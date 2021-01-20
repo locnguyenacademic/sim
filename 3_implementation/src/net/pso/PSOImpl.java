@@ -7,6 +7,7 @@
  */
 package net.pso;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import net.hudup.core.Util;
@@ -116,81 +117,43 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 
 	@Override
-	public Double getPhi1() {
+	public PSOConfiguration<?> getPSOConfiguration() throws RemoteException {
+		PSOConfiguration<Double> psoConfig = new PSOConfiguration<Double>();
+		
 		double phi1 = config.getAsReal(PHI1_FIELD);
-		return Util.isUsed(phi1) && phi1 > 0 ? phi1 : PHI1_DEFAULT;
-	}
-
-
-	@Override
-	public void setPhi1(Double phi1) {
-		config.put(PHI1_FIELD, phi1);
-	}
-
-
-	@Override
-	public Double getPhi2() {
+		psoConfig.phi1 = Util.isUsed(phi1) && phi1 > 0 ? phi1 : PHI1_DEFAULT;
+		
 		double phi2 = config.getAsReal(PHI2_FIELD);
-		return Util.isUsed(phi2) && phi2 > 0 ? phi2 : PHI2_DEFAULT;
-	}
+		psoConfig.phi2 = Util.isUsed(phi2) && phi2 > 0 ? phi2 : PHI2_DEFAULT;
 
-
-	@Override
-	public void setPhi2(Double phi2) {
-		config.put(PHI2_FIELD, phi2);
-	}
-
-	
-	@Override
-	public Double getOmega() {
 		double omega = config.getAsReal(OMEGA_FIELD);
-		return Util.isUsed(omega) && omega > 0 ? omega : OMEGA_DEFAULT;
-	}
+		psoConfig.omega = Util.isUsed(omega) && omega > 0 ? omega : OMEGA_DEFAULT;
 
-
-	@Override
-	public void setOmega(Double omega) {
-		config.put(OMEGA_FIELD, omega);
-	}
-
-	
-	@Override
-	public Double getChi() {
 		double chi = config.getAsReal(CHI_FIELD);
-		return Util.isUsed(chi) && chi > 0 ? chi : CHI_DEFAULT;
+		psoConfig.chi = Util.isUsed(chi) && chi > 0 ? chi : CHI_DEFAULT;
+
+		psoConfig.lower = extractBound(POSITION_LOWER_BOUND_FIELD);
+		
+		psoConfig.upper = extractBound(POSITION_UPPER_BOUND_FIELD);
+
+		return psoConfig;
 	}
 
 
 	@Override
-	public void setChi(Double chi) {
-		config.put(CHI_FIELD, chi);
-	}
+	public void setPSOConfiguration(PSOConfiguration<?> psoConfig) throws RemoteException {
+		@SuppressWarnings("unchecked")
+		PSOConfiguration<Double> psoc = (PSOConfiguration<Double>)psoConfig;
 
-	
-	@Override
-	public Double[] getPositionLowerBound() {
-		return extractBound(POSITION_LOWER_BOUND_FIELD);
-	}
-	
-
-	@Override
-	public void setPositionLowerBound(Double[] lower) {
-		config.put(POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(lower, ","));
+		config.put(PHI1_FIELD, psoc.phi1);
+		config.put(PHI2_FIELD, psoc.phi2);
+		config.put(OMEGA_FIELD, psoc.omega);
+		config.put(CHI_FIELD, psoc.chi);
+		config.put(POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
+		config.put(POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
 	}
 
 
-	@Override
-	public Double[] getPositionUpperBound() {
-		return extractBound(POSITION_UPPER_BOUND_FIELD);
-	}
-
-
-	@Override
-	public void setPositionUpperBound(Double[] upper) {
-		config.put(POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(upper, ","));
-	}
-
-	
 	/**
 	 * Extracting bound.
 	 * @param key key of bound property.

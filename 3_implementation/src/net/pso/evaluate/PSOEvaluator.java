@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.alg.AlgDesc2;
 import net.hudup.core.evaluate.execute.NonexecuteEvaluator;
-import net.pso.PSOAbstract;
+import net.pso.PSO;
 
 /**
  * This class is the evaluator for particle swarm optimization (PSO) algorithm.
@@ -46,7 +46,7 @@ public class PSOEvaluator extends NonexecuteEvaluator {
 	
 	@Override
 	public boolean acceptAlg(Alg alg) throws RemoteException {
-		return (alg != null) && (alg instanceof PSOAbstract) && !(AlgDesc2.isForTest(alg));
+		return (alg != null) && (alg instanceof PSO) && !(AlgDesc2.isForTest(alg));
 	}
 
 	

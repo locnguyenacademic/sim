@@ -55,6 +55,7 @@ public class Util {
 	
 	/**
 	 * Creating matrix with specified rows, columns, and initial value for each element.
+	 * @param <T> element type.
 	 * @param rows specified rows.
 	 * @param columns specified columns.
 	 * @param initialValue initial value for each element.

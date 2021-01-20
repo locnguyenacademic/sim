@@ -99,6 +99,21 @@
 
 
 	<!--
+	Function: Parsing mathematical expressions.
+	Affected packages, classes: net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*
+	Referred jars:
+	Source: http://www.speqmath.com/tutorials/expression_parser_java
+	Vendor: Jos de Jong
+	Archive: D:/newtech-research/natural-language-processing/expression-parser/simple/expression_parser_java.zip
+	Version: build 2010.01
+	Status: using
+	Note:
+	-->
+	<property name="parser.jong1" value="${bin.home}/net/pso/logistic/speqmath/*"/>
+	<property name="parser.jong2" value="${bin.home}/net/rem/regression/logistic/speqmath/*"/>
+
+
+	<!--
 	Function: Weka is a collection of machine learning algorithms for data mining tasks. It contains tools for data preparation, classification, regression, clustering, association rules mining, and visualization.
 	Affected packages, classes: net.hudup.logistic.mining.Clusterer
 	Referred jars:
@@ -191,7 +206,7 @@
 		<javadoc destdir="${docs.home}/api"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
 		</javadoc>
 	</target>
 
@@ -202,7 +217,7 @@
 		<javadoc destdir="${archive.home}"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
 		</javadoc>
 
 		<zip destfile="${archive.home}/${product}-${version}-doc.zip" basedir="${archive.home}"/>

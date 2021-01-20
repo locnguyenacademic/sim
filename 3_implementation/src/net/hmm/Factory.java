@@ -63,6 +63,7 @@ public interface Factory {
 	 * @param PI initial state distribution.
 	 * @param means means of continuous normal mixture distributions of observations.
 	 * @param variances variances of continuous normal mixture distributions of observations.
+	 * @param weights weights of components.
 	 * @return continuous hidden Markov model (HMM) with continuous normal mixture distributions of observations.
 	 */
 	HMM createNormalMixtureHMM(double[][] A, double[] PI, double[][] means, double[][] variances, double[][] weights);

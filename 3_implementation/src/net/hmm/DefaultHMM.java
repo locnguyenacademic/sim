@@ -1292,7 +1292,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	
 	/**
 	 * Learning this hidden Markov model (HMM) by expectation maximization (EM) algorithm from observation sequence.
-	 * This method has the same to the {@link #em(List, int)} method but it calls the {@link #emOneLoop(List)} for each iteration.
+	 * This method has the same to the {@link #em(List, double, boolean, int)} method but it calls the {@link #emOneLoop(List)} for each iteration.
 	 * @param O observation sequence.
 	 * @param terminatedThreshold terminated threshold.
 	 * @param terminatedRatioMode flag to indicate whether terminated threshold is for ratio.
@@ -1333,6 +1333,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	/**
 	 * Learning this hidden Markov model (HMM) by expectation maximization (EM) algorithm from observation sequence in one loop.
 	 * @param O observation sequence.
+	 * @return the probability of observation sequence.
 	 */
 	@Deprecated
 	protected double emOneLoop(List<Obs> O) {
@@ -1498,7 +1499,6 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	/**
 	 * Adding listener.
 	 * @param listener specified listener.
-	 * @throws RemoteException if any error raises.
 	 */
 	public void addListener(HMMListener listener) {
 		synchronized (listenerList) {
@@ -1510,7 +1510,6 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	/**
 	 * Removing listener.
 	 * @param listener specified listener.
-	 * @throws RemoteException if any error raises.
 	 */
 	public void removeListener(HMMListener listener) {
 		synchronized (listenerList) {
@@ -1919,6 +1918,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 * @param PI initial state distribution.
 	 * @param means means of continuous normal mixture distributions of observations.
 	 * @param variances variances of continuous normal mixture distributions of observations.
+	 * @param weights weights of components.
 	 * @return continuous hidden Markov model (HMM) with continuous normal mixture distributions of observations.
 	 */
 	public static HMM createNormalMixtureHMM(double[][] A, double[] PI, double[][] means, double[][] variances, double[][] weights) {

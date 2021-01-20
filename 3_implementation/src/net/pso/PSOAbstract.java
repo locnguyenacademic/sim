@@ -30,7 +30,7 @@ import net.hudup.core.parser.TextParserUtil;
  * @version 1.0
  *
  */
-public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements AllowNullTrainingSet {
+public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
 
 
 	/**
@@ -121,6 +121,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * Default value for terminated ratio mode.
 	 */
 	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
+	
+	
 	/**
 	 * Target function or cost function.
 	 */
@@ -141,10 +143,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	}
 
 	
-	/**
-	 * New setting up method.
-	 */
-	public void setup() {
+	@Override
+	public void setup() throws RemoteException {
 		try {
 			super.setup(new NullPointer());
 		}
@@ -159,9 +159,13 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * @param func target function (cost function).
 	 */
 	public void setup(Function<T> func) {
-		setFunction(func);
-
-		setup();
+		try {
+			setFunction(func);
+			setup();
+		}
+		catch (Exception e) {
+			LogUtil.trace(e);
+		}
 	}
 
 	
@@ -174,7 +178,12 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		config.put(FUNC_EXPR_FIELD, funcExpr);
 		this.config.put(FUNC_VARNAMES_FIELD, TextParserUtil.toText(varNames, ","));
 
-		setup();
+		try {
+			setup();
+		}
+		catch (Exception e) {
+			LogUtil.trace(e);
+		}
 	}
 	
 	
@@ -193,10 +202,13 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		
 		func.setOptimizer(null);
 		
+		@SuppressWarnings("unchecked")
+		PSOConfiguration<T> psoConfig = (PSOConfiguration<T>) getPSOConfiguration();
+		
 		int N = config.getAsInt(PARTICLE_NUMBER_FIELD);
 		N = N > 0 ? N : PARTICLE_NUMBER_DEFAULT;
-		T[] lower = getPositionLowerBound();
-		T[] upper = getPositionUpperBound();
+		T[] lower = psoConfig.lower;
+		T[] upper = psoConfig.upper;
 		
 		Optimizer<T> optimizer = null;
 		for (int i = 0; i < N; i++) {
@@ -213,10 +225,10 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 		int maxIteration = config.getAsInt(MAX_ITERATION_FIELD);
 		maxIteration = maxIteration < 0 ? 0 : maxIteration;  
-		T phi1 = getPhi1();
-		T phi2 = getPhi2();
-		T omega = getOmega();
-		T chi = getChi();
+		T phi1 = psoConfig.phi1;
+		T phi2 = psoConfig.phi2;
+		T omega = psoConfig.omega;
+		T chi = psoConfig.chi;
 		
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
@@ -350,15 +362,13 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * Defining mathematical expression function.
 	 * @param varNames variable names.
 	 * @param expr mathematical expression.
+	 * @return mathematical expression function.
 	 */
 	protected abstract Function<T> defineExprFunction(List<String> varNames, String expr);
 	
 	
-	/**
-	 * Getting target function (cost function).
-	 * @return target function (cost function).
-	 */
-	public Function<T> getFunction() {
+	@Override
+	public Function<?> getFunction() throws RemoteException {
 		return func;
 	}
 	
@@ -366,9 +376,11 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	/**
 	 * Setting target function (cost function).
 	 * @param func target function (cost function).
+	 * @throws RemoteException if any error raises.
 	 */
-	public synchronized void setFunction(Function<T> func) {
-		this.func = func;
+	@SuppressWarnings("unchecked")
+	public synchronized void setFunction(Function<?> func) throws RemoteException {
+		this.func = (Function<T>) func;
 		
 		if (func != null) {
 			this.config.put(FUNC_EXPR_FIELD, "");
@@ -377,12 +389,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	}
 	
 	
-	/**
-	 * Setting target function (cost function) with mathematical expression.
-	 * @param varNames variable names.
-	 * @param funcExpr mathematical expression of target function (cost function).
-	 */
-	public synchronized void setFunction(List<String> varNames, String funcExpr) {
+	@Override
+	public synchronized void setFunction(List<String> varNames, String funcExpr) throws RemoteException {
 		if (varNames == null || funcExpr == null) return;
 		if (varNames.size() == 0 || funcExpr.trim().isEmpty()) return;
 		
@@ -393,90 +401,6 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		this.config.put(FUNC_EXPR_FIELD, funcExpr);
 		this.config.put(FUNC_VARNAMES_FIELD, TextParserUtil.toText(varNames, ","));
 	}
-
-	
-	/**
-	 * Getting phi 1 parameter.
-	 * @return phi 1 parameter.
-	 */
-	public abstract T getPhi1();
-	
-	
-	/**
-	 * Setting phi 1 parameter.
-	 * @param phi1 phi 1 parameter.
-	 */
-	public abstract void setPhi1(T phi1);
-	
-	
-	/**
-	 * Getting phi 2 parameter.
-	 * @return phi 2 parameter.
-	 */
-	public abstract T getPhi2();
-
-	
-	/**
-	 * Setting phi 2 parameter.
-	 * @param phi1 phi 2 parameter.
-	 */
-	public abstract void setPhi2(T phi2);
-
-	
-	/**
-	 * Getting omega parameter.
-	 * @return omega parameter.
-	 */
-	public abstract T getOmega();
-
-	
-	/**
-	 * Setting omega parameter.
-	 * @param omega omega parameter.
-	 */
-	public abstract void setOmega(T omega);
-
-	
-	/**
-	 * Getting chi parameter.
-	 * @return chi parameter.
-	 */
-	public abstract T getChi();
-
-	
-	/**
-	 * Setting chi parameter.
-	 * @param chi chi parameter.
-	 */
-	public abstract void setChi(T chi);
-
-	
-	/**
-	 * Getting position lower bound.
-	 * @return position lower bound.
-	 */
-	public abstract T[] getPositionLowerBound();
-	
-
-	/**
-	 * Setting position lower bound.
-	 * @param lower lower bound.
-	 */
-	public abstract void setPositionLowerBound(T[] lower);
-
-	
-	/**
-	 * Getting position upper bound.
-	 * @return position upper bound.
-	 */
-	public abstract T[] getPositionUpperBound();
-
-
-	/**
-	 * Setting position upper bound.
-	 * @param upper upper bound.
-	 */
-	public abstract void setPositionUpperBound(T[] upper);
 
 	
 	@Override
@@ -497,8 +421,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 	
 	@Override
-	public String getDescription() throws RemoteException {
-		return "Particle swarm optimization (PSO) algorithm";
+	public synchronized String getDescription() throws RemoteException {
+		return parameterToShownText(getParameter());
 	}
 
 	
@@ -506,10 +430,16 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	public Inspector getInspector() {
 		String desc = "";
 		try {
-			desc = getDescription() + ".\n" + parameterToShownText(getParameter());
+			desc = getDescription();
 		} catch (Exception e) {LogUtil.trace(e);}
 		
 		return new DescriptionDlg(UIUtil.getFrameForComponent(null), "Inspector", desc);
+	}
+
+	
+	@Override
+	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
+		return new String[] {PSORemote.class.getName()};
 	}
 
 	
