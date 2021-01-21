@@ -124,6 +124,42 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	
 	
 	/**
+	 * Lower bound of position.
+	 */
+	public final static String POSITION_LOWER_BOUND_FIELD = "pso_position_lower_bound";
+	
+	
+	/**
+	 * Upper bound of position.
+	 */
+	public final static String POSITION_UPPER_BOUND_FIELD = "pso_position_upper_bound";
+	
+	
+	/**
+	 * Cognitive weight.
+	 */
+	public final static String COGNITIVE_WEIGHT_FIELD = "pso_cognitive_weight";
+
+	
+	/**
+	 * Social weight.
+	 */
+	public final static String SOCIAL_WEIGHT_FIELD = "pso_social_weight";
+
+	
+	/**
+	 * Inertial weight.
+	 */
+	public final static String INERTIAL_WEIGHT_FIELD = "pso_inertial_weight";
+
+	
+	/**
+	 * Restriction weight.
+	 */
+	public final static String RESTRICTION_WEIGHT_FIELD = "pso_restriction_weight";
+
+	
+	/**
 	 * Target function or cost function.
 	 */
 	protected Function<T> func = null;
@@ -225,40 +261,42 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 		int maxIteration = config.getAsInt(MAX_ITERATION_FIELD);
 		maxIteration = maxIteration < 0 ? 0 : maxIteration;  
-		T phi1 = psoConfig.phi1;
-		T phi2 = psoConfig.phi2;
-		T omega = psoConfig.omega;
-		T chi = psoConfig.chi;
+		T cognWeight = psoConfig.cognitiveWeight;
+		T socialWeight = psoConfig.socialWeight;
+		T inertialWeight = psoConfig.inertialWeight;
+		T restrictWeight = psoConfig.restrictionWeight;
 		
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
 		learnStarted = true;
 		while (learnStarted && (maxIteration <= 0 || iteration < maxIteration)) {
 			for (Particle<T> x : swarm) {
-				x.velocity.multiply(omega);
+				x.velocity.multiply(inertialWeight);
 				
-				Vector<T> force1 = func.createRandomVector(func.zero(), phi1).multiplyWise(
+				Vector<T> force1 = func.createRandomVector(func.zero(), cognWeight).multiplyWise(
 					x.bestPosition.duplicate().subtract(x.position));
 				x.velocity.add(force1);
 				
 				List<Particle<T>> neighbors = defineNeighbors(x);
 				if (neighbors == null || neighbors.size() == 0) {
-					Vector<T> force2 = func.createRandomVector(func.zero(), phi2).multiplyWise(
+					Vector<T> force2 = func.createRandomVector(func.zero(), socialWeight).multiplyWise(
 						optimizer.bestPosition.duplicate().subtract(x.position));
 					x.velocity.add(force2);
 				}
 				else {
-					Vector<T> sum = func.createVector(func.zero());
-					int K = neighbors.size();
-					for (int k = 0; k < K; k++) {
-						Vector<T> force2 = func.createRandomVector(func.zero(), phi2).multiplyWise(
-							neighbors.get(k).bestPosition.duplicate().subtract(x.position));
-						sum.add(force2);
+					Vector<T> force2 = func.createVector(func.zero());
+					List<Vector<T>> neighborForces = Util.newList(neighbors.size());
+					for (Particle<T> neighbor : neighbors) {
+						Vector<T> neighborForce = func.createRandomVector(func.zero(), socialWeight).multiplyWise(
+							neighbor.bestPosition.duplicate().subtract(x.position));
+						neighborForces.add(neighborForce);
 					}
-					x.velocity.add(sum.multiplyCoeff(1.0 / (double)K));
+					force2.mean(neighborForces);
+					
+					x.velocity.add(force2);
 				}
 				
-				x.velocity.multiply(chi);
+				x.velocity.multiply(restrictWeight);
 				x.position.add(x.velocity);
 				
 				T value = func.eval(x.position);

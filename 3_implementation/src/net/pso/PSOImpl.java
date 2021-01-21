@@ -31,23 +31,11 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	
 	/**
-	 * Lower bound of position.
-	 */
-	public final static String POSITION_LOWER_BOUND_FIELD = "pso_position_lower_bound";
-	
-	
-	/**
 	 * Default value for lower bound of position.
 	 */
 	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
 
 
-	/**
-	 * Upper bound of position.
-	 */
-	public final static String POSITION_UPPER_BOUND_FIELD = "pso_position_upper_bound";
-	
-	
 	/**
 	 * Default value for upper bound of position.
 	 */
@@ -55,51 +43,27 @@ public class PSOImpl extends PSOAbstract<Double> {
 	
 	
 	/**
-	 * Phi 1 parameter.
+	 * Default value for cognitive weight parameter.
 	 */
-	public final static String PHI1_FIELD = "pso_phi1";
+	public final static double COGNITIVE_WEIGHT_DEFAULT = 0.5;
 
 	
 	/**
-	 * Default value for Phi 1 parameter.
+	 * Default value for social weight.
 	 */
-	public final static double PHI1_DEFAULT = 0.5;
+	public final static double SOCIAL_WEIGHT_DEFAULT = 0.5;
 
 	
 	/**
-	 * Phi 2 parameter.
+	 * Default value for inertial weight.
 	 */
-	public final static String PHI2_FIELD = "pso_phi2";
+	public final static double INERTIAL_WEIGHT_DEFAULT = 1;
 
 	
 	/**
-	 * Default value for Phi 2 parameter.
+	 * Default value for restriction weight.
 	 */
-	public final static double PHI2_DEFAULT = 0.5;
-
-	
-	/**
-	 * Omega parameter.
-	 */
-	public final static String OMEGA_FIELD = "pso_omega";
-
-	
-	/**
-	 * Default value for Omega parameter.
-	 */
-	public final static double OMEGA_DEFAULT = 1;
-
-	
-	/**
-	 * Chi parameter.
-	 */
-	public final static String CHI_FIELD = "pso_chi";
-
-	
-	/**
-	 * Default value for Chi parameter.
-	 */
-	public final static double CHI_DEFAULT = 0.5;
+	public final static double RESTRICTION_WEIGHT_DEFAULT = 0.5;
 
 	
 	/**
@@ -120,17 +84,17 @@ public class PSOImpl extends PSOAbstract<Double> {
 	public PSOConfiguration<?> getPSOConfiguration() throws RemoteException {
 		PSOConfiguration<Double> psoConfig = new PSOConfiguration<Double>();
 		
-		double phi1 = config.getAsReal(PHI1_FIELD);
-		psoConfig.phi1 = Util.isUsed(phi1) && phi1 > 0 ? phi1 : PHI1_DEFAULT;
+		double cognitiveWeight = config.getAsReal(COGNITIVE_WEIGHT_FIELD);
+		psoConfig.cognitiveWeight = Util.isUsed(cognitiveWeight) && cognitiveWeight > 0 ? cognitiveWeight : COGNITIVE_WEIGHT_DEFAULT;
 		
-		double phi2 = config.getAsReal(PHI2_FIELD);
-		psoConfig.phi2 = Util.isUsed(phi2) && phi2 > 0 ? phi2 : PHI2_DEFAULT;
+		double socialWeight = config.getAsReal(SOCIAL_WEIGHT_FIELD);
+		psoConfig.socialWeight = Util.isUsed(socialWeight) && socialWeight > 0 ? socialWeight : SOCIAL_WEIGHT_DEFAULT;
 
-		double omega = config.getAsReal(OMEGA_FIELD);
-		psoConfig.omega = Util.isUsed(omega) && omega > 0 ? omega : OMEGA_DEFAULT;
+		double inertialWeight = config.getAsReal(INERTIAL_WEIGHT_FIELD);
+		psoConfig.inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : INERTIAL_WEIGHT_DEFAULT;
 
-		double chi = config.getAsReal(CHI_FIELD);
-		psoConfig.chi = Util.isUsed(chi) && chi > 0 ? chi : CHI_DEFAULT;
+		double restrictionWeight = config.getAsReal(RESTRICTION_WEIGHT_FIELD);
+		psoConfig.restrictionWeight = Util.isUsed(restrictionWeight) && restrictionWeight > 0 ? restrictionWeight : RESTRICTION_WEIGHT_DEFAULT;
 
 		psoConfig.lower = extractBound(POSITION_LOWER_BOUND_FIELD);
 		
@@ -145,10 +109,10 @@ public class PSOImpl extends PSOAbstract<Double> {
 		@SuppressWarnings("unchecked")
 		PSOConfiguration<Double> psoc = (PSOConfiguration<Double>)psoConfig;
 
-		config.put(PHI1_FIELD, psoc.phi1);
-		config.put(PHI2_FIELD, psoc.phi2);
-		config.put(OMEGA_FIELD, psoc.omega);
-		config.put(CHI_FIELD, psoc.chi);
+		config.put(COGNITIVE_WEIGHT_FIELD, psoc.cognitiveWeight);
+		config.put(SOCIAL_WEIGHT_FIELD, psoc.socialWeight);
+		config.put(INERTIAL_WEIGHT_FIELD, psoc.inertialWeight);
+		config.put(RESTRICTION_WEIGHT_FIELD, psoc.restrictionWeight);
 		config.put(POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
 		config.put(POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
 	}
@@ -183,10 +147,10 @@ public class PSOImpl extends PSOAbstract<Double> {
 		DataConfig config = super.createDefaultConfig();
 		config.put(POSITION_LOWER_BOUND_FIELD, POSITION_LOWER_BOUND_DEFAULT);
 		config.put(POSITION_UPPER_BOUND_FIELD, POSITION_UPPER_BOUND_DEFAULT);
-		config.put(PHI1_FIELD, PHI1_DEFAULT);
-		config.put(PHI2_FIELD, PHI2_DEFAULT);
-		config.put(OMEGA_FIELD, OMEGA_DEFAULT);
-		config.put(CHI_FIELD, CHI_DEFAULT);
+		config.put(COGNITIVE_WEIGHT_FIELD, COGNITIVE_WEIGHT_DEFAULT);
+		config.put(SOCIAL_WEIGHT_FIELD, SOCIAL_WEIGHT_DEFAULT);
+		config.put(INERTIAL_WEIGHT_FIELD, INERTIAL_WEIGHT_DEFAULT);
+		config.put(RESTRICTION_WEIGHT_FIELD, RESTRICTION_WEIGHT_DEFAULT);
 		
 		return config;
 	}

@@ -7,6 +7,8 @@
  */
 package net.pso;
 
+import java.util.Collection;
+
 import net.hudup.core.data.AttributeList;
 
 /**
@@ -39,6 +41,8 @@ public class RealVector extends Vector<Double> {
 	 */
 	public RealVector(AttributeList attRef) {
 		super(attRef);
+		int n = getAttCount();
+		for (int i = 0; i < n; i++) setValue(i, 0.0);
 	}
 
 	
@@ -86,12 +90,6 @@ public class RealVector extends Vector<Double> {
 
 	@Override
 	public Vector<Double> multiply(Double alpha) {
-		return multiplyCoeff(alpha);
-	}
-
-
-	@Override
-	public Vector<Double> multiplyCoeff(double alpha) {
 		int n = this.getAttCount();
 		for (int i = 0; i < n; i++) {
 			double value = alpha * this.getValueAsReal(i);
@@ -110,6 +108,21 @@ public class RealVector extends Vector<Double> {
 			this.setValue(i, value);
 		}
 		
+		return this;
+	}
+
+
+	@Override
+	public Vector<Double> mean(Collection<Vector<Double>> vectors) {
+		int n = getAttCount();
+		for (int i = 0; i < n; i++) setValue(i, 0.0);
+		if (vectors == null || vectors.size() == 0) return this;
+		
+		for (Vector<Double> vector : vectors) {
+			this.add(vector);
+		}
+		this.multiply(1.0 / (double)vectors.size());
+
 		return this;
 	}
 

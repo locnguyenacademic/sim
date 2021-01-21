@@ -7,6 +7,8 @@
  */
 package net.pso;
 
+import java.util.Collection;
+
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.Profile;
 
@@ -75,19 +77,18 @@ public abstract class Vector<T> extends Profile {
 
 
 	/**
-	 * Multiplying this vector by specified number.
-	 * @param alpha specified number.
-	 * @return resulted vector from multiplying this vector by specified number. 
-	 */
-	public abstract Vector<T> multiplyCoeff(double alpha);
-
-	
-	/**
 	 * Wise-multiplying this vector and specified vector.
 	 * @param that specified vector.
 	 * @return resulted vector from wise-multiplying this vector and specified vector.
 	 */
 	public abstract Vector<T> multiplyWise(Vector<T> that);
 
+	
+	/**
+	 * Calculating mean of collection of vectors.
+	 * @param vectors collection of vectors.
+	 * @return mean of collection of vectors.
+	 */
+	public abstract Vector<T> mean(Collection<Vector<T>> vectors);
 	
 }

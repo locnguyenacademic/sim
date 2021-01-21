@@ -1042,6 +1042,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 				else
 					satisfied = Math.abs(curCriterion - preCriterion) <= terminatedThreshold;
 				if (satisfied) {
+					doStarted = false;
 					fireInfoEvent(new HMMInfoEventImpl(this, "\nThe resulted estimate is:\n" + this));
 					break;
 				}
