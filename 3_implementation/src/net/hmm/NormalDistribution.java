@@ -60,8 +60,8 @@ public class NormalDistribution extends ContinuousDistribution {
 		double value = ((MonoObs)x).value;
 
 		if (variance == 0 && mean != value) return 0;
+		if (variance == 0 && mean == value) return 1;
 		
-		variance = variance != 0 ? variance : Float.MIN_VALUE;
 		double d = value - mean;
 		return (1.0 / (Math.sqrt(2*Math.PI*variance))) * Math.exp(-(d*d) / (2*variance));
 	}

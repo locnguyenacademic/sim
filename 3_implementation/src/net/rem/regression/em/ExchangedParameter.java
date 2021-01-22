@@ -577,8 +577,9 @@ public class ExchangedParameter implements Cloneable, Serializable {
 	 */
 	public static double normalPDF(double value, double mean, double variance) {
 		if (variance == 0 && mean != value) return 0;
+		if (variance == 0 && mean == value) return 1;
 		
-		variance = variance != 0 ? variance : Float.MIN_VALUE;
+//		variance = variance != 0 ? variance : Float.MIN_VALUE;
 		double d = value - mean;
 		return (1.0 / (Math.sqrt(2*Math.PI*variance))) * Math.exp(-(d*d) / (2*variance));
 	}
