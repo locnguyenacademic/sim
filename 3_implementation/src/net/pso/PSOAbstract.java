@@ -142,9 +142,15 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 	
 	/**
-	 * Social weight.
+	 * Global social weight.
 	 */
-	public final static String SOCIAL_WEIGHT_FIELD = "pso_social_weight";
+	public final static String SOCIAL_WEIGHT_GLOBAL_FIELD = "pso_social_weight_global";
+
+	
+	/**
+	 * Global social weight.
+	 */
+	public final static String SOCIAL_WEIGHT_LOCAL_FIELD = "pso_social_weight_local";
 
 	
 	/**
@@ -261,8 +267,9 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 		int maxIteration = config.getAsInt(MAX_ITERATION_FIELD);
 		maxIteration = maxIteration < 0 ? 0 : maxIteration;  
-		T cognWeight = psoConfig.cognitiveWeight;
-		T socialWeight = psoConfig.socialWeight;
+		T cognitiveWeight = psoConfig.cognitiveWeight;
+		T socialWeightGlobal = psoConfig.socialWeightGlobal;
+		T socialWeightLocal = psoConfig.socialWeightLocal;
 		T inertialWeight = psoConfig.inertialWeight;
 		T restrictWeight = psoConfig.restrictionWeight;
 		
@@ -273,27 +280,26 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 			for (Particle<T> x : swarm) {
 				x.velocity.multiply(inertialWeight);
 				
-				Vector<T> force1 = func.createRandomVector(func.zero(), cognWeight).multiplyWise(
+				Vector<T> cognitiveForce = func.createRandomVector(func.zero(), cognitiveWeight).multiplyWise(
 					x.bestPosition.duplicate().subtract(x.position));
-				x.velocity.add(force1);
+				x.velocity.add(cognitiveForce);
 				
+				Vector<T> socialForceGlobal = func.createRandomVector(func.zero(), socialWeightGlobal).multiplyWise(
+					optimizer.bestPosition.duplicate().subtract(x.position));
+				x.velocity.add(socialForceGlobal);
+
 				List<Particle<T>> neighbors = defineNeighbors(x);
-				if (neighbors == null || neighbors.size() == 0) {
-					Vector<T> force2 = func.createRandomVector(func.zero(), socialWeight).multiplyWise(
-						optimizer.bestPosition.duplicate().subtract(x.position));
-					x.velocity.add(force2);
-				}
-				else {
-					Vector<T> force2 = func.createVector(func.zero());
+				if (neighbors != null && neighbors.size() > 0) {
+					Vector<T> socialForceLocal = func.createVector(func.zero());
 					List<Vector<T>> neighborForces = Util.newList(neighbors.size());
 					for (Particle<T> neighbor : neighbors) {
-						Vector<T> neighborForce = func.createRandomVector(func.zero(), socialWeight).multiplyWise(
+						Vector<T> neighborForce = func.createRandomVector(func.zero(), socialWeightLocal).multiplyWise(
 							neighbor.bestPosition.duplicate().subtract(x.position));
 						neighborForces.add(neighborForce);
 					}
-					force2.mean(neighborForces);
+					socialForceLocal.mean(neighborForces);
 					
-					x.velocity.add(force2);
+					x.velocity.add(socialForceLocal);
 				}
 				
 				x.velocity.multiply(restrictWeight);

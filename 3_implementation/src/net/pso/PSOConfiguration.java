@@ -27,25 +27,31 @@ public class PSOConfiguration<T> implements Cloneable, Serializable {
 
 	
 	/**
-	 * Phi 1 parameter.
+	 * Cognitive weight.
 	 */
 	public T cognitiveWeight;
 
 	
 	/**
-	 * Phi 2 parameter.
+	 * Global social weight.
 	 */
-	public T socialWeight;
+	public T socialWeightGlobal;
 
 	
 	/**
-	 * Omega parameter.
+	 * Local social weight.
+	 */
+	public T socialWeightLocal;
+
+	
+	/**
+	 * Inertial weight.
 	 */
 	public T inertialWeight;
 
 	
 	/**
-	 * Chi parameter.
+	 * Restriction weight.
 	 */
 	public T restrictionWeight;
 
