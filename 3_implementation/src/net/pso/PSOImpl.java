@@ -45,31 +45,31 @@ public class PSOImpl extends PSOAbstract<Double> {
 	/**
 	 * Default value for cognitive weight parameter.
 	 */
-	public final static double COGNITIVE_WEIGHT_DEFAULT = 0.5;
+	public final static double COGNITIVE_WEIGHT_DEFAULT = 1.5;
 
 	
 	/**
 	 * Default value for global social weight.
 	 */
-	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 0.5;
+	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 1.5;
 
 	
 	/**
 	 * Default value for local social weight.
 	 */
-	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 0.5;
+	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 1.5;
 
 	
 	/**
 	 * Default value for inertial weight.
 	 */
-	public final static double INERTIAL_WEIGHT_DEFAULT = 1;
+	public final static double INERTIAL_WEIGHT_DEFAULT = 0.73;
 
 	
 	/**
-	 * Default value for restriction weight.
+	 * Default value for constriction weight.
 	 */
-	public final static double RESTRICTION_WEIGHT_DEFAULT = 0.5;
+	public final static double CONSTRICT_WEIGHT_DEFAULT = 1;
 
 	
 	/**
@@ -102,8 +102,8 @@ public class PSOImpl extends PSOAbstract<Double> {
 		double inertialWeight = config.getAsReal(INERTIAL_WEIGHT_FIELD);
 		psoConfig.inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : INERTIAL_WEIGHT_DEFAULT;
 
-		double restrictionWeight = config.getAsReal(RESTRICTION_WEIGHT_FIELD);
-		psoConfig.restrictionWeight = Util.isUsed(restrictionWeight) && restrictionWeight > 0 ? restrictionWeight : RESTRICTION_WEIGHT_DEFAULT;
+		double constrictWeight = config.getAsReal(CONSTRICT_WEIGHT_FIELD);
+		psoConfig.constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
 
 		psoConfig.lower = extractBound(POSITION_LOWER_BOUND_FIELD);
 		
@@ -122,7 +122,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		config.put(SOCIAL_WEIGHT_GLOBAL_FIELD, psoc.socialWeightGlobal);
 		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, psoc.socialWeightLocal);
 		config.put(INERTIAL_WEIGHT_FIELD, psoc.inertialWeight);
-		config.put(RESTRICTION_WEIGHT_FIELD, psoc.restrictionWeight);
+		config.put(CONSTRICT_WEIGHT_FIELD, psoc.constrictWeight);
 		config.put(POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
 		config.put(POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
 	}
@@ -161,7 +161,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		config.put(SOCIAL_WEIGHT_GLOBAL_FIELD, SOCIAL_WEIGHT_GLOBAL_DEFAULT);
 		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, SOCIAL_WEIGHT_LOCAL_DEFAULT);
 		config.put(INERTIAL_WEIGHT_FIELD, INERTIAL_WEIGHT_DEFAULT);
-		config.put(RESTRICTION_WEIGHT_FIELD, RESTRICTION_WEIGHT_DEFAULT);
+		config.put(CONSTRICT_WEIGHT_FIELD, CONSTRICT_WEIGHT_DEFAULT);
 		
 		return config;
 	}

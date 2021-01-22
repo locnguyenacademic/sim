@@ -53,7 +53,7 @@ public class PSOConfiguration<T> implements Cloneable, Serializable {
 	/**
 	 * Restriction weight.
 	 */
-	public T restrictionWeight;
+	public T constrictWeight;
 
 	
 	/**

@@ -160,9 +160,9 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 	
 	/**
-	 * Restriction weight.
+	 * Constriction weight.
 	 */
-	public final static String RESTRICTION_WEIGHT_FIELD = "pso_restriction_weight";
+	public final static String CONSTRICT_WEIGHT_FIELD = "pso_constrict_weight";
 
 	
 	/**
@@ -271,7 +271,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T socialWeightGlobal = psoConfig.socialWeightGlobal;
 		T socialWeightLocal = psoConfig.socialWeightLocal;
 		T inertialWeight = psoConfig.inertialWeight;
-		T restrictWeight = psoConfig.restrictionWeight;
+		T constrictWeight = psoConfig.constrictWeight;
 		
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
@@ -302,7 +302,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 					x.velocity.add(socialForceLocal);
 				}
 				
-				x.velocity.multiply(restrictWeight);
+				x.velocity.multiply(constrictWeight);
 				x.position.add(x.velocity);
 				
 				T value = func.eval(x.position);
