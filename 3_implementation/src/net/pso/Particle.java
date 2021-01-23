@@ -65,7 +65,7 @@ public class Particle<T> implements Serializable, Cloneable {
 		this.bestPosition = this.position != null ? this.position.duplicate() : null;
 		
 		if (func != null && this.bestPosition != null)
-			this.bestValue = func.eval(this.bestPosition);
+			this.bestValue = this.value = func.eval(this.bestPosition);
 	}
 	
 	
@@ -81,7 +81,7 @@ public class Particle<T> implements Serializable, Cloneable {
 		this.bestPosition = this.position != null ? this.position.duplicate() : null;
 		
 		if (this.bestPosition != null)
-			this.bestValue = func.eval(this.bestPosition);
+			this.bestValue = this.value = func.eval(this.bestPosition);
 	}
 	
 	
@@ -102,7 +102,7 @@ public class Particle<T> implements Serializable, Cloneable {
 	 * @return whether this particle is valid.
 	 */
 	public boolean isValid() {
-		return position != null && velocity != null && bestPosition != null && bestValue != null;
+		return position != null && velocity != null && bestPosition != null && bestPosition.isValid(bestValue);
 	}
 	
 	

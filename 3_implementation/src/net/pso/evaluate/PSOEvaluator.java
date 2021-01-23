@@ -9,8 +9,8 @@ package net.pso.evaluate;
 
 import java.rmi.RemoteException;
 
+import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.alg.AlgDesc2;
 import net.hudup.core.evaluate.execute.NonexecuteEvaluator;
 import net.pso.PSO;
 
@@ -46,8 +46,19 @@ public class PSOEvaluator extends NonexecuteEvaluator {
 	
 	@Override
 	public boolean acceptAlg(Alg alg) throws RemoteException {
-		return (alg != null) && (alg instanceof PSO) && !(AlgDesc2.isForTest(alg));
+		return (alg != null) && (alg instanceof PSO);
 	}
 
 	
+	/**
+	 * The main method to start evaluator.
+	 * @param args The argument parameter of main method. It contains command line arguments.
+	 * @throws Exception if there is any error.
+	 */
+	public static void main(String[] args) throws Exception {
+		String regressEvClassName = PSOEvaluator.class.getName();
+		new Evaluator().run(new String[] {regressEvClassName});
+	}
+
+
 }

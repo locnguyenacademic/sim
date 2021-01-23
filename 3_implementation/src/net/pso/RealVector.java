@@ -9,6 +9,7 @@ package net.pso;
 
 import java.util.Collection;
 
+import net.hudup.core.Util;
 import net.hudup.core.data.AttributeList;
 
 /**
@@ -67,6 +68,12 @@ public class RealVector extends Vector<Double> {
 	@Override
 	public Vector<Double> duplicate() {
 		return (RealVector)clone();
+	}
+
+
+	@Override
+	public boolean isValid(Double value) {
+		return value != null && Util.isUsed(value);
 	}
 
 

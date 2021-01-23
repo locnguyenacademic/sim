@@ -46,6 +46,14 @@ public abstract class Vector<T> extends Profile {
 
 	
 	/**
+	 * Checking whether the specified value is valid.
+	 * @param value specified value.
+	 * @return whether the specified value is valid.
+	 */
+	public abstract boolean isValid(T value);
+	
+	
+	/**
 	 * Getting element zero.
 	 * @return defined element zero.
 	 */

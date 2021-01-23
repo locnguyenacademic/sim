@@ -277,6 +277,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T[] upper = psoConfig.upper;
 		
 		Optimizer<T> optimizer = null;
+		N = 2*N; //Solving the problem of invalid randomization.
 		for (int i = 0; i < N; i++) {
 			Particle<T> x = func.createRandomParticle(lower, upper);
 			if (x == null || !x.isValid())
@@ -286,6 +287,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 			
 			if (optimizer == null || checkABetterThanB(x.bestValue, optimizer.bestValue))
 				optimizer = Optimizer.extract(x, func);
+			
+			if (swarm.size() >= N && optimizer != null) break;
 		}
 		if (swarm.size() == 0 || optimizer == null) return (func = null);
 
@@ -297,7 +300,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T inertialWeight = psoConfig.inertialWeight;
 		T constrictWeight = psoConfig.constrictWeight;
 		
-		T elementZero = func.createOneElementVector().elementZero();
+		Vector<T> oneElementVector = func.createOneElementVector();
+		T elementZero = oneElementVector.elementZero();
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
 		learnStarted = true;
@@ -330,12 +334,12 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 				x.velocity.multiply(constrictWeight);
 				x.position.add(x.velocity);
 				
-				T value = func.eval(x.position);
-				if (value == null)
+				x.value = func.eval(x.position);
+				if (!oneElementVector.isValid(x.value))
 					continue;
-				else if (checkABetterThanB(value, x.bestValue)) {
+				else if (checkABetterThanB(x.value, x.bestValue)) {
 					x.bestPosition = x.position.duplicate();
-					x.bestValue = value;
+					x.bestValue = x.value;
 					
 					if (checkABetterThanB(x.bestValue, optimizer.bestValue)) {
 						preOptimizer = optimizer;
@@ -431,18 +435,20 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		double fdrThreshold = config.getAsReal(NEIGHBORS_FDR_THRESHOLD_FIELD);
 		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
 		
-		if (targetParticle.value == null)
+		Vector<T> vector = func.createOneElementVector();
+		
+		if (!targetParticle.position.isValid(targetParticle.value))
 			targetParticle.value = func.eval(targetParticle.position);
-		if (targetParticle.value == null)
+		if (!targetParticle.position.isValid(targetParticle.value))
 			return Util.newList();
 
 		List<Particle<T>> neighbors = Util.newList();
-		Vector<T> vector = func.createOneElementVector();
 		for (Particle<T> particle : swarm) {
 			if (particle.position == null || particle == targetParticle) continue;
-			if (particle.value == null)
+			
+			if (!particle.position.isValid(particle.value))
 				particle.value = func.eval(particle.position);
-			if (particle.value == null)
+			if (!particle.position.isValid(particle.value))
 				continue;
 			
 			double fdis = vector.distance(targetParticle.value, particle.value);
