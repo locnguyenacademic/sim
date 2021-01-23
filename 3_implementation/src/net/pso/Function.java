@@ -32,39 +32,6 @@ public interface Function<T> extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Getting zero.
-	 * @return defined zero.
-	 */
-	T zero();
-	
-	
-	/**
-	 * Comparing evaluated value A with evaluated value B.
-	 * @param evalA evaluated value A.
-	 * @param evalB evaluated value B.
-	 * @return -1 if value A is less than value B, 0 if value A is equal to value B, and 1 if value A is larger than value B.
-	 */
-	int compareTo(T evalA, T evalB);
-	
-	
-	/**
-	 * Calculating distance between evaluated value A with evaluated value B.
-	 * @param evalA evaluated value A.
-	 * @param evalB evaluated value B.
-	 * @return distance between evaluated value A with evaluated value B.
-	 */
-	double distance(T evalA, T evalB);
-	
-	
-	/**
-	 * Calculating the module of value A.
-	 * @param evalA evaluated value A.
-	 * @return the module of value A.
-	 */
-	double distance(T evalA);
-
-	
-	/**
 	 * Getting number of variables.
 	 * @return number of variables.
 	 */
@@ -94,6 +61,13 @@ public interface Function<T> extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Creating 1-element vector.
+	 * @return 1-element vector.
+	 */
+	Vector<T> createOneElementVector();
+	
+	
+	/**
 	 * Creating vector with initial value.
 	 * @param initialValue initial value.
 	 * @return vector created with initial value.
@@ -101,6 +75,21 @@ public interface Function<T> extends Serializable, Cloneable {
 	Vector<T> createVector(T initialValue);
 	
 	
+	/**
+	 * Constructor with specified initial value.
+	 * @param initialValue initial value.
+	 */
+	Particle<T> createParticle(T initialValue);
+	
+	
+	/**
+	 * Constructor with specified position and velocity.
+	 * @param position specified position.
+	 * @param velocity specified velocity.
+	 */
+	Particle<T> createParticle(Vector<T> position, Vector<T> velocity);
+
+		
 	/**
 	 * Making random vector from low bound to high bound.
 	 * @param lower low bound.

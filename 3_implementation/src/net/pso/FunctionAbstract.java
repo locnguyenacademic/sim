@@ -50,30 +50,6 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public int compareTo(T evalA, T evalB) {
-		if (evalA == null && evalB == null) return 0;
-		if (evalA == null) return -1;
-		if (evalB == null) return 1;
-		
-		if ((evalA instanceof Number) && (evalB instanceof Number)) {
-			double a = ((Number)evalA).doubleValue();
-			double b = ((Number)evalB).doubleValue();
-			if (a < b)
-				return -1;
-			else if (a == b)
-				return 0;
-			else
-				return 1;
-		}
-		else if (evalA instanceof Comparable<?>)
-			return ((Comparable<T>)evalA).compareTo(evalB);
-		else
-			return -1;
-	}
-
-
 	@Override
 	public int getVarNum() {
 		return vars.size();

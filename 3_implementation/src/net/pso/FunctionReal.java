@@ -7,9 +7,11 @@
  */
 package net.pso;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.hudup.core.data.Attribute.Type;
+import net.hudup.core.data.AttributeList;
 
 /**
  * This abstract class represents the abstract function whose image domain is real space.
@@ -37,34 +39,19 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 
 
 	@Override
-	public Double zero() {
-		return 0.0;
-	}
-
-
-	@Override
-	public int compareTo(Double evalA, Double evalB) {
-		if (evalA < evalB)
-			return -1;
-		else if (evalA == evalB)
-			return 0;
+	public Vector<Double> createOneElementVector() {
+		AttributeList attRef = null;
+		if (vars == null || vars.size() == 0)
+			attRef = AttributeList.defaultRealVarAttributeList(1);
 		else
-			return 1;
+			attRef = AttributeList.create(Arrays.asList(vars.get(0)));
+		
+		RealVector vector = new RealVector(attRef);
+		vector.setValue(0, vector.elementZero());
+		return vector;
 	}
 
 
-	@Override
-	public double distance(Double evalA, Double evalB) {
-		return Math.abs(evalA - evalB);
-	}
-
-	
-	@Override
-	public double distance(Double evalA) {
-		return Math.abs(evalA);
-	}
-
-	
 	@Override
 	public Vector<Double> createVector(Double initialValue) {
 		RealVector vector = new RealVector(vars);
@@ -75,6 +62,18 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 		}
 		
 		return vector;
+	}
+
+
+	@Override
+	public Particle<Double> createParticle(Double initialValue) {
+		return new Particle<Double>(initialValue, this);
+	}
+
+
+	@Override
+	public Particle<Double> createParticle(Vector<Double> position, Vector<Double> velocity) {
+		return new Particle<Double>(position, velocity, this);
 	}
 
 
@@ -134,7 +133,7 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 			velocity.setValue(i, v);
 		}
 
-		return new Particle<Double>(position, velocity, this);
+		return createParticle(position, velocity);
 	}
 
 

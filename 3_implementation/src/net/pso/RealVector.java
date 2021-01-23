@@ -28,6 +28,12 @@ public class RealVector extends Vector<Double> {
 
 	
 	/**
+	 * Zero vector.
+	 */
+	private RealVector zero = null;
+	
+	
+	/**
 	 * Default constructor
 	 */
 	public RealVector() {
@@ -61,6 +67,77 @@ public class RealVector extends Vector<Double> {
 	@Override
 	public Vector<Double> duplicate() {
 		return (RealVector)clone();
+	}
+
+
+	@Override
+	public Double elementZero() {
+		return 0.0;
+	}
+
+
+	@Override
+	public Vector<Double> zero() {
+		if (zero != null) return zero;
+		
+		if (this.attRef == null || this.attRef.size() == 0)
+			zero = null;
+		else {
+			zero = new RealVector(this.attRef);
+			int n = zero.getAttCount();
+			for (int i = 0; i < n; i++) zero.setValue(i, elementZero());
+		}
+
+		return zero;
+	}
+
+
+	@Override
+	public int compareTo(Double a, Double b) {
+		if (a < b)
+			return -1;
+		else if (a == b)
+			return 0;
+		else
+			return 1;
+	}
+
+
+	@Override
+	public double module(Double a) {
+		return Math.abs(a);
+	}
+
+	
+	@Override
+	public Double module() {
+		int n = this.getAttCount();
+		double module = 0;
+		for (int i = 0; i < n; i++) {
+			double value = this.getValueAsReal(i);
+			module += value * value;
+		}
+		
+		return Math.sqrt(module);
+	}
+
+
+	@Override
+	public double distance(Double a, Double b) {
+		return Math.abs(a - b);
+	}
+
+	
+	@Override
+	public Double distance(Vector<Double> that) {
+		int n = Math.min(this.getAttCount(), that.getAttCount());
+		double dis = 0;
+		for (int i = 0; i < n; i++) {
+			double deviate = this.getValueAsReal(i) - that.getValueAsReal(i);
+			dis += deviate * deviate;
+		}
+
+		return Math.sqrt(dis);
 	}
 
 

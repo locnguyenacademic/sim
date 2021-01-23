@@ -121,7 +121,31 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * Default value for terminated ratio mode.
 	 */
 	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
+
 	
+	/**
+	 * Fitness distance ratio mode.
+	 */
+	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";
+
+	
+	/**
+	 * Fitness distance ratio mode.
+	 */
+	public final static boolean NEIGHBORS_FDR_MODE_DEFAULT = false;
+	
+	
+	/**
+	 * Fitness distance ratio threshold.
+	 */
+	public final static String NEIGHBORS_FDR_THRESHOLD_FIELD = "neighbors_fdr_threshold";
+
+	
+	/**
+	 * Default value for fitness distance ratio threshold.
+	 */
+	public final static double NEIGHBORS_FDR_THRESHOLD_DEFAULT = 2;
+
 	
 	/**
 	 * Lower bound of position.
@@ -273,6 +297,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T inertialWeight = psoConfig.inertialWeight;
 		T constrictWeight = psoConfig.constrictWeight;
 		
+		T elementZero = func.createOneElementVector().elementZero();
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
 		learnStarted = true;
@@ -280,20 +305,20 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 			for (Particle<T> x : swarm) {
 				x.velocity.multiply(inertialWeight);
 				
-				Vector<T> cognitiveForce = func.createRandomVector(func.zero(), cognitiveWeight).multiplyWise(
+				Vector<T> cognitiveForce = func.createRandomVector(elementZero, cognitiveWeight).multiplyWise(
 					x.bestPosition.duplicate().subtract(x.position));
 				x.velocity.add(cognitiveForce);
 				
-				Vector<T> socialForceGlobal = func.createRandomVector(func.zero(), socialWeightGlobal).multiplyWise(
+				Vector<T> socialForceGlobal = func.createRandomVector(elementZero, socialWeightGlobal).multiplyWise(
 					optimizer.bestPosition.duplicate().subtract(x.position));
 				x.velocity.add(socialForceGlobal);
 
 				List<Particle<T>> neighbors = defineNeighbors(x);
 				if (neighbors != null && neighbors.size() > 0) {
-					Vector<T> socialForceLocal = func.createVector(func.zero());
+					Vector<T> socialForceLocal = func.createVector(elementZero);
 					List<Vector<T>> neighborForces = Util.newList(neighbors.size());
 					for (Particle<T> neighbor : neighbors) {
-						Vector<T> neighborForce = func.createRandomVector(func.zero(), socialWeightLocal).multiplyWise(
+						Vector<T> neighborForce = func.createRandomVector(elementZero, socialWeightLocal).multiplyWise(
 							neighbor.bestPosition.duplicate().subtract(x.position));
 						neighborForces.add(neighborForce);
 					}
@@ -347,7 +372,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 			
 			fireSetupEvent(new PSOLearnEvent(this, Type.done, getName(),
 				"At final iteration " + iteration + ": final optimizer is " + optimizer.toString(),
-				iteration, maxIteration));
+				iteration, iteration));
 
 			notifyAll();
 		}
@@ -368,37 +393,66 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
 		terminatedThreshold = Util.isUsed(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
 		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_MODE_FIELD);
+		Vector<T> vector = func.createOneElementVector();
 		if (terminatedRatio)
-			return func.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold * func.distance(preOptimizer.bestValue);
+			return vector.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold * vector.module(preOptimizer.bestValue);
 		else
-			return func.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold;
+			return vector.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold;
 	}
 	
 	
 	/**
-	 * Checking if evaluated value A is better than evaluated value B.
-	 * @param evalA evaluated value A.
-	 * @param evalB evaluated value B.
-	 * @return true if evaluated value A is better than evaluated value B.
+	 * Checking if value a is better than value b.
+	 * @param a value a.
+	 * @param b value b.
+	 * @return true if value a is better than value b.
 	 */
-	protected boolean checkABetterThanB(T evalA, T evalB) {
+	protected boolean checkABetterThanB(T a, T b) {
 		if (func == null) return false;
 		
 		boolean minimize = config.getAsBoolean(MINIMIZE_MODE_FIELD);
+		Vector<T> vector = func.createOneElementVector();
 		if (minimize)
-			return func.compareTo(evalA, evalB) == -1;
+			return vector.compareTo(a, b) == -1;
 		else
-			return func.compareTo(evalA, evalB) == 1;
+			return vector.compareTo(a, b) == 1;
 	}
 
 	
 	/**
 	 * Defining neighbors of a given particle.
-	 * @param particle given particle.
+	 * @param targetParticle given particle.
 	 * @return list of neighbors of the given particle. Returning empty list in case of fully connected swarm topology.
 	 */
-	protected List<Particle<T>> defineNeighbors(Particle<T> particle) {
-		return Util.newList();
+	protected List<Particle<T>> defineNeighbors(Particle<T> targetParticle) {
+		if (func == null || targetParticle == null || targetParticle.position == null)
+			return Util.newList();
+		boolean fdrMode = config.getAsBoolean(NEIGHBORS_FDR_MODE_FIELD);
+		double fdrThreshold = config.getAsReal(NEIGHBORS_FDR_THRESHOLD_FIELD);
+		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
+		
+		if (targetParticle.value == null)
+			targetParticle.value = func.eval(targetParticle.position);
+		if (targetParticle.value == null)
+			return Util.newList();
+
+		List<Particle<T>> neighbors = Util.newList();
+		Vector<T> vector = func.createOneElementVector();
+		for (Particle<T> particle : swarm) {
+			if (particle.position == null || particle == targetParticle) continue;
+			if (particle.value == null)
+				particle.value = func.eval(particle.position);
+			if (particle.value == null)
+				continue;
+			
+			double fdis = vector.distance(targetParticle.value, particle.value);
+			double xdis = vector.module(targetParticle.position.distance(particle.position));
+			if (Util.isUsed(fdis) && Util.isUsed(xdis) && fdis >= fdrThreshold*xdis) {
+				neighbors.add(particle);
+			}
+		}
+		
+		return neighbors;
 	}
 	
 	
@@ -497,6 +551,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		config.put(PARTICLE_NUMBER_FIELD, PARTICLE_NUMBER_DEFAULT);
 		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
 		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
+		config.put(NEIGHBORS_FDR_MODE_FIELD, NEIGHBORS_FDR_MODE_DEFAULT);
+		config.put(NEIGHBORS_FDR_THRESHOLD_FIELD, NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 		
 		return config;
 	}

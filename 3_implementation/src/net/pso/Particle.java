@@ -49,6 +49,12 @@ public class Particle<T> implements Serializable, Cloneable {
 	
 	
 	/**
+	 * Evaluated value of the position. This information is not important.
+	 */
+	public T value = null;
+
+	
+	/**
 	 * Constructor with specified initial value and function.
 	 * @param initialValue initial value.
 	 * @param func specified function.
@@ -76,6 +82,18 @@ public class Particle<T> implements Serializable, Cloneable {
 		
 		if (this.bestPosition != null)
 			this.bestValue = func.eval(this.bestPosition);
+	}
+	
+	
+	/**
+	 * Evaluating position and best position by specified target function.
+	 * @param func specified target function.
+	 */
+	public void eval(Function<T> func) {
+		if (func == null) return;
+		
+		if (position != null) value = func.eval(position);
+		if (bestPosition != null) bestValue = func.eval(bestPosition);
 	}
 	
 	
