@@ -28,10 +28,10 @@ public class RealVector extends Vector<Double> {
 	private static final long serialVersionUID = 1L;
 
 	
-	/**
-	 * Zero vector.
-	 */
-	private RealVector zero = null;
+//	/**
+//	 * Zero vector.
+//	 */
+//	private RealVector zero = null;
 	
 	
 	/**
@@ -83,37 +83,37 @@ public class RealVector extends Vector<Double> {
 	}
 
 
-	@Override
-	public Vector<Double> zero() {
-		if (zero != null) return zero;
-		
-		if (this.attRef == null || this.attRef.size() == 0)
-			zero = null;
-		else {
-			zero = new RealVector(this.attRef);
-			int n = zero.getAttCount();
-			for (int i = 0; i < n; i++) zero.setValue(i, elementZero());
-		}
-
-		return zero;
-	}
-
-
-	@Override
-	public int compareTo(Double a, Double b) {
-		if (a < b)
-			return -1;
-		else if (a == b)
-			return 0;
-		else
-			return 1;
-	}
+//	@Override
+//	public Vector<Double> zero() {
+//		if (zero != null) return zero;
+//		
+//		if (this.attRef == null || this.attRef.size() == 0)
+//			zero = null;
+//		else {
+//			zero = new RealVector(this.attRef);
+//			int n = zero.getAttCount();
+//			for (int i = 0; i < n; i++) zero.setValue(i, elementZero());
+//		}
+//
+//		return zero;
+//	}
 
 
-	@Override
-	public double module(Double a) {
-		return Math.abs(a);
-	}
+//	@Override
+//	public int compareTo(Double a, Double b) {
+//		if (a < b)
+//			return -1;
+//		else if (a == b)
+//			return 0;
+//		else
+//			return 1;
+//	}
+
+
+//	@Override
+//	public double module(Double a) {
+//		return Math.abs(a);
+//	}
 
 	
 	@Override
@@ -129,10 +129,10 @@ public class RealVector extends Vector<Double> {
 	}
 
 
-	@Override
-	public double distance(Double a, Double b) {
-		return Math.abs(a - b);
-	}
+//	@Override
+//	public double distance(Double a, Double b) {
+//		return Math.abs(a - b);
+//	}
 
 	
 	@Override

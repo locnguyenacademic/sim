@@ -127,13 +127,13 @@ public class Optimizer<T> implements Serializable, Cloneable {
 				return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 			else {
 				T value = func.eval(particle.position);
-				if (value != null)
-					return new Optimizer<T>(particle.bestPosition, particle.bestValue);
-				else
+				if (particle.position.isValid(value))
 					return new Optimizer<T>(particle.position, value);
+				else
+					return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 			}
 		}
-		else if (particle.bestValue != null)
+		else if (particle.bestPosition.isValid(particle.bestValue))
 			return new Optimizer<T>(particle.bestPosition, particle.bestValue);
 		else
 			return new Optimizer<T>(particle.bestPosition, func.eval(particle.bestPosition));

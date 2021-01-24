@@ -32,6 +32,13 @@ public interface Function<T> extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Getting zero vector.
+	 * @return zero vector.
+	 */
+	Vector<T> zero();
+
+	
+	/**
 	 * Getting number of variables.
 	 * @return number of variables.
 	 */
@@ -60,11 +67,11 @@ public interface Function<T> extends Serializable, Cloneable {
 	void setOptimizer(Optimizer<T> optimizer);
 	
 	
-	/**
-	 * Creating 1-element vector.
-	 * @return 1-element vector.
-	 */
-	Vector<T> createOneElementVector();
+//	/**
+//	 * Creating 1-element vector.
+//	 * @return 1-element vector.
+//	 */
+//	Vector<T> createOneElementVector();
 	
 	
 	/**

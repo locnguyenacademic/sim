@@ -50,7 +50,9 @@ public abstract class Vector<T> extends Profile {
 	 * @param value specified value.
 	 * @return whether the specified value is valid.
 	 */
-	public abstract boolean isValid(T value);
+	public boolean isValid(T value) {
+		return value != null;
+	}
 	
 	
 	/**
@@ -60,48 +62,48 @@ public abstract class Vector<T> extends Profile {
 	public abstract T elementZero();
 	
 	
-	/**
-	 * Getting zero vector.
-	 * @return zero vector.
-	 */
-	public abstract Vector<T> zero();
+//	/**
+//	 * Getting zero vector.
+//	 * @return zero vector.
+//	 */
+//	public abstract Vector<T> zero();
 	
 	
-	/**
-	 * Comparing value a with value b.
-	 * @param a value a.
-	 * @param b value b.
-	 * @return -1 if value a is less than value b, 0 if value a is equal to value b, and 1 if value a is larger than value b.
-	 */
-	@SuppressWarnings("unchecked")
-	public int compareTo(T a, T b) {
-		if (a == null && b == null) return 0;
-		if (a == null) return -1;
-		if (b == null) return 1;
-		
-		if ((a instanceof Number) && (b instanceof Number)) {
-			double va = ((Number)a).doubleValue();
-			double vb = ((Number)b).doubleValue();
-			if (va < vb)
-				return -1;
-			else if (va == vb)
-				return 0;
-			else
-				return 1;
-		}
-		else if (a instanceof Comparable<?>)
-			return ((Comparable<T>)a).compareTo(b);
-		else
-			return -1;
-	}
+//	/**
+//	 * Comparing value a with value b.
+//	 * @param a value a.
+//	 * @param b value b.
+//	 * @return -1 if value a is less than value b, 0 if value a is equal to value b, and 1 if value a is larger than value b.
+//	 */
+//	@SuppressWarnings("unchecked")
+//	public int compareTo(T a, T b) {
+//		if (a == null && b == null) return 0;
+//		if (a == null) return -1;
+//		if (b == null) return 1;
+//		
+//		if ((a instanceof Number) && (b instanceof Number)) {
+//			double va = ((Number)a).doubleValue();
+//			double vb = ((Number)b).doubleValue();
+//			if (va < vb)
+//				return -1;
+//			else if (va == vb)
+//				return 0;
+//			else
+//				return 1;
+//		}
+//		else if (a instanceof Comparable<?>)
+//			return ((Comparable<T>)a).compareTo(b);
+//		else
+//			return -1;
+//	}
 	
 	
-	/**
-	 * Calculating the module of value a.
-	 * @param a value a.
-	 * @return the module of value a.
-	 */
-	public abstract double module(T a);
+//	/**
+//	 * Calculating the module of value a.
+//	 * @param a value a.
+//	 * @return the module of value a.
+//	 */
+//	public abstract double module(T a);
 
 	
 	/**
@@ -111,13 +113,13 @@ public abstract class Vector<T> extends Profile {
 	public abstract T module();
 
 	
-	/**
-	 * Calculating distance between value a with value b.
-	 * @param a value a.
-	 * @param b value b.
-	 * @return distance between value a with value b.
-	 */
-	public abstract double distance(T a, T b);
+//	/**
+//	 * Calculating distance between value a with value b.
+//	 * @param a value a.
+//	 * @param b value b.
+//	 * @return distance between value a with value b.
+//	 */
+//	public abstract double distance(T a, T b);
 	
 	
 	/**
@@ -173,5 +175,6 @@ public abstract class Vector<T> extends Profile {
 	 * @return mean of collection of vectors.
 	 */
 	public abstract Vector<T> mean(Collection<Vector<T>> vectors);
+	
 	
 }

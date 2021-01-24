@@ -31,6 +31,30 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	
 	/**
+	 * Terminated threshold.
+	 */
+	public final static String TERMINATED_THRESHOLD_FIELD = "terminated_threshold";
+
+	
+	/**
+	 * Default value for terminated threshold .
+	 */
+	public final static double TERMINATED_THRESHOLD_DEFAULT = 0.001;
+	
+	
+	/**
+	 * Terminated ratio mode.
+	 */
+	public final static String TERMINATED_RATIO_MODE_FIELD = "terminated_ratio_mode";
+
+	
+	/**
+	 * Default value for terminated ratio mode.
+	 */
+	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
+
+	
+	/**
 	 * Default value for lower bound of position.
 	 */
 	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
@@ -73,6 +97,30 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	
 	/**
+	 * Fitness distance ratio mode.
+	 */
+	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";
+
+	
+	/**
+	 * Fitness distance ratio mode.
+	 */
+	public final static boolean NEIGHBORS_FDR_MODE_DEFAULT = false;
+	
+	
+	/**
+	 * Fitness distance ratio threshold.
+	 */
+	public final static String NEIGHBORS_FDR_THRESHOLD_FIELD = "neighbors_fdr_threshold";
+
+	
+	/**
+	 * Default value for fitness distance ratio threshold.
+	 */
+	public final static double NEIGHBORS_FDR_THRESHOLD_DEFAULT = 2;
+
+	
+	/**
 	 * Default constructor.
 	 */
 	public PSOImpl() {
@@ -80,6 +128,65 @@ public class PSOImpl extends PSOAbstract<Double> {
 	}
 
 	
+	@Override
+	protected boolean terminatedCondition(Optimizer<Double> curOptimizer, Optimizer<Double> preOptimizer) {
+		if (curOptimizer == null || preOptimizer == null) return false;
+		
+		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
+		terminatedThreshold = Util.isUsed(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
+		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_MODE_FIELD);
+		if (terminatedRatio)
+			return Math.abs(curOptimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold * Math.abs(preOptimizer.bestValue);
+		else
+			return Math.abs(curOptimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold;
+	}
+
+
+	@Override
+	protected boolean checkABetterThanB(Double a, Double b) {
+		if (func == null) return false;
+		
+		boolean minimize = config.getAsBoolean(MINIMIZE_MODE_FIELD);
+		if (minimize)
+			return a < b;
+		else
+			return a > b;
+	}
+
+
+	@Override
+	protected List<Particle<Double>> defineNeighbors(Particle<Double> targetParticle) {
+		if (func == null || targetParticle == null || targetParticle.position == null)
+			return Util.newList();
+		boolean fdrMode = config.getAsBoolean(NEIGHBORS_FDR_MODE_FIELD);
+		double fdrThreshold = config.getAsReal(NEIGHBORS_FDR_THRESHOLD_FIELD);
+		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
+		
+		if (!targetParticle.position.isValid(targetParticle.value))
+			targetParticle.value = func.eval(targetParticle.position);
+		if (!targetParticle.position.isValid(targetParticle.value))
+			return Util.newList();
+
+		List<Particle<Double>> neighbors = Util.newList();
+		for (Particle<Double> particle : swarm) {
+			if (particle.position == null || particle == targetParticle) continue;
+			
+			if (!particle.position.isValid(particle.value))
+				particle.value = func.eval(particle.position);
+			if (!particle.position.isValid(particle.value))
+				continue;
+			
+			double fdis = Math.abs(targetParticle.value - particle.value);
+			double xdis = targetParticle.position.distance(particle.position);
+			if (Util.isUsed(fdis) && Util.isUsed(xdis) && fdis >= fdrThreshold*xdis) {
+				neighbors.add(particle);
+			}
+		}
+		
+		return neighbors;
+	}
+
+
 	@Override
 	protected Function<Double> defineExprFunction(List<String> varNames, String expr) {
 		return new ExprFunction(varNames, expr);
@@ -155,6 +262,8 @@ public class PSOImpl extends PSOAbstract<Double> {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
+		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
+		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
 		config.put(POSITION_LOWER_BOUND_FIELD, POSITION_LOWER_BOUND_DEFAULT);
 		config.put(POSITION_UPPER_BOUND_FIELD, POSITION_UPPER_BOUND_DEFAULT);
 		config.put(COGNITIVE_WEIGHT_FIELD, COGNITIVE_WEIGHT_DEFAULT);
@@ -162,6 +271,8 @@ public class PSOImpl extends PSOAbstract<Double> {
 		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, SOCIAL_WEIGHT_LOCAL_DEFAULT);
 		config.put(INERTIAL_WEIGHT_FIELD, INERTIAL_WEIGHT_DEFAULT);
 		config.put(CONSTRICT_WEIGHT_FIELD, CONSTRICT_WEIGHT_DEFAULT);
+		config.put(NEIGHBORS_FDR_MODE_FIELD, NEIGHBORS_FDR_MODE_DEFAULT);
+		config.put(NEIGHBORS_FDR_THRESHOLD_FIELD, NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 		
 		return config;
 	}

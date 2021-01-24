@@ -7,11 +7,9 @@
  */
 package net.pso;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.data.AttributeList;
 
 /**
  * This abstract class represents the abstract function whose image domain is real space.
@@ -30,6 +28,12 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 
 
 	/**
+	 * Zero vector.
+	 */
+	private RealVector zero = null;
+
+	
+	/**
 	 * Constructor with dimension and type.
 	 * @param dim specified dimension.
 	 */
@@ -39,17 +43,34 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 
 
 	@Override
-	public Vector<Double> createOneElementVector() {
-		AttributeList attRef = null;
-		if (vars == null || vars.size() == 0)
-			attRef = AttributeList.defaultRealVarAttributeList(1);
-		else
-			attRef = AttributeList.create(Arrays.asList(vars.get(0)));
+	public Vector<Double> zero() {
+		if (zero != null) return zero;
 		
-		RealVector vector = new RealVector(attRef);
-		vector.setValue(0, vector.elementZero());
-		return vector;
+		int n = vars.size();
+		if (n == 0)
+			zero = null;
+		else {
+			zero = new RealVector(vars);
+			for (int i = 0; i < n; i++) zero.setValue(i, zero.elementZero());
+		}
+
+		return zero;
+
 	}
+
+
+//	@Override
+//	public Vector<Double> createOneElementVector() {
+//		AttributeList attRef = null;
+//		if (vars == null || vars.size() == 0)
+//			attRef = AttributeList.defaultRealVarAttributeList(1);
+//		else
+//			attRef = AttributeList.create(Arrays.asList(vars.get(0)));
+//		
+//		RealVector vector = new RealVector(attRef);
+//		vector.setValue(0, vector.elementZero());
+//		return vector;
+//	}
 
 
 	@Override

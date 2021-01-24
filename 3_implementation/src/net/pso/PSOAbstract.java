@@ -100,54 +100,6 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 	
 	/**
-	 * Terminated threshold.
-	 */
-	public final static String TERMINATED_THRESHOLD_FIELD = "terminated_threshold";
-
-	
-	/**
-	 * Default value for terminated threshold .
-	 */
-	public final static double TERMINATED_THRESHOLD_DEFAULT = 0.001;
-	
-	
-	/**
-	 * Terminated ratio mode.
-	 */
-	public final static String TERMINATED_RATIO_MODE_FIELD = "terminated_ratio_mode";
-
-	
-	/**
-	 * Default value for terminated ratio mode.
-	 */
-	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static boolean NEIGHBORS_FDR_MODE_DEFAULT = false;
-	
-	
-	/**
-	 * Fitness distance ratio threshold.
-	 */
-	public final static String NEIGHBORS_FDR_THRESHOLD_FIELD = "neighbors_fdr_threshold";
-
-	
-	/**
-	 * Default value for fitness distance ratio threshold.
-	 */
-	public final static double NEIGHBORS_FDR_THRESHOLD_DEFAULT = 2;
-
-	
-	/**
 	 * Lower bound of position.
 	 */
 	public final static String POSITION_LOWER_BOUND_FIELD = "pso_position_lower_bound";
@@ -300,8 +252,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T inertialWeight = psoConfig.inertialWeight;
 		T constrictWeight = psoConfig.constrictWeight;
 		
-		Vector<T> oneElementVector = func.createOneElementVector();
-		T elementZero = oneElementVector.elementZero();
+		T elementZero = func.zero().elementZero();
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
 		learnStarted = true;
@@ -335,7 +286,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 				x.position.add(x.velocity);
 				
 				x.value = func.eval(x.position);
-				if (!oneElementVector.isValid(x.value))
+				if (!x.position.isValid(x.value))
 					continue;
 				else if (checkABetterThanB(x.value, x.bestValue)) {
 					x.bestPosition = x.position.duplicate();
@@ -386,23 +337,12 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 
 	/**
-	 * Setting the terminated condition.
+	 * Checking whether the terminated condition is satisfied.
 	 * @param curOptimizer current optimizer.
 	 * @param preOptimizer previous optimizer.
 	 * @return true then the algorithm can stop.
 	 */
-	protected boolean terminatedCondition(Optimizer<T> curOptimizer, Optimizer<T> preOptimizer) {
-		if (curOptimizer == null || preOptimizer == null) return false;
-		
-		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
-		terminatedThreshold = Util.isUsed(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
-		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_MODE_FIELD);
-		Vector<T> vector = func.createOneElementVector();
-		if (terminatedRatio)
-			return vector.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold * vector.module(preOptimizer.bestValue);
-		else
-			return vector.distance(curOptimizer.bestValue, preOptimizer.bestValue) <= terminatedThreshold;
-	}
+	protected abstract boolean terminatedCondition(Optimizer<T> curOptimizer, Optimizer<T> preOptimizer);
 	
 	
 	/**
@@ -411,16 +351,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * @param b value b.
 	 * @return true if value a is better than value b.
 	 */
-	protected boolean checkABetterThanB(T a, T b) {
-		if (func == null) return false;
-		
-		boolean minimize = config.getAsBoolean(MINIMIZE_MODE_FIELD);
-		Vector<T> vector = func.createOneElementVector();
-		if (minimize)
-			return vector.compareTo(a, b) == -1;
-		else
-			return vector.compareTo(a, b) == 1;
-	}
+	protected abstract boolean checkABetterThanB(T a, T b);
 
 	
 	/**
@@ -429,36 +360,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	 * @return list of neighbors of the given particle. Returning empty list in case of fully connected swarm topology.
 	 */
 	protected List<Particle<T>> defineNeighbors(Particle<T> targetParticle) {
-		if (func == null || targetParticle == null || targetParticle.position == null)
-			return Util.newList();
-		boolean fdrMode = config.getAsBoolean(NEIGHBORS_FDR_MODE_FIELD);
-		double fdrThreshold = config.getAsReal(NEIGHBORS_FDR_THRESHOLD_FIELD);
-		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
-		
-		Vector<T> vector = func.createOneElementVector();
-		
-		if (!targetParticle.position.isValid(targetParticle.value))
-			targetParticle.value = func.eval(targetParticle.position);
-		if (!targetParticle.position.isValid(targetParticle.value))
-			return Util.newList();
-
-		List<Particle<T>> neighbors = Util.newList();
-		for (Particle<T> particle : swarm) {
-			if (particle.position == null || particle == targetParticle) continue;
-			
-			if (!particle.position.isValid(particle.value))
-				particle.value = func.eval(particle.position);
-			if (!particle.position.isValid(particle.value))
-				continue;
-			
-			double fdis = vector.distance(targetParticle.value, particle.value);
-			double xdis = vector.module(targetParticle.position.distance(particle.position));
-			if (Util.isUsed(fdis) && Util.isUsed(xdis) && fdis >= fdrThreshold*xdis) {
-				neighbors.add(particle);
-			}
-		}
-		
-		return neighbors;
+		return Util.newList();
 	}
 	
 	
@@ -555,10 +457,6 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		config.put(FUNC_VARNAMES_FIELD, FUNC_VARNAMES_DEFAULT);
 		config.put(MAX_ITERATION_FIELD, MAX_ITERATION_DEFAULT);
 		config.put(PARTICLE_NUMBER_FIELD, PARTICLE_NUMBER_DEFAULT);
-		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
-		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
-		config.put(NEIGHBORS_FDR_MODE_FIELD, NEIGHBORS_FDR_MODE_DEFAULT);
-		config.put(NEIGHBORS_FDR_THRESHOLD_FIELD, NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 		
 		return config;
 	}
