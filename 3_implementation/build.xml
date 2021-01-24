@@ -570,7 +570,6 @@
 		<then>
 			<jar destfile="${archive.home}/${product}-pso.jar">
 	    		<fileset dir="${bin.home}" includes="net/pso/**"/>
-				<!--
 	    		<restrict>
 	     			<name name="**"/>
 					<archives>
@@ -579,7 +578,6 @@
 						</zips>
 					</archives>
 	    		</restrict>
-				-->
 	    		
 				<manifest>
 					<attribute name="Main-Class" value="net.pso.PSO"/>

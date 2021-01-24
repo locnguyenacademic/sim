@@ -10,6 +10,9 @@ package net.pso;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
+
+import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.parser.TextParserUtil;
@@ -57,43 +60,55 @@ public class PSOImpl extends PSOAbstract<Double> {
 	/**
 	 * Default value for lower bound of position.
 	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
+	public final static String POSITION_LOWER_BOUND_DEFAULT = "-100, -100"; //"-1, -1";
 
 
 	/**
 	 * Default value for upper bound of position.
 	 */
-	public final static String POSITION_UPPER_BOUND_DEFAULT = "1, 1";
+	public final static String POSITION_UPPER_BOUND_DEFAULT = "100, 100"; //"1, 1";
 	
 	
 	/**
 	 * Default value for cognitive weight parameter.
 	 */
-	public final static double COGNITIVE_WEIGHT_DEFAULT = 1.5;
+	public final static double COGNITIVE_WEIGHT_DEFAULT = 1.4962;
 
 	
 	/**
 	 * Default value for global social weight.
 	 */
-	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 1.5;
+	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 1.4962;
 
 	
 	/**
 	 * Default value for local social weight.
 	 */
-	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 1.5;
+	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 1.4962;
 
 	
 	/**
 	 * Default value for inertial weight.
 	 */
-	public final static double INERTIAL_WEIGHT_DEFAULT = 0.73;
+	public final static double INERTIAL_WEIGHT_DEFAULT = 0.7298;
 
 	
 	/**
 	 * Default value for constriction weight.
 	 */
 	public final static double CONSTRICT_WEIGHT_DEFAULT = 1;
+
+	
+	/**
+	 * Probabilistic constriction weight mode.
+	 */
+	public final static String CONSTRICT_WEIGHT_PROB_MODE_FIELD = "pso_constrict_weight_prob_mode";
+
+	
+	/**
+	 * Default value for probabilistic constriction weight mode.
+	 */
+	public final static boolean CONSTRICT_WEIGHT_PROB_MODE_DEFAULT = false;
 
 	
 	/**
@@ -194,6 +209,44 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 
 	@Override
+	protected Vector<Double> defineConstrictWeightVector(Particle<Double> targetParticle, Optimizer<Double> optimizer) {
+		boolean probMode = config.getAsBoolean(CONSTRICT_WEIGHT_PROB_MODE_FIELD);
+		if (!probMode || func == null) return null;
+		
+		double weight = config.getAsReal(CONSTRICT_WEIGHT_FIELD);
+		weight = Util.isUsed(weight) ? weight : CONSTRICT_WEIGHT_DEFAULT;
+		int n = func.getVarNum();
+		Vector<Double> constrictWeight = func.createVector(0.0);
+		for (int i = 0; i < n; i++) constrictWeight.setValue(i, weight);
+		if (targetParticle == null || targetParticle.bestPosition == null)
+			return constrictWeight;
+		
+		if (optimizer == null || optimizer.bestPosition == null) return constrictWeight;
+		
+		RandomDataGenerator rnd = new RandomDataGenerator();
+		for (int i = 0; i < n; i++) {
+			double mean = (targetParticle.bestPosition.getValueAsReal(i) + optimizer.bestPosition.getValueAsReal(i)) / 2.0;
+			double deviate = Math.abs(targetParticle.bestPosition.getValueAsReal(i) - optimizer.bestPosition.getValueAsReal(i));
+			double variance = deviate * deviate;
+			
+			double w = Constants.UNUSED;
+			if (variance == 0) {
+				w = weight;
+			}
+			else {
+				double z = rnd.nextGaussian(mean, deviate);
+				double d = mean - z;
+				w = Math.exp(-0.5*d*d/variance);
+			}
+			
+			if (Util.isUsed(w)) constrictWeight.setValue(i, w);
+		}
+		
+		return constrictWeight;
+	}
+	
+	
+	@Override
 	public PSOConfiguration<?> getPSOConfiguration() throws RemoteException {
 		PSOConfiguration<Double> psoConfig = new PSOConfiguration<Double>();
 		
@@ -255,7 +308,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	@Override
 	public String getName() {
-		return "pso";
+		return "pso_general";
 	}
 
 
@@ -271,6 +324,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, SOCIAL_WEIGHT_LOCAL_DEFAULT);
 		config.put(INERTIAL_WEIGHT_FIELD, INERTIAL_WEIGHT_DEFAULT);
 		config.put(CONSTRICT_WEIGHT_FIELD, CONSTRICT_WEIGHT_DEFAULT);
+		config.put(CONSTRICT_WEIGHT_PROB_MODE_FIELD, CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
 		config.put(NEIGHBORS_FDR_MODE_FIELD, NEIGHBORS_FDR_MODE_DEFAULT);
 		config.put(NEIGHBORS_FDR_THRESHOLD_FIELD, NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 		
