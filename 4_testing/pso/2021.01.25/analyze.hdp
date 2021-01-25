@@ -1,0 +1,112 @@
+General evaluation
+
+  01.pso_basic
+    Setup time = 1.3240
+
+  02.gpso
+    Setup time = 1.4420
+
+  03.gpso_prob_constrict
+    Setup time = 2.1560
+
+
+Dataset evaluation
+
+  Dataset "1"
+    01.pso_basic
+      Setup time = 1.3240
+    02.gpso
+      Setup time = 1.4420
+    03.gpso_prob_constrict
+      Setup time = 2.1560
+
+
+Setup time evaluation
+
+  01.pso_basic
+    Dataset "1" got 1.3240
+
+  02.gpso
+    Dataset "1" got 1.4420
+
+  03.gpso_prob_constrict
+    Dataset "1" got 2.1560
+
+
+Algorithm parameters
+
+  01.pso_basic
+    pso_particle_number=50.0000
+    pso_social_weight_global=2.0500
+    pso_position_upper_bound=10, 10
+    terminated_threshold=0.0010
+    delay_unsetup=false
+    function_expression=-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))
+    pso_cognitive_weight=2.0500
+    minimize_mode=true
+    pso_inertial_weight=1.0000
+    max_iteration=1000.0000
+    pso_constrict_weight=0.7298
+    terminated_ratio_mode=false
+    pso_position_lower_bound=-10, -10
+    function_variables=x1, x2
+
+  02.gpso
+    pso_particle_number=50.0000
+    pso_social_weight_global=2.0500
+    pso_position_upper_bound=10, 10
+    terminated_threshold=0.0010
+    delay_unsetup=false
+    function_expression=-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))
+    pso_cognitive_weight=2.0500
+    neighbors_fdr_threshold=2.0000
+    minimize_mode=true
+    pso_inertial_weight=1.0000
+    max_iteration=1000.0000
+    pso_social_weight_local=2.0500
+    pso_constrict_weight=0.7298
+    terminated_ratio_mode=false
+    pso_position_lower_bound=-10, -10
+    function_variables=x1, x2
+    neighbors_fdr_mode=true
+
+  03.gpso_prob_constrict
+    pso_particle_number=50.0000
+    pso_social_weight_global=2.0500
+    pso_position_upper_bound=10, 10
+    terminated_threshold=0.0010
+    delay_unsetup=false
+    function_expression=-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))
+    pso_cognitive_weight=2.0500
+    neighbors_fdr_threshold=2.0000
+    minimize_mode=true
+    pso_constrict_weight_prob_mode=true
+    pso_inertial_weight=1.0000
+    max_iteration=1000.0000
+    pso_social_weight_local=2.0500
+    pso_constrict_weight=0.7298
+    terminated_ratio_mode=false
+    pso_position_lower_bound=-10, -10
+    function_variables=x1, x2
+    neighbors_fdr_mode=true
+
+
+Algorithm descriptions
+
+  01.pso_basic
+    Dataset "1" got Function "-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))" gets optimal at best position = {x1=3.0421, x2=3.1151}, best value = -0.9842
+
+  02.gpso
+    Dataset "1" got Function "-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))" gets optimal at best position = {x1=3.1837, x2=3.1352}, best value = -0.9973
+
+  03.gpso_prob_constrict
+    Dataset "1" got Function "-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))" gets optimal at best position = {x1=3.1464, x2=3.1485}, best value = -0.9999
+
+
+Note
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_101-b13, Java HotSpot(TM) 64-Bit Server VM version 25.101-b13, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows 8.1, amd64, version 6.3
+  Memory(VM): Allocated memory = 360.50MB, Free memory = 331.33MB, Max memory = 892.50MB
+  CPU: Intel64 Family 6 Model 76 Stepping 3, GenuineIntel, AMD64, the number of processors is 2
+  Directory: Current working directory is "E:\GoogleDrive\todo\working\projects\sim\3_implementation"

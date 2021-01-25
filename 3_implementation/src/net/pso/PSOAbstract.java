@@ -60,7 +60,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	/**
 	 * Default value for function expression.
 	 */
-	public final static String FUNC_EXPR_DEFAULT = "(sin(x1))^2 + 2*((x2+1)^2) + 3*((x3-1)^2) + 10"; //(x1 + x2)^2;
+	public final static String FUNC_EXPR_DEFAULT = "(x1 + x2)^2";
 
 	
 	/**
@@ -72,7 +72,7 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	/**
 	 * Default value for variable names.
 	 */
-	public final static String FUNC_VARNAMES_DEFAULT = "x1, x2, x3"; //"x1, x2";
+	public final static String FUNC_VARNAMES_DEFAULT = "x1, x2";
 
 	
 	/**

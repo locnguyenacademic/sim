@@ -60,13 +60,13 @@ public class PSOImpl extends PSOAbstract<Double> {
 	/**
 	 * Default value for lower bound of position.
 	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "-100, -100"; //"-1, -1";
+	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
 
 
 	/**
 	 * Default value for upper bound of position.
 	 */
-	public final static String POSITION_UPPER_BOUND_DEFAULT = "100, 100"; //"1, 1";
+	public final static String POSITION_UPPER_BOUND_DEFAULT = "1, 1";
 	
 	
 	/**
