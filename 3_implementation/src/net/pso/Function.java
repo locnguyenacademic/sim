@@ -83,16 +83,18 @@ public interface Function<T> extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Constructor with specified initial value.
+	 * Creating particle with specified initial value.
 	 * @param initialValue initial value.
+	 * @return particle with initial values.
 	 */
 	Particle<T> createParticle(T initialValue);
 	
 	
 	/**
-	 * Constructor with specified position and velocity.
+	 * Creating particle with specified position and velocity.
 	 * @param position specified position.
 	 * @param velocity specified velocity.
+	 * @return particle with specified position and velocity.
 	 */
 	Particle<T> createParticle(Vector<T> position, Vector<T> velocity);
 

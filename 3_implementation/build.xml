@@ -206,7 +206,7 @@
 		<javadoc destdir="${docs.home}/api"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+			excludepackagenames="net.hudup.temp.*, net.temp.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
 		</javadoc>
 	</target>
 
@@ -217,7 +217,7 @@
 		<javadoc destdir="${archive.home}"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.hudup.alg.cf.test.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*, net.rem.temp.*, net.temp.*">
+			excludepackagenames="net.hudup.temp.*, net.temp.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
 		</javadoc>
 
 		<zip destfile="${archive.home}/${product}-${version}-doc.zip" basedir="${archive.home}"/>

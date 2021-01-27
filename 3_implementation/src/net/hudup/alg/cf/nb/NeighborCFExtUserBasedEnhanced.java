@@ -47,13 +47,13 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	/**
 	 * Rare threshold.
 	 */
-	public static final String RARE_THRESHOLD_FIELD = "rare_threshold";
+	public static final String POPULAR_THRESHOLD_FIELD = "popular_threshold";
 
 	
 	/**
 	 * Default value for rare threshold.
 	 */
-	public static final double RARE_THRESHOLD_DEFAULT = 0.5;
+	public static final double POPULAR_THRESHOLD_DEFAULT = 0.5;
 	
 	
 	/**
@@ -159,7 +159,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	 * Getting list of k nearest neighbors.
 	 * @param thisUser this user rating vector.
 	 * @param thisProfile this user profile.
-	 * @param itemId item identifier.
+	 * @param itemIds collection of item identifiers.
 	 * @param knn the number of nearest neighbors.
 	 * @return list of k nearest neighbors.
 	 */
@@ -197,7 +197,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 		}
 		
 		List<RatingVector> nb = Util.newList();
-		if (thisUser.id() >= 0) {
+		if (thisUser.id() >= 0 && !rareSet.isEmpty()) {
 			for (RatingVector user : cn) {
 				Set<Integer> cu = user.fieldIds(true);
 				cu.retainAll(rareSet);
@@ -259,9 +259,9 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 		
 		rareSet.clear();
 		DatasetMetadata2 dm = DatasetMetadata2.create(dataset);
-		double rareThreshold = config.getAsReal(RARE_THRESHOLD_FIELD);
-		rareThreshold = Util.isUsed(rareThreshold) ? rareThreshold : RARE_THRESHOLD_DEFAULT; 
-		double threshold = rareThreshold * dm.itemAverageRatingCount;
+		double popular = config.getAsReal(POPULAR_THRESHOLD_FIELD);
+		popular = Util.isUsed(popular) ? popular : POPULAR_THRESHOLD_DEFAULT; 
+		double threshold = popular * dm.itemAverageRatingCount;
 		
 		Fetcher<RatingVector> vRatings = null;
 		try {
@@ -286,16 +286,6 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	
 	
 	@Override
-	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
-			Profile profile2, Object... params) {
-		if (measure.equals(Measure.COSINE))
-			return cosine(vRating1, vRating2, profile1, profile2);
-		else
-			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
-	}
-
-	
-	@Override
 	public String getName() {
 		return "neighborcf_userbased_enhanced";
 	}
@@ -310,7 +300,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(RARE_THRESHOLD_FIELD, RARE_THRESHOLD_DEFAULT);
+		config.put(POPULAR_THRESHOLD_FIELD, POPULAR_THRESHOLD_DEFAULT);
 		return config;
 	}
 
@@ -378,9 +368,12 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 			C = cra(C);
 			
 			for (RatingVector user : cn) {
-				Set<Integer> ids = user.fieldIds(true);
+				Set<Integer> ids0 = user.fieldIds(true);
 				for (Set<Integer> cu : C) {
-					if (ids.containsAll(cu)) {
+					Set<Integer> ids = Util.newSet(ids0.size());
+					ids.addAll(ids0);
+					ids.retainAll(cu);
+					if (!ids.isEmpty()) {
 						nb.add(user);
 						break;
 					}
@@ -450,7 +443,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 			
 			boolean contained = false;
 			for (Set<Integer> rc : RC) {
-				if (rc.contains(c)) {
+				if (rc.containsAll(c)) {
 					contained = true;
 					break;
 				}
