@@ -11,18 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.hudup.alg.cf.nb.Measure;
-import net.hudup.alg.cf.nb.NeighborCFExtUserBasedEnhanced;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBasedReduced;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * Cosine measure with enhancement.
+ * Cosine measure with reduced neighborhood.
  *  
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class CosineEnhanced extends NeighborCFExtUserBasedEnhanced {
+public class CosineReduced extends NeighborCFExtUserBasedReduced {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class CosineEnhanced extends NeighborCFExtUserBasedEnhanced {
 	/**
 	 * Default constructor.
 	 */
-	public CosineEnhanced() {
+	public CosineReduced() {
 
 	}
 
@@ -91,7 +91,7 @@ public class CosineEnhanced extends NeighborCFExtUserBasedEnhanced {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_cosine_enhanced";
+			return "neighborcf_cosine_reduced";
 	}
 
 

@@ -35,7 +35,7 @@ import net.hudup.core.logistic.LogUtil;
  * @version 1.0
  *
  */
-public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
+public class NeighborCFExtUserBasedReduced extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -65,7 +65,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	/**
 	 * Constructor.
 	 */
-	public NeighborCFExtUserBasedEnhanced() {
+	public NeighborCFExtUserBasedReduced() {
 
 	}
 
@@ -287,7 +287,7 @@ public class NeighborCFExtUserBasedEnhanced extends NeighborCFExtUserBased {
 	
 	@Override
 	public String getName() {
-		return "neighborcf_userbased_enhanced";
+		return "neighborcf_userbased_reduced";
 	}
 
 

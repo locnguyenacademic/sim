@@ -1,12 +1,12 @@
 package net.temp.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.nb.Measure;
-import net.hudup.alg.cf.nb.NeighborCFExtUserBasedEnhanced;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBasedReduced;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
-public class CosineEnhanced extends NeighborCFExtUserBasedEnhanced implements ForTest {
+public class CosineEnhanced extends NeighborCFExtUserBasedReduced implements ForTest {
 
 	
 	/**
