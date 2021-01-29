@@ -67,13 +67,6 @@ public interface Function<T> extends Serializable, Cloneable {
 	void setOptimizer(Optimizer<T> optimizer);
 	
 	
-//	/**
-//	 * Creating 1-element vector.
-//	 * @return 1-element vector.
-//	 */
-//	Vector<T> createOneElementVector();
-	
-	
 	/**
 	 * Creating vector with initial value.
 	 * @param initialValue initial value.

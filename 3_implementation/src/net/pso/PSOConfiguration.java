@@ -47,13 +47,13 @@ public class PSOConfiguration<T> implements Cloneable, Serializable {
 	/**
 	 * Inertial weight.
 	 */
-	public T inertialWeight;
+	public Vector<T> inertialWeight;
 
 	
 	/**
 	 * Restriction weight.
 	 */
-	public T constrictWeight;
+	public Vector<T> constrictWeight;
 
 	
 	/**

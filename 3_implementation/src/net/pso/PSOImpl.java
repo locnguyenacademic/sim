@@ -60,13 +60,13 @@ public class PSOImpl extends PSOAbstract<Double> {
 	/**
 	 * Default value for lower bound of position.
 	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1, -1";
+	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1";
 
 
 	/**
 	 * Default value for upper bound of position.
 	 */
-	public final static String POSITION_UPPER_BOUND_DEFAULT = "1, 1";
+	public final static String POSITION_UPPER_BOUND_DEFAULT = "1";
 	
 	
 	/**
@@ -209,7 +209,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 
 	@Override
-	protected Vector<Double> defineConstrictWeightVector(Particle<Double> targetParticle, Optimizer<Double> optimizer) {
+	protected Vector<Double> customizeConstrictWeight(Particle<Double> targetParticle, Optimizer<Double> optimizer) {
 		boolean probMode = config.getAsBoolean(CONSTRICT_WEIGHT_PROB_MODE_FIELD);
 		if (!probMode || func == null) return null;
 		
@@ -260,10 +260,12 @@ public class PSOImpl extends PSOAbstract<Double> {
 		psoConfig.socialWeightLocal = Util.isUsed(socialWeightLocal) && socialWeightLocal > 0 ? socialWeightLocal : SOCIAL_WEIGHT_LOCAL_DEFAULT;
 
 		double inertialWeight = config.getAsReal(INERTIAL_WEIGHT_FIELD);
-		psoConfig.inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : INERTIAL_WEIGHT_DEFAULT;
+		inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : INERTIAL_WEIGHT_DEFAULT;
+		psoConfig.inertialWeight = func.createVector(inertialWeight);
 
 		double constrictWeight = config.getAsReal(CONSTRICT_WEIGHT_FIELD);
-		psoConfig.constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
+		constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
+		psoConfig.constrictWeight = func.createVector(constrictWeight);
 
 		psoConfig.lower = extractBound(POSITION_LOWER_BOUND_FIELD);
 		
@@ -293,16 +295,30 @@ public class PSOImpl extends PSOAbstract<Double> {
 	 * @param key key of bound property.
 	 * @return extracted bound.
 	 */
-	private Double[] extractBound(String key) {
+	protected Double[] extractBound(String key) {
 		try {
 			if (!config.containsKey(key))
-				return new Double[0];
-			else
-				return TextParserUtil.parseListByClass(config.getAsString(key), Double.class, ",").toArray(new Double[] {});
+				return func != null ? RealVector.toArray(func.zero()) : new Double[0];
+
+			List<Double> boundList = TextParserUtil.parseListByClass(config.getAsString(key), Double.class, ",");
+			if (boundList == null || boundList.size() == 0)
+				return func != null ? RealVector.toArray(func.zero()) : new Double[0];
+			if (func == null) return boundList.toArray(new Double[] {});
+			
+			int n = func.getVarNum();
+			if (n < boundList.size()) {
+				boundList = boundList.subList(0, n);
+				return boundList.toArray(new Double[] {});
+			}
+			
+			double lastValue = boundList.get(boundList.size() - 1);
+			n = n - boundList.size();
+			for (int i = 0; i < n; i++) boundList.add(lastValue);
+			return boundList.toArray(new Double[] {});
 		}
 		catch (Throwable e) {}
 		
-		return new Double[0];
+		return func != null ? RealVector.toArray(func.zero()) : new Double[0];
 	}
 
 

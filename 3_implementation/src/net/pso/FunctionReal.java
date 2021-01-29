@@ -59,20 +59,6 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 	}
 
 
-//	@Override
-//	public Vector<Double> createOneElementVector() {
-//		AttributeList attRef = null;
-//		if (vars == null || vars.size() == 0)
-//			attRef = AttributeList.defaultRealVarAttributeList(1);
-//		else
-//			attRef = AttributeList.create(Arrays.asList(vars.get(0)));
-//		
-//		RealVector vector = new RealVector(attRef);
-//		vector.setValue(0, vector.elementZero());
-//		return vector;
-//	}
-
-
 	@Override
 	public Vector<Double> createVector(Double initialValue) {
 		RealVector vector = new RealVector(vars);

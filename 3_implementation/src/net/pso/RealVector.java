@@ -28,12 +28,6 @@ public class RealVector extends Vector<Double> {
 	private static final long serialVersionUID = 1L;
 
 	
-//	/**
-//	 * Zero vector.
-//	 */
-//	private RealVector zero = null;
-	
-	
 	/**
 	 * Default constructor
 	 */
@@ -48,6 +42,18 @@ public class RealVector extends Vector<Double> {
 	 */
 	public RealVector(AttributeList attRef) {
 		super(attRef);
+		int n = getAttCount();
+		for (int i = 0; i < n; i++) setValue(i, 0.0);
+	}
+
+	
+	/**
+	 * Default constructor
+	 * @param dim specified dimension.
+	 * @param initialValue initial value.
+	 */
+	protected RealVector(int dim, double initialValue) {
+		super(AttributeList.defaultRealVarAttributeList(dim));
 		int n = getAttCount();
 		for (int i = 0; i < n; i++) setValue(i, 0.0);
 	}
@@ -83,39 +89,6 @@ public class RealVector extends Vector<Double> {
 	}
 
 
-//	@Override
-//	public Vector<Double> zero() {
-//		if (zero != null) return zero;
-//		
-//		if (this.attRef == null || this.attRef.size() == 0)
-//			zero = null;
-//		else {
-//			zero = new RealVector(this.attRef);
-//			int n = zero.getAttCount();
-//			for (int i = 0; i < n; i++) zero.setValue(i, elementZero());
-//		}
-//
-//		return zero;
-//	}
-
-
-//	@Override
-//	public int compareTo(Double a, Double b) {
-//		if (a < b)
-//			return -1;
-//		else if (a == b)
-//			return 0;
-//		else
-//			return 1;
-//	}
-
-
-//	@Override
-//	public double module(Double a) {
-//		return Math.abs(a);
-//	}
-
-	
 	@Override
 	public Double module() {
 		int n = this.getAttCount();
@@ -129,12 +102,6 @@ public class RealVector extends Vector<Double> {
 	}
 
 
-//	@Override
-//	public double distance(Double a, Double b) {
-//		return Math.abs(a - b);
-//	}
-
-	
 	@Override
 	public Double distance(Vector<Double> that) {
 		int n = Math.min(this.getAttCount(), that.getAttCount());
@@ -211,4 +178,18 @@ public class RealVector extends Vector<Double> {
 	}
 
 
+	/**
+	 * Converting this vector to array.
+	 * @param vector specified vector.
+	 * @return converted array.
+	 */
+	public static Double[] toArray(Vector<Double> vector) {
+		int n = vector.getAttCount();
+		Double[] array = new Double[n];
+		for (int i = 0; i < n; i++) array[i] = vector.getValueAsReal(i);
+		
+		return array;
+	}
+	
+	
 }

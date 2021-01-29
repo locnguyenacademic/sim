@@ -249,8 +249,8 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		T cognitiveWeight = psoConfig.cognitiveWeight;
 		T socialWeightGlobal = psoConfig.socialWeightGlobal;
 		T socialWeightLocal = psoConfig.socialWeightLocal;
-		T inertialWeight = psoConfig.inertialWeight;
-		T constrictWeight = psoConfig.constrictWeight;
+		Vector<T> inertialWeight = psoConfig.inertialWeight;
+		Vector<T> constrictWeight = psoConfig.constrictWeight;
 		
 		T elementZero = func.zero().elementZero();
 		int iteration = 0;
@@ -258,7 +258,11 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		learnStarted = true;
 		while (learnStarted && (maxIteration <= 0 || iteration < maxIteration)) {
 			for (Particle<T> x : swarm) {
-				x.velocity.multiply(inertialWeight);
+				Vector<T> inertialWeightCustom = customizeInertialWeight(x, optimizer);
+				if (inertialWeightCustom != null && inertialWeightCustom.getAttCount() > 0)
+					x.velocity.multiplyWise(inertialWeightCustom);
+				else
+					x.velocity.multiplyWise(inertialWeight);
 				
 				Vector<T> cognitiveForce = func.createRandomVector(elementZero, cognitiveWeight).multiplyWise(
 					x.bestPosition.duplicate().subtract(x.position));
@@ -282,11 +286,11 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 					x.velocity.add(socialForceLocal);
 				}
 				
-				Vector<T> constrictWeightVector = defineConstrictWeightVector(x, optimizer);
-				if (constrictWeightVector != null && constrictWeightVector.getAttCount() == x.velocity.getAttCount())
-					x.velocity.multiplyWise(constrictWeightVector);
+				Vector<T> constrictWeightCustom = customizeConstrictWeight(x, optimizer);
+				if (constrictWeightCustom != null && constrictWeightCustom.getAttCount() > 0)
+					x.velocity.multiplyWise(constrictWeightCustom);
 				else
-					x.velocity.multiply(constrictWeight);
+					x.velocity.multiplyWise(constrictWeight);
 				x.position.add(x.velocity);
 				
 				x.value = func.eval(x.position);
@@ -378,12 +382,23 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	
 	
 	/**
-	 * Defining constriction weight vector.
+	 * Customizing inertial weight vector.
 	 * @param targetParticle target particle.
 	 * @param optimizer specified optimizer.
-	 * @return constriction weight vector given target particle and optimizer.
+	 * @return customized inertial weight vector given target particle and optimizer. Return null if there is no customized constriction weight.
 	 */
-	protected Vector<T> defineConstrictWeightVector(Particle<T> targetParticle, Optimizer<T> optimizer) {
+	protected Vector<T> customizeInertialWeight(Particle<T> targetParticle, Optimizer<T> optimizer) {
+		return null;
+	}
+	
+
+	/**
+	 * Customizing constriction weight vector.
+	 * @param targetParticle target particle.
+	 * @param optimizer specified optimizer.
+	 * @return customized constriction weight vector given target particle and optimizer. Return null if there is no customized constriction weight.
+	 */
+	protected Vector<T> customizeConstrictWeight(Particle<T> targetParticle, Optimizer<T> optimizer) {
 		return null;
 	}
 	

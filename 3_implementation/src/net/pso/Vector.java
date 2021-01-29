@@ -62,65 +62,12 @@ public abstract class Vector<T> extends Profile {
 	public abstract T elementZero();
 	
 	
-//	/**
-//	 * Getting zero vector.
-//	 * @return zero vector.
-//	 */
-//	public abstract Vector<T> zero();
-	
-	
-//	/**
-//	 * Comparing value a with value b.
-//	 * @param a value a.
-//	 * @param b value b.
-//	 * @return -1 if value a is less than value b, 0 if value a is equal to value b, and 1 if value a is larger than value b.
-//	 */
-//	@SuppressWarnings("unchecked")
-//	public int compareTo(T a, T b) {
-//		if (a == null && b == null) return 0;
-//		if (a == null) return -1;
-//		if (b == null) return 1;
-//		
-//		if ((a instanceof Number) && (b instanceof Number)) {
-//			double va = ((Number)a).doubleValue();
-//			double vb = ((Number)b).doubleValue();
-//			if (va < vb)
-//				return -1;
-//			else if (va == vb)
-//				return 0;
-//			else
-//				return 1;
-//		}
-//		else if (a instanceof Comparable<?>)
-//			return ((Comparable<T>)a).compareTo(b);
-//		else
-//			return -1;
-//	}
-	
-	
-//	/**
-//	 * Calculating the module of value a.
-//	 * @param a value a.
-//	 * @return the module of value a.
-//	 */
-//	public abstract double module(T a);
-
-	
 	/**
 	 * Calculating the module of this vector.
 	 * @return the module of this vector.
 	 */
 	public abstract T module();
 
-	
-//	/**
-//	 * Calculating distance between value a with value b.
-//	 * @param a value a.
-//	 * @param b value b.
-//	 * @return distance between value a with value b.
-//	 */
-//	public abstract double distance(T a, T b);
-	
 	
 	/**
 	 * Calculating distance between this vector and the other vector.
