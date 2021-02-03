@@ -2,6 +2,8 @@ package net.temp.hudup.alg.cf.test.userbased;
 
 import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.Profile;
+import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
 public class NHSM extends NeighborCFExtUserBased implements ForTest {
@@ -17,14 +19,20 @@ public class NHSM extends NeighborCFExtUserBased implements ForTest {
 	 * Default constructor
 	 */
 	public NHSM() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public String getDefaultMeasure() {
-		// TODO Auto-generated method stub
 		return Measure.NHSM;
+	}
+
+	
+	@Override
+	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
+			Profile profile2, Object... params) {
+		return nhsm(vRating1, vRating2, profile1, profile2);
 	}
 
 	

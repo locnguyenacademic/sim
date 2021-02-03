@@ -331,7 +331,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
 		config.removeReadOnly(TA_NORMALIZED_FIELD);
 		if (measure.equals(Measure.PSS)) {
-			config.put(CALC_STATISTICS_FIELD, false);
+			config.put(CALC_STATISTICS_FIELD, true);
 			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -343,7 +343,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.NHSM)) {
-			config.put(CALC_STATISTICS_FIELD, false);
+			config.put(CALC_STATISTICS_FIELD, true);
 			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -464,7 +464,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
-			config.put(CALC_STATISTICS_FIELD, false);
+			config.put(CALC_STATISTICS_FIELD, true);
 			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
