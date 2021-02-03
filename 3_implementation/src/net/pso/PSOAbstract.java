@@ -7,15 +7,18 @@
  */
 package net.pso;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
 
 import net.hudup.core.Util;
 import net.hudup.core.alg.AllowNullTrainingSet;
-import net.hudup.core.alg.NonexecutableAlgAbstract;
+import net.hudup.core.alg.ExecutableAlgAbstract;
 import net.hudup.core.alg.SetupAlgEvent.Type;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.NullPointer;
+import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.ui.DescriptionDlg;
@@ -30,7 +33,7 @@ import net.hudup.core.parser.TextParserUtil;
  * @version 1.0
  *
  */
-public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
+public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
 
 
 	/**
@@ -142,6 +145,41 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 
 	
 	/**
+	 * This class is a pair of function and optimizer.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 */
+	protected class FunctionOptimizer implements Serializable, Cloneable {
+
+		/**
+		 * Serial version UID for serializable class.
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Mathematical expression function.
+		 */
+		public Function<T> func = null;
+		
+		/**
+		 * Optimizer.
+		 */
+		public Optimizer<T> optimizer = null;
+		
+		/**
+		 * Constructor with specified function and optimizer.
+		 * @param func specified function.
+		 * @param optimizer specified optimizer.
+		 */
+		private FunctionOptimizer(Function<T> func, Optimizer<T> optimizer) {
+			this.func = func;
+			this.optimizer = optimizer;
+		}
+		
+	}
+	
+
+	/**
 	 * Target function or cost function.
 	 */
 	protected Function<T> func = null;
@@ -154,6 +192,12 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	
 	
 	/**
+	 * List of pairs function-optimizer.
+	 */
+	protected List<FunctionOptimizer> foList = Util.newList();
+	
+	
+	/**
 	 * Default constructor.
 	 */
 	public PSOAbstract() {
@@ -161,6 +205,57 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	}
 
 	
+	@Override
+	public void setup(Dataset dataset, Object... info) throws RemoteException {
+		super.setup(dataset, info);
+		
+		foList.clear();
+		while (sample.next()) {
+			try {
+				Profile profile = sample.pick();
+				FunctionOptimizer fo = createFunctionOptimizer(profile);
+				if (fo != null) foList.add(fo);
+			}
+			catch (Throwable e) {LogUtil.trace(e);}
+		}
+		
+		sample.reset();
+	}
+
+
+	/**
+	 * Creating the pair of function and optimizer via specified profile.
+	 * @param profile specified profile.
+	 * @return the pair of function and optimizer via specified profile.
+	 */
+	protected FunctionOptimizer createFunctionOptimizer(Profile profile) {
+		if (profile == null || profile.getAttCount() < 4) return null;
+		
+		String expr = profile.getValueAsString(0);
+		if (expr == null || expr.isEmpty()) return null;
+		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
+		if (varNames.size() == 0) return null;
+		Function<T> func = defineExprFunction(varNames, expr);
+		
+		T elementZero = func.zero().elementZero();
+		Vector<T> bestPosition = func.createVector(elementZero);
+		@SuppressWarnings("unchecked")
+		List<T> position = (List<T>) TextParserUtil.parseListByClass(profile.getValueAsString(2), elementZero.getClass(), ",");
+		int n = Math.min(bestPosition.getAttCount(), position.size());
+		for (int i = 0; i < n; i++) {
+			bestPosition.setValue(i, position.get(i));
+		}
+		
+		String bestValueText = profile.getValueAsString(3);
+		@SuppressWarnings("unchecked")
+		T bestValue = (T) TextParserUtil.parseObjectByClass(bestValueText, elementZero.getClass());
+		
+		Optimizer<T> optimizer = new Optimizer<T>(bestPosition, bestValue);
+		
+		return new FunctionOptimizer(func, optimizer);
+	}
+	
+
 	@Override
 	public void setup() throws RemoteException {
 		try {
@@ -205,6 +300,13 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 	}
 	
 	
+	@Override
+	public synchronized void unsetup() throws RemoteException {
+		super.unsetup();
+		foList.clear();
+	}
+
+
 	@Override
 	public Object learnStart(Object... info) throws RemoteException {
 		if (isLearnStarted()) return null;
@@ -341,6 +443,17 @@ public abstract class PSOAbstract<T> extends NonexecutableAlgAbstract implements
 		}
 
 		return func;
+	}
+
+
+	@Override
+	public Object execute(Object input) throws RemoteException {
+		if ((func == null) || (input == null) || !(input instanceof Vector<?>))
+			return null;
+		
+		@SuppressWarnings("unchecked")
+		Vector<T> arg = (Vector<T>)input;
+		return func.eval(arg);
 	}
 
 

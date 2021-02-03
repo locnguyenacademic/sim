@@ -7,11 +7,14 @@
  */
 package net.pso.evaluate;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
-import net.hudup.core.evaluate.execute.NonexecuteEvaluator;
+import net.hudup.core.data.Profile;
+import net.hudup.core.evaluate.execute.ExecuteEvaluator;
+import net.hudup.core.logistic.LogUtil;
 import net.pso.PSO;
 
 /**
@@ -21,7 +24,7 @@ import net.pso.PSO;
  * @version 1.0
  *
  */
-public class PSOEvaluator extends NonexecuteEvaluator {
+public class PSOEvaluator extends ExecuteEvaluator {
 	
 
 	/**
@@ -50,6 +53,19 @@ public class PSOEvaluator extends NonexecuteEvaluator {
 	}
 
 	
+	@Override
+	protected Serializable extractTestValue(Alg alg, Profile testingProfile) {
+		if (testingProfile == null || testingProfile.getAttCount() < 4) return null;
+		
+		String bestValueText = testingProfile.getValueAsString(3);
+		try {
+			return Double.parseDouble(bestValueText);
+		} catch (Throwable e) {LogUtil.trace(e);}
+		
+		return null;
+	}
+
+
 	/**
 	 * The main method to start evaluator.
 	 * @param args The argument parameter of main method. It contains command line arguments.

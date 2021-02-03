@@ -14,13 +14,13 @@ import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * Cosine measure for test.
+ * Dice measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class Cosine extends NeighborCFExtUserBased implements ForTest {
+public class Dice extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**
@@ -32,21 +32,21 @@ public class Cosine extends NeighborCFExtUserBased implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public Cosine() {
+	public Dice() {
 
 	}
 
 	
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.COSINE;
+		return Measure.DICE;
 	}
 
 	
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return cosine(vRating1, vRating2, profile1, profile2);
+		return dice(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -56,7 +56,7 @@ public class Cosine extends NeighborCFExtUserBased implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "u01.01.cosine";
+			return "u03.04.dice";
 	}
 
 

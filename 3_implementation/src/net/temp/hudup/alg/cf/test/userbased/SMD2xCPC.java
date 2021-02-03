@@ -5,7 +5,7 @@ import net.hudup.alg.cf.nb.NeighborCFTwosCombinedUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
-public class SMD2xTA extends NeighborCFTwosCombinedUserBased implements ForTest {
+public class SMD2xCPC extends NeighborCFTwosCombinedUserBased implements ForTest {
 
 	
 	/**
@@ -17,11 +17,11 @@ public class SMD2xTA extends NeighborCFTwosCombinedUserBased implements ForTest 
 	/**
 	 * Default constructor.
 	 */
-	public SMD2xTA() {
+	public SMD2xCPC() {
 
 	}
 
-
+	
 	@Override
 	public String getDefaultMeasure() {
 		return Measure.SMD2;
@@ -34,7 +34,7 @@ public class SMD2xTA extends NeighborCFTwosCombinedUserBased implements ForTest 
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "u09.13.02.smd2xta";
+			return "u09.14.02.smd2xcpc";
 	}
 
 
@@ -42,7 +42,7 @@ public class SMD2xTA extends NeighborCFTwosCombinedUserBased implements ForTest 
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, Measure.SMD2);
-		config.put(OTHER_MEASURE, Measure.TA);
+		config.put(OTHER_MEASURE, Measure.CPC);
 		config.put(COMBINED_TYPE_FIELD, COMBINED_TYPE_MULTIPLY);
 		config.put(COMBINED_MINMAX_MODE_FIELD, false);
 		config.put(COMBINED_WEIGHT1_FIELD, 1);
