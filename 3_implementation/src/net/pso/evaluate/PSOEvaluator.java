@@ -13,9 +13,10 @@ import java.rmi.RemoteException;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.Profile;
-import net.hudup.core.evaluate.execute.ExecuteEvaluator;
-import net.hudup.core.logistic.LogUtil;
+import net.hudup.core.evaluate.execute.ExecuteAsLearnEvaluator;
+import net.pso.Functor;
 import net.pso.PSO;
+import net.pso.PSOAbstract;
 
 /**
  * This class is the evaluator for particle swarm optimization (PSO) algorithm.
@@ -24,7 +25,7 @@ import net.pso.PSO;
  * @version 1.0
  *
  */
-public class PSOEvaluator extends ExecuteEvaluator {
+public class PSOEvaluator extends ExecuteAsLearnEvaluator {
 	
 
 	/**
@@ -55,14 +56,15 @@ public class PSOEvaluator extends ExecuteEvaluator {
 	
 	@Override
 	protected Serializable extractTestValue(Alg alg, Profile testingProfile) {
-		if (testingProfile == null || testingProfile.getAttCount() < 4) return null;
+		if (testingProfile == null) return null;
+		if (!(alg instanceof PSOAbstract<?>)) return null;
 		
-		String bestValueText = testingProfile.getValueAsString(3);
-		try {
-			return Double.parseDouble(bestValueText);
-		} catch (Throwable e) {LogUtil.trace(e);}
-		
-		return null;
+		PSOAbstract<?> pso = (PSOAbstract<?>)alg;
+		Functor<?> functor = Functor.create(pso, testingProfile);
+		if (functor == null)
+			return null;
+		else
+			return (Serializable) functor.optimizer.bestValue;
 	}
 
 

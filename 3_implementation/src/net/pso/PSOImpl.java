@@ -267,9 +267,9 @@ public class PSOImpl extends PSOAbstract<Double> {
 		constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
 		psoConfig.constrictWeight = func.createVector(constrictWeight);
 
-		psoConfig.lower = extractBound(POSITION_LOWER_BOUND_FIELD);
+		psoConfig.lower = extractBound(config.getAsString(POSITION_LOWER_BOUND_FIELD)).toArray(new Double[] {});
 		
-		psoConfig.upper = extractBound(POSITION_UPPER_BOUND_FIELD);
+		psoConfig.upper = extractBound(config.getAsString(POSITION_UPPER_BOUND_FIELD)).toArray(new Double[] {});
 
 		return psoConfig;
 	}
@@ -295,7 +295,9 @@ public class PSOImpl extends PSOAbstract<Double> {
 	 * @param key key of bound property.
 	 * @return extracted bound.
 	 */
-	protected Double[] extractBound(String key) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private Double[] extractBound0(String key) {
 		try {
 			if (!config.containsKey(key))
 				return func != null ? RealVector.toArray(func.zero()) : new Double[0];

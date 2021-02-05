@@ -7,16 +7,14 @@
  */
 package net.pso;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
 
 import net.hudup.core.Util;
 import net.hudup.core.alg.AllowNullTrainingSet;
-import net.hudup.core.alg.ExecutableAlgAbstract;
+import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
 import net.hudup.core.alg.SetupAlgEvent.Type;
 import net.hudup.core.data.DataConfig;
-import net.hudup.core.data.Dataset;
 import net.hudup.core.data.NullPointer;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
@@ -33,7 +31,7 @@ import net.hudup.core.parser.TextParserUtil;
  * @version 1.0
  *
  */
-public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
+public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
 
 
 	/**
@@ -145,41 +143,6 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 
 	
 	/**
-	 * This class is a pair of function and optimizer.
-	 * @author Loc Nguyen
-	 * @version 1.0
-	 */
-	protected class FunctionOptimizer implements Serializable, Cloneable {
-
-		/**
-		 * Serial version UID for serializable class.
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		/**
-		 * Mathematical expression function.
-		 */
-		public Function<T> func = null;
-		
-		/**
-		 * Optimizer.
-		 */
-		public Optimizer<T> optimizer = null;
-		
-		/**
-		 * Constructor with specified function and optimizer.
-		 * @param func specified function.
-		 * @param optimizer specified optimizer.
-		 */
-		private FunctionOptimizer(Function<T> func, Optimizer<T> optimizer) {
-			this.func = func;
-			this.optimizer = optimizer;
-		}
-		
-	}
-	
-
-	/**
 	 * Target function or cost function.
 	 */
 	protected Function<T> func = null;
@@ -192,12 +155,6 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 	
 	
 	/**
-	 * List of pairs function-optimizer.
-	 */
-	protected List<FunctionOptimizer> foList = Util.newList();
-	
-	
-	/**
 	 * Default constructor.
 	 */
 	public PSOAbstract() {
@@ -205,57 +162,6 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 	}
 
 	
-	@Override
-	public void setup(Dataset dataset, Object... info) throws RemoteException {
-		super.setup(dataset, info);
-		
-		foList.clear();
-		while (sample.next()) {
-			try {
-				Profile profile = sample.pick();
-				FunctionOptimizer fo = createFunctionOptimizer(profile);
-				if (fo != null) foList.add(fo);
-			}
-			catch (Throwable e) {LogUtil.trace(e);}
-		}
-		
-		sample.reset();
-	}
-
-
-	/**
-	 * Creating the pair of function and optimizer via specified profile.
-	 * @param profile specified profile.
-	 * @return the pair of function and optimizer via specified profile.
-	 */
-	protected FunctionOptimizer createFunctionOptimizer(Profile profile) {
-		if (profile == null || profile.getAttCount() < 4) return null;
-		
-		String expr = profile.getValueAsString(0);
-		if (expr == null || expr.isEmpty()) return null;
-		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
-		if (varNames.size() == 0) return null;
-		Function<T> func = defineExprFunction(varNames, expr);
-		
-		T elementZero = func.zero().elementZero();
-		Vector<T> bestPosition = func.createVector(elementZero);
-		@SuppressWarnings("unchecked")
-		List<T> position = (List<T>) TextParserUtil.parseListByClass(profile.getValueAsString(2), elementZero.getClass(), ",");
-		int n = Math.min(bestPosition.getAttCount(), position.size());
-		for (int i = 0; i < n; i++) {
-			bestPosition.setValue(i, position.get(i));
-		}
-		
-		String bestValueText = profile.getValueAsString(3);
-		@SuppressWarnings("unchecked")
-		T bestValue = (T) TextParserUtil.parseObjectByClass(bestValueText, elementZero.getClass());
-		
-		Optimizer<T> optimizer = new Optimizer<T>(bestPosition, bestValue);
-		
-		return new FunctionOptimizer(func, optimizer);
-	}
-	
-
 	@Override
 	public void setup() throws RemoteException {
 		try {
@@ -301,29 +207,36 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 	
 	
 	@Override
-	public synchronized void unsetup() throws RemoteException {
-		super.unsetup();
-		foList.clear();
+	public Object learnStart(Object... info) throws RemoteException {
+		return learnStart(null, null);
 	}
 
 
-	@Override
-	public Object learnStart(Object... info) throws RemoteException {
+	/**
+	 * Learning the PSO algorithm based on specified configuration and mathematical expression.
+	 * @param psoConfig specified configuration
+	 * @param funcExpr mathematical expression to represent a function.
+	 * @return target function.
+	 * @throws RemoteException if any error raises.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Object learnStart(PSOConfiguration<T> psoConfig, String funcExpr) throws RemoteException {
 		if (isLearnStarted()) return null;
-
+		
 		swarm.clear();
 		
-		String expr = config.getAsString(FUNC_EXPR_FIELD);
-		if (expr != null && !expr.trim().isEmpty()) {
+		String expr = funcExpr != null ? funcExpr.trim() : null;
+		expr = expr != null ? expr : config.getAsString(FUNC_EXPR_FIELD);
+		expr = expr != null ? expr.trim() : null;
+		if (expr != null) {
 			List<String> varNames = extractVarNames();
 			func = defineExprFunction(varNames, expr);
 		}
 		if (func == null) return func;
 		
+		if (psoConfig == null) psoConfig = (PSOConfiguration<T>)getPSOConfiguration();
+
 		func.setOptimizer(null);
-		
-		@SuppressWarnings("unchecked")
-		PSOConfiguration<T> psoConfig = (PSOConfiguration<T>) getPSOConfiguration();
 		
 		int N = config.getAsInt(PARTICLE_NUMBER_FIELD);
 		N = N > 0 ? N : PARTICLE_NUMBER_DEFAULT;
@@ -444,16 +357,31 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 
 		return func;
 	}
-
-
+	
+	
 	@Override
-	public Object execute(Object input) throws RemoteException {
-		if ((func == null) || (input == null) || !(input instanceof Vector<?>))
-			return null;
+	public Object learnAsExecuteStart(Object input) throws RemoteException {
+		if (input == null) return null;
+		if (input instanceof Vector<?>) {
+			if (func == null)
+				return null;
+			else {
+				@SuppressWarnings("unchecked")
+				Vector<T> arg = (Vector<T>)input;
+				return func.eval(arg);
+			}
+		}
+
+		if (!(input instanceof Profile)) return null;
 		
-		@SuppressWarnings("unchecked")
-		Vector<T> arg = (Vector<T>)input;
-		return func.eval(arg);
+		Profile profile = (Profile)input;
+		Functor<T> functor = Functor.create(this, profile);
+		if (functor == null) return null;
+		
+		Object f = learnStart(functor.psoConfig, functor.expr);
+		if (f == null) return null;
+		Optimizer<T> optimizer = func.getOptimizer();
+		return optimizer != null ? optimizer.bestValue : null;
 	}
 
 
@@ -610,25 +538,56 @@ public abstract class PSOAbstract<T> extends ExecutableAlgAbstract implements PS
 	 * @return variable names.
 	 */
 	private List<String> extractVarNames() {
-		return extractNames(FUNC_VARNAMES_FIELD);
+		return extractNames(config.getAsString(FUNC_VARNAMES_FIELD));
 	}
 	
 	
 	/**
 	 * Extracting names.
-	 * @param key key of names property.
+	 * @param names list of names.
 	 * @return extracted names.
 	 */
-	private List<String> extractNames(String key) {
+	private List<String> extractNames(String names) {
 		try {
-			if (!config.containsKey(key))
+			if (names == null)
 				return Util.newList();
 			else
-				return TextParserUtil.parseListByClass(config.getAsString(key), String.class, ",");
+				return TextParserUtil.parseListByClass(names, String.class, ",");
 		}
 		catch (Throwable e) {}
 		
 		return Util.newList();
+	}
+
+
+	/**
+	 * Extracting bound.
+	 * @param bounds bound text.
+	 * @return extracted bound.
+	 */
+	protected List<T> extractBound(String bounds) {
+		List<T> boundList = Util.newList();
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> tClass = (Class<T>) func.zero().elementZero().getClass();
+			bounds = bounds != null ? bounds : "";
+			
+			boundList = TextParserUtil.parseListByClass(bounds, tClass, ",");
+			if (boundList.size() == 0) return boundList;
+			
+			int n = func.getVarNum();
+			if (n < boundList.size()) {
+				boundList = boundList.subList(0, n);
+			}
+			else {
+				T lastValue = boundList.get(boundList.size() - 1);
+				n = n - boundList.size();
+				for (int i = 0; i < n; i++) boundList.add(lastValue);
+			}
+		}
+		catch (Throwable e) {}
+		
+		return boundList;
 	}
 
 

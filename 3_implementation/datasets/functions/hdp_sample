@@ -1,2 +1,2 @@
-expression, variables, best_position, best_value
-"-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))", "x1, x2", "3.1416, 3.1416", -1
+expression, variables, lower_bound, upper_bound, best_position, best_value
+"-cos(x1)*cos(x2)*exp(-((x1-PI)^2)-((x2-PI)^2))", "x1, x2", "-10, -10", "10, 10", "3.1416, 3.1416", -1
