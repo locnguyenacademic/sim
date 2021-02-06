@@ -8,7 +8,6 @@
 package net.hmm;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.EventListener;
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class HMMListenerList implements Serializable, Cloneable {
     		if (t.isInstance(l)) list.add((T)l);
     	}
     	
-    	T[] array = (T[])Array.newInstance(t, list.size());
+    	T[] array = Util.newArray(t, list.size());
     	for (int i = 0; i < list.size(); i++) array[i] = list.get(i);
     	
     	return array;

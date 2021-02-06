@@ -46,6 +46,14 @@ public abstract class Vector<T> extends Profile {
 
 	
 	/**
+	 * Getting value at specified index.
+	 * @param index specified index.
+	 * @return value at specified index.
+	 */
+	public abstract T get(int index);
+	
+	
+	/**
 	 * Checking whether the specified value is valid.
 	 * @param value specified value.
 	 * @return whether the specified value is valid.

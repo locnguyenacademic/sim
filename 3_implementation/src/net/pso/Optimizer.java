@@ -9,6 +9,7 @@ package net.pso;
 
 import java.io.Serializable;
 
+import net.hudup.core.Util;
 import net.hudup.core.data.Attribute;
 import net.hudup.core.data.Attribute.Type;
 import net.hudup.core.logistic.MathUtil;
@@ -60,6 +61,27 @@ public class Optimizer<T> implements Serializable, Cloneable {
 		this.bestValue = bestValue;
 	}
 	
+	
+	/**
+	 * Converting this optimizer to array.
+	 * @return converted array.
+	 */
+	public T[] toArray() {
+		if (bestPosition == null || bestValue == null)
+			return null;
+		
+		@SuppressWarnings("unchecked")
+		Class<T> tClass = (Class<T>) bestValue.getClass();
+		int n = bestPosition.getAttCount();
+		T[] values = (T[]) Util.newArray(tClass, n + 1);
+		for (int i = 0; i < n; i++) {
+			values[i] = bestPosition.get(i);
+		}
+		values[n] = bestValue;
+		
+		return values;
+	}
+
 	
 	@Override
 	public String toString() {

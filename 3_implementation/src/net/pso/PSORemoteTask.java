@@ -10,7 +10,7 @@ package net.pso;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import net.hudup.core.alg.NonexecutableAlgRemoteTask;
+import net.hudup.core.alg.ExecuteAsLearnAlgRemoteTask;
 
 /**
  * This interface declares methods for remote particle swarm optimization (PSO) algorithm.
@@ -19,7 +19,7 @@ import net.hudup.core.alg.NonexecutableAlgRemoteTask;
  * @version 2.0
  *
  */
-public interface PSORemoteTask extends NonexecutableAlgRemoteTask {
+public interface PSORemoteTask extends ExecuteAsLearnAlgRemoteTask {
 
 
 	/**

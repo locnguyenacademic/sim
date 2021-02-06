@@ -7,7 +7,7 @@
  */
 package net.pso;
 
-import net.hudup.core.alg.NonexecutableAlg;
+import net.hudup.core.alg.ExecuteAsLearnAlg;
 
 /**
  * <code>PSO</code> is the most abstract interface for all particle swarm optimization (PSO) algorithms.
@@ -16,7 +16,7 @@ import net.hudup.core.alg.NonexecutableAlg;
  * @version 1.0
  *
  */
-public interface PSO extends PSORemoteTask, NonexecutableAlg {
+public interface PSO extends PSORemoteTask, ExecuteAsLearnAlg {
 
 	
 }

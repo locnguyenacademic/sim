@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import net.hudup.core.alg.AllowNullTrainingSet;
-import net.hudup.core.alg.NonexecutableAlgRemoteWrapper;
+import net.hudup.core.alg.ExecuteAsLearnAlgRemoteWrapper;
 import net.hudup.core.logistic.BaseClass;
 import net.hudup.core.logistic.Inspector;
 import net.hudup.core.logistic.LogUtil;
@@ -26,7 +26,7 @@ import net.hudup.core.logistic.ui.UIUtil;
  *
  */
 @BaseClass //The annotation is very important which prevent Firer to instantiate the wrapper without referred remote object. This wrapper is not normal algorithm.
-public class PSORemoteWrapper extends NonexecutableAlgRemoteWrapper implements PSO, PSORemote, AllowNullTrainingSet {
+public class PSORemoteWrapper extends ExecuteAsLearnAlgRemoteWrapper implements PSO, PSORemote, AllowNullTrainingSet {
 
 	
 	/**

@@ -7,6 +7,7 @@
  */
 package net.hmm.adapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,20 @@ public class Util {
 		catch (Throwable e) {}
 	}
 	
+	
+	/**
+	 * Creating a new array.
+	 * @param tClass element type.
+	 * @param length array length.
+	 * @return new array
+	 */
+	public static <T> T[] newArray(Class<T> tClass, int length) {
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(tClass, length);
+		
+		return array;
+	}
+
 	
 	/**
 	 * Creating a new list with initial capacity.

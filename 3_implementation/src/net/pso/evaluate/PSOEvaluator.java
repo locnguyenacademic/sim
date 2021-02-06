@@ -13,7 +13,12 @@ import java.rmi.RemoteException;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.Profile;
+import net.hudup.core.evaluate.HudupRecallMetric;
+import net.hudup.core.evaluate.NoneWrapperMetricList;
+import net.hudup.core.evaluate.SetupTimeMetric;
+import net.hudup.core.evaluate.SpeedMetric;
 import net.hudup.core.evaluate.execute.ExecuteAsLearnEvaluator;
+import net.hudup.core.evaluate.execute.MAEVector;
 import net.pso.Functor;
 import net.pso.PSO;
 import net.pso.PSOAbstract;
@@ -61,13 +66,33 @@ public class PSOEvaluator extends ExecuteAsLearnEvaluator {
 		
 		PSOAbstract<?> pso = (PSOAbstract<?>)alg;
 		Functor<?> functor = Functor.create(pso, testingProfile);
-		if (functor == null)
+		if (functor == null || functor.optimizer == null)
 			return null;
 		else
-			return (Serializable) functor.optimizer.bestValue;
+			return (Serializable) functor.optimizer.toArray();
 	}
 
 
+	@Override
+	public NoneWrapperMetricList defaultMetrics() throws RemoteException {
+		NoneWrapperMetricList metricList = new NoneWrapperMetricList();
+		
+		SetupTimeMetric setupTime = new SetupTimeMetric();
+		metricList.add(setupTime);
+		
+		SpeedMetric speed = new SpeedMetric();
+		metricList.add(speed);
+		
+		HudupRecallMetric hudupRecall = new HudupRecallMetric();
+		metricList.add(hudupRecall);
+		
+		MAEVector maeVector = new MAEVector();
+		metricList.add(maeVector);
+
+		return metricList;
+	}
+
+	
 	/**
 	 * The main method to start evaluator.
 	 * @param args The argument parameter of main method. It contains command line arguments.

@@ -1,9 +1,9 @@
 package net.pso;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.List;
 
+import net.hudup.core.Util;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.parser.TextParserUtil;
@@ -81,10 +81,10 @@ public class Functor<T> implements Serializable, Cloneable {
 			functor.psoConfig = (PSOConfiguration<T>) pso.getPSOConfiguration();
 			
 			List<T> lowerBound = pso.extractBound(profile.getValueAsString(2));
-			functor.psoConfig.lower = lowerBound.toArray((T[])Array.newInstance(tClass, 0));
+			functor.psoConfig.lower = lowerBound.toArray(Util.newArray(tClass, 0));
 			
 			List<T> upperBound = pso.extractBound(profile.getValueAsString(3));
-			functor.psoConfig.upper = upperBound.toArray((T[])Array.newInstance(tClass, 0));
+			functor.psoConfig.upper = upperBound.toArray(Util.newArray(tClass, 0));
 		} catch (Exception e) {LogUtil.trace(e);}
 		
 		T elementZero = functor.func.zero().elementZero();

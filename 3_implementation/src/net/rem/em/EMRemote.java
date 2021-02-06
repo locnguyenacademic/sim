@@ -7,6 +7,8 @@
  */
 package net.rem.em;
 
+import java.rmi.RemoteException;
+
 import net.hudup.core.alg.ExecutableAlgRemote;
 
 /**
@@ -18,5 +20,9 @@ import net.hudup.core.alg.ExecutableAlgRemote;
  */
 public interface EMRemote extends EMRemoteTask, ExecutableAlgRemote {
 	
+
+	@Override
+	Object getStatistics() throws RemoteException;
+
 
 }

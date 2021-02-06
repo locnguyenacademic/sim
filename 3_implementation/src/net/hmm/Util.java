@@ -27,6 +27,17 @@ public class Util {
 
 	
 	/**
+	 * Creating a new array.
+	 * @param tClass element type.
+	 * @param length array length.
+	 * @return new array
+	 */
+	public static <T> T[] newArray(Class<T> tClass, int length) {
+	    return net.hmm.adapter.Util.newArray(tClass, length);
+	}
+
+	
+	/**
 	 * Creating a new list with initial capacity.
 	 * @param <T> type of elements in list.
 	 * @param initialCapacity initial capacity of this list.

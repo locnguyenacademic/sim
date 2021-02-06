@@ -206,12 +206,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 	
 	
-	@Override
-	public Object learnStart(Object... info) throws RemoteException {
-		return learnStart(null, null);
-	}
-
-
 	/**
 	 * Learning the PSO algorithm based on specified configuration and mathematical expression.
 	 * @param psoConfig specified configuration
@@ -220,7 +214,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 * @throws RemoteException if any error raises.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Object learnStart(PSOConfiguration<T> psoConfig, String funcExpr) throws RemoteException {
+	protected Object learn(PSOConfiguration<T> psoConfig, String funcExpr) throws RemoteException {
 		if (isLearnStarted()) return null;
 		
 		swarm.clear();
@@ -360,8 +354,35 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	
 	
 	@Override
-	public Object learnAsExecuteStart(Object input) throws RemoteException {
-		if (input == null) return null;
+	public Object executeAsLearn(Object input) throws RemoteException {
+		if (input == null) {
+			PSOConfiguration<T> psoConfig = null;
+			String funcExpr = null;
+			try {
+				while (sample.next()) {
+					Profile profile = sample.pick();
+					if (profile == null) continue;
+					
+					Functor<T> functor = Functor.create(this, profile);
+					if (functor != null && functor.psoConfig != null && functor.expr != null) {
+						psoConfig = functor.psoConfig;
+						funcExpr = functor.expr;
+						break;
+					}
+				}
+			}
+			catch (Throwable e) {
+				psoConfig = null;
+				funcExpr = null;
+				LogUtil.trace(e);
+			}
+			finally {
+				sample.reset();
+			}
+			
+			return learn(psoConfig, funcExpr);
+		}
+		
 		if (input instanceof Vector<?>) {
 			if (func == null)
 				return null;
@@ -378,10 +399,10 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		Functor<T> functor = Functor.create(this, profile);
 		if (functor == null) return null;
 		
-		Object f = learnStart(functor.psoConfig, functor.expr);
+		Object f = learn(functor.psoConfig, functor.expr);
 		if (f == null) return null;
 		Optimizer<T> optimizer = func.getOptimizer();
-		return optimizer != null ? optimizer.bestValue : null;
+		return optimizer != null ? optimizer.toArray() : null;
 	}
 
 

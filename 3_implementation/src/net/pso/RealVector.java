@@ -60,6 +60,12 @@ public class RealVector extends Vector<Double> {
 
 	
 	@Override
+	public Double get(int index) {
+		return getValueAsReal(index);
+	}
+
+
+	@Override
 	public Object clone() {
 		RealVector profile = new RealVector();
 		profile.attRef = this.attRef;
