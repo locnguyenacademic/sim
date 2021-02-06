@@ -7,8 +7,12 @@
  */
 package net.pso;
 
+import java.util.List;
+
+import net.hudup.core.Util;
 import net.hudup.core.data.Attribute;
 import net.hudup.core.data.Attribute.Type;
+import net.hudup.core.parser.TextParserUtil;
 import net.hudup.core.data.AttributeList;
 
 /**
@@ -74,4 +78,39 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 	}
 
 	
+	/**
+	 * Extracting bound.
+	 * @param <T> element type.
+	 * @param func specified function.
+	 * @param bounds bound text.
+	 * @return extracted bound.
+	 */
+	public static <T> List<T> extractBound(Function<T> func, String bounds) {
+		List<T> boundList = Util.newList();
+		if (func == null) return boundList;
+		
+		try {
+			@SuppressWarnings("unchecked")
+			Class<T> tClass = (Class<T>) func.zero().elementZero().getClass();
+			bounds = bounds != null ? bounds : "";
+			
+			boundList = TextParserUtil.parseListByClass(bounds, tClass, ",");
+			if (boundList.size() == 0) return boundList;
+			
+			int n = func.getVarNum();
+			if (n < boundList.size()) {
+				boundList = boundList.subList(0, n);
+			}
+			else {
+				T lastValue = boundList.get(boundList.size() - 1);
+				n = n - boundList.size();
+				for (int i = 0; i < n; i++) boundList.add(lastValue);
+			}
+		}
+		catch (Throwable e) {}
+		
+		return boundList;
+	}
+
+
 }

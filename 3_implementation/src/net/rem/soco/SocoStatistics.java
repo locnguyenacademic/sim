@@ -22,6 +22,7 @@ import net.hudup.core.Util;
  * @version 1.0
  *
  */
+@Deprecated
 public class SocoStatistics implements Cloneable, Serializable {
 
 	

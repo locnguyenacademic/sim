@@ -267,9 +267,9 @@ public class PSOImpl extends PSOAbstract<Double> {
 		constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
 		psoConfig.constrictWeight = func.createVector(constrictWeight);
 
-		psoConfig.lower = extractBound(config.getAsString(POSITION_LOWER_BOUND_FIELD)).toArray(new Double[] {});
+		psoConfig.lower = FunctionAbstract.extractBound(func, config.getAsString(POSITION_LOWER_BOUND_FIELD)).toArray(new Double[] {});
 		
-		psoConfig.upper = extractBound(config.getAsString(POSITION_UPPER_BOUND_FIELD)).toArray(new Double[] {});
+		psoConfig.upper = FunctionAbstract.extractBound(func, config.getAsString(POSITION_UPPER_BOUND_FIELD)).toArray(new Double[] {});
 
 		return psoConfig;
 	}

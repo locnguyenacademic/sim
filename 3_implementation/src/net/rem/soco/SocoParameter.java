@@ -19,6 +19,7 @@ import net.hudup.core.Constants;
  * @version 1.0
  *
  */
+@Deprecated
 public class SocoParameter implements Cloneable, Serializable {
 
 	

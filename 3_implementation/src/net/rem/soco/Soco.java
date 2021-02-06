@@ -30,6 +30,7 @@ import net.rem.em.ExponentialEM;
  * @version 1.0
  *
  */
+@Deprecated
 @BaseClass
 public class Soco extends ExponentialEM {
 

@@ -581,35 +581,4 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 
 
-	/**
-	 * Extracting bound.
-	 * @param bounds bound text.
-	 * @return extracted bound.
-	 */
-	protected List<T> extractBound(String bounds) {
-		List<T> boundList = Util.newList();
-		try {
-			@SuppressWarnings("unchecked")
-			Class<T> tClass = (Class<T>) func.zero().elementZero().getClass();
-			bounds = bounds != null ? bounds : "";
-			
-			boundList = TextParserUtil.parseListByClass(bounds, tClass, ",");
-			if (boundList.size() == 0) return boundList;
-			
-			int n = func.getVarNum();
-			if (n < boundList.size()) {
-				boundList = boundList.subList(0, n);
-			}
-			else {
-				T lastValue = boundList.get(boundList.size() - 1);
-				n = n - boundList.size();
-				for (int i = 0; i < n; i++) boundList.add(lastValue);
-			}
-		}
-		catch (Throwable e) {}
-		
-		return boundList;
-	}
-
-
 }

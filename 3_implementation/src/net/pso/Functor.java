@@ -30,12 +30,6 @@ public class Functor<T> implements Serializable, Cloneable {
 	
 	
 	/**
-	 * Optimizer.
-	 */
-	public Optimizer<T> optimizer = null;
-	
-	
-	/**
 	 * PSO configuration.
 	 */
 	public PSOConfiguration<T> psoConfig = null;
@@ -77,13 +71,13 @@ public class Functor<T> implements Serializable, Cloneable {
 		if (functor.func == null) return null;
 		
 		try {
-			Class<T> tClass = (Class<T>) pso.getFunction().zero().elementZero().getClass();
+			Class<T> tClass = (Class<T>) functor.func.zero().elementZero().getClass();
 			functor.psoConfig = (PSOConfiguration<T>) pso.getPSOConfiguration();
 			
-			List<T> lowerBound = pso.extractBound(profile.getValueAsString(2));
+			List<T> lowerBound = FunctionAbstract.extractBound(functor.func, profile.getValueAsString(2));
 			functor.psoConfig.lower = lowerBound.toArray(Util.newArray(tClass, 0));
 			
-			List<T> upperBound = pso.extractBound(profile.getValueAsString(3));
+			List<T> upperBound = FunctionAbstract.extractBound(functor.func, profile.getValueAsString(3));
 			functor.psoConfig.upper = upperBound.toArray(Util.newArray(tClass, 0));
 		} catch (Exception e) {LogUtil.trace(e);}
 		
@@ -98,7 +92,7 @@ public class Functor<T> implements Serializable, Cloneable {
 		String bestValueText = profile.getValueAsString(5);
 		T bestValue = (T) TextParserUtil.parseObjectByClass(bestValueText, elementZero.getClass());
 		
-		functor.optimizer = new Optimizer<T>(bestPosition, bestValue);
+		functor.func.setOptimizer(new Optimizer<T>(bestPosition, bestValue));
 		
 		return functor;
 	}

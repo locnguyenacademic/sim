@@ -27,6 +27,7 @@ import net.rem.soco.Soco;
  * @version 12.0
  *
  */
+@Deprecated
 @NextUpdate
 @BaseClass //This is not base class but the base class annotation prevents this algorithm to be registered in plug-in storage. The algorithm needs to be revised because it runs too slowly. Maybe it is not converged.
 public class NeighborCFExtUserBasedSoco extends NeighborCFExtUserBased {

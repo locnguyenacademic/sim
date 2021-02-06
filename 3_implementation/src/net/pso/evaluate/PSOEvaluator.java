@@ -20,6 +20,7 @@ import net.hudup.core.evaluate.SpeedMetric;
 import net.hudup.core.evaluate.execute.ExecuteAsLearnEvaluator;
 import net.hudup.core.evaluate.execute.MAEVector;
 import net.pso.Functor;
+import net.pso.Optimizer;
 import net.pso.PSO;
 import net.pso.PSOAbstract;
 
@@ -66,10 +67,11 @@ public class PSOEvaluator extends ExecuteAsLearnEvaluator {
 		
 		PSOAbstract<?> pso = (PSOAbstract<?>)alg;
 		Functor<?> functor = Functor.create(pso, testingProfile);
-		if (functor == null || functor.optimizer == null)
+		if (functor == null || functor.func == null)
 			return null;
-		else
-			return (Serializable) functor.optimizer.toArray();
+		
+		Optimizer<?> optimizer = functor.func.getOptimizer();
+		return (Serializable) (optimizer != null ? optimizer.toArray() : null);
 	}
 
 
