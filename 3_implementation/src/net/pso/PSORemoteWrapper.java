@@ -79,14 +79,14 @@ public class PSORemoteWrapper extends ExecuteAsLearnAlgRemoteWrapper implements 
 
 
 	@Override
-	public PSOConfiguration<?> getPSOConfiguration() throws RemoteException {
-		return ((PSORemote)this.remoteAlg).getPSOConfiguration();
+	public PSOConfig<?> getPSOConfig() throws RemoteException {
+		return ((PSORemote)this.remoteAlg).getPSOConfig();
 	}
 
 
 	@Override
-	public void setPSOConfiguration(PSOConfiguration<?> psoConfig) throws RemoteException {
-		((PSORemote)this.remoteAlg).setPSOConfiguration(psoConfig);
+	public void setPSOConfig(PSOConfig<?> psoConfig) throws RemoteException {
+		((PSORemote)this.remoteAlg).setPSOConfig(psoConfig);
 	}
 
 

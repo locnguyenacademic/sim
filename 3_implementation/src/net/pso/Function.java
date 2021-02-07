@@ -10,6 +10,7 @@ package net.pso;
 import java.io.Serializable;
 
 import net.hudup.core.data.Attribute;
+import net.hudup.core.data.DataConfig;
 
 /**
  * This interface represents function.
@@ -108,6 +109,22 @@ public interface Function<T> extends Serializable, Cloneable {
 	 * @return random particle in range from lower to upper.
 	 */
 	Particle<T> createRandomParticle(T[] lower, T[] upper);
+	
+	
+	/**
+	 * Extracting PSO configuration from data configuration.
+	 * @param config data configuration.
+	 * @return PSO configuration.
+	 */
+	PSOConfig<T> extractPSOConfig(DataConfig config);
+
+
+	/**
+	 * Extracting bound.
+	 * @param bounds bound text.
+	 * @return extracted bound.
+	 */
+	T[] extractBound(String bounds);
 	
 	
 }

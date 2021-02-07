@@ -39,11 +39,11 @@ public interface PSORemote extends PSORemoteTask, ExecuteAsLearnAlgRemote {
 
 	
 	@Override
-	PSOConfiguration<?> getPSOConfiguration() throws RemoteException;
+	PSOConfig<?> getPSOConfig() throws RemoteException;
 	
 	
 	@Override
-	void setPSOConfiguration(PSOConfiguration<?> psoConfig) throws RemoteException;
+	void setPSOConfig(PSOConfig<?> psoConfig) throws RemoteException;
 	
 	
 }

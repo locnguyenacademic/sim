@@ -12,8 +12,8 @@ import java.util.List;
 import net.hudup.core.Util;
 import net.hudup.core.data.Attribute;
 import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.parser.TextParserUtil;
 import net.hudup.core.data.AttributeList;
+import net.hudup.core.parser.TextParserUtil;
 
 /**
  * This abstract class represents the abstract function which is implements partially the interface {@link Function}.
@@ -77,7 +77,7 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 		this.optimizer = optimizer;
 	}
 
-	
+
 	/**
 	 * Extracting bound.
 	 * @param <T> element type.
@@ -85,7 +85,9 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 	 * @param bounds bound text.
 	 * @return extracted bound.
 	 */
-	public static <T> List<T> extractBound(Function<T> func, String bounds) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private static <T> List<T> extractBound(Function<T> func, String bounds) {
 		List<T> boundList = Util.newList();
 		if (func == null) return boundList;
 		
@@ -112,5 +114,5 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 		return boundList;
 	}
 
-
+	
 }

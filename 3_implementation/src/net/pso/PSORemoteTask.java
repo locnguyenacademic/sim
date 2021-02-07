@@ -59,7 +59,7 @@ public interface PSORemoteTask extends ExecuteAsLearnAlgRemoteTask {
 	 * @return PSO configuration.
 	 * @throws RemoteException if any error raises.
 	 */
-	PSOConfiguration<?> getPSOConfiguration() throws RemoteException;
+	PSOConfig<?> getPSOConfig() throws RemoteException;
 	
 	
 	/**
@@ -67,7 +67,7 @@ public interface PSORemoteTask extends ExecuteAsLearnAlgRemoteTask {
 	 * @param psoConfig PSO configuration.
 	 * @throws RemoteException if any error raises.
 	 */
-	void setPSOConfiguration(PSOConfiguration<?> psoConfig) throws RemoteException;
+	void setPSOConfig(PSOConfig<?> psoConfig) throws RemoteException;
 	
 	
 }

@@ -15,6 +15,8 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Profile;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.parser.TextParserUtil;
 
 /**
@@ -58,84 +60,6 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	
 	/**
-	 * Default value for lower bound of position.
-	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1";
-
-
-	/**
-	 * Default value for upper bound of position.
-	 */
-	public final static String POSITION_UPPER_BOUND_DEFAULT = "1";
-	
-	
-	/**
-	 * Default value for cognitive weight parameter.
-	 */
-	public final static double COGNITIVE_WEIGHT_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Default value for global social weight.
-	 */
-	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Default value for local social weight.
-	 */
-	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Default value for inertial weight.
-	 */
-	public final static double INERTIAL_WEIGHT_DEFAULT = 0.7298;
-
-	
-	/**
-	 * Default value for constriction weight.
-	 */
-	public final static double CONSTRICT_WEIGHT_DEFAULT = 1;
-
-	
-	/**
-	 * Probabilistic constriction weight mode.
-	 */
-	public final static String CONSTRICT_WEIGHT_PROB_MODE_FIELD = "pso_constrict_weight_prob_mode";
-
-	
-	/**
-	 * Default value for probabilistic constriction weight mode.
-	 */
-	public final static boolean CONSTRICT_WEIGHT_PROB_MODE_DEFAULT = false;
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static boolean NEIGHBORS_FDR_MODE_DEFAULT = false;
-	
-	
-	/**
-	 * Fitness distance ratio threshold.
-	 */
-	public final static String NEIGHBORS_FDR_THRESHOLD_FIELD = "neighbors_fdr_threshold";
-
-	
-	/**
-	 * Default value for fitness distance ratio threshold.
-	 */
-	public final static double NEIGHBORS_FDR_THRESHOLD_DEFAULT = 2;
-
-	
-	/**
 	 * Default constructor.
 	 */
 	public PSOImpl() {
@@ -173,8 +97,8 @@ public class PSOImpl extends PSOAbstract<Double> {
 	protected List<Particle<Double>> defineNeighbors(Particle<Double> targetParticle) {
 		if (func == null || targetParticle == null || targetParticle.position == null)
 			return Util.newList();
-		boolean fdrMode = config.getAsBoolean(NEIGHBORS_FDR_MODE_FIELD);
-		double fdrThreshold = config.getAsReal(NEIGHBORS_FDR_THRESHOLD_FIELD);
+		boolean fdrMode = config.getAsBoolean(PSOConfig.NEIGHBORS_FDR_MODE_FIELD);
+		double fdrThreshold = config.getAsReal(PSOConfig.NEIGHBORS_FDR_THRESHOLD_FIELD);
 		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
 		
 		if (!targetParticle.position.isValid(targetParticle.value))
@@ -210,11 +134,11 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	@Override
 	protected Vector<Double> customizeConstrictWeight(Particle<Double> targetParticle, Optimizer<Double> optimizer) {
-		boolean probMode = config.getAsBoolean(CONSTRICT_WEIGHT_PROB_MODE_FIELD);
+		boolean probMode = config.getAsBoolean(PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_FIELD);
 		if (!probMode || func == null) return null;
 		
-		double weight = config.getAsReal(CONSTRICT_WEIGHT_FIELD);
-		weight = Util.isUsed(weight) ? weight : CONSTRICT_WEIGHT_DEFAULT;
+		double weight = config.getAsReal(PSOConfig.CONSTRICT_WEIGHT_FIELD);
+		weight = Util.isUsed(weight) ? weight : PSOConfig.CONSTRICT_WEIGHT_DEFAULT;
 		int n = func.getVarNum();
 		Vector<Double> constrictWeight = func.createVector(0.0);
 		for (int i = 0; i < n; i++) constrictWeight.setValue(i, weight);
@@ -247,46 +171,26 @@ public class PSOImpl extends PSOAbstract<Double> {
 	
 	
 	@Override
-	public PSOConfiguration<?> getPSOConfiguration() throws RemoteException {
-		PSOConfiguration<Double> psoConfig = new PSOConfiguration<Double>();
-		
-		double cognitiveWeight = config.getAsReal(COGNITIVE_WEIGHT_FIELD);
-		psoConfig.cognitiveWeight = Util.isUsed(cognitiveWeight) && cognitiveWeight > 0 ? cognitiveWeight : COGNITIVE_WEIGHT_DEFAULT;
-		
-		double socialWeightGlobal = config.getAsReal(SOCIAL_WEIGHT_GLOBAL_FIELD);
-		psoConfig.socialWeightGlobal = Util.isUsed(socialWeightGlobal) && socialWeightGlobal > 0 ? socialWeightGlobal : SOCIAL_WEIGHT_GLOBAL_DEFAULT;
-
-		double socialWeightLocal = config.getAsReal(SOCIAL_WEIGHT_LOCAL_FIELD);
-		psoConfig.socialWeightLocal = Util.isUsed(socialWeightLocal) && socialWeightLocal > 0 ? socialWeightLocal : SOCIAL_WEIGHT_LOCAL_DEFAULT;
-
-		double inertialWeight = config.getAsReal(INERTIAL_WEIGHT_FIELD);
-		inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : INERTIAL_WEIGHT_DEFAULT;
-		psoConfig.inertialWeight = func.createVector(inertialWeight);
-
-		double constrictWeight = config.getAsReal(CONSTRICT_WEIGHT_FIELD);
-		constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : CONSTRICT_WEIGHT_DEFAULT;
-		psoConfig.constrictWeight = func.createVector(constrictWeight);
-
-		psoConfig.lower = FunctionAbstract.extractBound(func, config.getAsString(POSITION_LOWER_BOUND_FIELD)).toArray(new Double[] {});
-		
-		psoConfig.upper = FunctionAbstract.extractBound(func, config.getAsString(POSITION_UPPER_BOUND_FIELD)).toArray(new Double[] {});
-
-		return psoConfig;
+	public PSOConfig<?> getPSOConfig() throws RemoteException {
+		if (func == null)
+			return new PSOConfig<Double>();
+		else
+			return func.extractPSOConfig(config);
 	}
 
 
 	@Override
-	public void setPSOConfiguration(PSOConfiguration<?> psoConfig) throws RemoteException {
+	public void setPSOConfig(PSOConfig<?> psoConfig) throws RemoteException {
 		@SuppressWarnings("unchecked")
-		PSOConfiguration<Double> psoc = (PSOConfiguration<Double>)psoConfig;
+		PSOConfig<Double> psoc = (PSOConfig<Double>)psoConfig;
 
-		config.put(COGNITIVE_WEIGHT_FIELD, psoc.cognitiveWeight);
-		config.put(SOCIAL_WEIGHT_GLOBAL_FIELD, psoc.socialWeightGlobal);
-		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, psoc.socialWeightLocal);
-		config.put(INERTIAL_WEIGHT_FIELD, psoc.inertialWeight);
-		config.put(CONSTRICT_WEIGHT_FIELD, psoc.constrictWeight);
-		config.put(POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
-		config.put(POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
+		config.put(PSOConfig.COGNITIVE_WEIGHT_FIELD, psoc.cognitiveWeight);
+		config.put(PSOConfig.SOCIAL_WEIGHT_GLOBAL_FIELD, psoc.socialWeightGlobal);
+		config.put(PSOConfig.SOCIAL_WEIGHT_LOCAL_FIELD, psoc.socialWeightLocal);
+		config.put(PSOConfig.INERTIAL_WEIGHT_FIELD, psoc.inertialWeight);
+		config.put(PSOConfig.CONSTRICT_WEIGHT_FIELD, psoc.constrictWeight);
+		config.put(PSOConfig.POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
+		config.put(PSOConfig.POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
 	}
 
 
@@ -297,7 +201,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 	 */
 	@SuppressWarnings("unused")
 	@Deprecated
-	private Double[] extractBound0(String key) {
+	private Double[] extractBound(String key) {
 		try {
 			if (!config.containsKey(key))
 				return func != null ? RealVector.toArray(func.zero()) : new Double[0];
@@ -335,18 +239,57 @@ public class PSOImpl extends PSOAbstract<Double> {
 		DataConfig config = super.createDefaultConfig();
 		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
 		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
-		config.put(POSITION_LOWER_BOUND_FIELD, POSITION_LOWER_BOUND_DEFAULT);
-		config.put(POSITION_UPPER_BOUND_FIELD, POSITION_UPPER_BOUND_DEFAULT);
-		config.put(COGNITIVE_WEIGHT_FIELD, COGNITIVE_WEIGHT_DEFAULT);
-		config.put(SOCIAL_WEIGHT_GLOBAL_FIELD, SOCIAL_WEIGHT_GLOBAL_DEFAULT);
-		config.put(SOCIAL_WEIGHT_LOCAL_FIELD, SOCIAL_WEIGHT_LOCAL_DEFAULT);
-		config.put(INERTIAL_WEIGHT_FIELD, INERTIAL_WEIGHT_DEFAULT);
-		config.put(CONSTRICT_WEIGHT_FIELD, CONSTRICT_WEIGHT_DEFAULT);
-		config.put(CONSTRICT_WEIGHT_PROB_MODE_FIELD, CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
-		config.put(NEIGHBORS_FDR_MODE_FIELD, NEIGHBORS_FDR_MODE_DEFAULT);
-		config.put(NEIGHBORS_FDR_THRESHOLD_FIELD, NEIGHBORS_FDR_THRESHOLD_DEFAULT);
+		config.put(PSOConfig.POSITION_LOWER_BOUND_FIELD, PSOConfig.POSITION_LOWER_BOUND_DEFAULT);
+		config.put(PSOConfig.POSITION_UPPER_BOUND_FIELD, PSOConfig.POSITION_UPPER_BOUND_DEFAULT);
+		config.put(PSOConfig.COGNITIVE_WEIGHT_FIELD, PSOConfig.COGNITIVE_WEIGHT_DEFAULT);
+		config.put(PSOConfig.SOCIAL_WEIGHT_GLOBAL_FIELD, PSOConfig.SOCIAL_WEIGHT_GLOBAL_DEFAULT);
+		config.put(PSOConfig.SOCIAL_WEIGHT_LOCAL_FIELD, PSOConfig.SOCIAL_WEIGHT_LOCAL_DEFAULT);
+		config.put(PSOConfig.INERTIAL_WEIGHT_FIELD, PSOConfig.INERTIAL_WEIGHT_DEFAULT);
+		config.put(PSOConfig.CONSTRICT_WEIGHT_FIELD, PSOConfig.CONSTRICT_WEIGHT_DEFAULT);
+		config.put(PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_FIELD, PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
+		config.put(PSOConfig.NEIGHBORS_FDR_MODE_FIELD, PSOConfig.NEIGHBORS_FDR_MODE_DEFAULT);
+		config.put(PSOConfig.NEIGHBORS_FDR_THRESHOLD_FIELD, PSOConfig.NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 		
 		return config;
+	}
+
+
+	@Override
+	public Functor<Double> createFunctor(Profile profile) {
+		if (profile == null || profile.getAttCount() < 6) return null;
+		
+		Functor<Double> functor = new Functor<Double>();
+
+		String expr = profile.getValueAsString(0);
+		expr = expr != null ? expr.trim() : null;
+		if (expr == null) return null;
+		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
+		if (varNames.size() == 0) return null;
+		
+		functor.func = defineExprFunction(varNames, expr);
+		if (functor.func == null) return null;
+		
+		try {
+			functor.psoConfig = functor.func.extractPSOConfig(getConfig());
+			functor.psoConfig.lower = functor.func.extractBound(profile.getValueAsString(2));
+			functor.psoConfig.upper = functor.func.extractBound(profile.getValueAsString(3));
+		} catch (Exception e) {LogUtil.trace(e);}
+		
+		Vector<Double> bestPosition = functor.func.createVector(0.0);
+		List<Double> position = TextParserUtil.parseListByClass(profile.getValueAsString(4), Double.class, ",");
+		int n = Math.min(bestPosition.getAttCount(), position.size());
+		for (int i = 0; i < n; i++) {
+			bestPosition.setValue(i, position.get(i));
+		}
+		
+		Double bestValue = null;
+		try {
+			bestValue = Double.parseDouble(profile.getValueAsString(5));
+		} catch (Exception e) {LogUtil.trace(e);}
+		
+		functor.func.setOptimizer(new Optimizer<Double>(bestPosition, bestValue));
+		
+		return functor;
 	}
 
 

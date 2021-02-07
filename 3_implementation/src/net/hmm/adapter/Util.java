@@ -7,7 +7,6 @@
  */
 package net.hmm.adapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,15 +43,13 @@ public class Util {
 	
 	/**
 	 * Creating a new array.
+	 * @param <T> element type.
 	 * @param tClass element type.
 	 * @param length array length.
 	 * @return new array
 	 */
 	public static <T> T[] newArray(Class<T> tClass, int length) {
-		@SuppressWarnings("unchecked")
-		T[] array = (T[]) Array.newInstance(tClass, length);
-		
-		return array;
+		return net.hudup.core.Util.newArray(tClass, length);
 	}
 
 	

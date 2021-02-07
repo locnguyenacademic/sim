@@ -89,60 +89,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 
 	
 	/**
-	 * Particle number.
-	 */
-	public final static String PARTICLE_NUMBER_FIELD = "pso_particle_number";
-	
-	
-	/**
-	 * Default value for particle number.
-	 */
-	public final static int PARTICLE_NUMBER_DEFAULT = 50;
-
-	
-	/**
-	 * Lower bound of position.
-	 */
-	public final static String POSITION_LOWER_BOUND_FIELD = "pso_position_lower_bound";
-	
-	
-	/**
-	 * Upper bound of position.
-	 */
-	public final static String POSITION_UPPER_BOUND_FIELD = "pso_position_upper_bound";
-	
-	
-	/**
-	 * Cognitive weight.
-	 */
-	public final static String COGNITIVE_WEIGHT_FIELD = "pso_cognitive_weight";
-
-	
-	/**
-	 * Global social weight.
-	 */
-	public final static String SOCIAL_WEIGHT_GLOBAL_FIELD = "pso_social_weight_global";
-
-	
-	/**
-	 * Global social weight.
-	 */
-	public final static String SOCIAL_WEIGHT_LOCAL_FIELD = "pso_social_weight_local";
-
-	
-	/**
-	 * Inertial weight.
-	 */
-	public final static String INERTIAL_WEIGHT_FIELD = "pso_inertial_weight";
-
-	
-	/**
-	 * Constriction weight.
-	 */
-	public final static String CONSTRICT_WEIGHT_FIELD = "pso_constrict_weight";
-
-	
-	/**
 	 * Target function or cost function.
 	 */
 	protected Function<T> func = null;
@@ -208,13 +154,13 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	
 	/**
 	 * Learning the PSO algorithm based on specified configuration and mathematical expression.
-	 * @param psoConfig specified configuration
-	 * @param funcExpr mathematical expression to represent a function.
+	 * @param psoConfig specified configuration. It can be null.
+	 * @param funcExpr mathematical expression to represent a function. It can be null.
 	 * @return target function.
 	 * @throws RemoteException if any error raises.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Object learn(PSOConfiguration<T> psoConfig, String funcExpr) throws RemoteException {
+	protected Object learn(PSOConfig<T> psoConfig, String funcExpr) throws RemoteException {
 		if (isLearnStarted()) return null;
 		
 		swarm.clear();
@@ -228,12 +174,12 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		}
 		if (func == null) return func;
 		
-		if (psoConfig == null) psoConfig = (PSOConfiguration<T>)getPSOConfiguration();
+		if (psoConfig == null) psoConfig = (PSOConfig<T>)getPSOConfig();
 
 		func.setOptimizer(null);
 		
-		int N = config.getAsInt(PARTICLE_NUMBER_FIELD);
-		N = N > 0 ? N : PARTICLE_NUMBER_DEFAULT;
+		int N = config.getAsInt(PSOConfig.PARTICLE_NUMBER_FIELD);
+		N = N > 0 ? N : PSOConfig.PARTICLE_NUMBER_DEFAULT;
 		T[] lower = psoConfig.lower;
 		T[] upper = psoConfig.upper;
 		
@@ -356,17 +302,19 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	@Override
 	public Object executeAsLearn(Object input) throws RemoteException {
 		if (input == null) {
-			PSOConfiguration<T> psoConfig = null;
+			PSOConfig<T> psoConfig = null;
 			String funcExpr = null;
 			try {
 				while (sample.next()) {
 					Profile profile = sample.pick();
 					if (profile == null) continue;
 					
-					Functor<T> functor = Functor.create(this, profile);
-					if (functor != null && functor.psoConfig != null && functor.expr != null) {
+					Functor<T> functor = createFunctor(profile);
+					if (functor != null && functor.psoConfig != null && functor.func != null) {
 						psoConfig = functor.psoConfig;
-						funcExpr = functor.expr;
+						if (functor.func instanceof ExprFunction)
+							funcExpr = ((ExprFunction)functor.func).getExpr();
+						
 						break;
 					}
 				}
@@ -396,11 +344,13 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		if (!(input instanceof Profile)) return null;
 		
 		Profile profile = (Profile)input;
-		Functor<T> functor = Functor.create(this, profile);
-		if (functor == null) return null;
+		Functor<T> functor = createFunctor(profile);
+		if (functor == null || functor.func == null) return null;
 		
-		Object f = learn(functor.psoConfig, functor.expr);
+		String funcExpr = functor.func instanceof ExprFunction ? ((ExprFunction)functor.func).getExpr() : null;
+		Object f = learn(functor.psoConfig, funcExpr);
 		if (f == null) return null;
+		
 		Optimizer<T> optimizer = func.getOptimizer();
 		return optimizer != null ? optimizer.toArray() : null;
 	}
@@ -548,7 +498,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		config.put(FUNC_EXPR_FIELD, FUNC_EXPR_DEFAULT);
 		config.put(FUNC_VARNAMES_FIELD, FUNC_VARNAMES_DEFAULT);
 		config.put(MAX_ITERATION_FIELD, MAX_ITERATION_DEFAULT);
-		config.put(PARTICLE_NUMBER_FIELD, PARTICLE_NUMBER_DEFAULT);
+		config.put(PSOConfig.PARTICLE_NUMBER_FIELD, PSOConfig.PARTICLE_NUMBER_DEFAULT);
 		
 		return config;
 	}
@@ -559,26 +509,20 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 * @return variable names.
 	 */
 	private List<String> extractVarNames() {
-		return extractNames(config.getAsString(FUNC_VARNAMES_FIELD));
+		String names = config.getAsString(FUNC_VARNAMES_FIELD);
+		if (names == null)
+			return Util.newList();
+		else
+			return TextParserUtil.parseListByClass(names, String.class, ",");
 	}
 	
 	
 	/**
-	 * Extracting names.
-	 * @param names list of names.
-	 * @return extracted names.
+	 * Create functor from profile.
+	 * @param profile specified profile.
+	 * @return functor created from profile.
 	 */
-	private List<String> extractNames(String names) {
-		try {
-			if (names == null)
-				return Util.newList();
-			else
-				return TextParserUtil.parseListByClass(names, String.class, ",");
-		}
-		catch (Throwable e) {}
-		
-		return Util.newList();
-	}
-
-
+	public abstract Functor<T> createFunctor(Profile profile);
+	
+	
 }

@@ -66,7 +66,7 @@ public class PSOEvaluator extends ExecuteAsLearnEvaluator {
 		if (!(alg instanceof PSOAbstract<?>)) return null;
 		
 		PSOAbstract<?> pso = (PSOAbstract<?>)alg;
-		Functor<?> functor = Functor.create(pso, testingProfile);
+		Functor<?> functor = pso.createFunctor(testingProfile);
 		if (functor == null || functor.func == null)
 			return null;
 		

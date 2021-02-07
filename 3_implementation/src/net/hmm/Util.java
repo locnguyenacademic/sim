@@ -28,6 +28,7 @@ public class Util {
 	
 	/**
 	 * Creating a new array.
+	 * @param <T> element type.
 	 * @param tClass element type.
 	 * @param length array length.
 	 * @return new array

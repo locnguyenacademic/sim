@@ -3,7 +3,6 @@ package net.pso;
 import java.io.Serializable;
 import java.util.List;
 
-import net.hudup.core.Util;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.parser.TextParserUtil;
@@ -32,19 +31,13 @@ public class Functor<T> implements Serializable, Cloneable {
 	/**
 	 * PSO configuration.
 	 */
-	public PSOConfiguration<T> psoConfig = null;
-	
-	
-	/**
-	 * Mathematical expression.
-	 */
-	public String expr = null;
+	public PSOConfig<T> psoConfig = null;
 	
 	
 	/**
 	 * Default constructor.
 	 */
-	protected Functor() {
+	public Functor() {
 
 	}
 
@@ -55,30 +48,26 @@ public class Functor<T> implements Serializable, Cloneable {
 	 * @param profile specified profile.
 	 * @return the pair of function and optimizer via specified profile.
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Functor<T> create(PSOAbstract<T> pso, Profile profile) {
+	@Deprecated
+	@SuppressWarnings({ "unchecked", "unused" })
+	private static <T> Functor<T> create(PSOAbstract<T> pso, Profile profile) {
 		if (pso == null || profile == null || profile.getAttCount() < 6) return null;
 		
 		Functor<T> functor = new Functor<T>();
 
-		functor.expr = profile.getValueAsString(0);
-		functor.expr = functor.expr != null ? functor.expr.trim() : null;
-		if (functor.expr == null) return null;
+		String expr = profile.getValueAsString(0);
+		expr = expr != null ? expr.trim() : null;
+		if (expr == null) return null;
 		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
 		if (varNames.size() == 0) return null;
 		
-		functor.func = pso.defineExprFunction(varNames, functor.expr);
+		functor.func = pso.defineExprFunction(varNames, expr);
 		if (functor.func == null) return null;
 		
 		try {
-			Class<T> tClass = (Class<T>) functor.func.zero().elementZero().getClass();
-			functor.psoConfig = (PSOConfiguration<T>) pso.getPSOConfiguration();
-			
-			List<T> lowerBound = FunctionAbstract.extractBound(functor.func, profile.getValueAsString(2));
-			functor.psoConfig.lower = lowerBound.toArray(Util.newArray(tClass, 0));
-			
-			List<T> upperBound = FunctionAbstract.extractBound(functor.func, profile.getValueAsString(3));
-			functor.psoConfig.upper = upperBound.toArray(Util.newArray(tClass, 0));
+			functor.psoConfig = (PSOConfig<T>) functor.func.extractPSOConfig(pso.getConfig());
+			functor.psoConfig.lower = functor.func.extractBound(profile.getValueAsString(2));
+			functor.psoConfig.upper = functor.func.extractBound(profile.getValueAsString(3));
 		} catch (Exception e) {LogUtil.trace(e);}
 		
 		T elementZero = functor.func.zero().elementZero();

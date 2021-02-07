@@ -49,7 +49,7 @@ public class ExprFunction extends FunctionReal {
 	public ExprFunction(List<String> varNames, String expr) {
 		super(varNames.size());
 		
-		this.expr = expr != null ? expr : "";
+		this.expr = expr != null ? expr.trim() : "";
 		int dim = this.vars.size();
 		for (int i = 0; i < dim; i++) {
 			this.vars.get(i).setName(varNames.get(i));
@@ -98,6 +98,15 @@ public class ExprFunction extends FunctionReal {
 	}
 
 
+	/**
+	 * Getting mathematical expression.
+	 * @return mathematical expression.
+	 */
+	public String getExpr() {
+		return expr;
+	}
+	
+	
 	@Override
 	public String toString() {
 		StringBuffer text = new StringBuffer("Function \"" + expr);
