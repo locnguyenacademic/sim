@@ -47,7 +47,7 @@ public class BCF extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.BCF);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class BCF extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.BCF;
+		return getDefaultMeasure();
 	}
 
 

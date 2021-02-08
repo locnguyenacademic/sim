@@ -47,7 +47,7 @@ public class IJ extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.IJ);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class IJ extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.IJ;
+		return getDefaultMeasure();
 	}
 
 

@@ -47,7 +47,7 @@ public class TA extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.TA);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class TA extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.TA;
+		return getDefaultMeasure();
 	}
 
 

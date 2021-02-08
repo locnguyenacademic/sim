@@ -47,7 +47,7 @@ public class SMTP extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.SMTP);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class SMTP extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.SMTP;
+		return getDefaultMeasure();
 	}
 
 

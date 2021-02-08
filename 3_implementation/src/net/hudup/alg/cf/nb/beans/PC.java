@@ -48,7 +48,7 @@ public class PC extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.PC);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -60,7 +60,7 @@ public class PC extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.PC;
+		return getDefaultMeasure();
 	}
 
 

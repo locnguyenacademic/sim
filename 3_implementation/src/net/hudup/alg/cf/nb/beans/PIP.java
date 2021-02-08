@@ -47,7 +47,7 @@ public class PIP extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.PIP);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class PIP extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.PIP;
+		return getDefaultMeasure();
 	}
 
 

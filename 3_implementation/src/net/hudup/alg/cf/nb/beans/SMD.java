@@ -47,7 +47,7 @@ public class SMD extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.SMD);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class SMD extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.SMD;
+		return getDefaultMeasure();
 	}
 
 

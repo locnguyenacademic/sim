@@ -18,11 +18,13 @@ import net.hudup.core.Util;
 import net.hudup.core.alg.cf.nb.NeighborCF;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
+import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.evaluate.recommend.Accuracy;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.Vector2;
 import net.hudup.core.parser.TextParserUtil;
@@ -165,6 +167,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 		this.rankBins = convertValueBinsToRankBins(this.valueBins);
 		
 		this.valueCache.clear();
+		
+		try {
+			if (getMeasure().equals(Measure.SMD) && !getConfig().getAsBoolean(CALC_STATISTICS_FIELD)) {
+				this.itemIds.clear();
+				Fetcher<RatingVector> items = dataset.fetchItemRatings();
+				while (items.next()) {
+					RatingVector item = items.pick();
+					if (item != null) this.itemIds.add(item.id());
+				}
+				items.close();
+			}
+		} catch (Throwable e) {LogUtil.trace(e);}
 	}
 
 
@@ -464,7 +478,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
-			config.put(CALC_STATISTICS_FIELD, true);
+			config.put(CALC_STATISTICS_FIELD, false);
 			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -582,13 +596,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else {
-			config.remove(VALUE_BINS_FIELD);
-			config.remove(BCF_MEDIAN_MODE_FIELD);
-			config.remove(MU_ALPHA_FIELD);
-			config.remove(SMTP_LAMBDA_FIELD);
-			config.remove(SMTP_GENERAL_VAR_FIELD);
-			config.remove(TA_NORMALIZED_FIELD);
-			
 			super.updateConfig(measure);
 		}
 	}

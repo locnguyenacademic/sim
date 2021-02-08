@@ -47,7 +47,7 @@ public class PSS extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.PSS);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class PSS extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.PSS;
+		return getDefaultMeasure();
 	}
 
 
@@ -68,7 +68,6 @@ public class PSS extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
-		config.remove(CALC_STATISTICS_FIELD);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);

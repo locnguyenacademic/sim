@@ -47,7 +47,7 @@ public class Feng extends NeighborCFExtUserBased {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.FENG);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class Feng extends NeighborCFExtUserBased {
 
 	@Override
 	public String getMeasure() {
-		return Measure.FENG;
+		return getDefaultMeasure();
 	}
 
 

@@ -47,7 +47,7 @@ public class CosineReduced extends NeighborCFExtUserBasedReduced {
 
 	@Override
 	public List<String> getMainMeasures() {
-		return Arrays.asList(Measure.COSINE);
+		return Arrays.asList(getDefaultMeasure());
 	}
 
 
@@ -59,7 +59,7 @@ public class CosineReduced extends NeighborCFExtUserBasedReduced {
 
 	@Override
 	public String getMeasure() {
-		return Measure.COSINE;
+		return getDefaultMeasure();
 	}
 
 
