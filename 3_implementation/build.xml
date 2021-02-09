@@ -85,7 +85,7 @@
 
 	<!--
 	Function: Jayes is a Bayesian Network Library for Java. It has initially been created as my bachelor's thesis and it's goal is to provide highly efficient Bayesian Networks algorithms to the open souce community.
-	Affected packages, classes: net.bayescf.bnet.FactoryImpl
+	Affected packages, classes: net.ml.bnet.FactoryImpl
 	Referred jars:
 	Source: https://github.com/kutschkem/Jayes
 	Vendor: Michael Kutschke
@@ -100,7 +100,7 @@
 
 	<!--
 	Function: Parsing mathematical expressions.
-	Affected packages, classes: net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*
+	Affected packages, classes: net.ea.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*
 	Referred jars:
 	Source: http://www.speqmath.com/tutorials/expression_parser_java
 	Vendor: Jos de Jong
@@ -109,7 +109,7 @@
 	Status: using
 	Note:
 	-->
-	<property name="parser.jong1" value="${bin.home}/net/pso/logistic/speqmath/*"/>
+	<property name="parser.jong1" value="${bin.home}/net/ea/pso/logistic/speqmath/*"/>
 	<property name="parser.jong2" value="${bin.home}/net/rem/regression/logistic/speqmath/*"/>
 
 
@@ -130,7 +130,7 @@
 	<!--
 	List of classes and packages which use libraries:
 	
-	net.bayescf.bnet.FactoryImpl: jayes.jar, jayes-io.jar
+	net.ml.bnet.FactoryImpl: jayes.jar, jayes-io.jar
 	
 	net.rem.em.NewtonGEM: commons-math3.jar
 	net.rem.regression.RMAbstract: commons-math3.jar
@@ -206,7 +206,7 @@
 		<javadoc destdir="${docs.home}/api"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.temp.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
+			excludepackagenames="net.hudup.temp.*, net.temp.*, net.ea.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
 		</javadoc>
 	</target>
 
@@ -217,7 +217,7 @@
 		<javadoc destdir="${archive.home}"
 			classpathref="build.class.path"
 			sourcepath="${src.home}"
-			excludepackagenames="net.hudup.temp.*, net.temp.*, net.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
+			excludepackagenames="net.hudup.temp.*, net.temp.*, net.ea.pso.logistic.speqmath.*, net.rem.regression.logistic.speqmath.*">
 		</javadoc>
 
 		<zip destfile="${archive.home}/${product}-${version}-doc.zip" basedir="${archive.home}"/>
@@ -347,59 +347,6 @@
 	</target>
 
 
-	<target name="jar-bayescf" depends="compile" description="Create collaborative filtering based on Bayesian network package">
-		<mkdir dir="${archive.home}"/>
-		<antcall target="clean-archive" />
-		
-		<if>
-		<equals arg1="${include-runtime-lib}" arg2="embed"/>
-		<then>
-			<jar destfile="${archive.home}/${product}-bayescf.jar">
-	    		<fileset dir="${bin.home}" includes="net/bayescf/**"/>
-	    		<restrict>
-	     			<name name="**"/>
-					<archives>
-						<zips>
-							<fileset dir="${lib.home}" includes="${jayes.jar}, ${jayes-io.jar}"/>
-						</zips>
-					</archives>
-	    		</restrict>
-
-				<manifest>
-					<attribute name="Main-Class" value="net.bayescf.alg.cf.bnet.BnetCF"/>
-				</manifest>
-			</jar>
-		</then>
-		<else>
-			<if>
-			<equals arg1="${include-runtime-lib}" arg2="normal" />
-			<then>
-				<antcall target="jar-runtime-lib" />
-			</then>
-			</if>
-
-			<jar destfile="${archive.home}/${product}-bayescf.jar">
-	    		<fileset dir="${bin.home}" includes="net/bayescf/**"/>
-
-				<manifest>
-					<attribute name="Main-Class" value="net.bayescf.alg.cf.bnet.BnetCF"/>
-				</manifest>
-			</jar>
-		</else>
-		</if>
-
-		<copy todir="${archive.home}">
-			<fileset dir="." includes="${doctype}, env*.*, evaluator*.*, *.script"/>
-		</copy>
-		
-		<zip destfile="${archive.home}/${product}-${version}-bayescf.zip" basedir="${archive.home}"/>
-		
-		<delete quiet="true" includeEmptyDirs="true">
-			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-bayescf.zip"/>
-		</delete>
-	</target>
-
-
 	<target name="jar-hudup" depends="compile" description="Create Hudup extension package">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
@@ -506,15 +453,15 @@
 	</target>
 
 
-	<target name="jar-hmm" depends="compile" description="Create HMM package including hidden Markov model (HMM)">
+	<target name="jar-ml" depends="compile" description="Create machine learning package including hidden Markov model (ml)">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
 
 		<if>
 		<equals arg1="${include-runtime-lib}" arg2="embed" />
 		<then>
-			<jar destfile="${archive.home}/${product}-hmm.jar">
-	    		<fileset dir="${bin.home}" includes="net/hmm/**"/>
+			<jar destfile="${archive.home}/${product}-ml.jar">
+	    		<fileset dir="${bin.home}" includes="net/ml/**"/>
 				<!--
 	    		<restrict>
 	     			<name name="**"/>
@@ -527,7 +474,7 @@
 				-->
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.hmm.FactoryImpl"/>
+					<attribute name="Main-Class" value="net.ml.hmm.FactoryImpl"/>
 				</manifest>
 			</jar>
 		</then>
@@ -539,37 +486,37 @@
 			</then>
 			</if>
 
-			<jar destfile="${archive.home}/${product}-hmm.jar">
-	    		<fileset dir="${bin.home}" includes="net/hmm/**"/>
+			<jar destfile="${archive.home}/${product}-ml.jar">
+	    		<fileset dir="${bin.home}" includes="net/ml/**"/>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.hmm.FactoryImpl"/>
+					<attribute name="Main-Class" value="net.ml.hmm.FactoryImpl"/>
 				</manifest>
 			</jar>
 		</else>
 		</if>
 
 		<copy todir="${archive.home}">
-			<fileset dir="." includes="${doctype}, env*.*, hmm*.*, *.script"/>
+			<fileset dir="." includes="${doctype}, env*.*, ml*.*, *.script"/>
 		</copy>
 
-		<zip destfile="${archive.home}/${product}-${version}-hmm.zip" basedir="${archive.home}"/>
+		<zip destfile="${archive.home}/${product}-${version}-ml.zip" basedir="${archive.home}"/>
 		
 		<delete quiet="true" includeEmptyDirs="true">
-			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-hmm.zip"/>
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-ml.zip"/>
 		</delete>
 	</target>
 
 
-	<target name="jar-pso" depends="compile" description="Create PSO package including particle swarm optimization (PSO) algorithm">
+	<target name="jar-ea" depends="compile" description="Create evolution algorithm (EA) package">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
 
 		<if>
 		<equals arg1="${include-runtime-lib}" arg2="embed" />
 		<then>
-			<jar destfile="${archive.home}/${product}-pso.jar">
-	    		<fileset dir="${bin.home}" includes="net/pso/**"/>
+			<jar destfile="${archive.home}/${product}-ea.jar">
+	    		<fileset dir="${bin.home}" includes="net/ea/**"/>
 	    		<restrict>
 	     			<name name="**"/>
 					<archives>
@@ -580,7 +527,7 @@
 	    		</restrict>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.pso.PSO"/>
+					<attribute name="Main-Class" value="net.ea.pso.PSO"/>
 				</manifest>
 			</jar>
 		</then>
@@ -592,24 +539,24 @@
 			</then>
 			</if>
 
-			<jar destfile="${archive.home}/${product}-pso.jar">
-	    		<fileset dir="${bin.home}" includes="net/pso/**"/>
+			<jar destfile="${archive.home}/${product}-ea.jar">
+	    		<fileset dir="${bin.home}" includes="net/ea/**"/>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.pso.PSO"/>
+					<attribute name="Main-Class" value="net.ea.pso.PSO"/>
 				</manifest>
 			</jar>
 		</else>
 		</if>
 
 		<copy todir="${archive.home}">
-			<fileset dir="." includes="${doctype}, env*.*, pso*.*, *.script"/>
+			<fileset dir="." includes="${doctype}, env*.*, ea*.*, *.script"/>
 		</copy>
 
-		<zip destfile="${archive.home}/${product}-${version}-pso.zip" basedir="${archive.home}"/>
+		<zip destfile="${archive.home}/${product}-${version}-ea.zip" basedir="${archive.home}"/>
 		
 		<delete quiet="true" includeEmptyDirs="true">
-			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-pso.zip"/>
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-ea.zip"/>
 		</delete>
 	</target>
 

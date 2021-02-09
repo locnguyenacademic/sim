@@ -1,0 +1,111 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
+package net.ml.hmm.adapter;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.hudup.core.Constants;
+
+/**
+ * This is utility class to provide static utility methods. It is also adapter to other libraries.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
+public class Util {
+	
+	
+	/**
+	 * The maximum number digits in decimal precision.
+	 */
+	public static int DECIMAL_PRECISION = 12;
+
+	
+	/**
+	 * Static code.
+	 */
+	static {
+		try {
+			DECIMAL_PRECISION = Constants.DECIMAL_PRECISION;
+		}
+		catch (Throwable e) {}
+	}
+	
+	
+	/**
+	 * Creating a new array.
+	 * @param <T> element type.
+	 * @param tClass element type.
+	 * @param length array length.
+	 * @return new array
+	 */
+	public static <T> T[] newArray(Class<T> tClass, int length) {
+		try {
+			return net.hudup.core.Util.newArray(tClass, length);
+		}
+		catch (Throwable e) {}
+		
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(tClass, length);
+		return array;
+	}
+
+	
+	/**
+	 * Creating a new list with initial capacity.
+	 * @param <T> type of elements in list.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new list with initial capacity.
+	 */
+	public static <T> List<T> newList(int initialCapacity) {
+		try {
+		    return net.hudup.core.Util.newList(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new ArrayList<T>(initialCapacity);
+	}
+	
+	
+	/**
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
+	 */
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+		try {
+		    return net.hudup.core.Util.newMap(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new HashMap<K, V>(initialCapacity);
+	}
+
+
+	/**
+	 * Tracing error.
+	 * @param e throwable error.
+	 */
+	public static void trace(Throwable e) {
+		try {
+			net.hudup.core.logistic.LogUtil.trace(e);
+		}
+		catch (Throwable ex) {
+			e.printStackTrace();
+		}
+	}
+
+
+}

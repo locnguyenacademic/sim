@@ -7,11 +7,11 @@
  */
 package net.hudup;
 
+import net.ea.pso.PSORemote;
+import net.ea.pso.PSORemoteWrapper;
 import net.hudup.core.Firer;
 import net.hudup.core.alg.AlgRemote;
 import net.hudup.core.alg.AlgRemoteWrapper;
-import net.pso.PSORemote;
-import net.pso.PSORemoteWrapper;
 import net.rem.em.EMRemote;
 import net.rem.em.EMRemoteWrapper;
 import net.rem.regression.RMRemote;
