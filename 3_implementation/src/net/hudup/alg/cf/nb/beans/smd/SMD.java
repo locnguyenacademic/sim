@@ -5,27 +5,24 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans;
+package net.hudup.alg.cf.nb.beans.smd;
 
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
-import net.hudup.core.data.Dataset;
-import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.LogUtil;
 
 /**
- * SMD + TA measure.
+ * SMD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class SMD_TA extends NeighborCFExtUserBased {
+public class SMD extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -37,24 +34,8 @@ public class SMD_TA extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public SMD_TA() {
+	public SMD() {
 
-	}
-
-
-	@Override
-	public synchronized void setup(Dataset dataset, Object...params) throws RemoteException {
-		super.setup(dataset, params);
-		
-		try {
-			this.itemIds.clear();
-			Fetcher<RatingVector> items = dataset.fetchItemRatings();
-			while (items.next()) {
-				RatingVector item = items.pick();
-				if (item != null) this.itemIds.add(item.id());
-			}
-			items.close();
-		} catch (Throwable e) {LogUtil.trace(e);}
 	}
 
 
@@ -72,7 +53,7 @@ public class SMD_TA extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "smd_ta";
+		return Measure.SMD;
 	}
 
 
@@ -95,13 +76,14 @@ public class SMD_TA extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
+		config.remove(TA_NORMALIZED_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd(vRating1, vRating2, profile1, profile2, this.itemIds) * triangleArea(vRating1, vRating2, profile1, profile2);
+		return smd(vRating1, vRating2, profile1, profile2, this.itemIds);
 	}
 
 	
@@ -111,7 +93,7 @@ public class SMD_TA extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_smd_ta";
+			return "neighborcf_smd";
 	}
 
 

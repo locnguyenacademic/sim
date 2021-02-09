@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans;
+package net.hudup.alg.cf.nb.beans.smd;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -19,13 +19,13 @@ import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.LogUtil;
 
 /**
- * SMD + CPC measure.
+ * SMD + TA measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class SMD_CPC extends NeighborCFExtUserBased {
+public class SMDxTA extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -37,7 +37,7 @@ public class SMD_CPC extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public SMD_CPC() {
+	public SMDxTA() {
 
 	}
 
@@ -72,7 +72,7 @@ public class SMD_CPC extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "smd_cpc";
+		return "smd_ta";
 	}
 
 
@@ -95,14 +95,13 @@ public class SMD_CPC extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
-		config.remove(TA_NORMALIZED_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd(vRating1, vRating2, profile1, profile2, this.itemIds) * cpc(vRating1, vRating2, profile1, profile2);
+		return smd(vRating1, vRating2, profile1, profile2, this.itemIds) * triangleArea(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -112,7 +111,7 @@ public class SMD_CPC extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_smd_cpc";
+			return "neighborcf_smdxta";
 	}
 
 
