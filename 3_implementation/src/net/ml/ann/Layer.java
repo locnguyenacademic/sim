@@ -20,6 +20,19 @@ public interface Layer extends Serializable, Cloneable {
 
 	
 	/**
+	 * Getting identifier reference.
+	 * @return identifier reference.
+	 */
+	Id getIdRef();
+	
+	/**
+	 * Create neuron.
+	 * @return created neuron.
+	 */
+	Neuron newNeuron();
+
+	
+	/**
 	 * Getting layer size.
 	 * @return layer size.
 	 */
@@ -35,28 +48,12 @@ public interface Layer extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Create and add neuron.
-	 * @return created and added neuron.
-	 */
-	Neuron addNew();
-
-	
-	/**
 	 * Adding neuron.
 	 * @param neuron specified neuron.
 	 * @return true if adding is successful.
 	 */
 	boolean add(Neuron neuron);
 
-	
-	/**
-	 * Setting neuron at specified index.
-	 * @param index specified index.
-	 * @param neuron specified neuron
-	 * @return previous neuron.
-	 */
-	Neuron set(int index, Neuron neuron);
-	
 	
 	/**
 	 * Removing neuron at specified index.
@@ -75,6 +72,14 @@ public interface Layer extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Finding specified neuron.
+	 * @param neuron specified neuron.
+	 * @return specified neuron.
+	 */
+	int indexOf(Neuron neuron);
+	
+	
+	/**
 	 * Getting next layer.
 	 * @return next layer.
 	 */
@@ -82,11 +87,43 @@ public interface Layer extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Setting next layer.
+	 * @param nextLayer next layer.
+	 * @return the old next layer.
+	 */
+	Layer setNextLayer(Layer nextLayer);
+	
+	
+	/**
+	 * Assigning next layer.
+	 * @param nextLayer next layer.
+	 * @return the old next layer.
+	 */
+	Layer assignNextLayer(Layer nextLayer);
+
+	
+	/**
 	 * Getting previous layer.
 	 * @return previous layer.
 	 */
 	Layer getPrevLayer();
 	
+	
+	/**
+	 * Setting previous layer.
+	 * @param prevLayer previous layer.
+	 * @return the old previous layer.
+	 */
+	Layer setPrevLayer(Layer prevLayer);
+
+	
+	/**
+	 * Assigning previous layer.
+	 * @param prevLayer previous layer.
+	 * @return the old previous layer.
+	 */
+	Layer assignPrevLayer(Layer prevLayer);
+
 	
 	/**
 	 * Getting reference to activation function.
@@ -97,10 +134,10 @@ public interface Layer extends Serializable, Cloneable {
 	
 	/**
 	 * Setting reference to activation function.
-	 * @param funcRef reference to activation function.
+	 * @param activateRef reference to activation function.
 	 * @return previous function reference.
 	 */
-	Function setActivateRef(Function funcRef);
+	Function setActivateRef(Function activateRef);
 	
 	
 }

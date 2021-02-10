@@ -63,10 +63,10 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	/**
 	 * Setting reference to activation function.
-	 * @param funcRef reference to activation function.
+	 * @param activateRef reference to activation function.
 	 * @return previous function reference.
 	 */
-	Function setActivateRef(Function funcRef);
+	Function setActivateRef(Function activateRef);
 	
 	
 	/**
@@ -110,6 +110,12 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
+	 * Clearing next neurons.
+	 */
+	void clearNextNeurons();
+	
+	
+	/**
 	 * Checking whether containing the next neuron.
 	 * @param neuron the next neuron.
 	 * @return whether containing the next neuron.
@@ -118,10 +124,18 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
+	 * Finding the specified next neuron.
+	 * @param neuron specified next neuron.
+	 * @return index of specified next neuron.
+	 */
+	int nextIndexOf(Neuron neuron);
+
+		
+	/**
 	 * Getting previous neuron count.
 	 * @return previous neuron count.
 	 */
-	Neuron getPrevNeuronCount();
+	int getPrevNeuronCount();
 
 	
 	/**
@@ -158,6 +172,12 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
+	 * Clearing next neurons.
+	 */
+	void clearPrevNeurons();
+	
+	
+	/**
 	 * Checking whether containing the previous neuron.
 	 * @param neuron the previous neuron.
 	 * @return whether containing the previous neuron.
@@ -166,6 +186,14 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
+	 * Finding the specified previous neuron.
+	 * @param neuron specified previous neuron.
+	 * @return index of specified previous neuron.
+	 */
+	int prevIndexOf(Neuron neuron);
+
+		
+	/**
 	 * Getting next sibling neuron.
 	 * @return next sibling neuron.
 	 */
@@ -173,10 +201,40 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Getting next sibling weight.
+	 * @return next sibling weight.
+	 */
+	double getNextSiblingWeight();
+	
+	
+	/**
+	 * Setting next sibling weight.
+	 * @param weight next sibling weight.
+	 * @return true if setting is successful.
+	 */
+	void setNextSiblingWeight(double weight);
+	
+	
+	/**
 	 * Getting previous sibling neuron.
 	 * @return previous sibling neuron.
 	 */
 	Neuron getPreviousSibling();
+	
+	
+	/**
+	 * Getting previous sibling weight.
+	 * @return previous sibling weight.
+	 */
+	double getPrevSiblingWeight();
+	
+	
+	/**
+	 * Setting previous sibling weight.
+	 * @param weight previous sibling weight.
+	 * @return true if setting is successful.
+	 */
+	void setPrevSiblingWeight(double weight);
 	
 	
 	/**

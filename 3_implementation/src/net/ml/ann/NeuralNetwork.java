@@ -10,7 +10,9 @@ package net.ml.ann;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+
+import net.hudup.core.data.Fetcher;
+import net.hudup.core.data.Profile;
 
 /**
  * This interface represents neural network.
@@ -21,6 +23,14 @@ import java.util.List;
  */
 public interface NeuralNetwork extends Remote, Serializable, Cloneable {
 
+	
+	/**
+	 * Getting memory layer.
+	 * @return memory layer.
+	 * @throws RemoteException if any error raises.
+	 */
+	Layer getMemoryLayer() throws RemoteException;
+	
 	
 	/**
 	 * Getting input layer.
@@ -59,10 +69,10 @@ public interface NeuralNetwork extends Remote, Serializable, Cloneable {
 	 * Learning the neural network.
 	 * @param input input sample.
 	 * @param output output sample.
-	 * @return result from learning process.
+	 * @return true if learning process is successful.
 	 * @throws RemoteException if any error raises.
 	 */
-	Object learn(List<double[]> input, List<double[]> output) throws RemoteException;
+	boolean learn(Fetcher<Profile> input, Fetcher<Profile> output) throws RemoteException;
 	
 	
 }
