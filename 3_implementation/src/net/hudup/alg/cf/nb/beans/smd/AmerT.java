@@ -22,7 +22,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
-public class SMD extends NeighborCFExtUserBased {
+public class AmerT extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class SMD extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public SMD() {
+	public AmerT() {
 
 	}
 
@@ -53,7 +53,7 @@ public class SMD extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.SMD;
+		return Measure.AMERT;
 	}
 
 
@@ -83,7 +83,7 @@ public class SMD extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd(vRating1, vRating2, profile1, profile2);
+		return amerThreshold(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -93,7 +93,7 @@ public class SMD extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_smd";
+			return "neighborcf_amert";
 	}
 
 

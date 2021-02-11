@@ -7,16 +7,12 @@
  */
 package net.hudup.alg.cf.nb.beans.smd;
 
-import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
-import net.hudup.core.data.Dataset;
-import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.LogUtil;
 
 /**
  * SMD + NHSM measure.
@@ -43,22 +39,6 @@ public class SMDxNHSM extends NeighborCFExtUserBased {
 
 
 	@Override
-	public synchronized void setup(Dataset dataset, Object...params) throws RemoteException {
-		super.setup(dataset, params);
-		
-		try {
-			this.itemIds.clear();
-			Fetcher<RatingVector> items = dataset.fetchItemRatings();
-			while (items.next()) {
-				RatingVector item = items.pick();
-				if (item != null) this.itemIds.add(item.id());
-			}
-			items.close();
-		} catch (Throwable e) {LogUtil.trace(e);}
-	}
-
-
-	@Override
 	public List<String> getAllMeasures() {
 		return getMainMeasures();
 	}
@@ -72,7 +52,7 @@ public class SMDxNHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "smd_nhsm";
+		return "smdxnhsm";
 	}
 
 
@@ -85,9 +65,9 @@ public class SMDxNHSM extends NeighborCFExtUserBased {
 	@Override
 	protected void updateConfig(String measure) {
 		super.updateConfig(measure);
+		config.put(CALC_STATISTICS_FIELD, true);
 		
 		config.remove(MEASURE);
-		config.remove(CALC_STATISTICS_FIELD);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
@@ -103,7 +83,7 @@ public class SMDxNHSM extends NeighborCFExtUserBased {
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
 		double urp = urp(vRating1, vRating2, profile1, profile2);
-		double smd = smd(vRating1, vRating2, profile1, profile2, this.itemIds);
+		double smd = smd(vRating1, vRating2, profile1, profile2);
 		return pss(vRating1, vRating2, profile1, profile2) * smd * urp;
 	}
 

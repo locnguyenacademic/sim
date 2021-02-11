@@ -38,7 +38,7 @@ public class SMD extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd(vRating1, vRating2, profile1, profile2, this.itemIds);
+		return smd(vRating1, vRating2, profile1, profile2);
 	}
 
 	

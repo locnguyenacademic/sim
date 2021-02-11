@@ -10,19 +10,18 @@ package net.hudup.alg.cf.nb.beans.smd;
 import java.util.Arrays;
 import java.util.List;
 
-import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD measure.
+ * SMD + NHSM measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class SMD extends NeighborCFExtUserBased {
+public class AmerTxNHSM extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +33,7 @@ public class SMD extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public SMD() {
+	public AmerTxNHSM() {
 
 	}
 
@@ -53,7 +52,7 @@ public class SMD extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.SMD;
+		return "amertxnhsm";
 	}
 
 
@@ -66,9 +65,9 @@ public class SMD extends NeighborCFExtUserBased {
 	@Override
 	protected void updateConfig(String measure) {
 		super.updateConfig(measure);
+		config.put(CALC_STATISTICS_FIELD, true);
 		
 		config.remove(MEASURE);
-		config.remove(CALC_STATISTICS_FIELD);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
@@ -83,7 +82,9 @@ public class SMD extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd(vRating1, vRating2, profile1, profile2);
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		double amert = amerThreshold(vRating1, vRating2, profile1, profile2);
+		return pss(vRating1, vRating2, profile1, profile2) * amert * urp;
 	}
 
 	
@@ -93,7 +94,7 @@ public class SMD extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_smd";
+			return "neighborcf_amertxnhsm";
 	}
 
 

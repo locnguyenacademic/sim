@@ -18,13 +18,11 @@ import net.hudup.core.Util;
 import net.hudup.core.alg.cf.nb.NeighborCF;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
-import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.evaluate.recommend.Accuracy;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
-import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.Vector2;
 import net.hudup.core.parser.TextParserUtil;
@@ -167,18 +165,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		this.rankBins = convertValueBinsToRankBins(this.valueBins);
 		
 		this.valueCache.clear();
-		
-		try {
-			if (getMeasure().equals(Measure.SMD) && !getConfig().getAsBoolean(CALC_STATISTICS_FIELD)) {
-				this.itemIds.clear();
-				Fetcher<RatingVector> items = dataset.fetchItemRatings();
-				while (items.next()) {
-					RatingVector item = items.pick();
-					if (item != null) this.itemIds.add(item.id());
-				}
-				items.close();
-			}
-		} catch (Throwable e) {LogUtil.trace(e);}
 	}
 
 
@@ -306,8 +292,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return mu(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMTP))
 			return smtp(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.AMERT))
+			return amerThreshold(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD))
-			return smd(vRating1, vRating2, profile1, profile2, this.itemIds);
+			return smd(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD2))
 			return smd2(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD2J))
@@ -475,6 +463,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(MSD_FRACTION_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+		}
+		else if (measure.equals(Measure.AMERT)) {
+			config.put(CALC_STATISTICS_FIELD, false);
+			config.addReadOnly(CALC_STATISTICS_FIELD);
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
@@ -1148,16 +1148,13 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
-	 * @param itemIds set of all item identifiers
 	 * @author Ali Amer.
 	 * @return SMD measure between both two rating vectors and profiles.
 	 */
 	protected double smd(
 			RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2, Set<Integer> itemIds) {
-		if (itemIds == null)
-			itemIds = Util.newSet();
-		itemIds.addAll(unionFieldIds(vRating1, vRating2));
+			Profile profile1, Profile profile2) {
+		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
 		int N = itemIds.size();
 		if (N == 0) return Constants.UNUSED;
 		
@@ -1173,6 +1170,36 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		
 		return ((1.0 - F/N) + (2.0*Nab / (Na + Nb))) / 2.0;
+	}
+	
+	
+	/**
+	 * Calculating the Amer-Threshold measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * 
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @param itemIds set of all item identifiers
+	 * @author Ali Amer, Loc Nguyen
+	 * @return Amer-Threshold measure between both two rating vectors and profiles.
+	 */
+	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		double N = vRating1.size() + vRating1.size();
+		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
+		int Nab = 0;
+		for (int itemId : itemIds) {
+			if (!vRating1.isRated(itemId) || !vRating2.isRated(itemId))
+				continue;
+			
+			boolean relevant1 = Accuracy.isRelevant(vRating1.get(itemId).value, this);
+			boolean relevant2 = Accuracy.isRelevant(vRating2.get(itemId).value, this);
+			if (relevant1 == relevant2) Nab++;
+		}
+		
+		return 2.0*Nab / N;
 	}
 	
 	
