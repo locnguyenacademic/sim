@@ -1152,21 +1152,23 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return SMD measure between both two rating vectors and profiles.
 	 */
 	protected double smd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
+		Set<Integer> itemIds1 = vRating1.fieldIds(true);
+		Set<Integer> itemIds2 = vRating2.fieldIds(true);
+		Set<Integer> itemIds = Util.newSet(itemIds1.size());
+		itemIds.addAll(itemIds1);
+		itemIds.addAll(itemIds2);
 		
-		int Nab = 0, F = 0;
+		int Nab = 0;
 		for (int itemId : itemIds) {
 			boolean rated1 = vRating1.isRated(itemId);
 			boolean rated2 = vRating2.isRated(itemId);
 			
-			if (rated1 == rated2)
-				Nab++;
-			else
-				F++;
+			if (rated1 == rated2) Nab++;
 		}
 		
+		double M = itemIds1.size() + itemIds2.size();
 		double N = itemIds.size();
-		return ((1.0-F/N) + (2.0*Nab/N)) / 2.0;
+		return Nab * (1/M + 0.5/N);
 	}
 	
 	
@@ -1184,26 +1186,26 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return Amer-Threshold measure between both two rating vectors and profiles.
 	 */
 	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
+		Set<Integer> itemIds1 = vRating1.fieldIds(true);
+		Set<Integer> itemIds2 = vRating2.fieldIds(true);
+		Set<Integer> itemIds = Util.newSet(itemIds1.size());
+		itemIds.addAll(itemIds1);
+		itemIds.addAll(itemIds2);
 		
-		double coeff = 1;
-		double Nab = 0, F = 0;
+		double Nab = 0;
 		for (int itemId : itemIds) {
 			boolean rated1 = vRating1.isRated(itemId);
 			boolean rated2 = vRating2.isRated(itemId);
 			
 			if (rated1 == rated2) {
-				Nab = Nab + 1;
-				double sim = 1 / (1 + Math.exp(Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value)));
-				Nab = Nab + coeff*sim;
-			}
-			else {
-				F = F + 1;
+				double sim = 1 / (1 + Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value));
+				Nab = Nab + 1 + sim;
 			}
 		}
 		
+		double M = itemIds1.size() + itemIds2.size();
 		double N = itemIds.size();
-		return ((1.0-F/N) + (2.0*Nab/N)) / 2.0;
+		return Nab * (1/M + 0.5/N);
 	}
 	
 	
