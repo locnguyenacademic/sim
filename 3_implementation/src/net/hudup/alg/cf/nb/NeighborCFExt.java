@@ -323,7 +323,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected void updateConfig(String measure) {
 		if (measure == null) return;
 		
-		config.removeReadOnly(CALC_STATISTICS_FIELD);
 		config.removeReadOnly(VALUE_BINS_FIELD);
 		config.removeReadOnly(COSINE_NORMALIZED_FIELD);
 		config.removeReadOnly(MSD_FRACTION_FIELD);
@@ -333,8 +332,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
 		config.removeReadOnly(TA_NORMALIZED_FIELD);
 		if (measure.equals(Measure.PSS)) {
-			config.put(CALC_STATISTICS_FIELD, true);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -345,8 +342,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.NHSM)) {
-			config.put(CALC_STATISTICS_FIELD, true);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -357,8 +352,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.BCF)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -368,8 +361,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.BCFJ)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -379,8 +370,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SRC)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
@@ -390,8 +379,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -402,7 +389,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.PC)) {
-			config.put(CALC_STATISTICS_FIELD, true);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -413,8 +399,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.MMD)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
@@ -424,8 +408,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.CJACMD)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
@@ -434,8 +416,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.FENG)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -446,8 +426,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.MU)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -457,7 +435,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMTP)) {
-			config.put(CALC_STATISTICS_FIELD, true);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -466,8 +443,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.AMERT)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -478,8 +453,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -490,8 +463,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -502,8 +473,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2J)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -514,8 +483,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -526,8 +493,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -538,8 +503,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.TA)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -549,8 +512,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 		}
 		else if (measure.equals(Measure.TAJ)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -560,8 +521,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 		}
 		else if (measure.equals(Measure.COCO)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -572,8 +531,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.NNSM)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -584,8 +541,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
 		else if (measure.equals(Measure.IJ)) {
-			config.put(CALC_STATISTICS_FIELD, false);
-			config.addReadOnly(CALC_STATISTICS_FIELD);
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -1113,7 +1068,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			Profile profile1, Profile profile2) {
 		
 		List<Integer> common = commonFieldIdsAsList(vRating1, vRating2);
-		common.retainAll(this.itemVars.keySet());
+		common.retainAll(getItemVars().keySet());
 		if (common.size() == 0) return Constants.UNUSED;
 		
 		double[] data1 = new double[common.size()];
@@ -1126,9 +1081,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 			data1[i] = vRating1.get(id).value; 
 			data2[i] = vRating2.get(id).value;
 			if (useGeneralVar)
-				vars[i] = this.ratingVar;
+				vars[i] = getRatingVar();
 			else
-				vars[i] = this.itemVars.get(id);
+				vars[i] = getItemVars().get(id);
 		}
 
 		DocumentVector vector1 = new DocumentVector(data1);
@@ -1172,6 +1127,40 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 	
 	
+//	/**
+//	 * Calculating the Amer-Threshold measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
+//	 * The first pair includes the first rating vector and the first profile.
+//	 * The second pair includes the second rating vector and the second profile.
+//	 * 
+//	 * @param vRating1 first rating vector.
+//	 * @param vRating2 second rating vector.
+//	 * @param profile1 first profile.
+//	 * @param profile2 second profile.
+//	 * @param itemIds set of all item identifiers
+//	 * @author Ali Amer, Loc Nguyen
+//	 * @return Amer-Threshold measure between both two rating vectors and profiles.
+//	 */
+//	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+//		double sim = 0;
+//		double sum = 0;
+//		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
+//		for (int itemId : itemIds) {
+//			boolean rated1 = vRating1.isRated(itemId);
+//			boolean rated2 = vRating2.isRated(itemId);
+//			
+//			if (rated1 == rated2) {
+//				double sim0 = 1 + 1/(1 + Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value));
+//				sim += sim0;
+//				sum += sim0;
+//			}
+//			else
+//				sum += 1;
+//		}
+//		
+//		return sim / sum;
+//	}
+	
+	
 	/**
 	 * Calculating the Amer-Threshold measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
@@ -1199,7 +1188,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			
 			if (rated1 == rated2) {
 				double sim = 1 / (1 + Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value));
-				Nab = Nab + 1 + sim;
+				Nab += 1 + sim;
 			}
 		}
 		
@@ -1207,7 +1196,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double N = itemIds.size();
 		return Nab * (1/M + 0.5/N);
 	}
-	
+
 	
 	/**
 	 * Calculating the SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.

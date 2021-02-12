@@ -65,7 +65,6 @@ public class AmerTxNHSM extends NeighborCFExtUserBased {
 	@Override
 	protected void updateConfig(String measure) {
 		super.updateConfig(measure);
-		config.put(CALC_STATISTICS_FIELD, true);
 		
 		config.remove(MEASURE);
 		config.remove(VALUE_BINS_FIELD);

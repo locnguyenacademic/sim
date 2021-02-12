@@ -181,7 +181,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 		boolean isBoundedMinMax = isBoundedMinMaxRating(); 
 		double thisMean = calcColumnMean(thisUser);
 		Set<Integer> itemIds = Util.newSet();
-		itemIds.addAll(this.itemIds);
+		itemIds.addAll(getItemIds());
 		itemIds.removeAll(thisUser.fieldIds(true));
 		for (int itemId : itemIds) {
 			double accum = 0;
@@ -221,32 +221,32 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 	protected double cod(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return cod(vRating1, vRating2, this.userMeans);
+		return cod(vRating1, vRating2, getUserMeans());
 	}
 
 	
 	@Override
 	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, this.userMeans);
+		return pip(vRating1, vRating2, getUserMeans());
 	}
 
 
 	@Override
 	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, this.userMeans);
+		return pss(vRating1, vRating2, getUserMeans());
 	}
 
 
 	@Override
 	protected double pc(RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, int fixedColumnId) {
-		return pc(vRating1, vRating2, fixedColumnId, this.userMeans);
+		return pc(vRating1, vRating2, fixedColumnId, getUserMeans());
 	}
 
 	
 	@Override
 	protected Set<Integer> getRowIds() {
-		return itemIds;
+		return getItemIds();
 	}
 
 	
@@ -258,13 +258,13 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 	
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, itemMeans, vRating);
+		return calcMean(this, getItemMeans(), vRating);
 	}
 
 
 	@Override
 	protected Set<Integer> getColumnIds() {
-		return userIds;
+		return getUserIds();
 	}
 
 	
@@ -276,7 +276,7 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, userMeans, vRating);
+		return calcMean(this, getUserMeans(), vRating);
 	}
 
 	

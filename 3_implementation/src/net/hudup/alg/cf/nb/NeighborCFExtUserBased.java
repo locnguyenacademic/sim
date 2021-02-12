@@ -65,32 +65,32 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	protected double cod(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return cod(vRating1, vRating2, this.itemMeans);
+		return cod(vRating1, vRating2, getItemMeans());
 	}
 
 	
 	@Override
 	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, this.itemMeans);
+		return pip(vRating1, vRating2, getItemMeans());
 	}
 
 
 	@Override
 	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, this.itemMeans);
+		return pss(vRating1, vRating2, getItemMeans());
 	}
 
 	
 	@Override
 	protected double pc(RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, int fixedColumnId) {
-		return pc(vRating1, vRating2, fixedColumnId, this.itemMeans);
+		return pc(vRating1, vRating2, fixedColumnId, getItemMeans());
 	}
 
 
 	@Override
 	protected Set<Integer> getRowIds() {
-		return userIds;
+		return getUserIds();
 	}
 
 
@@ -102,13 +102,13 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, userMeans, vRating);
+		return calcMean(this, getUserMeans(), vRating);
 	}
 
 
 	@Override
 	protected Set<Integer> getColumnIds() {
-		return itemIds;
+		return getItemIds();
 	}
 
 
@@ -120,7 +120,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, itemMeans, vRating);
+		return calcMean(this, getItemMeans(), vRating);
 	}
 
 
