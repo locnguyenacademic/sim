@@ -1151,25 +1151,22 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer.
 	 * @return SMD measure between both two rating vectors and profiles.
 	 */
-	protected double smd(
-			RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
+	protected double smd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-		int N = itemIds.size();
-		if (N == 0) return Constants.UNUSED;
 		
-		int Na = 0, Nb = 0, Nab = 0, F = 0;
+		int Nab = 0, F = 0;
 		for (int itemId : itemIds) {
 			boolean rated1 = vRating1.isRated(itemId);
 			boolean rated2 = vRating2.isRated(itemId);
 			
-			if (rated1) Na++;
-			if (rated2) Nb++;
-			if (rated1 && rated2) Nab++;
-			if ((rated1 && !rated2) || (!rated1 && rated2)) F++;
+			if (rated1 == rated2)
+				Nab++;
+			else
+				F++;
 		}
 		
-		return ((1.0 - F/N) + (2.0*Nab / (Na + Nb))) / 2.0;
+		double N = itemIds.size();
+		return ((1.0-F/N) + (2.0*Nab/N)) / 2.0;
 	}
 	
 	
@@ -1187,19 +1184,26 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return Amer-Threshold measure between both two rating vectors and profiles.
 	 */
 	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		double N = vRating1.size() + vRating1.size();
 		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-		int Nab = 0;
+		
+		double coeff = 1;
+		double Nab = 0, F = 0;
 		for (int itemId : itemIds) {
-			if (!vRating1.isRated(itemId) || !vRating2.isRated(itemId))
-				continue;
+			boolean rated1 = vRating1.isRated(itemId);
+			boolean rated2 = vRating2.isRated(itemId);
 			
-			boolean relevant1 = Accuracy.isRelevant(vRating1.get(itemId).value, this);
-			boolean relevant2 = Accuracy.isRelevant(vRating2.get(itemId).value, this);
-			if (relevant1 == relevant2) Nab++;
+			if (rated1 == rated2) {
+				Nab = Nab + 1;
+				double sim = 1 / (1 + Math.exp(Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value)));
+				Nab = Nab + coeff*sim;
+			}
+			else {
+				F = F + 1;
+			}
 		}
 		
-		return 2.0*Nab / N;
+		double N = itemIds.size();
+		return ((1.0-F/N) + (2.0*Nab/N)) / 2.0;
 	}
 	
 	
