@@ -42,6 +42,20 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
+	 * Getting bias.
+	 * @return bias.
+	 */
+	double getBias();
+	
+	
+	/**
+	 * Setting bias.
+	 * @param bias specified bias.
+	 */
+	void setBias(double bias);
+
+	
+	/**
 	 * Getting output value.
 	 * @return output value.
 	 */

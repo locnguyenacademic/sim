@@ -8,6 +8,7 @@
 package net.ml.ann;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -320,8 +321,104 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	
 	
 	@Override
-	public synchronized boolean learn(Collection<double[]> sample, int nInput, int nOutput) throws RemoteException {
-		return false;
+	public synchronized boolean learn(Collection<double[]> sample, double learningRate) throws RemoteException {
+		if (inputLayer == null || outputLayer == null) return false;
+		int nInput = inputLayer.size();
+		int nOutput = outputLayer.size();
+		if (nInput == 0 || nOutput == 0) return false;
+		
+		for (double[] record : sample) {
+			double[] input = Arrays.copyOfRange(record, 0, nInput);
+			double[] output = Arrays.copyOfRange(record, nInput, nInput + nOutput);
+			
+			for (int i = 0; i < inputLayer.size(); i++) {
+				Neuron neuron = inputLayer.get(i);
+				neuron.setInput(input[i]);
+				neuron.setOutput(input[i]);
+			}
+			
+			List<Layer> layers = Util.newList();
+			layers.addAll(hiddenLayers);
+			layers.add(outputLayer);
+			
+			//Calculating outputs.
+			for (Layer layer : layers) {
+				for (int j = 0; j < layer.size(); j++) {
+					Neuron neuron = layer.get(j);
+					List<WeightedNeuron> prevs = neuron.getFromPrevNeurons();
+					double in = neuron.getBias();
+					for (WeightedNeuron prev : prevs) {
+						in += prev.weight.weight * prev.neuron.getOutput();
+					}
+					
+					neuron.setInput(in);
+					neuron.setOutput(neuron.getActivateRef().eval(in));
+				}
+			}
+			
+			//Calculating errors.
+			List<double[]> errors = Util.newList();
+			for (int i = layers.size() - 1; i >= 0; i--) {
+				Layer layer = layers.get(i);
+				Layer nextLayer = i < layers.size() - 1 ? layers.get(i + 1) : null;
+				double[] error = new double[layer.size()];
+				errors.add(0, error);
+				
+				for (int j = 0; j < layer.size(); j++) {
+					Neuron neuron = layer.get(j);
+					double out = neuron.getOutput();
+					
+					if (i == layers.size() - 1)
+						error[j] = out * (1-out) * (output[j]-out);
+					else {
+						double rsum = 0;
+						double[] nextError = errors.get(1);
+						int n = neuron.getNextNeuronCount();
+						for (int k = 0; k < n; k++) {
+							int index = nextLayer.indexOf(neuron.getNextNeuron(k));
+							rsum += nextError[index] * neuron.getNextWeight(k).weight;
+						}
+						
+						error[j] = out * (1-out) * rsum;
+					}
+				}
+			}
+			
+			//Updating weights and biases.
+			layers.add(0, inputLayer);
+			for (int i = 0; i < layers.size() - 1; i++) {
+				Layer layer = layers.get(i);
+				Layer nextLayer = layers.get(i + 1);
+				double[] error = i > 0 ? errors.get(i - 1) : null;
+				double[] nextError = errors.get(i);
+				
+				for (int j = 0; j < layer.size(); j++) {
+					Neuron neuron = layer.get(j);
+					double out = neuron.getOutput();
+					
+					int n = neuron.getNextNeuronCount();
+					for (int k = 0; k < n; k++) {
+						Weight nw = neuron.getNextWeight(k);
+						int index = nextLayer.indexOf(neuron.getNextNeuron(k));
+						nw.weight = nw.weight + learningRate*nextError[index]*out;
+					}
+					
+					if (i > 0)
+						neuron.setBias(neuron.getBias() + learningRate*error[j]);
+				}
+				
+				if (i == layers.size() - 1) {
+					for (int j = 0; j < nextLayer.size(); j++) {
+						Neuron neuron = nextLayer.get(j);
+						neuron.setBias(neuron.getBias() + learningRate*nextError[j]);
+					}
+				}
+				
+			}
+			
+		}
+		
+		return true;
 	}
 
 	

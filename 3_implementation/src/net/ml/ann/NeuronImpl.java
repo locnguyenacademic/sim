@@ -46,6 +46,12 @@ public class NeuronImpl implements Neuron {
 	
 	
 	/**
+	 * Bias.
+	 */
+	protected double bias = 0;
+
+	
+	/**
 	 * Output value.
 	 */
 	protected double output = 0;
@@ -108,6 +114,19 @@ public class NeuronImpl implements Neuron {
 	public void setInput(double value) {
 		this.input = value;
 	}
+
+	
+	@Override
+	public double getBias() {
+		return bias;
+	}
+
+
+	@Override
+	public void setBias(double bias) {
+		this.bias = bias;
+	}
+
 
 	@Override
 	public double getOutput() {

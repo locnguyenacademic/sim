@@ -75,12 +75,11 @@ public interface NeuralNetwork extends Remote, Serializable, Cloneable {
 	/**
 	 * Learning the neural network.
 	 * @param sample sample includes input and output.
-	 * @param nInput number of input fields.
-	 * @param nOutput number of input fields.
+	 * @param learningRate learning rate.
 	 * @return true if learning process is successful.
 	 * @throws RemoteException if any error raises.
 	 */
-	boolean learn(Collection<double[]> sample, int nInput, int nOutput) throws RemoteException;
+	boolean learn(Collection<double[]> sample, double learningRate) throws RemoteException;
 	
 	
 }

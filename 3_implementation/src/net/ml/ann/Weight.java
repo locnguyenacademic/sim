@@ -28,7 +28,7 @@ public class Weight implements Serializable, Cloneable {
 	/**
 	 * Weight.
 	 */
-	protected double weight = 0;
+	public double weight = 0;
 	
 	
 	/**
@@ -39,23 +39,5 @@ public class Weight implements Serializable, Cloneable {
 		this.weight = weight;
 	}
 
-	
-	/**
-	 * Getting weight.
-	 * @return real weight.
-	 */
-	public double get() {
-		return weight;
-	}
-	
-	
-	/**
-	 * Setting weight.
-	 * @param weight real weight.
-	 */
-	public void set(double weight) {
-		this.weight = weight;
-	}
-	
 	
 }
