@@ -28,36 +28,6 @@ public class NeuronImpl implements Neuron {
 
 	
 	/**
-	 * This class represents a pair of neuron and associated weight.
-	 * @author Loc Nguyen
-	 * @version 1.0
-	 */
-	protected class WeightNeuron {
-		
-		/**
-		 * Neuron.
-		 */
-		public Neuron neuron = null;
-		
-		/**
-		 * Associated weight.
-		 */
-		public double weight = 0;
-		
-		/**
-		 * Constructor with specified neuron and associated weight.
-		 * @param neuron specified neuron.
-		 * @param weight associated weight.
-		 */
-		public WeightNeuron(Neuron neuron, double weight) {
-			this.neuron = neuron;
-			this.weight = weight;
-		}
-		
-	}
-	
-	
-	/**
 	 * Identifier.
 	 */
 	protected int id = -1;
@@ -88,28 +58,28 @@ public class NeuronImpl implements Neuron {
 	
 	
 	/**
-	 * Next neurons
+	 * Previous neurons
 	 */
-	protected List<WeightNeuron> nextNeurons = Util.newList();
+	protected List<WeightedNeuron> prevNeurons = Util.newList();
 	
 	
 	/**
-	 * Previous neurons
+	 * Next neurons
 	 */
-	protected List<WeightNeuron> prevNeurons = Util.newList();
+	protected List<WeightedNeuron> nextNeurons = Util.newList();
 	
+	
+	/**
+	 * Previous sibling weight.
+	 */
+	protected double prevSiblingWeight = 0;
+
 	
 	/**
 	 * Next sibling weight.
 	 */
 	protected double nextSiblingWeight = 0;
 	
-	
-	/**
-	 * Next sibling weight.
-	 */
-	protected double prevSiblingWeight = 0;
-
 	
 	/**
 	 * Default constructor.
@@ -164,99 +134,6 @@ public class NeuronImpl implements Neuron {
 
 	
 	@Override
-	public int getNextNeuronCount() {
-		return nextNeurons.size();
-	}
-
-	
-	@Override
-	public Neuron getNextNeuron(int index) {
-		return nextNeurons.get(index).neuron;
-	}
-
-	
-	@Override
-	public double getNextWeight(int index) {
-		return nextNeurons.get(index).weight;
-	}
-
-	
-	@Override
-	public boolean addNextNeuron(Neuron neuron, double weight) {
-		Layer nextLayer = layer != null ? layer.getNextLayer() : null;
-		if (nextLayer == null || neuron == null || weight == Double.NaN)
-			return false;
-		if (!nextLayer.contains(neuron)) return false;
-		
-		int index = nextIndexOf(neuron);
-		WeightNeuron wn = null;
-		boolean result = true;
-		if (index < 0) {
-			wn = new WeightNeuron(neuron, weight);
-			result = nextNeurons.add(wn);
-		}
-		else {
-			wn = nextNeurons.get(index);
-			wn.weight = weight;
-			result = true;
-		}
-		
-		return result && neuron.addPrevNeuron(this, weight);
-	}
-
-	
-	@Override
-	public boolean removeNextNeuron(Neuron neuron) {
-		if (neuron == null) return false;
-		
-		boolean result = false;
-		for (int i = 0; i < nextNeurons.size(); i++) {
-			if (nextNeurons.get(i) == neuron) {
-				nextNeurons.remove(i);
-				result = true;
-				break;
-			}
-		}
-		if (!result) return false;
-		
-		Layer nextLayer = layer != null ? layer.getNextLayer() : null;
-		if (nextLayer != null && nextLayer.contains(neuron))
-			return neuron.removePrevNeuron(this);
-		else
-			return true;
-	}
-
-	
-	@Override
-	public void clearNextNeurons() {
-		List<WeightNeuron> wns = Util.newList(this.nextNeurons.size());
-		wns.addAll(this.nextNeurons);
-		
-		for (WeightNeuron wn : wns) {
-			removeNextNeuron(wn.neuron);
-		}
-		
-		this.nextNeurons.clear();
-	}
-
-
-	@Override
-	public boolean containsNextNeuron(Neuron neuron) {
-		return nextIndexOf(neuron) >= 0;
-	}
-
-	
-	@Override
-	public int nextIndexOf(Neuron neuron) {
-		for (int i = 0; i < nextNeurons.size(); i++) {
-			if (nextNeurons.get(i) == neuron) return i;
-		}
-		
-		return -1;
-	}
-	
-	
-	@Override
 	public int getPrevNeuronCount() {
 		return prevNeurons.size();
 	}
@@ -269,63 +146,55 @@ public class NeuronImpl implements Neuron {
 
 	
 	@Override
-	public double getPrevWeight(int index) {
+	public Weight getPrevWeight(int index) {
 		return prevNeurons.get(index).weight;
 	}
 
 	
 	@Override
-	public boolean addPrevNeuron(Neuron neuron, double weight) {
+	public WeightedNeuron getPrevWeightedNeuron(int index) {
+		return prevNeurons.get(index);
+	}
+
+
+	@Override
+	public boolean setPrevNeuron(Neuron neuron, Weight weight) {
 		Layer prevLayer = layer != null ? layer.getPrevLayer() : null;
-		if (prevLayer == null || neuron == null || weight == Double.NaN)
+		if (prevLayer == null || neuron == null || weight == null)
 			return false;
-		if (!prevLayer.contains(neuron)) return false;
+		if (prevLayer.indexOf(neuron) < 0) return false;
 		
 		int index = prevIndexOf(neuron);
-		WeightNeuron wn = null;
-		boolean result = true;
+		WeightedNeuron wn = null;
 		if (index < 0) {
-			wn = new WeightNeuron(neuron, weight);
-			result = prevNeurons.add(wn);
+			wn = new WeightedNeuron(neuron, weight);
+			prevNeurons.add(wn);
 		}
 		else {
 			wn = prevNeurons.get(index);
 			wn.weight = weight;
-			result = true;
 		}
 		
-		return result && neuron.addNextNeuron(this, weight);
+		return true;
 	}
 
 	
 	@Override
 	public boolean removePrevNeuron(Neuron neuron) {
-		if (neuron == null) return false;
+		if (neuron == null || !prevNeurons.contains(neuron)) return false;
 		
-		boolean result = false;
-		for (int i = 0; i < prevNeurons.size(); i++) {
-			if (prevNeurons.get(i) == neuron) {
-				prevNeurons.remove(i);
-				result = true;
-				break;
-			}
-		}
-		if (!result) return false;
+		prevNeurons.remove(neuron);
 		
-		Layer prevLayer = layer != null ? layer.getPrevLayer() : null;
-		if (prevLayer != null && prevLayer.contains(neuron))
-			return neuron.removeNextNeuron(this);
-		else
-			return true;
+		return true;
 	}
 
 	
 	@Override
 	public void clearPrevNeurons() {
-		List<WeightNeuron> wns = Util.newList(this.prevNeurons.size());
+		List<WeightedNeuron> wns = Util.newList(this.prevNeurons.size());
 		wns.addAll(this.prevNeurons);
 		
-		for (WeightNeuron wn : wns) {
+		for (WeightedNeuron wn : wns) {
 			removePrevNeuron(wn.neuron);
 		}
 		
@@ -333,12 +202,6 @@ public class NeuronImpl implements Neuron {
 	}
 
 
-	@Override
-	public boolean containsPrevNeuron(Neuron neuron) {
-		return prevIndexOf(neuron) >= 0;
-	}
-
-	
 	@Override
 	public int prevIndexOf(Neuron neuron) {
 		for (int i = 0; i < prevNeurons.size(); i++) {
@@ -349,6 +212,131 @@ public class NeuronImpl implements Neuron {
 	}
 	
 	
+	@Override
+	public int prevIndexOf(int neuronId) {
+		for (int i = 0; i < prevNeurons.size(); i++) {
+			Neuron neuron = prevNeurons.get(i).neuron;
+			if (neuron != null && neuron.id() == neuronId) return i;
+		}
+		
+		return -1;
+	}
+
+
+	@Override
+	public int getNextNeuronCount() {
+		return nextNeurons.size();
+	}
+
+	
+	@Override
+	public Neuron getNextNeuron(int index) {
+		return nextNeurons.get(index).neuron;
+	}
+
+	
+	@Override
+	public Weight getNextWeight(int index) {
+		return nextNeurons.get(index).weight;
+	}
+
+	
+	@Override
+	public WeightedNeuron getNextWeightedNeuron(int index) {
+		return nextNeurons.get(index);
+	}
+
+
+	@Override
+	public boolean setNextNeuron(Neuron neuron, Weight weight) {
+		Layer nextLayer = layer != null ? layer.getNextLayer() : null;
+		if (nextLayer == null || neuron == null || weight == null)
+			return false;
+		if (nextLayer.indexOf(neuron) < 0) return false;
+		
+		int index = nextIndexOf(neuron);
+		WeightedNeuron wn = null;
+		if (index < 0) {
+			wn = new WeightedNeuron(neuron, weight);
+			nextNeurons.add(wn);
+		}
+		else {
+			wn = nextNeurons.get(index);
+			wn.weight = weight;
+		}
+		
+		return true;
+	}
+
+	
+	@Override
+	public boolean removeNextNeuron(Neuron neuron) {
+		if (neuron == null || !nextNeurons.contains(neuron)) return false;
+		
+		nextNeurons.remove(neuron);
+		
+		return true;
+	}
+
+	
+	@Override
+	public void clearNextNeurons() {
+		List<WeightedNeuron> wns = Util.newList(this.nextNeurons.size());
+		wns.addAll(this.nextNeurons);
+		
+		for (WeightedNeuron wn : wns) {
+			removeNextNeuron(wn.neuron);
+		}
+		
+		this.nextNeurons.clear();
+	}
+
+
+	@Override
+	public int nextIndexOf(Neuron neuron) {
+		for (int i = 0; i < nextNeurons.size(); i++) {
+			if (nextNeurons.get(i) == neuron) return i;
+		}
+		
+		return -1;
+	}
+	
+	
+	@Override
+	public int nextIndexOf(int neuronId) {
+		for (int i = 0; i < nextNeurons.size(); i++) {
+			Neuron neuron = nextNeurons.get(i).neuron;
+			if (neuron != null && neuron.id() == neuronId) return i;
+		}
+		
+		return -1;
+	}
+
+
+	@Override
+	public Neuron getPrevSibling() {
+		if (layer == null) return null;
+		
+		int index = layer.indexOf(this);
+		if (index <= 0)
+			return null;
+		else
+			return layer.get(index - 1);
+	}
+
+	
+	@Override
+	public double getPrevSiblingWeight() {
+		return prevSiblingWeight;
+	}
+
+
+	@Override
+	public void setPrevSiblingWeight(double weight) {
+		this.prevSiblingWeight = weight;
+	}
+
+
 	@Override
 	public Neuron getNextSibling() {
 		if (layer == null) return null;
@@ -374,29 +362,47 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public Neuron getPreviousSibling() {
-		if (layer == null) return null;
+	public List<WeightedNeuron> getFromPrevNeurons() {
+		List<WeightedNeuron> fromNeurons = Util.newList();
+		if (layer == null) return fromNeurons;
 		
-		int index = layer.indexOf(this);
-		if (index <= 0)
-			return null;
-		else
-			return layer.get(index - 1);
+		Layer prevLayer = layer.getPrevLayer();
+		if (prevLayer == null) return fromNeurons;
+		
+		for (int i = 0; i < prevLayer.size(); i++) {
+			Neuron prevNeuron = prevLayer.get(i);
+			int index = prevNeuron.nextIndexOf(this);
+			if (index >= 0) {
+				WeightedNeuron wn = new WeightedNeuron(prevNeuron, prevNeuron.getNextWeight(index));
+				fromNeurons.add(wn);
+			}
+		}
+		
+		return fromNeurons;
 	}
-
 	
-	@Override
-	public double getPrevSiblingWeight() {
-		return prevSiblingWeight;
-	}
-
 
 	@Override
-	public void setPrevSiblingWeight(double weight) {
-		this.prevSiblingWeight = weight;
+	public List<WeightedNeuron> getFromNextNeurons() {
+		List<WeightedNeuron> toNeurons = Util.newList();
+		if (layer == null) return toNeurons;
+		
+		Layer nextLayer = layer.getNextLayer();
+		if (nextLayer == null) return toNeurons;
+		
+		for (int i = 0; i < nextLayer.size(); i++) {
+			Neuron nextNeuron = nextLayer.get(i);
+			int index = nextNeuron.prevIndexOf(this);
+			if (index >= 0) {
+				WeightedNeuron wn = new WeightedNeuron(nextNeuron, nextNeuron.getPrevWeight(index));
+				toNeurons.add(wn);
+			}
+		}
+		
+		return toNeurons;
 	}
-
-
+	
+	
 	@Override
 	public Layer getLayer() {
 		return layer;

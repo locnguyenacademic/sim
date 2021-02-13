@@ -19,4 +19,12 @@ import java.io.Serializable;
 public interface Function extends Serializable, Cloneable {
 
 	
+	/**
+	 * Evaluating specified variable.
+	 * @param x specified variable.
+	 * @return evaluated value.
+	 */
+	double eval(double x);
+	
+	
 }

@@ -8,11 +8,10 @@
 package net.ml.ann;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.List;
 
 import net.hudup.core.Util;
-import net.hudup.core.data.Fetcher;
-import net.hudup.core.data.Profile;
 
 /**
  * This class is default implementation of neural network.
@@ -29,6 +28,41 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	/**
+	 * Layer type.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 */
+	public static enum LayerType {
+		
+		/**
+		 * Memory layer.
+		 */
+		memory,
+		
+		/**
+		 * Input layer.
+		 */
+		input,
+		
+		/**
+		 * Hidden layer.
+		 */
+		hidden,
+		
+		/**
+		 * Output layer.
+		 */
+		output,
+		
+		/**
+		 * Unknown layer.
+		 */
+		unknown,
+		
+	}
+	
 	
 	/**
 	 * Internal identifier.
@@ -76,40 +110,52 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param nHiddenNeuron number of hidden neurons.
 	 */
 	public NeuralNetworkImpl(Function activateRef, int nMemoryNeuron, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
+		nMemoryNeuron = nMemoryNeuron < 0 ? 0 : nMemoryNeuron;
+		nInputNeuron = nInputNeuron < 1 ? 1 : nInputNeuron;
+		nOutputNeuron = nOutputNeuron < 1 ? 1 : nOutputNeuron;
+		nHiddenLayer = nHiddenLayer < 0 ? 0 : nHiddenLayer;
+		if (nHiddenLayer == 0) nHiddenNeuron = 0;
+		nHiddenNeuron = nHiddenNeuron < 0 ? 0 : nHiddenNeuron;
+		
 		this.activateRef = activateRef;
 		
-		this.memoryLayer = new LayerImpl(activateRef, null, null, idRef);
-		for (int i = 0; i < nMemoryNeuron; i++) {
-			this.memoryLayer.add(this.memoryLayer.newNeuron());
-		}
+		if (nMemoryNeuron > 0)
+			this.memoryLayer = newLayer(null, null, nMemoryNeuron);
+		this.inputLayer = newLayer(this.memoryLayer, null, nInputNeuron);
 		
-		this.inputLayer = new LayerImpl(activateRef, this.memoryLayer, null, idRef);
-		for (int i = 0; i < nMemoryNeuron; i++) {
-			this.inputLayer.add(this.inputLayer.newNeuron());
-		}
-		this.memoryLayer.setNextLayer(this.inputLayer);
-		
-		this.hiddenLayers = Util.newList(nHiddenLayer);
-		for (int l = 0; l < nHiddenLayer; l++) {
-			Layer prevHiddenLayer = l == 0 ? this.inputLayer : this.hiddenLayers.get(l - 1);
-			Layer hiddenLayer = new LayerImpl(activateRef, prevHiddenLayer, null, idRef);
-			for (int i = 0; i < nHiddenNeuron; i++) {
-				hiddenLayer.add(hiddenLayer.newNeuron());
+		if (nHiddenNeuron > 0) {
+			this.hiddenLayers = Util.newList(nHiddenLayer);
+			for (int l = 0; l < nHiddenLayer; l++) {
+				Layer prevHiddenLayer = l == 0 ? this.inputLayer : this.hiddenLayers.get(l - 1);
+				Layer hiddenLayer = newLayer(prevHiddenLayer, null, nHiddenNeuron);
+				this.hiddenLayers.add(hiddenLayer);
 			}
-			
-			prevHiddenLayer.setNextLayer(hiddenLayer);
 		}
-
-		Layer lastHiddenLayer = nHiddenLayer > 0 ? this.hiddenLayers.get(this.hiddenLayers.size() - 1) : null;
-		this.outputLayer = new LayerImpl(activateRef, lastHiddenLayer, null, idRef);
-		for (int i = 0; i < nMemoryNeuron; i++) {
-			this.outputLayer.add(this.outputLayer.newNeuron());
-		}
-		lastHiddenLayer.setNextLayer(this.outputLayer);
 		
-		this.outputLayer.setNextLayer(memoryLayer);
+		Layer preOutputLayer = this.hiddenLayers.size() > 0 ? this.hiddenLayers.get(this.hiddenLayers.size() - 1) : this.inputLayer;
+		this.outputLayer = newLayer(preOutputLayer, this.memoryLayer, nOutputNeuron);
 	}
 
+	
+	/**
+	 * Getting non-empty layers.
+	 * @return list of non-empty layers.
+	 */
+	private List<Layer> getNonemptyLayers() {
+		List<Layer> layers = Util.newList();
+		
+		if (memoryLayer != null && memoryLayer.size() > 0) layers.add(memoryLayer);
+		if (inputLayer != null && inputLayer.size() > 0) layers.add(inputLayer);
+		
+		for (Layer hiddenLayer : hiddenLayers) {
+			if (hiddenLayer.size() > 0) layers.add(hiddenLayer);
+		}
+		
+		if (outputLayer != null && outputLayer.size() > 0) layers.add(outputLayer);
+
+		return layers;
+	}
+	
 	
 	/**
 	 * Constructor with number of neurons.
@@ -121,6 +167,73 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 */
 	public NeuralNetworkImpl(Function activateRef, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
 		this(activateRef, 0, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+	}
+	
+	
+	/**
+	 * Constructor with number of neurons.
+	 * @param activateRef activation function.
+	 * @param nInputNeuron number of input neurons.
+	 * @param nOutputNeuron number of output neurons.
+	 */
+	public NeuralNetworkImpl(Function activateRef, int nInputNeuron, int nOutputNeuron) {
+		this(activateRef, 0, nInputNeuron, nOutputNeuron, 0, 0);
+	}
+
+	
+	/**
+	 * Constructor with number of neurons.
+	 * @param nMemoryNeuron number of memory neurons.
+	 * @param nInputNeuron number of input neurons.
+	 * @param nOutputNeuron number of output neurons.
+	 * @param nHiddenLayer number of hidden layers.
+	 * @param nHiddenNeuron number of hidden neurons.
+	 */
+	public NeuralNetworkImpl(int nMemoryNeuron, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
+		this(new LogisticFunction(), nMemoryNeuron, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+	}
+
+	
+	/**
+	 * Constructor with number of neurons.
+	 * @param nInputNeuron number of input neurons.
+	 * @param nOutputNeuron number of output neurons.
+	 * @param nHiddenLayer number of hidden layers.
+	 * @param nHiddenNeuron number of hidden neurons.
+	 */
+	public NeuralNetworkImpl(int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
+		this(new LogisticFunction(), 0, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+	}
+	
+	
+	/**
+	 * Constructor with number of neurons.
+	 * @param nInputNeuron number of input neurons.
+	 * @param nOutputNeuron number of output neurons.
+	 */
+	public NeuralNetworkImpl(int nInputNeuron, int nOutputNeuron) {
+		this(new LogisticFunction(), 0, nInputNeuron, nOutputNeuron, 0, 0);
+	}
+
+	
+	/**
+	 * Creating new layer.
+	 * @param prevLayer previous layer.
+	 * @param nextLayer next layer.
+	 * @param nNeuron number of neurons.
+	 * @return new layer.
+	 */
+	private Layer newLayer(Layer prevLayer, Layer nextLayer, int nNeuron) {
+		LayerImpl layer = new LayerImpl(activateRef, idRef);
+		nNeuron = nNeuron < 0 ? 0 : nNeuron;
+		for (int i = 0; i < nNeuron; i++) {
+			layer.add(layer.newNeuron());
+		}
+		
+		if (prevLayer != null) prevLayer.setNextLayer(layer);
+		if (nextLayer != null) layer.setNextLayer(nextLayer);
+
+		return layer;
 	}
 	
 	
@@ -148,14 +261,66 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	}
 
 	
+	/**
+	 * Getting index of hidden layer.
+	 * @param layer hidden layer.
+	 * @return index of hidden layer.
+	 */
+	protected int hiddenIndexOf(Layer layer) {
+		if (layer == null) return -1;
+		
+		for (int i = 0; i < hiddenLayers.size(); i++) {
+			Layer hiddenLayer = hiddenLayers.get(i);
+			if (layer == hiddenLayer) return i;
+		}
+		
+		return -1;
+	}
+	
+	
 	@Override
 	public Layer getOutputLayer() throws RemoteException {
 		return outputLayer;
 	}
 
 	
+	/**
+	 * Getting type of specified layer.
+	 * @param layer specified layer.
+	 * @return type of specified layer.
+	 */
+	protected LayerType typeOf(Layer layer) {
+		if (layer == null) return LayerType.unknown;
+		
+		if (memoryLayer != null && layer == memoryLayer)
+			return LayerType.memory;
+		if (inputLayer != null && layer == inputLayer)
+			return LayerType.input;
+		if (outputLayer != null && layer == outputLayer)
+			return LayerType.output;
+		
+		for (Layer hiddenLayer : hiddenLayers) {
+			if (layer == hiddenLayer) return LayerType.hidden;
+		}
+		
+		return LayerType.unknown;
+	}
+	
+	
 	@Override
-	public boolean learn(Fetcher<Profile> input, Fetcher<Profile> output) throws RemoteException {
+	public Neuron findNeuron(int neuronId) throws RemoteException {
+		List<Layer> layers = getNonemptyLayers();
+		for (Layer layer : layers) {
+			int index = layer.indexOf(neuronId);
+			if (index >= 0) return layer.get(index);
+		}
+		
+		return null;
+	}
+	
+	
+	@Override
+	public synchronized boolean learn(Collection<double[]> sample, int nInput, int nOutput) throws RemoteException {
 		return false;
 	}
 

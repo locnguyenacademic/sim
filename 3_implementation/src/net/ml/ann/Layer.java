@@ -25,6 +25,7 @@ public interface Layer extends Serializable, Cloneable {
 	 */
 	Id getIdRef();
 	
+	
 	/**
 	 * Create neuron.
 	 * @return created neuron.
@@ -64,11 +65,9 @@ public interface Layer extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Checking whether containing the specified neuron.
-	 * @param neuron the specified neuron.
-	 * @return whether containing the specified neuron.
+	 * Clearing all neurons.
 	 */
-	boolean contains(Neuron neuron);
+	void clear();
 	
 	
 	/**
@@ -78,6 +77,43 @@ public interface Layer extends Serializable, Cloneable {
 	 */
 	int indexOf(Neuron neuron);
 	
+	
+	/**
+	 * Finding neuron by specified identifier.
+	 * @param neuronId specified identifier.
+	 * @return found neuron.
+	 */
+	int indexOf(int neuronId);
+	
+	
+	/**
+	 * Getting previous layer.
+	 * @return previous layer.
+	 */
+	Layer getPrevLayer();
+	
+	
+	/**
+	 * Setting previous layer.
+	 * @param prevLayer previous layer.
+	 * @return the old previous layer.
+	 */
+	Layer setPrevLayer(Layer prevLayer);
+
+	
+	/**
+	 * Assigning previous layer.
+	 * @param prevLayer previous layer.
+	 * @return the old previous layer.
+	 */
+	Layer assignPrevLayer(Layer prevLayer);
+
+	
+	/**
+	 * Clearing previous neurons.
+	 */
+	void clearPrevNeurons();
+
 	
 	/**
 	 * Getting next layer.
@@ -103,26 +139,9 @@ public interface Layer extends Serializable, Cloneable {
 
 	
 	/**
-	 * Getting previous layer.
-	 * @return previous layer.
+	 * Clearing next neurons.
 	 */
-	Layer getPrevLayer();
-	
-	
-	/**
-	 * Setting previous layer.
-	 * @param prevLayer previous layer.
-	 * @return the old previous layer.
-	 */
-	Layer setPrevLayer(Layer prevLayer);
-
-	
-	/**
-	 * Assigning previous layer.
-	 * @param prevLayer previous layer.
-	 * @return the old previous layer.
-	 */
-	Layer assignPrevLayer(Layer prevLayer);
+	void clearNextNeurons();
 
 	
 	/**
