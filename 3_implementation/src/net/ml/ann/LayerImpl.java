@@ -9,8 +9,6 @@ package net.ml.ann;
 
 import java.util.List;
 
-import net.hudup.core.Util;
-
 /**
  * This class is default implementation of neuron.
  * 
@@ -42,7 +40,7 @@ public class LayerImpl implements Layer {
 	/**
 	 * Internal neurons.
 	 */
-	protected List<Neuron> neurons = Util.newList();
+	protected List<Neuron> neurons = Util.newList(0);
 	
 	
 	/**
@@ -55,6 +53,12 @@ public class LayerImpl implements Layer {
 	 * Next layer.
 	 */
 	protected Layer nextLayer = null;
+	
+	
+	/**
+	 * Latent layer.
+	 */
+	protected Layer latentLayer = null;
 	
 	
 	/**
@@ -101,19 +105,8 @@ public class LayerImpl implements Layer {
 	public Neuron remove(int index) {
 		Neuron neuron = neurons.get(index);
 		neuron.clearNextNeurons();
-		neuron.clearPrevNeurons();
+		neuron.clearLatentNeurons();
 		
-		if (neurons.size() == 1) return neurons.remove(index);
-		
-		if (index == neurons.size() - 1) {
-			Neuron prev = neurons.get(index - 1);
-			prev.setNextSiblingWeight(0);
-		}
-		if (index == 0) {
-			Neuron next = neurons.get(index + 1);
-			next.setPrevSiblingWeight(0);
-		}
-
 		return neurons.remove(index);
 	}
 
@@ -152,21 +145,17 @@ public class LayerImpl implements Layer {
 	public Layer setPrevLayer(Layer prevLayer) {
 		if (prevLayer == this.prevLayer) return this.prevLayer;
 
-		clearPrevNeurons();
-		
 		Layer oldPrevLayer = this.prevLayer;
 		Layer oldPrevPrevLayer = null;
 		if (oldPrevLayer != null) {
 			oldPrevPrevLayer = oldPrevLayer.getPrevLayer();
-			oldPrevLayer.clearPrevNeurons();
-			oldPrevLayer.clearNextNeurons();
+			clearNextNeurons(oldPrevLayer);
 		}
 
 		this.prevLayer = prevLayer;
 		if (prevLayer == null) return oldPrevLayer;
 
-		prevLayer.clearPrevNeurons();
-		prevLayer.clearNextNeurons();
+		clearNextNeurons(prevLayer);
 		prevLayer.assignNextLayer(this);
 		for (int i = 0; i < prevLayer.size(); i++) {
 			Neuron neuron = prevLayer.get(i);
@@ -176,7 +165,7 @@ public class LayerImpl implements Layer {
 		}
 		
 		if (oldPrevPrevLayer == null) return oldPrevLayer;
-		oldPrevPrevLayer.clearNextNeurons();
+		clearNextNeurons(oldPrevPrevLayer);
 		oldPrevPrevLayer.assignNextLayer(prevLayer);
 		prevLayer.assignPrevLayer(oldPrevPrevLayer);
 		for (int i = 0; i < oldPrevPrevLayer.size(); i++) {
@@ -191,18 +180,8 @@ public class LayerImpl implements Layer {
 
 
 	@Override
-	public Layer assignPrevLayer(Layer prevLayer) {
-		Layer oldPrevLayer = this.prevLayer;
+	public void assignPrevLayer(Layer prevLayer) {
 		this.prevLayer = prevLayer;
-		return oldPrevLayer;
-	}
-
-
-	@Override
-	public void clearPrevNeurons() {
-		for (Neuron neuron : neurons) {
-			neuron.clearPrevNeurons();
-		}
 	}
 
 
@@ -216,21 +195,19 @@ public class LayerImpl implements Layer {
 	public Layer setNextLayer(Layer nextLayer) {
 		if (nextLayer == this.nextLayer) return this.nextLayer;
 
-		clearNextNeurons();
+		clearNextNeurons(this);
 		
 		Layer oldNextLayer = this.nextLayer;
 		Layer oldNextNextLayer = null;
 		if (oldNextLayer != null) {
 			oldNextNextLayer = oldNextLayer.getNextLayer();
-			oldNextLayer.clearPrevNeurons();
-			oldNextLayer.clearNextNeurons();
+			clearNextNeurons(oldNextLayer);
 		}
 
 		this.nextLayer = nextLayer;
 		if (nextLayer == null) return oldNextLayer;
 
-		nextLayer.clearPrevNeurons();
-		nextLayer.clearNextNeurons();
+		clearNextNeurons(nextLayer);
 		nextLayer.assignPrevLayer(this);
 		for (int i = 0; i < size(); i++) {
 			Neuron neuron = get(i);
@@ -240,7 +217,6 @@ public class LayerImpl implements Layer {
 		}
 		
 		if (oldNextNextLayer == null) return oldNextLayer;
-		oldNextNextLayer.clearPrevNeurons();
 		oldNextNextLayer.assignPrevLayer(nextLayer);
 		nextLayer.assignNextLayer(oldNextNextLayer);
 		for (int i = 0; i < oldNextNextLayer.size(); i++) {
@@ -255,21 +231,64 @@ public class LayerImpl implements Layer {
 
 
 	@Override
-	public Layer assignNextLayer(Layer nextLayer) {
-		Layer oldNextLayer = this.nextLayer;
+	public void assignNextLayer(Layer nextLayer) {
 		this.nextLayer = nextLayer;
-		return oldNextLayer;
+	}
+
+
+	/**
+	 * Clearing next neurons of specified layer.
+	 * @param layer specified layer.
+	 */
+	private static void clearNextNeurons(Layer layer) {
+		if (layer == null) return;
+		for (int i = 0; i < layer.size(); i++) {
+			layer.get(i).clearNextNeurons();
+		}
+	}
+	
+	
+	@Override
+	public Layer getLatentLayer() {
+		return latentLayer;
 	}
 
 
 	@Override
-	public void clearNextNeurons() {
+	public Layer setLatentLayer(Layer latentLayer) {
+		if (this.latentLayer == latentLayer) return this.latentLayer;
+		
+		Layer oldLatentLayer = this.latentLayer;
+		this.latentLayer = latentLayer;
+		
 		for (Neuron neuron : neurons) {
-			neuron.clearNextNeurons();
+			neuron.resetLatentNeurons();
 		}
+		
+		return oldLatentLayer;
 	}
 
 
+	@Override
+	public WeightedNeuron[] getLatentNextNeurons(Neuron latentNeuron) {
+		List<WeightedNeuron> latentNextNeurons = Util.newList(0);
+		if (latentNeuron == null || latentLayer == null || latentLayer.indexOf(latentNeuron) < 0)
+			return latentNextNeurons.toArray(new WeightedNeuron[] {});
+		
+		for (Neuron neuron : neurons) {
+			WeightedNeuron[] wns = neuron.getLatentNeurons();
+			for (WeightedNeuron wn : wns) {
+				if (wn.neuron == latentNeuron) {
+					latentNextNeurons.add(new WeightedNeuron(neuron, wn.weight));
+					break;
+				}
+			}
+		}
+		
+		return latentNextNeurons.toArray(new WeightedNeuron[] {});
+	}
+	
+	
 	@Override
 	public Function getActivateRef() {
 		return this.activateRef;

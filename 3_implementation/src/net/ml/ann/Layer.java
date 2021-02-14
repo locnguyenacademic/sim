@@ -104,15 +104,8 @@ public interface Layer extends Serializable, Cloneable {
 	/**
 	 * Assigning previous layer.
 	 * @param prevLayer previous layer.
-	 * @return the old previous layer.
 	 */
-	Layer assignPrevLayer(Layer prevLayer);
-
-	
-	/**
-	 * Clearing previous neurons.
-	 */
-	void clearPrevNeurons();
+	void assignPrevLayer(Layer prevLayer);
 
 	
 	/**
@@ -133,17 +126,33 @@ public interface Layer extends Serializable, Cloneable {
 	/**
 	 * Assigning next layer.
 	 * @param nextLayer next layer.
-	 * @return the old next layer.
 	 */
-	Layer assignNextLayer(Layer nextLayer);
+	void assignNextLayer(Layer nextLayer);
 
 	
 	/**
-	 * Clearing next neurons.
+	 * Getting latent layer.
+	 * @return latent layer.
 	 */
-	void clearNextNeurons();
-
+	Layer getLatentLayer();
 	
+	
+	/**
+	 * Setting latent layer.
+	 * @param latentLayer latent layer.
+	 * @return previous latent layer.
+	 */
+	Layer setLatentLayer(Layer latentLayer);
+	
+	
+	/**
+	 * Getting next neurons of specified latent neuron.
+	 * @param latentNeuron specified latent neuron.
+	 * @return next neurons of specified latent neuron.
+	 */
+	WeightedNeuron[] getLatentNextNeurons(Neuron latentNeuron);
+
+		
 	/**
 	 * Getting reference to activation function.
 	 * @return reference to activation function.

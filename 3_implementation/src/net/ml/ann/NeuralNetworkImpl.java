@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import net.hudup.core.Util;
-
 /**
  * This class is default implementation of neural network.
  * 
@@ -38,11 +36,6 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	public static enum LayerType {
 		
 		/**
-		 * Memory layer.
-		 */
-		memory,
-		
-		/**
 		 * Input layer.
 		 */
 		input,
@@ -56,6 +49,11 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 		 * Output layer.
 		 */
 		output,
+		
+		/**
+		 * Latent layer.
+		 */
+		latent,
 		
 		/**
 		 * Unknown layer.
@@ -78,12 +76,6 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 
 	
 	/**
-	 * Memory layer.
-	 */
-	protected Layer memoryLayer = null;
-	
-	
-	/**
 	 * Input layer.
 	 */
 	protected Layer inputLayer = null;
@@ -92,7 +84,7 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	/**
 	 * Memory layer.
 	 */
-	protected List<Layer> hiddenLayers = Util.newList();
+	protected List<Layer> hiddenLayers = Util.newList(0);
 
 	
 	/**
@@ -102,61 +94,59 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	
 
 	/**
+	 * Latent layer.
+	 */
+	protected Layer latentLayer = null;
+	
+	
+	/**
+	 * Default constructor.
+	 */
+	protected NeuralNetworkImpl() {
+		
+	}
+	
+	
+	/**
 	 * Constructor with number of neurons.
 	 * @param activateRef activation function.
-	 * @param nMemoryNeuron number of memory neurons.
 	 * @param nInputNeuron number of input neurons.
 	 * @param nOutputNeuron number of output neurons.
 	 * @param nHiddenLayer number of hidden layers.
 	 * @param nHiddenNeuron number of hidden neurons.
+	 * @param nLatentNeuron number of memory neurons.
 	 */
-	public NeuralNetworkImpl(Function activateRef, int nMemoryNeuron, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
-		nMemoryNeuron = nMemoryNeuron < 0 ? 0 : nMemoryNeuron;
+	public NeuralNetworkImpl(Function activateRef, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron, int nLatentNeuron) {
 		nInputNeuron = nInputNeuron < 1 ? 1 : nInputNeuron;
 		nOutputNeuron = nOutputNeuron < 1 ? 1 : nOutputNeuron;
 		nHiddenLayer = nHiddenLayer < 0 ? 0 : nHiddenLayer;
 		if (nHiddenLayer == 0) nHiddenNeuron = 0;
 		nHiddenNeuron = nHiddenNeuron < 0 ? 0 : nHiddenNeuron;
+		nLatentNeuron = nLatentNeuron < 0 ? 0 : nLatentNeuron;
 		
 		this.activateRef = activateRef;
 		
-		if (nMemoryNeuron > 0)
-			this.memoryLayer = newLayer(null, null, nMemoryNeuron);
-		this.inputLayer = newLayer(this.memoryLayer, null, nInputNeuron);
+		this.inputLayer = newLayer(nInputNeuron, null, null, null);
 		
 		if (nHiddenNeuron > 0) {
 			this.hiddenLayers = Util.newList(nHiddenLayer);
 			for (int l = 0; l < nHiddenLayer; l++) {
 				Layer prevHiddenLayer = l == 0 ? this.inputLayer : this.hiddenLayers.get(l - 1);
-				Layer hiddenLayer = newLayer(prevHiddenLayer, null, nHiddenNeuron);
+				Layer hiddenLayer = newLayer(nHiddenNeuron, prevHiddenLayer, null, null);
 				this.hiddenLayers.add(hiddenLayer);
 			}
 		}
 		
 		Layer preOutputLayer = this.hiddenLayers.size() > 0 ? this.hiddenLayers.get(this.hiddenLayers.size() - 1) : this.inputLayer;
-		this.outputLayer = newLayer(preOutputLayer, this.memoryLayer, nOutputNeuron);
-	}
-
-	
-	/**
-	 * Getting non-empty layers.
-	 * @return list of non-empty layers.
-	 */
-	private List<Layer> getNonemptyLayers() {
-		List<Layer> layers = Util.newList();
+		this.outputLayer = newLayer(nOutputNeuron, preOutputLayer, null, null);
 		
-		if (memoryLayer != null && memoryLayer.size() > 0) layers.add(memoryLayer);
-		if (inputLayer != null && inputLayer.size() > 0) layers.add(inputLayer);
-		
-		for (Layer hiddenLayer : hiddenLayers) {
-			if (hiddenLayer.size() > 0) layers.add(hiddenLayer);
+		if (nLatentNeuron > 0) {
+			this.latentLayer = newLayer(nLatentNeuron, this.outputLayer, null, null);
+			if (nHiddenNeuron > 0)
+				this.hiddenLayers.get(0).setLatentLayer(this.latentLayer);
 		}
-		
-		if (outputLayer != null && outputLayer.size() > 0) layers.add(outputLayer);
-
-		return layers;
 	}
-	
+
 	
 	/**
 	 * Constructor with number of neurons.
@@ -167,7 +157,7 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param nHiddenNeuron number of hidden neurons.
 	 */
 	public NeuralNetworkImpl(Function activateRef, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
-		this(activateRef, 0, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+		this(activateRef, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron, 0);
 	}
 	
 	
@@ -178,20 +168,20 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param nOutputNeuron number of output neurons.
 	 */
 	public NeuralNetworkImpl(Function activateRef, int nInputNeuron, int nOutputNeuron) {
-		this(activateRef, 0, nInputNeuron, nOutputNeuron, 0, 0);
+		this(activateRef, nInputNeuron, nOutputNeuron, 0, 0, 0);
 	}
 
 	
 	/**
 	 * Constructor with number of neurons.
-	 * @param nMemoryNeuron number of memory neurons.
 	 * @param nInputNeuron number of input neurons.
 	 * @param nOutputNeuron number of output neurons.
 	 * @param nHiddenLayer number of hidden layers.
 	 * @param nHiddenNeuron number of hidden neurons.
+	 * @param nLatentNeuron number of memory neurons.
 	 */
-	public NeuralNetworkImpl(int nMemoryNeuron, int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
-		this(new LogisticFunction(), nMemoryNeuron, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+	public NeuralNetworkImpl(int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron, int nLatentNeuron) {
+		this(new LogisticFunction(), nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron, nLatentNeuron);
 	}
 
 	
@@ -203,7 +193,7 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param nHiddenNeuron number of hidden neurons.
 	 */
 	public NeuralNetworkImpl(int nInputNeuron, int nOutputNeuron, int nHiddenLayer, int nHiddenNeuron) {
-		this(new LogisticFunction(), 0, nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron);
+		this(new LogisticFunction(), nInputNeuron, nOutputNeuron, nHiddenLayer, nHiddenNeuron, 0);
 	}
 	
 	
@@ -213,52 +203,49 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param nOutputNeuron number of output neurons.
 	 */
 	public NeuralNetworkImpl(int nInputNeuron, int nOutputNeuron) {
-		this(new LogisticFunction(), 0, nInputNeuron, nOutputNeuron, 0, 0);
+		this(new LogisticFunction(), nInputNeuron, nOutputNeuron, 0, 0, 0);
 	}
 
 	
 	/**
-	 * Creating new layer.
-	 * @param prevLayer previous layer.
-	 * @param nextLayer next layer.
-	 * @param nNeuron number of neurons.
-	 * @return new layer.
+	 * Getting type of specified layer.
+	 * @param layer specified layer.
+	 * @return type of specified layer.
 	 */
-	private Layer newLayer(Layer prevLayer, Layer nextLayer, int nNeuron) {
-		LayerImpl layer = new LayerImpl(activateRef, idRef);
-		nNeuron = nNeuron < 0 ? 0 : nNeuron;
-		for (int i = 0; i < nNeuron; i++) {
-			layer.add(layer.newNeuron());
+	public LayerType typeOf(Layer layer) {
+		if (layer == null) return LayerType.unknown;
+		
+		if (inputLayer != null && layer == inputLayer)
+			return LayerType.input;
+		if (outputLayer != null && layer == outputLayer)
+			return LayerType.output;
+		
+		for (Layer hiddenLayer : hiddenLayers) {
+			if (layer == hiddenLayer) return LayerType.hidden;
 		}
 		
-		if (prevLayer != null) prevLayer.setNextLayer(layer);
-		if (nextLayer != null) layer.setNextLayer(nextLayer);
+		if (latentLayer != null && layer == latentLayer)
+			return LayerType.latent;
 
-		return layer;
+		return LayerType.unknown;
 	}
 	
 	
-	@Override
-	public Layer getMemoryLayer() throws RemoteException {
-		return memoryLayer;
-	}
-
-	
-	@Override
-	public Layer getInputLayer() throws RemoteException {
+	/**
+	 * Getting input layer.
+	 * @return input layer.
+	 */
+	public Layer getInputLayer() {
 		return inputLayer;
 	}
 
 	
-	@Override
-	public int getHiddenLayerCount() throws RemoteException {
-		return hiddenLayers.size();
-	}
-
-	
-	@Override
-	public Layer getHiddenLayer(int index) throws RemoteException {
-		return hiddenLayers.get(index);
+	/**
+	 * Getting hidden layers.
+	 * @return array of hidden layers.
+	 */
+	public Layer[] getHiddenLayers() {
+		return hiddenLayers.toArray(new Layer[] {});
 	}
 
 	
@@ -267,7 +254,7 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	 * @param layer hidden layer.
 	 * @return index of hidden layer.
 	 */
-	protected int hiddenIndexOf(Layer layer) {
+	public int hiddenIndexOf(Layer layer) {
 		if (layer == null) return -1;
 		
 		for (int i = 0; i < hiddenLayers.size(); i++) {
@@ -279,37 +266,30 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	}
 	
 	
-	@Override
-	public Layer getOutputLayer() throws RemoteException {
+	/**
+	 * Getting output layer.
+	 * @return output layer.
+	 */
+	public Layer getOutputLayer() {
 		return outputLayer;
 	}
 
 	
 	/**
-	 * Getting type of specified layer.
-	 * @param layer specified layer.
-	 * @return type of specified layer.
+	 * Getting latent layer.
+	 * @return latent layer.
 	 */
-	protected LayerType typeOf(Layer layer) {
-		if (layer == null) return LayerType.unknown;
-		
-		if (memoryLayer != null && layer == memoryLayer)
-			return LayerType.memory;
-		if (inputLayer != null && layer == inputLayer)
-			return LayerType.input;
-		if (outputLayer != null && layer == outputLayer)
-			return LayerType.output;
-		
-		for (Layer hiddenLayer : hiddenLayers) {
-			if (layer == hiddenLayer) return LayerType.hidden;
-		}
-		
-		return LayerType.unknown;
+	public Layer getLatentLayer() {
+		return latentLayer;
 	}
+
 	
-	
-	@Override
-	public Neuron findNeuron(int neuronId) throws RemoteException {
+	/**
+	 * Finding neuron by specified identifier.
+	 * @param neuronId specified identifier.
+	 * @return found neuron.
+	 */
+	public Neuron findNeuron(int neuronId) {
 		List<Layer> layers = getNonemptyLayers();
 		for (Layer layer : layers) {
 			int index = layer.indexOf(neuronId);
@@ -321,105 +301,290 @@ public class NeuralNetworkImpl implements NeuralNetwork {
 	
 	
 	@Override
+	public synchronized double[] eval(double[] input) throws RemoteException {
+		if (inputLayer == null || outputLayer == null) return null;
+
+		for (int i = 0; i < inputLayer.size(); i++) {
+			Neuron neuron = inputLayer.get(i);
+			neuron.setInput(input[i]);
+			neuron.setOutput(input[i]);
+		}
+		
+		List<Layer> layers = Util.newList(0);
+		layers.addAll(hiddenLayers);
+		layers.add(outputLayer);
+		
+		//Calculating outputs.
+		for (Layer layer : layers) {
+			for (int j = 0; j < layer.size(); j++) {
+				Neuron neuron = layer.get(j);
+				neuron.eval();
+			}
+		}
+
+		double[] output = new double[outputLayer.size()];
+		for (int i = 0; i < output.length; i++) {
+			output[i] = outputLayer.get(i).getOutput();
+		}
+		return output;
+	}
+
+
+	@Override
 	public synchronized boolean learn(Collection<double[]> sample, double learningRate) throws RemoteException {
 		if (inputLayer == null || outputLayer == null) return false;
 		int nInput = inputLayer.size();
 		int nOutput = outputLayer.size();
 		if (nInput == 0 || nOutput == 0) return false;
 		
+		List<Layer> layers = getNonemptyLayers();
+		for (Layer layer : layers) {
+			for (int j = 0; j < layer.size(); j++) {
+				Neuron neuron = layer.get(j);
+				neuron.setInput(0);
+				neuron.setOutput(0);
+				neuron.setBias(0);
+			}
+		}
+		
+		
 		for (double[] record : sample) {
 			double[] input = Arrays.copyOfRange(record, 0, nInput);
 			double[] output = Arrays.copyOfRange(record, nInput, nInput + nOutput);
 			
-			for (int i = 0; i < inputLayer.size(); i++) {
-				Neuron neuron = inputLayer.get(i);
-				neuron.setInput(input[i]);
-				neuron.setOutput(input[i]);
-			}
+			//Calculating outputs.
+			eval(input);
 			
-			List<Layer> layers = Util.newList();
+			layers.clear();
+			layers.add(inputLayer);
 			layers.addAll(hiddenLayers);
 			layers.add(outputLayer);
 			
-			//Calculating outputs.
-			for (Layer layer : layers) {
-				for (int j = 0; j < layer.size(); j++) {
-					Neuron neuron = layer.get(j);
-					List<WeightedNeuron> prevs = neuron.getFromPrevNeurons();
-					double in = neuron.getBias();
-					for (WeightedNeuron prev : prevs) {
-						in += prev.weight.weight * prev.neuron.getOutput();
-					}
-					
-					neuron.setInput(in);
-					neuron.setOutput(neuron.getActivateRef().eval(in));
-				}
-			}
-			
 			//Calculating errors.
-			List<double[]> errors = Util.newList();
-			for (int i = layers.size() - 1; i >= 0; i--) {
-				Layer layer = layers.get(i);
-				Layer nextLayer = i < layers.size() - 1 ? layers.get(i + 1) : null;
-				double[] error = new double[layer.size()];
-				errors.add(0, error);
-				
-				for (int j = 0; j < layer.size(); j++) {
-					Neuron neuron = layer.get(j);
-					double out = neuron.getOutput();
-					
-					if (i == layers.size() - 1)
-						error[j] = out * (1-out) * (output[j]-out);
-					else {
-						double rsum = 0;
-						double[] nextError = errors.get(1);
-						int n = neuron.getNextNeuronCount();
-						for (int k = 0; k < n; k++) {
-							int index = nextLayer.indexOf(neuron.getNextNeuron(k));
-							rsum += nextError[index] * neuron.getNextWeight(k).weight;
-						}
-						
-						error[j] = out * (1-out) * rsum;
-					}
-				}
-			}
+			List<double[]> errors = calcErrors(layers, output);
 			
 			//Updating weights and biases.
-			layers.add(0, inputLayer);
-			for (int i = 0; i < layers.size() - 1; i++) {
-				Layer layer = layers.get(i);
-				Layer nextLayer = layers.get(i + 1);
-				double[] error = i > 0 ? errors.get(i - 1) : null;
-				double[] nextError = errors.get(i);
-				
-				for (int j = 0; j < layer.size(); j++) {
-					Neuron neuron = layer.get(j);
-					double out = neuron.getOutput();
-					
-					int n = neuron.getNextNeuronCount();
-					for (int k = 0; k < n; k++) {
-						Weight nw = neuron.getNextWeight(k);
-						int index = nextLayer.indexOf(neuron.getNextNeuron(k));
-						nw.weight = nw.weight + learningRate*nextError[index]*out;
-					}
-					
-					if (i > 0)
-						neuron.setBias(neuron.getBias() + learningRate*error[j]);
-				}
-				
-				if (i == layers.size() - 1) {
-					for (int j = 0; j < nextLayer.size(); j++) {
-						Neuron neuron = nextLayer.get(j);
-						neuron.setBias(neuron.getBias() + learningRate*nextError[j]);
-					}
-				}
-				
-			}
+			updateWeightsBiases(layers, errors, learningRate);
 			
+			//Updating weights and biases related to latent layer.
+			updateWeightsBiasesLatent(layers, errors, learningRate);
 		}
 		
 		return true;
 	}
 
+	
+	/**
+	 * Calculating errors.
+	 * @param layers list of layers including input layer.
+	 * @param output specified output.
+	 * @return list of errors.
+	 */
+	private List<double[]> calcErrors(List<Layer> layers, double[] output) {
+		List<double[]> errors = Util.newList(0);
+		
+		for (int i = layers.size() - 1; i >= 1; i--) {
+			Layer layer = layers.get(i);
+			Layer nextLayer = i < layers.size() - 1 ? layers.get(i + 1) : null;
+			double[] error = new double[layer.size()];
+			errors.add(0, error);
+			
+			for (int j = 0; j < layer.size(); j++) {
+				Neuron neuron = layer.get(j);
+				double out = neuron.getOutput();
+				
+				if (i == layers.size() - 1)
+					error[j] = out * (1-out) * (output[j]-out);
+				else {
+					double rsum = 0;
+					double[] nextError = errors.get(1);
+					WeightedNeuron[] targets = neuron.getNextNeurons();
+					for (WeightedNeuron target : targets) {
+						int index = nextLayer.indexOf(target.neuron);
+						rsum += nextError[index] * target.weight.value;
+					}
+					
+					error[j] = out * (1-out) * rsum;
+				}
+			}
+		}
+		
+		return errors;
+	}
+	
+	
+	/**
+	 * Updating weights and biases.
+	 * @param layers list of layers including input layer.
+	 * @param errors list of errors.
+	 * @param learningRate learning rate.
+	 */
+	private void updateWeightsBiases(List<Layer> layers, List<double[]> errors, double learningRate) {
+		for (int i = 0; i < layers.size() - 1; i++) {
+			Layer layer = layers.get(i);
+			Layer nextLayer = layers.get(i + 1);
+			double[] error = i > 0 ? errors.get(i - 1) : null;
+			double[] nextError = errors.get(i);
+			
+			for (int j = 0; j < layer.size(); j++) {
+				Neuron neuron = layer.get(j);
+				double out = neuron.getOutput();
+				
+				WeightedNeuron[] targets = neuron.getNextNeurons();
+				for (WeightedNeuron target : targets) {
+					Weight nw = target.weight;
+					int index = nextLayer.indexOf(target.neuron);
+					nw.value += learningRate*nextError[index]*out;
+				}
+				
+				if (i > 0)
+					neuron.setBias(neuron.getBias() + learningRate*error[j]);
+			}
+			
+			if (i == layers.size() - 1) {
+				for (int j = 0; j < nextLayer.size(); j++) {
+					Neuron neuron = nextLayer.get(j);
+					neuron.setBias(neuron.getBias() + learningRate*nextError[j]);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Updating weights and biases of latent layer.
+	 * @param layers list of layers including input layer.
+	 * @param errors list of errors.
+	 * @param learningRate learning rate.
+	 */
+	private void updateWeightsBiasesLatent(List<Layer> layers, List<double[]> errors, double learningRate) {
+		Layer attachedLayer = getLatentAttachedLayer();
+		if (attachedLayer == null) return;
+		
+		Layer prevLatentLayer = latentLayer.getPrevLayer();
+		if (prevLatentLayer == null) return;
+		
+		int attachedErrorIndex = -1;
+		for (int i = 0; i < layers.size(); i++) {
+			if (attachedLayer == layers.get(i)) {
+				attachedErrorIndex = i - 1;
+				break;
+			}
+		}
+		if (attachedErrorIndex < 0) return;
+		
+		//Evaluating latent neurons.
+		for (int j = 0; j < latentLayer.size(); j++) latentLayer.get(j).eval();
+
+		
+		//Updating errors of latent layer.
+		double[] latentError = new double[latentLayer.size()];
+		double[] attachedError = errors.get(attachedErrorIndex);
+		for (int j = 0; j < latentLayer.size(); j++) {
+			Neuron latentNeuron = latentLayer.get(j);
+			double out = latentNeuron.getOutput();
+
+			double rsum = 0;
+			WeightedNeuron[] targets = attachedLayer.getLatentNextNeurons(latentNeuron);
+			for (WeightedNeuron target : targets) {
+				int index = attachedLayer.indexOf(target.neuron);
+				rsum += attachedError[index] * target.weight.value;
+			}
+			
+			latentError[j] = out * (1-out) * rsum;
+		}
+
+		
+		//Updating weights of latent layer and its previous layer.
+		for (int j = 0; j < prevLatentLayer.size(); j++) {
+			Neuron neuron = prevLatentLayer.get(j);
+			double out = neuron.getOutput();
+			
+			WeightedNeuron[] targets = neuron.getNextNeurons();
+			for (WeightedNeuron target : targets) {
+				Weight nw = target.weight;
+				int index = latentLayer.indexOf(target.neuron);
+				nw.value += learningRate*latentError[index]*out;
+			}
+		}
+		
+		for (int j = 0; j < latentLayer.size(); j++) {
+			Neuron latentNeuron = latentLayer.get(j);
+			double out = latentNeuron.getOutput();
+			
+			WeightedNeuron[] targets = attachedLayer.getLatentNextNeurons(latentNeuron);
+			for (WeightedNeuron target : targets) {
+				Weight nw = target.weight;
+				int index = attachedLayer.indexOf(target.neuron);
+				nw.value += learningRate*attachedError[index]*out;
+			}
+			
+			latentNeuron.setBias(latentNeuron.getBias() + learningRate*latentError[j]);
+		}
+	}
+
+		
+	/**
+	 * Creating new layer.
+	 * @param nNeuron number of neurons.
+	 * @param prevLayer previous layer.
+	 * @param nextLayer next layer.
+	 * @param latentLayer latent layer.
+	 * @return new layer.
+	 */
+	private Layer newLayer(int nNeuron, Layer prevLayer, Layer nextLayer, Layer latentLayer) {
+		LayerImpl layer = new LayerImpl(activateRef, idRef);
+		nNeuron = nNeuron < 0 ? 0 : nNeuron;
+		for (int i = 0; i < nNeuron; i++) {
+			layer.add(layer.newNeuron());
+		}
+		
+		if (prevLayer != null) prevLayer.setNextLayer(layer);
+		if (nextLayer != null) layer.setNextLayer(nextLayer);
+		if (latentLayer != null) layer.setLatentLayer(latentLayer);
+
+		return layer;
+	}
+	
+
+	/**
+	 * Getting non-empty layers.
+	 * @return list of non-empty layers.
+	 */
+	protected List<Layer> getNonemptyLayers() {
+		List<Layer> layers = Util.newList(0);
+		
+		if (latentLayer != null && latentLayer.size() > 0) layers.add(latentLayer);
+		if (inputLayer != null && inputLayer.size() > 0) layers.add(inputLayer);
+		
+		for (Layer hiddenLayer : hiddenLayers) {
+			if (hiddenLayer != null && hiddenLayer.size() > 0) layers.add(hiddenLayer);
+		}
+		
+		if (outputLayer != null && outputLayer.size() > 0) layers.add(outputLayer);
+
+		return layers;
+	}
+
+	
+	/**
+	 * Getting layer that attaches to latent layers.
+	 * @return layer that attaches to latent layers.
+	 */
+	protected Layer getLatentAttachedLayer() {
+		if (latentLayer == null || latentLayer.size() == 0) return null;
+
+		List<Layer> layers = getNonemptyLayers();
+		for (Layer layer : layers) {
+			if (layer == inputLayer || layer == outputLayer || layer == latentLayer)
+				continue;
+			
+			if (layer.getLatentLayer() == latentLayer)
+				return layer;
+		}
+		
+		return null;
+	}
+	
 	
 }

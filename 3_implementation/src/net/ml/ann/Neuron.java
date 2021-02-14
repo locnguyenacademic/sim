@@ -8,7 +8,6 @@
 package net.ml.ann;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * This interface represents neuron.
@@ -85,106 +84,19 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Getting previous neuron count.
-	 * @return previous neuron count.
+	 * Getting previous neurons.
+	 * @return previous neurons.
 	 */
-	int getPrevNeuronCount();
-
-	
-	/**
-	 * Getting previous neuron at specified index.
-	 * @param index specified index.
-	 * @return previous neuron at specified index.
-	 */
-	Neuron getPrevNeuron(int index);
-	
-	
-	/**
-	 * Getting previous weight at specified index.
-	 * @param index specified index.
-	 * @return previous weight at specified index.
-	 */
-	Weight getPrevWeight(int index);
-	
-	
-	/**
-	 * Getting previous weighted neuron at specified index.
-	 * @param index specified index.
-	 * @return previous weighted neuron at specified index.
-	 */
-	WeightedNeuron getPrevWeightedNeuron(int index);
-
-	
-	/**
-	 * Adding previous neuron along with weight.
-	 * @param neuron previous neuron.
-	 * @param weight previous weight.
-	 * @return true if adding is successful.
-	 */
-	boolean setPrevNeuron(Neuron neuron, Weight weight);
-	
-	
-	/**
-	 * Removing previous neuron.
-	 * @param neuron previous neuron.
-	 * @return true if removing is successful.
-	 */
-	boolean removePrevNeuron(Neuron neuron);
-
-	
-	/**
-	 * Clearing previous neurons.
-	 */
-	void clearPrevNeurons();
-	
-	
-	/**
-	 * Finding the specified previous neuron.
-	 * @param neuron specified previous neuron.
-	 * @return index of specified previous neuron.
-	 */
-	int prevIndexOf(Neuron neuron);
+	WeightedNeuron[] getPrevNeurons();
 
 		
 	/**
-	 * Finding previous neuron by specified identifier.
-	 * @param neuronId specified previous neuron.
-	 * @return index of found previous neuron.
+	 * Getting next neurons.
+	 * @return next neurons.
 	 */
-	int prevIndexOf(int neuronId);
+	WeightedNeuron[] getNextNeurons();
 
-	
-	/**
-	 * Getting next neuron count.
-	 * @return next neuron count.
-	 */
-	int getNextNeuronCount();
-
-	
-	/**
-	 * Getting next neuron at specified index.
-	 * @param index specified index.
-	 * @return next neuron at specified index.
-	 */
-	Neuron getNextNeuron(int index);
-	
-	
-	/**
-	 * Getting next weight at specified index.
-	 * @param index specified index.
-	 * @return next weight at specified index.
-	 */
-	Weight getNextWeight(int index);
-	
-	
-	/**
-	 * Getting next weighted neuron at specified index.
-	 * @param index specified index.
-	 * @return next weighted neuron at specified index.
-	 */
-	WeightedNeuron getNextWeightedNeuron(int index);
-	
-	
+		
 	/**
 	 * Adding next neuron along with weight.
 	 * @param neuron next neuron.
@@ -209,19 +121,71 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Finding the specified next neuron.
+	 * Finding next neuron.
 	 * @param neuron specified next neuron.
-	 * @return index of specified next neuron.
+	 * @return next neuron.
 	 */
-	int nextIndexOf(Neuron neuron);
-
+	WeightedNeuron findNextNeuron(Neuron neuron);
+	
 	
 	/**
 	 * Finding next neuron by specified identifier.
-	 * @param neuronId specified next neuron.
-	 * @return index of found next neuron.
+	 * @param neuronId specified next neuron identifier.
+	 * @return next neuron.
 	 */
-	int nextIndexOf(int neuronId);
+	WeightedNeuron findNextNeuron(int neuronId);
+
+	
+	/**
+	 * Getting latent neurons.
+	 * @return latent neurons.
+	 */
+	WeightedNeuron[] getLatentNeurons();
+
+	
+	/**
+	 * Adding latent neuron along with weight.
+	 * @param neuron latent neuron.
+	 * @param weight latent weight.
+	 * @return true if adding is successful.
+	 */
+	boolean setLatentNeuron(Neuron neuron, Weight weight);
+	
+	
+	/**
+	 * Removing latent neuron.
+	 * @param neuron latent neuron.
+	 * @return true if removing is successful.
+	 */
+	boolean removeLatentNeuron(Neuron neuron);
+
+	
+	/**
+	 * Clearing latent neurons.
+	 */
+	void clearLatentNeurons();
+	
+	
+	/**
+	 * Finding latent neuron.
+	 * @param neuron specified latent neuron.
+	 * @return latent neuron.
+	 */
+	WeightedNeuron findLatentNeuron(Neuron neuron);
+
+	
+	/**
+	 * Finding latent neuron by specified identifier.
+	 * @param neuronId specified latent neuron identifier.
+	 * @return latent neuron.
+	 */
+	WeightedNeuron findLatentNeuron(int neuronId);
+
+	
+	/**
+	 * Resetting latent neurons.
+	 */
+	void resetLatentNeurons();
 	
 	
 	/**
@@ -232,21 +196,6 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Getting previous sibling weight.
-	 * @return previous sibling weight.
-	 */
-	double getPrevSiblingWeight();
-	
-	
-	/**
-	 * Setting previous sibling weight.
-	 * @param weight previous sibling weight.
-	 * @return true if setting is successful.
-	 */
-	void setPrevSiblingWeight(double weight);
-	
-	
-	/**
 	 * Getting next sibling neuron.
 	 * @return next sibling neuron.
 	 */
@@ -254,39 +203,17 @@ public interface Neuron extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Getting next sibling weight.
-	 * @return next sibling weight.
-	 */
-	double getNextSiblingWeight();
-	
-	
-	/**
-	 * Setting next sibling weight.
-	 * @param weight next sibling weight.
-	 * @return true if setting is successful.
-	 */
-	void setNextSiblingWeight(double weight);
-	
-	
-	/**
-	 * Getting from neurons.
-	 * @return from neurons.
-	 */
-	List<WeightedNeuron> getFromPrevNeurons();
-
-		
-	/**
-	 * Getting to neurons.
-	 * @return to neurons.
-	 */
-	List<WeightedNeuron> getFromNextNeurons();
-
-		
-	/**
-	 * Getting current layer.
-	 * @return current layer.
+	 * Getting main layer.
+	 * @return main layer.
 	 */
 	Layer getLayer();
+	
+	
+	/**
+	 * Evaluating neuron output.
+	 * @return neuron output.
+	 */
+	double eval();
 	
 	
 }

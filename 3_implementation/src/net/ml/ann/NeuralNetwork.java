@@ -23,54 +23,13 @@ public interface NeuralNetwork extends Remote, Serializable, Cloneable {
 
 	
 	/**
-	 * Getting memory layer.
-	 * @return memory layer.
+	 * Evaluating entire network with specified input.
+	 * @param input specified input.
+	 * @return array as output of output layer.
 	 * @throws RemoteException if any error raises.
 	 */
-	Layer getMemoryLayer() throws RemoteException;
+	double[] eval(double[] input) throws RemoteException;
 	
-	
-	/**
-	 * Getting input layer.
-	 * @return input layer.
-	 * @throws RemoteException if any error raises.
-	 */
-	Layer getInputLayer() throws RemoteException;
-	
-	
-	/**
-	 * Getting count of hidden layers.
-	 * @return count of hidden layers.
-	 * @throws RemoteException if any error raises.
-	 */
-	int getHiddenLayerCount() throws RemoteException;
-	
-	
-	/**
-	 * Getting hidden layer at specified index.
-	 * @param index specified index.
-	 * @return hidden layer at specified index.
-	 * @throws RemoteException if any error raises.
-	 */
-	Layer getHiddenLayer(int index) throws RemoteException;
-	
-	
-	/**
-	 * Getting output layer.
-	 * @return output layer.
-	 * @throws RemoteException if any error raises.
-	 */
-	Layer getOutputLayer() throws RemoteException;
-	
-	
-	/**
-	 * Finding neuron by specified identifier.
-	 * @param neuronId specified identifier.
-	 * @return found neuron.
-	 * @throws RemoteException if any error raises.
-	 */
-	Neuron findNeuron(int neuronId) throws RemoteException;
-
 	
 	/**
 	 * Learning the neural network.
