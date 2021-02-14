@@ -16,7 +16,8 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class AmerTxNHSM extends net.hudup.alg.cf.nb.beans.smd.AmerTxNHSM {
+@Deprecated
+public class AmerTxNHSM extends net.temp.hudup.alg.cf.nb.beans.smd.AmerTxNHSM {
 
 	
 	/**

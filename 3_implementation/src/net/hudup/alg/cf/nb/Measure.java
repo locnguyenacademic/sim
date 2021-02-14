@@ -18,141 +18,147 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	
 	
 	/**
-	 * Name of PSS measure.
+	 * PSS measure.
 	 */
 	public static final String PSS = "pss";
 
 	
 	/**
-	 * Name of NHSM measure.
+	 * NHSM measure.
 	 */
 	public static final String NHSM = "nhsm";
 
 	
 	/**
-	 * Name of BCF measure.
+	 * BCF measure.
 	 */
 	public static final String BCF = "bcf";
 
 	
 	/**
-	 * Name of BCFJ measure (BCF + Jaccard).
+	 * BCFJ measure (BCF + Jaccard).
 	 */
 	public static final String BCFJ = "bcfj";
 
 	
 	/**
-	 * Name of SRC measure.
+	 * SRC measure.
 	 */
 	public static final String SRC = "src";
 
 	
 	/**
-	 * Name of PIP measure.
+	 * PIP measure.
 	 */
 	public static final String PIP = "pip";
 
 	
 	/**
-	 * Name of PC measure.
+	 * PC measure.
 	 */
 	public static final String PC = "pc";
 
 	
 	/**
-	 * Name of MMD measure.
+	 * MMD measure.
 	 */
 	public static final String MMD = "mmd";
 
 	
 	/**
-	 * Name of CjacMD measure which is developed by Suryakant and Tripti Mahara.
+	 * CjacMD measure which is developed by Suryakant and Tripti Mahara.
 	 */
 	public static final String CJACMD = "cjacmd";
 
 	
 	/**
-	 * Name of Feng measure.
+	 * Feng measure.
 	 */
 	public static final String FENG = "feng";
 
 	
 	/**
-	 * Name of Mu measure.
+	 * Mu measure.
 	 */
 	public static final String MU = "mu";
 
 	
 	/**
-	 * Name of SMTP measure.
+	 * SMTP measure.
 	 */
 	public static final String SMTP = "smtp";
 
 	
 	/**
-	 * Name of Amer-Threshold measure.
+	 * Amer-Threshold measure.
 	 */
 	public static final String AMERT = "amert";
 	
 	
 	/**
-	 * Name of SMD measure.
+	 * SMD measure.
 	 */
 	public static final String SMD = "smd";
 
 	
 	/**
-	 * Name of SMD2 measure.
+	 * SMD2 measure.
 	 */
 	public static final String SMD2 = "smd2";
 
 	
 	/**
-	 * Name of SMD2 + Jaccard measure.
+	 * SMD2 + Jaccard measure.
 	 */
 	public static final String SMD2J = "smd2j";
 
 	
 	/**
-	 * Name of Quasi-TfIdf measure.
+	 * Quasi-TfIdf measure.
 	 */
 	public static final String QUASI_TFIDF = "qti";
 
 	
 	/**
-	 * Name of Quasi-TfIdf + Jaccard measure.
+	 * Quasi-TfIdf + Jaccard measure.
 	 */
 	public static final String QUASI_TFIDF_JACCARD = "qtij";
 
 	
 	/**
-	 * Name of triangle area measure.
+	 * Triangle area measure.
 	 */
 	public static final String TA = "ta";
 
 	
 	/**
-	 * Name of triangle area + Jaccard measure.
+	 * Triangle area + Jaccard measure.
 	 */
 	public static final String TAJ = "taj";
 
 	
 	/**
-	 * Name of Coco measure.
+	 * Coco measure.
 	 */
 	public static final String COCO = "coco";
 
 	
 	/**
-	 * Name of numerical nearby similarity measure (NNSM).
+	 * Numerical nearby similarity measure (NNSM).
 	 */
 	public static final String NNSM = "nnsm";
 
 	
 	/**
-	 * Name of improved Jaccard (IJ) measure.
+	 * Improved Jaccard (IJ) measure.
 	 */
 	public static final String IJ = "ij";
+
+	
+	/**
+	 * Relevant Jaccard (IJ) measure.
+	 */
+	public static final String RJ = "rj";
 
 	
 }

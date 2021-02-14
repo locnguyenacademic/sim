@@ -16,7 +16,8 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class AmerT extends net.hudup.alg.cf.nb.beans.smd.AmerT {
+@Deprecated
+public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT {
 
 	
 	/**

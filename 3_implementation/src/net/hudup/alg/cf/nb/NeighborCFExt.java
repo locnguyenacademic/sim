@@ -33,18 +33,32 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * This class sets up an advanced version of nearest neighbors collaborative filtering algorithm with more similarity measures.
  * <br>
  * There are many authors who contributed measure to this class.<br>
- * Authors Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu contributed PSS measures and NHSM measure.<br>
- * Authors Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi contributed BC and BCF measures.<br>
- * Author Hyung Jun Ahn contributed PIP measure.<br>
- * Authors Keunho Choi and Yongmoo Suh contributed PC measure.<br>
- * Authors Suryakant and Tripti Mahara contributed MMD measure and CjacMD measure.<br>
- * Authors Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
- * Authors Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
- * Authors Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
- * Author Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
- * Author Loc Nguyen contributed TA (triangle area) measure.<br>
- * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
- * Authors Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
+ * <br>
+ * Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu contributed PSS measures and NHSM measure.<br>
+ * <br>
+ * Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi contributed BC and BCF measures.<br>
+ * <br>
+ * Hyung Jun Ahn contributed PIP measure.<br>
+ * <br>
+ * Keunho Choi and Yongmoo Suh contributed PC measure.<br>
+ * <br>
+ * Suryakant and Tripti Mahara contributed MMD measure and CjacMD measure.<br>
+ * <br>
+ * Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
+ * <br>
+ * Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
+ * <br>
+ * Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
+ * <br>
+ * Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
+ * <br>
+ * Loc Nguyen contributed TA (triangle area) measure.<br>
+ * <br>
+ * Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
+ * <br>
+ * Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
+ * <br>
+ * Sujoy Bag, Sri Krishna Kumar, and Manoj Kumar Tiwari contributed relevant Jaccard (RJ) measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -189,6 +203,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.SMD2J);
 		mSet.add(Measure.QUASI_TFIDF_JACCARD);
 		mSet.add(Measure.TAJ);
+		mSet.add(Measure.AMERT);
 		
 		List<String> measures = Util.newList();
 		measures.addAll(mSet);
@@ -216,6 +231,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.COCO);
 		mSet.add(Measure.NNSM);
 		mSet.add(Measure.IJ);
+		mSet.add(Measure.RJ);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -314,6 +330,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return nnsm(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.IJ))
 			return improvedJaccard(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.RJ))
+			return relevantJaccard(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -1740,102 +1758,32 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 
 	
-//	/**
-//	 * Calculating the ITA (inverse triangle area) measure between two pairs. ITA is developed by Loc Nguyen.
-//	 * The first pair includes the first rating vector and the first profile.
-//	 * The second pair includes the second rating vector and the second profile.
-//	 * 
-//	 * @param vRating1 first rating vector.
-//	 * @param vRating2 second rating vector.
-//	 * @param profile1 first profile.
-//	 * @param profile2 second profile.
-//	 * @author Loc Nguyen.
-//	 * @return ITA measure between both two rating vectors and profiles.
-//	 */
-//	@Deprecated
-//	protected double inverseTriangleArea(RatingVector vRating1, RatingVector vRating2,
-//			Profile profile1, Profile profile2) {
-//		
-//		Set<Integer> common = commonFieldIds(vRating1, vRating2);
-//		if (common.size() == 0) return Constants.UNUSED;
-//		
-//		Vector2 v1 = new Vector2(common.size(), 0);
-//		Vector2 v2 = new Vector2(common.size(), 0);
-//		for (int id : common) {
-//			v1.add(vRating1.get(id).value / 5.0); //Fix here
-//			v2.add(vRating2.get(id).value / 5.0); //Fix here
-//		}
-//
-//		double cos = v1.cosine(v2);
-//		double sin = Math.sqrt(1 - cos*cos); //Fix here
-//		return 1 - v1.module() * v2.module() * sin;
-//		
-////		double cos2 = Math.abs(cos);
-////		double c = a > b ? b/a : a/b;
-////		double sin = Math.sqrt(1 - cos2*cos2);
-////		double area = Math.abs(cos2 - c) * sin;
-////		return (1 - area) * cos;
-//		
-////		double c = a > b ? b/a : a/b;
-////		double area = Math.abs(cos2 - c);
-////		if (area < 0) {
-////			int i = 0;
-////			i = 1;
-////		}
-////		return (1 - area) * cos;
-//		
-////		double c = a > b ? b/a : a/b;
-////		return c*cos*cos;
-//		
-////		double acos = a*cos;
-////		double bcos = b*cos;
-////		if (acos == b || bcos == a)
-////			return cos;
-////		else if (acos < b)
-////			return (acos/b)*cos;
-////		else
-////			return (bcos/a)*cos;
-//		
-////		if (taMode == TAMODE_MINPROJECT) {
-////			double acos = a*cos;
-////			double bcos = b*cos;
-////			if (acos <= b && bcos <= a) {
-////				double acoeff = acos/b;
-////				double bcoeff = bcos/a;
-////				if (acoeff < bcoeff)
-////					coeff = acoeff;
-////				else
-////					coeff = bcoeff; 
-////			}
-////			else if (acos < b)
-////				coeff = acos/b;
-////			else
-////				coeff = bcos/a;
-////		}
-////		else if (taMode == TAMODE_MAXPROJECT) {
-////			double acos = a*cos;
-////			double bcos = b*cos;
-////			if (acos == b || bcos == a)
-////				coeff = 1;
-////			else if (acos < b && bcos < a) {
-////				double acoeff = acos/b;
-////				double bcoeff = bcos/a;
-////				if (acoeff < bcoeff)
-////					coeff = bcoeff;
-////				else
-////					coeff = acoeff; 
-////			}
-////			else if (acos < b)
-////				coeff = acos/b;
-////			else
-////				coeff = bcos/a;
-////		}
-////		else if (taMode == TAMODE_EQUALRADIUS) {
-////			coeff = a < b ? a / b : b / a;
-////		}
-//	}
+	/**
+	 * Calculating the relevant Jaccard (RJ) measure between two pairs.
+	 * Sujoy Bag, Sri Krishna Kumar, and Manoj Kumar Tiwari developed the relevant Jaccard (RJ) measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Relevant Jaccard (RJ) measure between both two rating vectors and profiles.
+	 * @author Sujoy Bag, Sri Krishna Kumar, Manoj Kumar Tiwari
+	 */
+	protected double relevantJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> set1 = vRating1.fieldIds(true);
+		Set<Integer> set2 = vRating2.fieldIds(true);
+		Set<Integer> common = Util.newSet();
+		common.addAll(set1);
+		common.retainAll(set2);
+		
+		double n = common.size();
+		if (n == 0 && (set1.size() != 0 || set2.size() != 0)) return 0;
+		double n1 = set1.size() - n;
+		double n2 = set2.size() - n;
+		
+		return 1 / (1 + 1/n + n1/(1+n1) + n2/(1+n2));
+	}
 	
-
+	
 	/**
 	 * Computing common field IDs of two rating vectors as list.
 	 * @param vRating1 first rating vector.

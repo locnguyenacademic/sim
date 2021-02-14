@@ -19,20 +19,6 @@ import net.hudup.core.data.RatingVector;
 
 /**
  * This class sets up an advanced version of item-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
- * <br>
- * There are many authors who contributed measure to this class.<br>
- * Authors Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu contributed PSS measures and NHSM measure.<br>
- * Authors Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi contributed BC and BCF measures.<br>
- * Author Hyung Jun Ahn contributed PIP measure.<br>
- * Authors Keunho Choi and Yongmoo Suh contributed PC measure.<br>
- * Authors Suryakant and Tripti Mahara contributed MMD measure and CjacMD measure.<br>
- * Authors Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
- * Authors Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
- * Authors Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
- * Author Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
- * Author Loc Nguyen contributed TA (triangle area) measure.<br>
- * Authors Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
- * Authors Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0

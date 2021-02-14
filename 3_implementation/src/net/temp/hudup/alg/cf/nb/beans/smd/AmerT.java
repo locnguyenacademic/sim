@@ -5,23 +5,25 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans.smd;
+package net.temp.hudup.alg.cf.nb.beans.smd;
 
 import java.util.Arrays;
 import java.util.List;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD + NHSM measure.
+ * SMD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerTxNHSM extends NeighborCFExtUserBased {
+@Deprecated
+public class AmerT extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -33,7 +35,7 @@ public class AmerTxNHSM extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public AmerTxNHSM() {
+	public AmerT() {
 
 	}
 
@@ -52,7 +54,7 @@ public class AmerTxNHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amertxnhsm";
+		return Measure.AMERT;
 	}
 
 
@@ -81,9 +83,7 @@ public class AmerTxNHSM extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		double urp = urp(vRating1, vRating2, profile1, profile2);
-		double amert = amerThreshold(vRating1, vRating2, profile1, profile2);
-		return pss(vRating1, vRating2, profile1, profile2) * amert * urp;
+		return amerThreshold(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -93,7 +93,7 @@ public class AmerTxNHSM extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amertxnhsm";
+			return "neighborcf_amert";
 	}
 
 

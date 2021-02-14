@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans.smd;
+package net.temp.hudup.alg.cf.nb.beans.smd;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,13 +15,14 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD + CPC measure.
+ * SMD + NHSM measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerTxCPC extends NeighborCFExtUserBased {
+@Deprecated
+public class AmerTxNHSM extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -33,7 +34,7 @@ public class AmerTxCPC extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public AmerTxCPC() {
+	public AmerTxNHSM() {
 
 	}
 
@@ -52,7 +53,7 @@ public class AmerTxCPC extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amertxcpc";
+		return "amertxnhsm";
 	}
 
 
@@ -81,7 +82,9 @@ public class AmerTxCPC extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amerThreshold(vRating1, vRating2, profile1, profile2) * cpc(vRating1, vRating2, profile1, profile2);
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		double amert = amerThreshold(vRating1, vRating2, profile1, profile2);
+		return pss(vRating1, vRating2, profile1, profile2) * amert * urp;
 	}
 
 	
@@ -91,7 +94,7 @@ public class AmerTxCPC extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amertxcpc";
+			return "neighborcf_amertxnhsm";
 	}
 
 

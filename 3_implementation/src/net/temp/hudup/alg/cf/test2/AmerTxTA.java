@@ -16,7 +16,8 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class AmerTxTA extends net.hudup.alg.cf.nb.beans.smd.AmerTxTA {
+@Deprecated
+public class AmerTxTA extends net.temp.hudup.alg.cf.nb.beans.smd.AmerTxTA {
 
 	
 	/**
