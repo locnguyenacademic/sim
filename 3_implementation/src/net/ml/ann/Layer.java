@@ -131,28 +131,43 @@ public interface Layer extends Serializable, Cloneable {
 
 	
 	/**
-	 * Getting latent layer.
-	 * @return latent layer.
+	 * Getting input rib layer.
+	 * @return input rib layer.
 	 */
-	Layer getLatentLayer();
+	Layer getRibinLayer();
 	
 	
 	/**
-	 * Setting latent layer.
-	 * @param latentLayer latent layer.
-	 * @return previous latent layer.
+	 * Setting input rib layer.
+	 * @param riboutLayer input rib layer.
+	 * @return previous input rib layer.
 	 */
-	Layer setLatentLayer(Layer latentLayer);
+	Layer setRibinLayer(Layer ribinLayer);
+
 	
-	
-	/**
-	 * Getting next neurons of specified latent neuron.
-	 * @param latentNeuron specified latent neuron.
-	 * @return next neurons of specified latent neuron.
-	 */
-	WeightedNeuron[] getLatentNextNeurons(Neuron latentNeuron);
+//	/**
+//	 * Getting next neurons of specified input rib neuron.
+//	 * @param ribinNeuron specified input rib neuron.
+//	 * @return next neurons of specified input rib neuron.
+//	 */
+//	WeightedNeuron[] getRibinNextNeurons(Neuron ribinNeuron);
 
 		
+	/**
+	 * Getting output rib layer.
+	 * @return output rib layer.
+	 */
+	Layer getRiboutLayer();
+	
+	
+	/**
+	 * Setting output rib layer.
+	 * @param riboutLayer output rib layer.
+	 * @return previous output rib layer.
+	 */
+	Layer setRiboutLayer(Layer riboutLayer);
+	
+	
 	/**
 	 * Getting reference to activation function.
 	 * @return reference to activation function.

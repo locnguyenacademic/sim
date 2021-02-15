@@ -1784,6 +1784,23 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 	
 	
+//	protected double relevantJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+//		Set<Integer> set1 = vRating1.fieldIds(true);
+//		Set<Integer> set2 = vRating2.fieldIds(true);
+//		Set<Integer> common = Util.newSet();
+//		common.addAll(set1);
+//		common.retainAll(set2);
+//
+//		double n = common.size();
+//		double N = set1.size() + set2.size() - n;
+//		double M = getColumnIds().size();
+//		
+//		double a = n/N;
+//		double b = (M-N)/(M-n);
+//		return (n/N + (M-N)/(M-n)) / 2;
+//	}
+	
+	
 	/**
 	 * Computing common field IDs of two rating vectors as list.
 	 * @param vRating1 first rating vector.

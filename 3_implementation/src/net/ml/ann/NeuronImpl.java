@@ -69,9 +69,9 @@ public class NeuronImpl implements Neuron {
 	
 	
 	/**
-	 * Next neurons.
+	 * Output rib neurons.
 	 */
-	protected List<WeightedNeuron> latentNeurons = Util.newList(0);
+	protected List<WeightedNeuron> riboutNeurons = Util.newList(0);
 
 	
 	/**
@@ -83,8 +83,10 @@ public class NeuronImpl implements Neuron {
 		this.id = layer.getIdRef().get();
 		this.activateRef = layer.getActivateRef();
 		
-		if (layer != null && layer.getLatentLayer() != null)
-			resetLatentNeurons();
+		if (layer != null && layer.getRiboutLayer() != null) {
+			resetRibinNeurons();
+			resetRiboutNeurons();
+		}
 	}
 
 	
@@ -239,22 +241,114 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public WeightedNeuron[] getLatentNeurons() {
-		return latentNeurons.toArray(new WeightedNeuron[] {});
+	public WeightedNeuron[] getRibinNeurons() {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null) return new WeightedNeuron[] {};
+
+		List<WeightedNeuron> ribinNeurons = Util.newList(0);
+		for (int i = 0; i < ribinLayer.size(); i++) {
+			Neuron ribinNeuron = ribinLayer.get(i);
+			WeightedNeuron[] wns = ribinNeuron.getNextNeurons();
+			for (WeightedNeuron wn : wns) {
+				if (wn.neuron == this) {
+					ribinNeurons.add(new WeightedNeuron(ribinNeuron, wn.weight));
+				}
+			}
+		}
+
+		return ribinNeurons.toArray(new WeightedNeuron[] {});
 	}
 
 
 	@Override
-	public boolean setLatentNeuron(Neuron neuron, Weight weight) {
-		Layer latentLayer = layer != null ? layer.getLatentLayer() : null;
-		if (latentLayer == null || neuron == null || weight == null)
-			return false;
-		if (latentLayer.indexOf(neuron) < 0) return false;
+	public boolean setRibinNeuron(Neuron ribinNeuron, Weight weight) {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null || ribinNeuron == null || weight == null) return false;
+		if (ribinLayer.indexOf(ribinNeuron) < 0) return false;
 		
-		WeightedNeuron wn = findLatentNeuron(neuron);
+		return ribinNeuron.setNextNeuron(this, weight);
+	}
+
+
+	@Override
+	public boolean removeRibinNeuron(Neuron ribinNeuron) {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null || ribinNeuron == null) return false;
+		if (ribinLayer.indexOf(ribinNeuron) < 0) return false;
+
+		return ribinNeuron.removeNextNeuron(this);
+	}
+
+
+	@Override
+	public WeightedNeuron findRibinNeuron(Neuron ribinNeuron) {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null || ribinNeuron == null) return null;
+		if (ribinLayer.indexOf(ribinNeuron) < 0) return null;
+
+		WeightedNeuron wn = ribinNeuron.findNextNeuron(this);
+		if (wn == null)
+			return null;
+		else
+			return new WeightedNeuron(ribinNeuron, wn.weight);
+	}
+
+
+	@Override
+	public WeightedNeuron findRibinNeuron(int ribinNeuronId) {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null) return null;
+		int index = ribinLayer.indexOf(ribinNeuronId);
+		if (index < 0) return null;
+
+		Neuron ribinNeuron = ribinLayer.get(index);
+		WeightedNeuron wn = ribinNeuron.findNextNeuron(this);
+		if (wn == null)
+			return null;
+		else
+			return new WeightedNeuron(ribinNeuron, wn.weight);
+	}
+
+
+	@Override
+	public void clearRibinNeurons() {
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null) return;
+		for (int i = 0; i < ribinLayer.size(); i++) {
+			ribinLayer.get(i).removeNextNeuron(this);
+		}
+	}
+
+
+	@Override
+	public void resetRibinNeurons() {
+		clearRibinNeurons();
+		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
+		if (ribinLayer == null) return; 
+		
+		for (int i = 0; i < ribinLayer.size(); i++) {
+			ribinLayer.get(i).setNextNeuron(this, new Weight(0));
+		}
+	}
+
+	
+	@Override
+	public WeightedNeuron[] getRiboutNeurons() {
+		return riboutNeurons.toArray(new WeightedNeuron[] {});
+	}
+
+
+	@Override
+	public boolean setRiboutNeuron(Neuron riboutNeuron, Weight weight) {
+		Layer ribinLayer = layer != null ? layer.getRiboutLayer() : null;
+		if (ribinLayer == null || riboutNeuron == null || weight == null)
+			return false;
+		if (ribinLayer.indexOf(riboutNeuron) < 0) return false;
+		
+		WeightedNeuron wn = findRiboutNeuron(riboutNeuron);
 		if (wn == null) {
-			wn = new WeightedNeuron(neuron, weight);
-			latentNeurons.add(wn);
+			wn = new WeightedNeuron(riboutNeuron, weight);
+			riboutNeurons.add(wn);
 		}
 		else {
 			wn.weight.value = weight.value;
@@ -265,11 +359,11 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public boolean removeLatentNeuron(Neuron neuron) {
-		if (neuron == null) return false;
-		for (int i = 0; i < latentNeurons.size(); i++) {
-			if (latentNeurons.get(i).neuron == neuron) {
-				latentNeurons.remove(i);
+	public boolean removeRiboutNeuron(Neuron riboutNeuron) {
+		if (riboutNeuron == null) return false;
+		for (int i = 0; i < riboutNeurons.size(); i++) {
+			if (riboutNeurons.get(i).neuron == riboutNeuron) {
+				riboutNeurons.remove(i);
 				return true;
 			}
 		}
@@ -279,10 +373,10 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public WeightedNeuron findLatentNeuron(Neuron neuron) {
-		for (int i = 0; i < latentNeurons.size(); i++) {
-			WeightedNeuron wn = latentNeurons.get(i);
-			if (wn.neuron == neuron) return wn;
+	public WeightedNeuron findRiboutNeuron(Neuron riboutNeuron) {
+		for (int i = 0; i < riboutNeurons.size(); i++) {
+			WeightedNeuron wn = riboutNeurons.get(i);
+			if (wn.neuron == riboutNeuron) return wn;
 		}
 		
 		return null;
@@ -290,10 +384,10 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public WeightedNeuron findLatentNeuron(int neuronId) {
-		for (int i = 0; i < latentNeurons.size(); i++) {
-			WeightedNeuron wn = latentNeurons.get(i);
-			if (wn.neuron != null && wn.neuron.id() == neuronId) return wn;
+	public WeightedNeuron findRiboutNeuron(int riboutNeuronId) {
+		for (int i = 0; i < riboutNeurons.size(); i++) {
+			WeightedNeuron wn = riboutNeurons.get(i);
+			if (wn.neuron != null && wn.neuron.id() == riboutNeuronId) return wn;
 		}
 		
 		return null;
@@ -301,20 +395,20 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public void clearLatentNeurons() {
-		latentNeurons.clear();
+	public void clearRiboutNeurons() {
+		riboutNeurons.clear();
 	}
 
 
 	@Override
-	public void resetLatentNeurons() {
-		latentNeurons.clear();
-		Layer latentLayer = layer != null ? layer.getLatentLayer() : null;
-		if (latentLayer == null) return; 
+	public void resetRiboutNeurons() {
+		riboutNeurons.clear();
+		Layer ribinLayer = layer != null ? layer.getRiboutLayer() : null;
+		if (ribinLayer == null) return; 
 		
-		for (int i = 0; i < latentLayer.size(); i++) {
-			WeightedNeuron latentNeuron = new WeightedNeuron(latentLayer.get(i), new Weight(0));
-			latentNeurons.add(latentNeuron);
+		for (int i = 0; i < ribinLayer.size(); i++) {
+			WeightedNeuron wn = new WeightedNeuron(ribinLayer.get(i), new Weight(0));
+			riboutNeurons.add(wn);
 		}
 	}
 
@@ -353,7 +447,7 @@ public class NeuronImpl implements Neuron {
 	public double eval() {
 		List<WeightedNeuron> sources = Util.newList(0);
 		sources.addAll(Arrays.asList(getPrevNeurons()));
-		sources.addAll(Arrays.asList(getLatentNeurons()));
+		sources.addAll(Arrays.asList(getRibinNeurons()));
 		
 		if (sources.size() == 0) {
 			double out = getInput();

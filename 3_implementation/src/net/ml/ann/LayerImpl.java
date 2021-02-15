@@ -56,9 +56,15 @@ public class LayerImpl implements Layer {
 	
 	
 	/**
-	 * Latent layer.
+	 * Input rib layer.
 	 */
-	protected Layer latentLayer = null;
+	protected Layer ribinLayer = null;
+
+	
+	/**
+	 * Output rib layer.
+	 */
+	protected Layer riboutLayer = null;
 	
 	
 	/**
@@ -105,7 +111,7 @@ public class LayerImpl implements Layer {
 	public Neuron remove(int index) {
 		Neuron neuron = neurons.get(index);
 		neuron.clearNextNeurons();
-		neuron.clearLatentNeurons();
+		neuron.clearRiboutNeurons();
 		
 		return neurons.remove(index);
 	}
@@ -144,6 +150,8 @@ public class LayerImpl implements Layer {
 	@Override
 	public Layer setPrevLayer(Layer prevLayer) {
 		if (prevLayer == this.prevLayer) return this.prevLayer;
+		if (prevLayer != null && prevLayer.getRiboutLayer() == this)
+			return this.prevLayer;
 
 		Layer oldPrevLayer = this.prevLayer;
 		Layer oldPrevPrevLayer = null;
@@ -194,6 +202,8 @@ public class LayerImpl implements Layer {
 	@Override
 	public Layer setNextLayer(Layer nextLayer) {
 		if (nextLayer == this.nextLayer) return this.nextLayer;
+		if (getRibinLayer() != null && getRibinLayer() == getPrevLayer())
+			return this.nextLayer;
 
 		clearNextNeurons(this);
 		
@@ -249,46 +259,70 @@ public class LayerImpl implements Layer {
 	
 	
 	@Override
-	public Layer getLatentLayer() {
-		return latentLayer;
+	public Layer getRibinLayer() {
+		return ribinLayer;
 	}
 
 
 	@Override
-	public Layer setLatentLayer(Layer latentLayer) {
-		if (this.latentLayer == latentLayer) return this.latentLayer;
+	public Layer setRibinLayer(Layer ribinLayer) {
+		if (this.ribinLayer == ribinLayer) return this.ribinLayer;
 		
-		Layer oldLatentLayer = this.latentLayer;
-		this.latentLayer = latentLayer;
-		
-		for (Neuron neuron : neurons) {
-			neuron.resetLatentNeurons();
+		Layer oldRibinLayer = this.ribinLayer;
+		this.ribinLayer = ribinLayer;
+		if (ribinLayer != null) {
+			ribinLayer.setNextLayer(this);
 		}
 		
-		return oldLatentLayer;
+		for (Neuron neuron : neurons) {
+			neuron.resetRibinNeurons();
+		}
+		
+		return oldRibinLayer;
+	}
+
+	
+//	@Override
+//	public WeightedNeuron[] getRibinNextNeurons(Neuron ribinNeuron) {
+//		List<WeightedNeuron> ribinNextNeurons = Util.newList(0);
+//		if (ribinNeuron == null || ribinLayer == null || ribinLayer.indexOf(ribinNeuron) < 0)
+//			return ribinNextNeurons.toArray(new WeightedNeuron[] {});
+//		
+//		for (Neuron neuron : neurons) {
+//			WeightedNeuron[] wns = neuron.getRibinNeurons();
+//			for (WeightedNeuron wn : wns) {
+//				if (wn.neuron == ribinNeuron) {
+//					ribinNextNeurons.add(new WeightedNeuron(neuron, wn.weight));
+//					break;
+//				}
+//			}
+//		}
+//		
+//		return ribinNextNeurons.toArray(new WeightedNeuron[] {});
+//	}
+
+	
+	@Override
+	public Layer getRiboutLayer() {
+		return riboutLayer;
 	}
 
 
 	@Override
-	public WeightedNeuron[] getLatentNextNeurons(Neuron latentNeuron) {
-		List<WeightedNeuron> latentNextNeurons = Util.newList(0);
-		if (latentNeuron == null || latentLayer == null || latentLayer.indexOf(latentNeuron) < 0)
-			return latentNextNeurons.toArray(new WeightedNeuron[] {});
+	public Layer setRiboutLayer(Layer riboutLayer) {
+		if (this.riboutLayer == riboutLayer) return this.riboutLayer;
+		
+		Layer oldRiboutLayer = this.riboutLayer;
+		this.riboutLayer = riboutLayer;
 		
 		for (Neuron neuron : neurons) {
-			WeightedNeuron[] wns = neuron.getLatentNeurons();
-			for (WeightedNeuron wn : wns) {
-				if (wn.neuron == latentNeuron) {
-					latentNextNeurons.add(new WeightedNeuron(neuron, wn.weight));
-					break;
-				}
-			}
+			neuron.resetRiboutNeurons();
 		}
 		
-		return latentNextNeurons.toArray(new WeightedNeuron[] {});
+		return oldRiboutLayer;
 	}
-	
-	
+
+
 	@Override
 	public Function getActivateRef() {
 		return this.activateRef;

@@ -137,55 +137,107 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
-	 * Getting latent neurons.
-	 * @return latent neurons.
+	 * Getting input rib neurons.
+	 * @return input rib neurons.
 	 */
-	WeightedNeuron[] getLatentNeurons();
+	WeightedNeuron[] getRibinNeurons();
 
 	
 	/**
-	 * Adding latent neuron along with weight.
-	 * @param neuron latent neuron.
-	 * @param weight latent weight.
+	 * Adding input rib neuron along with weight.
+	 * @param ribinNeuron input rib neuron.
+	 * @param weight input rib weight.
 	 * @return true if adding is successful.
 	 */
-	boolean setLatentNeuron(Neuron neuron, Weight weight);
+	boolean setRibinNeuron(Neuron ribinNeuron, Weight weight);
 	
 	
 	/**
-	 * Removing latent neuron.
-	 * @param neuron latent neuron.
+	 * Removing input rib neuron.
+	 * @param ribinNeuron input rib neuron.
 	 * @return true if removing is successful.
 	 */
-	boolean removeLatentNeuron(Neuron neuron);
+	boolean removeRibinNeuron(Neuron ribinNeuron);
 
 	
 	/**
-	 * Clearing latent neurons.
+	 * Clearing input rib neurons.
 	 */
-	void clearLatentNeurons();
+	void clearRibinNeurons();
 	
 	
 	/**
-	 * Finding latent neuron.
-	 * @param neuron specified latent neuron.
-	 * @return latent neuron.
+	 * Finding input rib neuron.
+	 * @param ribinNeuron specified input rib neuron.
+	 * @return input rib neuron.
 	 */
-	WeightedNeuron findLatentNeuron(Neuron neuron);
+	WeightedNeuron findRibinNeuron(Neuron ribinNeuron);
 
 	
 	/**
-	 * Finding latent neuron by specified identifier.
-	 * @param neuronId specified latent neuron identifier.
-	 * @return latent neuron.
+	 * Finding input rib neuron by specified identifier.
+	 * @param ribinNeuronId specified input rib neuron identifier.
+	 * @return input rib neuron.
 	 */
-	WeightedNeuron findLatentNeuron(int neuronId);
+	WeightedNeuron findRibinNeuron(int ribinNeuronId);
 
 	
 	/**
-	 * Resetting latent neurons.
+	 * Resetting input rib neurons.
 	 */
-	void resetLatentNeurons();
+	void resetRibinNeurons();
+
+	
+	/**
+	 * Getting output rib neurons.
+	 * @return output rib neurons.
+	 */
+	WeightedNeuron[] getRiboutNeurons();
+
+	
+	/**
+	 * Adding output rib neuron along with weight.
+	 * @param riboutNeuron output rib neuron.
+	 * @param weight output rib weight.
+	 * @return true if adding is successful.
+	 */
+	boolean setRiboutNeuron(Neuron riboutNeuron, Weight weight);
+	
+	
+	/**
+	 * Removing output rib neuron.
+	 * @param riboutNeuron output rib neuron.
+	 * @return true if removing is successful.
+	 */
+	boolean removeRiboutNeuron(Neuron riboutNeuron);
+
+	
+	/**
+	 * Clearing output rib neurons.
+	 */
+	void clearRiboutNeurons();
+	
+	
+	/**
+	 * Finding output rib neuron.
+	 * @param riboutNeuron specified output rib neuron.
+	 * @return output rib neuron.
+	 */
+	WeightedNeuron findRiboutNeuron(Neuron riboutNeuron);
+
+	
+	/**
+	 * Finding output rib neuron by specified identifier.
+	 * @param riboutNeuronId specified output rib neuron identifier.
+	 * @return output rib neuron.
+	 */
+	WeightedNeuron findRiboutNeuron(int riboutNeuronId);
+
+	
+	/**
+	 * Resetting output rib neurons.
+	 */
+	void resetRiboutNeurons();
 	
 	
 	/**
