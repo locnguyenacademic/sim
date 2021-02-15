@@ -82,11 +82,6 @@ public class NeuronImpl implements Neuron {
 		this.layer = layer;
 		this.id = layer.getIdRef().get();
 		this.activateRef = layer.getActivateRef();
-		
-		if (layer != null && layer.getRiboutLayer() != null) {
-			resetRibinNeurons();
-			resetRiboutNeurons();
-		}
 	}
 
 	
@@ -166,8 +161,26 @@ public class NeuronImpl implements Neuron {
 	
 
 	@Override
+	public WeightedNeuron[] getImplicitPrevNeurons() {
+		if (layer == null)
+			return new WeightedNeuron[] {};
+		else
+			return ((LayerImpl)layer).getImplicitPrevNeurons(this);
+	}
+
+
+	@Override
 	public WeightedNeuron[] getNextNeurons() {
 		return nextNeurons.toArray(new WeightedNeuron[] {});
+	}
+
+
+	@Override
+	public WeightedNeuron[] getNextNeurons(Layer nextLayer) {
+		if (nextLayer == null || layer == null || layer.getNextLayer() == nextLayer)
+			return getNextNeurons();
+		else
+			return riboutNeurons.toArray(new WeightedNeuron[] {});
 	}
 
 
@@ -321,18 +334,6 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public void resetRibinNeurons() {
-		clearRibinNeurons();
-		Layer ribinLayer = layer != null ? layer.getRibinLayer() : null;
-		if (ribinLayer == null) return; 
-		
-		for (int i = 0; i < ribinLayer.size(); i++) {
-			ribinLayer.get(i).setNextNeuron(this, new Weight(0));
-		}
-	}
-
-	
-	@Override
 	public WeightedNeuron[] getRiboutNeurons() {
 		return riboutNeurons.toArray(new WeightedNeuron[] {});
 	}
@@ -401,19 +402,6 @@ public class NeuronImpl implements Neuron {
 
 
 	@Override
-	public void resetRiboutNeurons() {
-		riboutNeurons.clear();
-		Layer ribinLayer = layer != null ? layer.getRiboutLayer() : null;
-		if (ribinLayer == null) return; 
-		
-		for (int i = 0; i < ribinLayer.size(); i++) {
-			WeightedNeuron wn = new WeightedNeuron(ribinLayer.get(i), new Weight(0));
-			riboutNeurons.add(wn);
-		}
-	}
-
-
-	@Override
 	public Neuron getPrevSibling() {
 		if (layer == null) return null;
 		
@@ -448,6 +436,7 @@ public class NeuronImpl implements Neuron {
 		List<WeightedNeuron> sources = Util.newList(0);
 		sources.addAll(Arrays.asList(getPrevNeurons()));
 		sources.addAll(Arrays.asList(getRibinNeurons()));
+		sources.addAll(Arrays.asList(getImplicitPrevNeurons()));
 		
 		if (sources.size() == 0) {
 			double out = getInput();

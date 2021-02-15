@@ -102,13 +102,6 @@ public interface Layer extends Serializable, Cloneable {
 
 	
 	/**
-	 * Assigning previous layer.
-	 * @param prevLayer previous layer.
-	 */
-	void assignPrevLayer(Layer prevLayer);
-
-	
-	/**
 	 * Getting next layer.
 	 * @return next layer.
 	 */
@@ -122,13 +115,6 @@ public interface Layer extends Serializable, Cloneable {
 	 */
 	Layer setNextLayer(Layer nextLayer);
 	
-	
-	/**
-	 * Assigning next layer.
-	 * @param nextLayer next layer.
-	 */
-	void assignNextLayer(Layer nextLayer);
-
 	
 	/**
 	 * Getting input rib layer.
@@ -145,14 +131,6 @@ public interface Layer extends Serializable, Cloneable {
 	Layer setRibinLayer(Layer ribinLayer);
 
 	
-//	/**
-//	 * Getting next neurons of specified input rib neuron.
-//	 * @param ribinNeuron specified input rib neuron.
-//	 * @return next neurons of specified input rib neuron.
-//	 */
-//	WeightedNeuron[] getRibinNextNeurons(Neuron ribinNeuron);
-
-		
 	/**
 	 * Getting output rib layer.
 	 * @return output rib layer.

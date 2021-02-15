@@ -653,8 +653,6 @@ public class NetworkImpl implements Network {
 	 * @param learningRate learning rate.
 	 */
 	private static void updateWeightsBiases(List<Layer> bone, List<double[]> errors, double learningRate) {
-		boolean ribout = bone.get(1) == bone.get(0).getRiboutLayer();
-		
 		for (int i = 0; i < bone.size() - 1; i++) {
 			Layer layer = bone.get(i);
 			Layer nextLayer = bone.get(i + 1);
@@ -665,7 +663,7 @@ public class NetworkImpl implements Network {
 				Neuron neuron = layer.get(j);
 				double out = neuron.getOutput();
 				
-				WeightedNeuron[] targets = (i == 0 && ribout) ? neuron.getRiboutNeurons() : neuron.getNextNeurons();
+				WeightedNeuron[] targets = i == 0 ? neuron.getNextNeurons(nextLayer) : neuron.getNextNeurons();
 				for (WeightedNeuron target : targets) {
 					Weight nw = target.weight;
 					int index = nextLayer.indexOf(target.neuron);

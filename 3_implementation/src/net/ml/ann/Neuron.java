@@ -91,12 +91,27 @@ public interface Neuron extends Serializable, Cloneable {
 
 		
 	/**
+	 * Getting implicit previous neurons.
+	 * @return implicit previous neurons.
+	 */
+	WeightedNeuron[] getImplicitPrevNeurons();
+
+		
+	/**
 	 * Getting next neurons.
 	 * @return next neurons.
 	 */
 	WeightedNeuron[] getNextNeurons();
 
 		
+	/**
+	 * Getting next neurons.
+	 * @param nextLayer next layer.
+	 * @return next neurons.
+	 */
+	WeightedNeuron[] getNextNeurons(Layer nextLayer);
+
+	
 	/**
 	 * Adding next neuron along with weight.
 	 * @param neuron next neuron.
@@ -183,12 +198,6 @@ public interface Neuron extends Serializable, Cloneable {
 
 	
 	/**
-	 * Resetting input rib neurons.
-	 */
-	void resetRibinNeurons();
-
-	
-	/**
 	 * Getting output rib neurons.
 	 * @return output rib neurons.
 	 */
@@ -233,12 +242,6 @@ public interface Neuron extends Serializable, Cloneable {
 	 */
 	WeightedNeuron findRiboutNeuron(int riboutNeuronId);
 
-	
-	/**
-	 * Resetting output rib neurons.
-	 */
-	void resetRiboutNeurons();
-	
 	
 	/**
 	 * Getting previous sibling neuron.
