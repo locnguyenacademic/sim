@@ -179,6 +179,7 @@ public class NetworkImpl implements Network {
 		nOutputNeuron = nOutputNeuron < 1 ? 1 : nOutputNeuron;
 		nHiddenLayer = nHiddenLayer < 0 ? 0 : nHiddenLayer;
 		if (nHiddenLayer == 0) nHiddenNeuron = 0;
+		if (nHiddenNeuron == 0) nHiddenLayer = 0;
 		nHiddenNeuron = nHiddenNeuron < 0 ? 0 : nHiddenNeuron;
 		nMemoryNeuron = nMemoryNeuron < 0 ? 0 : nMemoryNeuron;
 		
@@ -199,7 +200,8 @@ public class NetworkImpl implements Network {
 		this.outputLayer = newLayer(nOutputNeuron, preOutputLayer, null);
 		
 		if (nMemoryNeuron > 0 && nHiddenNeuron > 0) {
-			this.memoryLayer = newLayer(nMemoryNeuron, this.outputLayer, this.hiddenLayers.get(0));
+			this.memoryLayer = newLayer(nMemoryNeuron, this.outputLayer, null);
+			this.memoryLayer.setRibinLayer(this.hiddenLayers.get(0));
 		}
 	}
 
@@ -404,7 +406,7 @@ public class NetworkImpl implements Network {
 		List<Layer> ribbone = Util.newList(0);
 		if (layer == null) return ribbone;
 		Layer ribLayer = layer.getRibinLayer();
-		if (ribLayer == null) return ribbone;
+		if (ribLayer == null || ribLayer == memoryLayer) return ribbone;
 		
 		ribbone.add(0, layer);
 		while (ribLayer != null) {
@@ -466,6 +468,11 @@ public class NetworkImpl implements Network {
 		if (outputLayer != null) all.add(outputLayer);
 		if (memoryLayer != null) all.add(memoryLayer);
 		
+		List<List<Layer>> bones = getRibinbones();
+		for (List<Layer> bone : bones) all.addAll(bone);
+		bones = getRiboutbones();
+		for (List<Layer> bone : bones) all.addAll(bone);
+		
 		for (Layer layer : all) {
 			if (layer != null && layer.id() == layerId) return layer;
 		}
@@ -509,7 +516,7 @@ public class NetworkImpl implements Network {
 			nonempty.add(layer);
 			
 			Layer ribLayer = layer.getRibinLayer();
-			while (ribLayer != null) {
+			while (ribLayer != null && ribLayer != memoryLayer) {
 				if (ribLayer.size() > 0) nonempty.add(ribLayer);
 				ribLayer = ribLayer.getPrevLayer();
 			}
@@ -705,7 +712,7 @@ public class NetworkImpl implements Network {
 				
 				//Updating weights and biases related to memory layer.
 				if (memoryLayer != null && memoryLayer.size() > 0)
-					updateWeightsBiasesTriple(memoryLayer, backbone, errors, learningRate);
+					updateWeightsBiasesAttachedTriple(memoryLayer, backbone, errors, learningRate);
 				
 				
 				error = (errors != null && errors.size() > 0) ? errors.get(errors.size()-1) : null;
@@ -839,7 +846,7 @@ public class NetworkImpl implements Network {
 	 * @param errors list of errors. Error list excludes input error and so it is 1 less than backbone. 
 	 * @param learningRate learning rate.
 	 */
-	private static void updateWeightsBiasesTriple(Layer centerLayer, List<Layer> bone, List<double[]> errors, double learningRate) {
+	private static void updateWeightsBiasesAttachedTriple(Layer centerLayer, List<Layer> bone, List<double[]> errors, double learningRate) {
 		if (bone.size() < 2) return;
 
 		Layer prevLayer = centerLayer.getPrevLayer();
