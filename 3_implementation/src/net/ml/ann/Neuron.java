@@ -91,10 +91,11 @@ public interface Neuron extends Serializable, Cloneable {
 
 		
 	/**
-	 * Getting implicit previous neurons.
-	 * @return implicit previous neurons.
+	 * Getting previous neurons.
+	 * @param prevLayer previous layer.
+	 * @return previous neurons.
 	 */
-	WeightedNeuron[] getImplicitPrevNeurons();
+	WeightedNeuron[] getPrevNeurons(Layer prevLayer);
 
 		
 	/**

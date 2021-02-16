@@ -14,6 +14,7 @@ import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD measure.
@@ -22,8 +23,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
-@Deprecated
-public class AmerT extends NeighborCFExtUserBased {
+public class AmerT extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**

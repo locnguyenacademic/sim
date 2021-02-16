@@ -41,7 +41,6 @@ public abstract class HMMWrapper implements HMM {
 
 	
 	/**
-	/**
 	 * Terminated ratio mode of learning hidden Markov model (HMM).
 	 */
 	public final static String LEARN_TERMINATED_RATIO_MODE_FIELD = "learn_terminated_ratio_mode";

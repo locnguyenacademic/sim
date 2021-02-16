@@ -10,6 +10,7 @@ package net.temp.ea.pso.test;
 import net.ea.pso.PSOConfig;
 import net.ea.pso.PSOImpl;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * Testing basic PSO.
@@ -18,7 +19,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class BasicPSO extends PSOImpl {
+public class BasicPSO extends PSOImpl implements ForTest {
 
 
 	/**

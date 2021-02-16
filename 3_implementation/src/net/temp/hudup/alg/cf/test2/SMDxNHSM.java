@@ -8,6 +8,7 @@
 package net.temp.hudup.alg.cf.test2;
 
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD + NHSM measure.
@@ -16,7 +17,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class SMDxNHSM extends net.hudup.alg.cf.nb.beans.smd.SMDxNHSM {
+public class SMDxNHSM extends net.hudup.alg.cf.nb.beans.smd.SMDxNHSM implements ForTest {
 
 	
 	/**

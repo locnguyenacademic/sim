@@ -24,6 +24,13 @@ public interface Layer extends Serializable, Cloneable {
 	 * @return identifier reference.
 	 */
 	Id getIdRef();
+
+	
+	/**
+	 * Getting identifier.
+	 * @return identifier.
+	 */
+	int id();
 	
 	
 	/**
@@ -96,9 +103,9 @@ public interface Layer extends Serializable, Cloneable {
 	/**
 	 * Setting previous layer.
 	 * @param prevLayer previous layer.
-	 * @return the old previous layer.
+	 * @return true if setting is successful.
 	 */
-	Layer setPrevLayer(Layer prevLayer);
+	boolean setPrevLayer(Layer prevLayer);
 
 	
 	/**
@@ -111,9 +118,9 @@ public interface Layer extends Serializable, Cloneable {
 	/**
 	 * Setting next layer.
 	 * @param nextLayer next layer.
-	 * @return the old next layer.
+	 * @return true if setting is successful.
 	 */
-	Layer setNextLayer(Layer nextLayer);
+	boolean setNextLayer(Layer nextLayer);
 	
 	
 	/**
@@ -125,10 +132,10 @@ public interface Layer extends Serializable, Cloneable {
 	
 	/**
 	 * Setting input rib layer.
-	 * @param riboutLayer input rib layer.
-	 * @return previous input rib layer.
+	 * @param ribinLayer input rib layer.
+	 * @return true if setting is successful.
 	 */
-	Layer setRibinLayer(Layer ribinLayer);
+	boolean setRibinLayer(Layer ribinLayer);
 
 	
 	/**
@@ -141,9 +148,9 @@ public interface Layer extends Serializable, Cloneable {
 	/**
 	 * Setting output rib layer.
 	 * @param riboutLayer output rib layer.
-	 * @return previous output rib layer.
+	 * @return true if setting is successful.
 	 */
-	Layer setRiboutLayer(Layer riboutLayer);
+	boolean setRiboutLayer(Layer riboutLayer);
 	
 	
 	/**

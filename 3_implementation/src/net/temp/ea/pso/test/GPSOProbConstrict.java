@@ -3,6 +3,7 @@ package net.temp.ea.pso.test;
 import net.ea.pso.PSOConfig;
 import net.ea.pso.PSOImpl;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * Testing general PSO with probabilistic constriction coefficient.
@@ -11,7 +12,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class GPSOProbConstrict extends PSOImpl {
+public class GPSOProbConstrict extends PSOImpl implements ForTest {
 
 
 	/**

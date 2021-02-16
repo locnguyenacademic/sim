@@ -474,7 +474,7 @@
 				-->
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.ml.hmm.FactoryImpl"/>
+					<attribute name="Main-Class" value="net.ml.Starter"/>
 				</manifest>
 			</jar>
 		</then>
@@ -490,7 +490,7 @@
 	    		<fileset dir="${bin.home}" includes="net/ml/**"/>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.ml.hmm.FactoryImpl"/>
+					<attribute name="Main-Class" value="net.ml.Starter"/>
 				</manifest>
 			</jar>
 		</else>
@@ -527,7 +527,7 @@
 	    		</restrict>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.ea.pso.PSO"/>
+					<attribute name="Main-Class" value="net.ea.Starter"/>
 				</manifest>
 			</jar>
 		</then>
@@ -543,7 +543,7 @@
 	    		<fileset dir="${bin.home}" includes="net/ea/**"/>
 	    		
 				<manifest>
-					<attribute name="Main-Class" value="net.ea.pso.PSO"/>
+					<attribute name="Main-Class" value="net.ea.Starter"/>
 				</manifest>
 			</jar>
 		</else>

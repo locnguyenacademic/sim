@@ -10,7 +10,7 @@ package net.ml.hmm;
 import java.io.Serializable;
 
 /**
- * This interface represents learning event about hidden Markov model (HMM).
+ * This interface represents doing event about hidden Markov model (HMM).
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -20,19 +20,19 @@ public interface HMMDoEvent extends Cloneable, Serializable {
 
 	
 	/**
-	 * Type of learning event.
+	 * Type of doing event.
 	 * @author Loc Nguyen
 	 * @version 10.0
 	 */
 	static enum Type {
 		
 		/**
-		 * Learning task in progress.
+		 * Doing task in progress.
 		 */
 		doing,
 		
 		/**
-		 * All learning tasks are done, which means that learning process is finished.
+		 * All doing tasks are done, which means that doing process is finished.
 		 */
 		done
 	}
@@ -46,15 +46,15 @@ public interface HMMDoEvent extends Cloneable, Serializable {
 
 
 	/**
-	 * Getting name of algorithm that issues the learning result.
-	 * @return name of algorithm that issues the learning result.
+	 * Getting name of algorithm that issues the doing result.
+	 * @return name of algorithm that issues the doing result.
 	 */
 	String getAlgName();
 
 	
 	/**
-	 * Getting the learning result issued by the algorithm.
-	 * @return learning result issued by the algorithm.
+	 * Getting the doing result issued by the algorithm.
+	 * @return doing result issued by the algorithm.
 	 */
 	Serializable getLearnResult();
 	

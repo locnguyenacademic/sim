@@ -41,6 +41,7 @@ public class Id implements Serializable, Cloneable {
 	
 	/**
 	 * Increase identifier.
+	 * @return increment and returning the identifier.
 	 */
 	public int get() {
 		id++;

@@ -8,6 +8,7 @@
 package net.temp.hudup.alg.cf.test2;
 
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD measure.
@@ -16,8 +17,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-@Deprecated
-public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT {
+public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT implements ForTest {
 
 	
 	/**

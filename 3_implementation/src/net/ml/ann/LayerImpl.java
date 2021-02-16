@@ -26,9 +26,15 @@ public class LayerImpl implements Layer {
 
 	
 	/**
-	 * Internal identifier.
+	 * Internal identifier reference.
 	 */
 	protected Id idRef = new Id();
+	
+	
+	/**
+	 * Identifier.
+	 */
+	protected int id = -1;
 	
 	
 	/**
@@ -76,16 +82,24 @@ public class LayerImpl implements Layer {
 	/**
 	 * Constructor with activation function.
 	 * @param activateRef activation function.
+	 * @param idRef identifier reference.
 	 */
 	public LayerImpl(Function activateRef, Id idRef) {
 		this.activateRef = activateRef;
 		if (idRef != null) this.idRef = idRef;
+		this.id = this.idRef.get();
 	}
 
 
 	@Override
 	public Id getIdRef() {
 		return idRef;
+	}
+
+
+	@Override
+	public int id() {
+		return id;
 	}
 	
 	
@@ -153,10 +167,19 @@ public class LayerImpl implements Layer {
 	}
 
 	
+	/**
+	 * Getting implicit previous layer.
+	 * @return implicit previous layer.
+	 */
+	protected Layer getPrevLayerImplicit() {
+		return prevLayerImplicit;
+	}
+	
+	
 	@Override
-	public Layer setPrevLayer(Layer prevLayer) {
-		if (prevLayer == this.prevLayer) return this.prevLayer;
-		if (this.prevLayer == null && this.prevLayerImplicit != null) return this.prevLayer;
+	public boolean setPrevLayer(Layer prevLayer) {
+		if (prevLayer == this.prevLayer) return false;
+		if (this.prevLayer == null && this.prevLayerImplicit != null) return false;
 
 		Layer oldPrevLayer = this.prevLayer;
 		Layer oldPrevPrevLayer = null;
@@ -166,7 +189,7 @@ public class LayerImpl implements Layer {
 		}
 
 		this.prevLayer = prevLayer;
-		if (prevLayer == null) return oldPrevLayer;
+		if (prevLayer == null) return true;
 
 		clearNextNeurons(prevLayer);
 		((LayerImpl)prevLayer).nextLayer = this;
@@ -177,7 +200,7 @@ public class LayerImpl implements Layer {
 			}
 		}
 		
-		if (oldPrevPrevLayer == null) return oldPrevLayer;
+		if (oldPrevPrevLayer == null) return true;
 		clearNextNeurons(oldPrevPrevLayer);
 		((LayerImpl)oldPrevPrevLayer).nextLayer = prevLayer;
 		((LayerImpl)prevLayer).prevLayer = oldPrevPrevLayer;
@@ -188,7 +211,7 @@ public class LayerImpl implements Layer {
 			}
 		}
 		
-		return oldPrevLayer;
+		return true;
 	}
 
 
@@ -199,10 +222,10 @@ public class LayerImpl implements Layer {
 
 	
 	@Override
-	public Layer setNextLayer(Layer nextLayer) {
-		if (nextLayer == this.nextLayer) return this.nextLayer;
+	public boolean setNextLayer(Layer nextLayer) {
+		if (nextLayer == this.nextLayer) return false;
 		if (getRibinLayer() != null && getRibinLayer() == getPrevLayer())
-			return this.nextLayer;
+			return false;
 
 		clearNextNeurons(this);
 		
@@ -214,7 +237,7 @@ public class LayerImpl implements Layer {
 		}
 
 		this.nextLayer = nextLayer;
-		if (nextLayer == null) return oldNextLayer;
+		if (nextLayer == null) return true;
 
 		clearNextNeurons(nextLayer);
 		((LayerImpl)nextLayer).prevLayer = this;
@@ -225,7 +248,7 @@ public class LayerImpl implements Layer {
 			}
 		}
 		
-		if (oldNextNextLayer == null) return oldNextLayer;
+		if (oldNextNextLayer == null) return true;
 		((LayerImpl)oldNextNextLayer).prevLayer = nextLayer;
 		((LayerImpl)nextLayer).nextLayer = oldNextNextLayer;
 		for (int i = 0; i < oldNextNextLayer.size(); i++) {
@@ -235,7 +258,7 @@ public class LayerImpl implements Layer {
 			}
 		}
 		
-		return oldNextLayer;
+		return true;
 	}
 
 
@@ -258,13 +281,12 @@ public class LayerImpl implements Layer {
 
 
 	@Override
-	public Layer setRibinLayer(Layer ribinLayer) {
-		if (this.ribinLayer == ribinLayer) return this.ribinLayer;
-		if (ribinLayer != null && ribinLayer.getNextLayer() != null) return this.ribinLayer;
+	public boolean setRibinLayer(Layer ribinLayer) {
+		if (this.ribinLayer == ribinLayer) return false;
+		if (ribinLayer != null && ribinLayer.getNextLayer() != null) return false;
 		
-		Layer oldRibinLayer = this.ribinLayer;
 		this.ribinLayer = ribinLayer;
-		if (ribinLayer == null) return oldRibinLayer;
+		if (ribinLayer == null) return true;
 			
 		clearNextNeurons(ribinLayer);
 		Layer oldNextLayer = ribinLayer.getNextLayer();
@@ -278,7 +300,7 @@ public class LayerImpl implements Layer {
 			}
 		}
 		
-		return oldRibinLayer;
+		return true;
 	}
 
 	
@@ -289,16 +311,16 @@ public class LayerImpl implements Layer {
 
 
 	@Override
-	public Layer setRiboutLayer(Layer riboutLayer) {
-		if (this.riboutLayer == riboutLayer) return this.riboutLayer;
-		if (riboutLayer != null && riboutLayer.getPrevLayer() != null) return this.riboutLayer;
+	public boolean setRiboutLayer(Layer riboutLayer) {
+		if (this.riboutLayer == riboutLayer) return false;
+		if (riboutLayer != null && riboutLayer.getPrevLayer() != null) return false;
 		
 		Layer oldRiboutLayer = this.riboutLayer;
 		this.riboutLayer = riboutLayer;
 		for (Neuron neuron : neurons) ((NeuronImpl)neuron).riboutNeurons.clear();
 		
 		if (oldRiboutLayer != null) ((LayerImpl)oldRiboutLayer).prevLayerImplicit = null;
-		if (riboutLayer == null) return oldRiboutLayer;
+		if (riboutLayer == null) return true;
 		
 		for (Neuron neuron : neurons) {
 			for (int i = 0; i < riboutLayer.size(); i++) {
@@ -309,36 +331,10 @@ public class LayerImpl implements Layer {
 		
 		((LayerImpl)riboutLayer).prevLayerImplicit = this;
 		
-		return oldRiboutLayer;
+		return true;
 	}
 
 
-	/**
-	 * Getting previous neurons of specified neuron.
-	 * @param neuron specified neuron.
-	 * @return previous neurons of specified neuron.
-	 */
-	protected WeightedNeuron[] getImplicitPrevNeurons(Neuron neuron) {
-		if (neuron == null || prevLayer != null || prevLayerImplicit == null)
-			return new WeightedNeuron[] {};
-		
-		if (!neurons.contains(neuron)) return new WeightedNeuron[] {};
-		Layer rLayer = prevLayerImplicit.getRiboutLayer();
-		if (this != rLayer) return new WeightedNeuron[] {};
-		
-		List<WeightedNeuron> wns = Util.newList(0);
-		for (int i = 0; i < prevLayerImplicit.size(); i++) {
-			Neuron prevNeuron = prevLayerImplicit.get(i);
-			WeightedNeuron nw = prevNeuron.findRiboutNeuron(neuron);
-			if (nw != null) {
-				wns.add(new WeightedNeuron(prevNeuron, nw.weight));
-			}
-		}
-		
-		return wns.toArray(new WeightedNeuron[] {});
-	}
-	
-	
 	@Override
 	public Function getActivateRef() {
 		return this.activateRef;
@@ -351,4 +347,30 @@ public class LayerImpl implements Layer {
 	}
 
 	
+//	/**
+//	 * Getting previous neurons of specified neuron.
+//	 * @param neuron specified neuron.
+//	 * @return previous neurons of specified neuron.
+//	 */
+//	protected WeightedNeuron[] getImplicitPrevNeurons(Neuron neuron) {
+//		if (neuron == null || prevLayer != null || prevLayerImplicit == null)
+//			return new WeightedNeuron[] {};
+//		
+//		if (!neurons.contains(neuron)) return new WeightedNeuron[] {};
+//		Layer rLayer = prevLayerImplicit.getRiboutLayer();
+//		if (this != rLayer) return new WeightedNeuron[] {};
+//		
+//		List<WeightedNeuron> wns = Util.newList(0);
+//		for (int i = 0; i < prevLayerImplicit.size(); i++) {
+//			Neuron prevNeuron = prevLayerImplicit.get(i);
+//			WeightedNeuron nw = prevNeuron.findRiboutNeuron(neuron);
+//			if (nw != null) {
+//				wns.add(new WeightedNeuron(prevNeuron, nw.weight));
+//			}
+//		}
+//		
+//		return wns.toArray(new WeightedNeuron[] {});
+//	}
+
+
 }

@@ -7,8 +7,11 @@
  */
 package net.ml.ann.adapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is utility class to provide static utility methods. It is also adapter to other libraries.
@@ -19,6 +22,25 @@ import java.util.List;
  */
 public class Util {
 	
+	
+	/**
+	 * Creating a new array.
+	 * @param <T> element type.
+	 * @param tClass element type.
+	 * @param length array length.
+	 * @return new array
+	 */
+	public static <T> T[] newArray(Class<T> tClass, int length) {
+		try {
+			return net.hudup.core.Util.newArray(tClass, length);
+		}
+		catch (Throwable e) {}
+		
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(tClass, length);
+		return array;
+	}
+
 	
 	/**
 	 * Creating a new list with initial capacity.
@@ -36,6 +58,22 @@ public class Util {
 	}
 	
 	
+	/**
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
+	 */
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+		try {
+		    return net.hudup.core.Util.newMap(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new HashMap<K, V>(initialCapacity);
+	}
+
 	/**
 	 * Tracing error.
 	 * @param e throwable error.

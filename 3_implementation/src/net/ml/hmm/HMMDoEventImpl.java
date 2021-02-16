@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.EventObject;
 
 /**
- * This class is an implementation of learning event for hidden Markov model (HMM).
+ * This class is an implementation of doing event for hidden Markov model (HMM).
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -27,7 +27,7 @@ public class HMMDoEventImpl extends EventObject implements HMMDoEvent {
 
 	
 	/**
-	 * Type of learning event. 
+	 * Type of doing event. 
 	 */
 	protected Type type = Type.doing;
 
@@ -57,7 +57,7 @@ public class HMMDoEventImpl extends EventObject implements HMMDoEvent {
 	
 
 	/**
-	 * Constructor with a source of event, algorithm name, learning result, progress step, and progress total.
+	 * Constructor with a source of event, algorithm name, doing result, progress step, and progress total.
 	 * @param source source of event. It is usually an evaluator but it can be the algorithm itself. This source is invalid in remote call because the source is transient variable.
 	 * @param type type of event.
 	 * @param algName name of the algorithm issuing the setup result.

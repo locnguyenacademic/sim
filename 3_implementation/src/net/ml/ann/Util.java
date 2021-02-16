@@ -8,6 +8,7 @@
 package net.ml.ann;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is utility class to provide static utility methods.
@@ -20,6 +21,18 @@ public class Util {
 	
 	
 	/**
+	 * Creating a new array.
+	 * @param <T> element type.
+	 * @param tClass element type.
+	 * @param length array length.
+	 * @return new array
+	 */
+	public static <T> T[] newArray(Class<T> tClass, int length) {
+	    return net.ml.ann.adapter.Util.newArray(tClass, length);
+	}
+
+	
+	/**
 	 * Creating a new list with initial capacity.
 	 * @param <T> type of elements in list.
 	 * @param initialCapacity initial capacity of this list.
@@ -29,6 +42,18 @@ public class Util {
 	    return net.ml.ann.adapter.Util.newList(initialCapacity);
 	}
 	
+	
+	/**
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
+	 */
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+	    return net.ml.ann.adapter.Util.newMap(initialCapacity);
+	}
+
 	
 	/**
 	 * Tracing error.

@@ -13,6 +13,7 @@ import java.util.List;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD + CPC measure.
@@ -21,8 +22,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
-@Deprecated
-public class AmerTxCPC extends NeighborCFExtUserBased {
+public class AmerTxCPC extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**

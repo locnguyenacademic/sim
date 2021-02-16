@@ -1188,7 +1188,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
-	 * @param itemIds set of all item identifiers
 	 * @author Ali Amer, Loc Nguyen
 	 * @return Amer-Threshold measure between both two rating vectors and profiles.
 	 */
@@ -1780,7 +1779,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double n1 = set1.size() - n;
 		double n2 = set2.size() - n;
 		
-		return 1 / (1 + 1/n + n1/(1+n1) + n2/(1+n2));
+		return 1 / (1 + 1/n + n1/(1+n1) + 1/(1+n2));
 	}
 	
 	

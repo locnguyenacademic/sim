@@ -8,6 +8,7 @@
 package net.temp.hudup.alg.cf.test2;
 
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD + CPC measure.
@@ -16,7 +17,7 @@ import net.hudup.core.data.DataConfig;
  * @version 1.0
  *
  */
-public class SMDxCPC extends net.hudup.alg.cf.nb.beans.smd.SMDxCPC {
+public class SMDxCPC extends net.hudup.alg.cf.nb.beans.smd.SMDxCPC implements ForTest {
 
 	
 	/**
