@@ -99,6 +99,13 @@ public interface Neuron extends Serializable, Cloneable {
 
 		
 	/**
+	 * Getting implicit previous neurons.
+	 * @return implicit previous neurons.
+	 */
+	WeightedNeuron[] getPrevNeuronsImplicit();
+
+	
+	/**
 	 * Getting next neurons.
 	 * @return next neurons.
 	 */

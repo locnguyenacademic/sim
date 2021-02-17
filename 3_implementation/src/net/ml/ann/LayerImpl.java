@@ -167,11 +167,8 @@ public class LayerImpl implements Layer {
 	}
 
 	
-	/**
-	 * Getting implicit previous layer.
-	 * @return implicit previous layer.
-	 */
-	protected Layer getPrevLayerImplicit() {
+	@Override
+	public Layer getPrevLayerImplicit() {
 		return prevLayerImplicit;
 	}
 	
@@ -180,6 +177,7 @@ public class LayerImpl implements Layer {
 	public boolean setPrevLayer(Layer prevLayer) {
 		if (prevLayer == this.prevLayer) return false;
 		if (this.prevLayer == null && this.prevLayerImplicit != null) return false;
+		if (prevLayer != null && prevLayer == getRibinLayer()) return false;
 
 		Layer oldPrevLayer = this.prevLayer;
 		Layer oldPrevPrevLayer = null;
@@ -224,9 +222,11 @@ public class LayerImpl implements Layer {
 	@Override
 	public boolean setNextLayer(Layer nextLayer) {
 		if (nextLayer == this.nextLayer) return false;
-		if (getRibinLayer() != null && getRibinLayer() == getPrevLayer())
-			return false;
-
+		if (nextLayer != null) {
+			if (nextLayer == getRiboutLayer()) return false;
+			if (nextLayer.getRibinLayer() == this) return false;
+		}
+		
 		clearNextNeurons(this);
 		
 		Layer oldNextLayer = this.nextLayer;
@@ -283,7 +283,10 @@ public class LayerImpl implements Layer {
 	@Override
 	public boolean setRibinLayer(Layer ribinLayer) {
 		if (this.ribinLayer == ribinLayer) return false;
-		if (ribinLayer != null && ribinLayer.getNextLayer() != null) return false;
+		if (ribinLayer != null) {
+			if (ribinLayer.getNextLayer() != null) return false;
+			if (ribinLayer == getPrevLayer()) return false;
+		}
 		
 		this.ribinLayer = ribinLayer;
 		if (ribinLayer == null) return true;
@@ -314,6 +317,10 @@ public class LayerImpl implements Layer {
 	public boolean setRiboutLayer(Layer riboutLayer) {
 		if (this.riboutLayer == riboutLayer) return false;
 		if (riboutLayer != null && riboutLayer.getPrevLayer() != null) return false;
+		if (riboutLayer != null) {
+			if (riboutLayer.getPrevLayer() != null) return false;
+			if (riboutLayer == getNextLayer()) return false;
+		}
 		
 		Layer oldRiboutLayer = this.riboutLayer;
 		this.riboutLayer = riboutLayer;

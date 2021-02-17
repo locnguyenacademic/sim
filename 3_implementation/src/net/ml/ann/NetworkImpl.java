@@ -80,6 +80,16 @@ public class NetworkImpl implements Network {
 		memory,
 		
 		/**
+		 * Input rib layer.
+		 */
+		ribin,
+		
+		/**
+		 * Memory layer.
+		 */
+		ribout,
+		
+		/**
 		 * Unknown layer.
 		 */
 		unknown,
@@ -200,7 +210,8 @@ public class NetworkImpl implements Network {
 		this.outputLayer = newLayer(nOutputNeuron, preOutputLayer, null);
 		
 		if (nMemoryNeuron > 0 && nHiddenNeuron > 0) {
-			this.memoryLayer = newLayer(nMemoryNeuron, this.outputLayer, null);
+			this.memoryLayer = newLayer(nMemoryNeuron, null, null);
+			this.outputLayer.setRiboutLayer(this.memoryLayer); //this.outputLayer.setRiboutLayer(this.hiddenLayers.get(this.hiddenLayers.size() - 1))
 			this.memoryLayer.setRibinLayer(this.hiddenLayers.get(0));
 		}
 	}
@@ -294,17 +305,20 @@ public class NetworkImpl implements Network {
 	public LayerType typeOf(Layer layer) {
 		if (layer == null) return LayerType.unknown;
 		
-		if (inputLayer != null && layer == inputLayer)
-			return LayerType.input;
-		if (outputLayer != null && layer == outputLayer)
-			return LayerType.output;
-		
+		if (inputLayer != null && layer == inputLayer) return LayerType.input;
+		if (outputLayer != null && layer == outputLayer) return LayerType.output;
 		for (Layer hiddenLayer : hiddenLayers) {
 			if (layer == hiddenLayer) return LayerType.hidden;
 		}
+		if (memoryLayer != null && layer == memoryLayer) return LayerType.memory;
 		
-		if (memoryLayer != null && layer == memoryLayer)
-			return LayerType.memory;
+		List<Layer> backbone = getBackbone();
+		for (Layer l : backbone) {
+			List<Layer> ribin = getRibinbone(l);
+			if (findLayer(ribin, layer) >= 0) return LayerType.ribin;
+			List<Layer> ribout = getRiboutbone(l);
+			if (findLayer(ribout, layer) >= 0) return LayerType.ribout;
+		}
 
 		return LayerType.unknown;
 	}
@@ -444,7 +458,7 @@ public class NetworkImpl implements Network {
 		List<Layer> ribbone = Util.newList(0);
 		if (layer == null) return ribbone;
 		Layer ribLayer = layer.getRiboutLayer();
-		if (ribLayer == null) return ribbone;
+		if (ribLayer == null || ribLayer == memoryLayer) return ribbone;
 		
 		ribbone.add(layer);
 		while (ribLayer != null) {
@@ -481,6 +495,22 @@ public class NetworkImpl implements Network {
 	}
 	
 	
+	/**
+	 * Finding specified layer in specified bone.
+	 * @param bone specified bone.
+	 * @param layer specified layer.
+	 * @return index of specified layer in specified bone.
+	 */
+	private static int findLayer(List<Layer> bone, Layer layer) {
+		if (layer == null || bone.size() == 0) return -1;
+		for (int i = 0; i < bone.size(); i++) {
+			if (bone.get(i) == layer) return i;
+		}
+		
+		return -1;
+	}
+	
+
 	/**
 	 * Finding neuron by specified identifier.
 	 * @param neuronId specified identifier.
@@ -522,7 +552,7 @@ public class NetworkImpl implements Network {
 			}
 			
 			ribLayer = layer.getRiboutLayer();
-			while (ribLayer != null) {
+			while (ribLayer != null && ribLayer != memoryLayer) {
 				if (ribLayer.size() > 0) nonempty.add(ribLayer);
 				ribLayer = ribLayer.getNextLayer();
 			}
@@ -533,17 +563,19 @@ public class NetworkImpl implements Network {
 
 	
 	@Override
-	public synchronized double[] eval(Record inputRecord) throws RemoteException {
+	public synchronized double[] eval(Record inputRecord, boolean refresh) throws RemoteException {
 		if (inputRecord == null) return null;
 		List<Layer> backbone = getBackbone();
 		if (backbone.size() == 0) return null;
 		
-		List<Layer> nonempty = getNonemptyLayers();
-		for (Layer layer : nonempty) {
-			for (int j = 0; j < layer.size(); j++) {
-				Neuron neuron = layer.get(j);
-				neuron.setInput(0);
-				neuron.setOutput(0);
+		if (refresh) {
+			List<Layer> nonempty = getNonemptyLayers();
+			for (Layer layer : nonempty) {
+				for (int j = 0; j < layer.size(); j++) {
+					Neuron neuron = layer.get(j);
+					neuron.setInput(0);
+					neuron.setOutput(0);
+				}
 			}
 		}
 		
@@ -554,18 +586,18 @@ public class NetworkImpl implements Network {
 			if (ribinbone != null && ribinbone.size() > 1) {
 				int id = ribinbone.get(0).id();
 				if (inputRecord.ribInput.containsKey(id))
-					eval(ribinbone, inputRecord.ribInput.get(id));
+					eval(ribinbone, inputRecord.ribInput.get(id), refresh);
 			}
 			
-			double[] ribOutput = eval(backbone, i, inputRecord.input);
+			double[] output = eval(backbone, i, inputRecord.input, refresh);
 			
 			List<Layer> riboutbone = getRiboutbone(layer);
 			if (riboutbone != null && riboutbone.size() > 1)
-				eval(riboutbone, ribOutput);
+				eval(riboutbone, output, refresh);
 		}
 		
 		if (memoryLayer != null) {
-			for (int j = 0; j < memoryLayer.size(); j++) memoryLayer.get(j).eval();
+			for (int j = 0; j < memoryLayer.size(); j++) eval(memoryLayer.get(j), refresh);
 		}
 		
 		Layer outputLayer = backbone.get(backbone.size() - 1);
@@ -581,12 +613,13 @@ public class NetworkImpl implements Network {
 	 * Evaluating bone with specified input.
 	 * @param bone list of layers including input layer.
 	 * @param input specified input.
+	 * @param refresh refresh mode.
 	 * @return evaluated output.
 	 */
-	private static double[] eval(List<Layer> bone, double[] input) {
+	private double[] eval(List<Layer> bone, double[] input, boolean refresh) {
 		if (bone.size() == 0) return null;
 		for (int i = 0; i < bone.size(); i++) {
-			eval(bone, i, input);
+			eval(bone, i, input, refresh);
 		}
 		
 		Layer outputLayer = bone.get(bone.size() - 1);
@@ -603,9 +636,10 @@ public class NetworkImpl implements Network {
 	 * @param bone list of layers including input layer.
 	 * @param index index.
 	 * @param input specified input.
+	 * @param refresh refresh mode.
 	 * @return evaluated output.
 	 */
-	private static double[] eval(List<Layer> bone, int index, double[] input) {
+	private double[] eval(List<Layer> bone, int index, double[] input, boolean refresh) {
 		Layer layer = bone.get(index);
 		if (input == null || input.length == 0) {
 			input = new double[layer.size()];
@@ -624,8 +658,7 @@ public class NetworkImpl implements Network {
 		}
 		else {
 			for (int j = 0; j < layer.size(); j++) {
-				Neuron neuron = layer.get(j);
-				neuron.eval();
+				eval(layer.get(j), refresh);
 			}
 		}
 		
@@ -636,6 +669,39 @@ public class NetworkImpl implements Network {
 		return output;
 	}
 
+	
+	/**
+	 * Evaluating neuron.
+	 * @param neuron specified neuron.
+	 * @param refresh refresh mode.
+	 * @return evaluated output.
+	 */
+	private double eval(Neuron neuron, boolean refresh) {
+		if (!refresh) return neuron.eval();
+		
+		List<WeightedNeuron> sources = Util.newList(0);
+		sources.addAll(Arrays.asList(neuron.getPrevNeurons()));
+		if (neuron.getLayer() != null && neuron.getLayer().getRibinLayer() != memoryLayer)
+			sources.addAll(Arrays.asList(neuron.getRibinNeurons()));
+		sources.addAll(Arrays.asList(neuron.getPrevNeuronsImplicit()));
+		
+		if (sources.size() == 0) {
+			double out = neuron.getInput();
+			neuron.setOutput(out);
+			return out;
+		}
+		
+		double in = neuron.getBias();
+		for (WeightedNeuron source : sources) {
+			in += source.weight.value * source.neuron.getOutput();
+		}
+		
+		neuron.setInput(in);
+		double out = neuron.getActivateRef().eval(in);
+		neuron.setOutput(out);
+		return out;
+		
+	}
 	
 	@Override
 	public synchronized double[] learn(Collection<Record> sample) throws RemoteException {
@@ -666,7 +732,7 @@ public class NetworkImpl implements Network {
 				Map<Integer, List<double[]>> riboutErrorMap = Util.newMap(0);
 
 				//Evaluating layers.
-				eval(record);
+				eval(record, true);
 				
 				
 				//Calculating errors.
@@ -784,12 +850,11 @@ public class NetworkImpl implements Network {
 				else {
 					double rsum = 0;
 					double[] nextError = errors.get(1);
-					WeightedNeuron[] targets = neuron.getNextNeurons();
+					WeightedNeuron[] targets = neuron.getNextNeurons(nextLayer);
 					for (WeightedNeuron target : targets) {
 						int index = nextLayer.indexOf(target.neuron);
 						rsum += nextError[index] * target.weight.value;
 					}
-					
 					error[j] = out * (1-out) * rsum;
 				}
 			}
@@ -818,15 +883,14 @@ public class NetworkImpl implements Network {
 				Neuron neuron = layer.get(j);
 				double out = neuron.getOutput();
 				
-				WeightedNeuron[] targets = i == 0 ? neuron.getNextNeurons(nextLayer) : neuron.getNextNeurons();
+				WeightedNeuron[] targets = neuron.getNextNeurons(nextLayer);
 				for (WeightedNeuron target : targets) {
 					Weight nw = target.weight;
 					int index = nextLayer.indexOf(target.neuron);
 					nw.value += learningRate*nextError[index]*out;
 				}
 				
-				if (i > 0)
-					neuron.setBias(neuron.getBias() + learningRate*error[j]);
+				if (i > 0) neuron.setBias(neuron.getBias() + learningRate*error[j]);
 			}
 			
 			if (i == bone.size() - 1) {
@@ -854,13 +918,7 @@ public class NetworkImpl implements Network {
 		Layer nextLayer = centerLayer.getNextLayer();
 		if (nextLayer == null) return;
 		
-		int nextErrorIndex = -1;
-		for (int i = 0; i < bone.size(); i++) {
-			if (nextLayer == bone.get(i)) {
-				nextErrorIndex = i - 1;
-				break;
-			}
-		}
+		int nextErrorIndex = findLayer(bone, nextLayer) - 1;
 		if (nextErrorIndex < 0) return;
 		
 		//Evaluating center neurons.
@@ -874,12 +932,11 @@ public class NetworkImpl implements Network {
 			double out = centerNeuron.getOutput();
 
 			double rsum = 0;
-			WeightedNeuron[] targets = centerNeuron.getNextNeurons();
+			WeightedNeuron[] targets = centerNeuron.getNextNeurons(nextLayer);
 			for (WeightedNeuron target : targets) {
 				int index = nextLayer.indexOf(target.neuron);
 				rsum += nextError[index] * target.weight.value;
 			}
-			
 			centerError[j] = out * (1-out) * rsum;
 		}
 		

@@ -43,10 +43,11 @@ public interface Network extends Remote, Serializable, Cloneable, AutoCloseable 
 	/**
 	 * Evaluating entire network.
 	 * @param inputRecord input record for evaluating.
+	 * @param refresh refresh mode.
 	 * @return array as output of output layer.
 	 * @throws RemoteException if any error raises.
 	 */
-	double[] eval(Record inputRecord) throws RemoteException;
+	double[] eval(Record inputRecord, boolean refresh) throws RemoteException;
 	
 	
 	/**

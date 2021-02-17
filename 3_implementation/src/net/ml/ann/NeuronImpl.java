@@ -166,7 +166,7 @@ public class NeuronImpl implements Neuron {
 			return getPrevNeurons();
 		
 		if (!(layer instanceof LayerImpl)) return new WeightedNeuron[] {};
-		Layer prevLayerImplicit = ((LayerImpl)layer).getPrevLayerImplicit();
+		Layer prevLayerImplicit = layer.getPrevLayerImplicit();
 		if (prevLayer == prevLayerImplicit)
 			return getPrevNeuronsImplicit();
 		else
@@ -174,14 +174,11 @@ public class NeuronImpl implements Neuron {
 	}
 
 
-	/**
-	 * Getting implicit previous neurons.
-	 * @return implicit previous neurons.
-	 */
-	protected WeightedNeuron[] getPrevNeuronsImplicit() {
+	@Override
+	public WeightedNeuron[] getPrevNeuronsImplicit() {
 		if (layer == null || !(layer instanceof LayerImpl)) return new WeightedNeuron[] {};
 		
-		Layer prevLayerImplicit = ((LayerImpl)layer).getPrevLayerImplicit();
+		Layer prevLayerImplicit = layer.getPrevLayerImplicit();
 		if (prevLayerImplicit == null || prevLayerImplicit.getRiboutLayer() != this)
 			return new WeightedNeuron[] {};
 		
