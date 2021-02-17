@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.temp.hudup.alg.cf.nb.beans.smd;
+package net.hudup.alg.cf.nb.beans.smd;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,16 +13,15 @@ import java.util.List;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.ForTest;
 
 /**
- * SMD + TA measure.
+ * SMD + NHSM measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerTxTA extends NeighborCFExtUserBased implements ForTest {
+public class AmerxNHSM extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +33,7 @@ public class AmerTxTA extends NeighborCFExtUserBased implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public AmerTxTA() {
+	public AmerxNHSM() {
 
 	}
 
@@ -53,7 +52,7 @@ public class AmerTxTA extends NeighborCFExtUserBased implements ForTest {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amertxta";
+		return "amerxnhsm";
 	}
 
 
@@ -75,13 +74,16 @@ public class AmerTxTA extends NeighborCFExtUserBased implements ForTest {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
+		config.remove(TA_NORMALIZED_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amerThreshold(vRating1, vRating2, profile1, profile2) * triangleArea(vRating1, vRating2, profile1, profile2);
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		double amert = amer(vRating1, vRating2, profile1, profile2);
+		return pss(vRating1, vRating2, profile1, profile2) * amert * urp;
 	}
 
 	
@@ -91,7 +93,7 @@ public class AmerTxTA extends NeighborCFExtUserBased implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amertxta";
+			return "neighborcf_amerxnhsm";
 	}
 
 

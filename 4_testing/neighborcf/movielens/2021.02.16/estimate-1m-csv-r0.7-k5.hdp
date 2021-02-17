@@ -1,0 +1,623 @@
+General evaluation
+
+  neighborcf_dice
+    Exact recall = 0.9383
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7660
+    MSE.recommend = 0.9627
+    R.recommend = 0.2881
+    Setup time = 0.0000
+    Speed = 0.0626
+
+  neighborcf_ij
+    Exact recall = 0.4888
+    Hudup recall = 1.0000
+    R.recommend = 0.0000
+    Setup time = 0.1344
+    Speed = 0.1426
+
+  neighborcf_jaccard
+    Exact recall = 0.9383
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7661
+    MSE.recommend = 0.9628
+    R.recommend = 0.2879
+    Setup time = 0.0000
+    Speed = 0.0594
+
+  neighborcf_rj
+    Exact recall = 0.9906
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7523
+    MSE.recommend = 0.9458
+    R.recommend = 0.3785
+    Setup time = 0.0000
+    Speed = 0.0662
+
+  neighborcf_smd
+    Exact recall = 0.9383
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7661
+    MSE.recommend = 0.9628
+    R.recommend = 0.2880
+    Setup time = 0.0000
+    Speed = 0.0814
+
+
+Dataset evaluation
+
+  Dataset "1"
+    neighborcf_dice
+      Exact recall = 0.9377
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7660
+      MSE.recommend = 0.9628
+      R.recommend = 0.2862
+      Setup time = 0.0000
+      Speed = 0.0664
+    neighborcf_ij
+      Exact recall = 0.4878
+      Hudup recall = 1.0000
+      R.recommend = 0.0000
+      Setup time = 0.6720
+      Speed = 0.1609
+    neighborcf_jaccard
+      Exact recall = 0.9377
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7660
+      MSE.recommend = 0.9629
+      R.recommend = 0.2861
+      Setup time = 0.0000
+      Speed = 0.0644
+    neighborcf_rj
+      Exact recall = 0.9894
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7513
+      MSE.recommend = 0.9432
+      R.recommend = 0.3804
+      Setup time = 0.0000
+      Speed = 0.0784
+    neighborcf_smd
+      Exact recall = 0.9377
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7660
+      MSE.recommend = 0.9628
+      R.recommend = 0.2861
+      Setup time = 0.0000
+      Speed = 0.0849
+
+  Dataset "2"
+    neighborcf_dice
+      Exact recall = 0.9383
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7658
+      MSE.recommend = 0.9620
+      R.recommend = 0.2902
+      Setup time = 0.0000
+      Speed = 0.0659
+    neighborcf_ij
+      Exact recall = 0.4892
+      Hudup recall = 1.0000
+      R.recommend = 0.0000
+      Setup time = 0.0000
+      Speed = 0.1410
+    neighborcf_jaccard
+      Exact recall = 0.9383
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7659
+      MSE.recommend = 0.9621
+      R.recommend = 0.2901
+      Setup time = 0.0000
+      Speed = 0.0632
+    neighborcf_rj
+      Exact recall = 0.9901
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7535
+      MSE.recommend = 0.9493
+      R.recommend = 0.3771
+      Setup time = 0.0000
+      Speed = 0.0759
+    neighborcf_smd
+      Exact recall = 0.9383
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7658
+      MSE.recommend = 0.9620
+      R.recommend = 0.2902
+      Setup time = 0.0000
+      Speed = 0.0859
+
+  Dataset "3"
+    neighborcf_dice
+      Exact recall = 0.9385
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7661
+      MSE.recommend = 0.9620
+      R.recommend = 0.2892
+      Setup time = 0.0000
+      Speed = 0.0667
+    neighborcf_ij
+      Exact recall = 0.4937
+      Hudup recall = 1.0000
+      R.recommend = 0.0000
+      Setup time = 0.0000
+      Speed = 0.1448
+    neighborcf_jaccard
+      Exact recall = 0.9385
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7661
+      MSE.recommend = 0.9621
+      R.recommend = 0.2891
+      Setup time = 0.0000
+      Speed = 0.0652
+    neighborcf_rj
+      Exact recall = 0.9906
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7530
+      MSE.recommend = 0.9458
+      R.recommend = 0.3783
+      Setup time = 0.0000
+      Speed = 0.0695
+    neighborcf_smd
+      Exact recall = 0.9386
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7661
+      MSE.recommend = 0.9621
+      R.recommend = 0.2890
+      Setup time = 0.0000
+      Speed = 0.0861
+
+  Dataset "4"
+    neighborcf_dice
+      Exact recall = 0.9386
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7663
+      MSE.recommend = 0.9633
+      R.recommend = 0.2872
+      Setup time = 0.0000
+      Speed = 0.0514
+    neighborcf_ij
+      Exact recall = 0.4903
+      Hudup recall = 1.0000
+      R.recommend = 0.0000
+      Setup time = 0.0000
+      Speed = 0.1311
+    neighborcf_jaccard
+      Exact recall = 0.9386
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7664
+      MSE.recommend = 0.9635
+      R.recommend = 0.2870
+      Setup time = 0.0000
+      Speed = 0.0520
+    neighborcf_rj
+      Exact recall = 0.9915
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7515
+      MSE.recommend = 0.9442
+      R.recommend = 0.3788
+      Setup time = 0.0000
+      Speed = 0.0507
+    neighborcf_smd
+      Exact recall = 0.9386
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7663
+      MSE.recommend = 0.9634
+      R.recommend = 0.2871
+      Setup time = 0.0000
+      Speed = 0.0725
+
+  Dataset "5"
+    neighborcf_dice
+      Exact recall = 0.9384
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7660
+      MSE.recommend = 0.9635
+      R.recommend = 0.2875
+      Setup time = 0.0000
+      Speed = 0.0624
+    neighborcf_ij
+      Exact recall = 0.4830
+      Hudup recall = 1.0000
+      R.recommend = 0.0000
+      Setup time = 0.0000
+      Speed = 0.1353
+    neighborcf_jaccard
+      Exact recall = 0.9384
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7661
+      MSE.recommend = 0.9636
+      R.recommend = 0.2874
+      Setup time = 0.0000
+      Speed = 0.0522
+    neighborcf_rj
+      Exact recall = 0.9913
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7521
+      MSE.recommend = 0.9465
+      R.recommend = 0.3779
+      Setup time = 0.0000
+      Speed = 0.0564
+    neighborcf_smd
+      Exact recall = 0.9384
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7661
+      MSE.recommend = 0.9636
+      R.recommend = 0.2874
+      Setup time = 0.0000
+      Speed = 0.0776
+
+
+Exact recall evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.9377
+    Dataset "2" got 0.9383
+    Dataset "3" got 0.9385
+    Dataset "4" got 0.9386
+    Dataset "5" got 0.9384
+
+  neighborcf_ij
+    Dataset "1" got 0.4878
+    Dataset "2" got 0.4892
+    Dataset "3" got 0.4937
+    Dataset "4" got 0.4903
+    Dataset "5" got 0.4830
+
+  neighborcf_jaccard
+    Dataset "1" got 0.9377
+    Dataset "2" got 0.9383
+    Dataset "3" got 0.9385
+    Dataset "4" got 0.9386
+    Dataset "5" got 0.9384
+
+  neighborcf_rj
+    Dataset "1" got 0.9894
+    Dataset "2" got 0.9901
+    Dataset "3" got 0.9906
+    Dataset "4" got 0.9915
+    Dataset "5" got 0.9913
+
+  neighborcf_smd
+    Dataset "1" got 0.9377
+    Dataset "2" got 0.9383
+    Dataset "3" got 0.9386
+    Dataset "4" got 0.9386
+    Dataset "5" got 0.9384
+
+
+Hudup recall evaluation
+
+  neighborcf_dice
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  neighborcf_ij
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  neighborcf_jaccard
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  neighborcf_rj
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  neighborcf_smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+MAE.recommend evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.7660
+    Dataset "2" got 0.7658
+    Dataset "3" got 0.7661
+    Dataset "4" got 0.7663
+    Dataset "5" got 0.7660
+
+  neighborcf_ij
+
+  neighborcf_jaccard
+    Dataset "1" got 0.7660
+    Dataset "2" got 0.7659
+    Dataset "3" got 0.7661
+    Dataset "4" got 0.7664
+    Dataset "5" got 0.7661
+
+  neighborcf_rj
+    Dataset "1" got 0.7513
+    Dataset "2" got 0.7535
+    Dataset "3" got 0.7530
+    Dataset "4" got 0.7515
+    Dataset "5" got 0.7521
+
+  neighborcf_smd
+    Dataset "1" got 0.7660
+    Dataset "2" got 0.7658
+    Dataset "3" got 0.7661
+    Dataset "4" got 0.7663
+    Dataset "5" got 0.7661
+
+
+MSE.recommend evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.9628
+    Dataset "2" got 0.9620
+    Dataset "3" got 0.9620
+    Dataset "4" got 0.9633
+    Dataset "5" got 0.9635
+
+  neighborcf_ij
+
+  neighborcf_jaccard
+    Dataset "1" got 0.9629
+    Dataset "2" got 0.9621
+    Dataset "3" got 0.9621
+    Dataset "4" got 0.9635
+    Dataset "5" got 0.9636
+
+  neighborcf_rj
+    Dataset "1" got 0.9432
+    Dataset "2" got 0.9493
+    Dataset "3" got 0.9458
+    Dataset "4" got 0.9442
+    Dataset "5" got 0.9465
+
+  neighborcf_smd
+    Dataset "1" got 0.9628
+    Dataset "2" got 0.9620
+    Dataset "3" got 0.9621
+    Dataset "4" got 0.9634
+    Dataset "5" got 0.9636
+
+
+R.recommend evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.2862
+    Dataset "2" got 0.2902
+    Dataset "3" got 0.2892
+    Dataset "4" got 0.2872
+    Dataset "5" got 0.2875
+
+  neighborcf_ij
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  neighborcf_jaccard
+    Dataset "1" got 0.2861
+    Dataset "2" got 0.2901
+    Dataset "3" got 0.2891
+    Dataset "4" got 0.2870
+    Dataset "5" got 0.2874
+
+  neighborcf_rj
+    Dataset "1" got 0.3804
+    Dataset "2" got 0.3771
+    Dataset "3" got 0.3783
+    Dataset "4" got 0.3788
+    Dataset "5" got 0.3779
+
+  neighborcf_smd
+    Dataset "1" got 0.2861
+    Dataset "2" got 0.2902
+    Dataset "3" got 0.2890
+    Dataset "4" got 0.2871
+    Dataset "5" got 0.2874
+
+
+Setup time evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  neighborcf_ij
+    Dataset "1" got 0.6720
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  neighborcf_jaccard
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  neighborcf_rj
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  neighborcf_smd
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+
+Speed evaluation
+
+  neighborcf_dice
+    Dataset "1" got 0.0664
+    Dataset "2" got 0.0659
+    Dataset "3" got 0.0667
+    Dataset "4" got 0.0514
+    Dataset "5" got 0.0624
+
+  neighborcf_ij
+    Dataset "1" got 0.1609
+    Dataset "2" got 0.1410
+    Dataset "3" got 0.1448
+    Dataset "4" got 0.1311
+    Dataset "5" got 0.1353
+
+  neighborcf_jaccard
+    Dataset "1" got 0.0644
+    Dataset "2" got 0.0632
+    Dataset "3" got 0.0652
+    Dataset "4" got 0.0520
+    Dataset "5" got 0.0522
+
+  neighborcf_rj
+    Dataset "1" got 0.0784
+    Dataset "2" got 0.0759
+    Dataset "3" got 0.0695
+    Dataset "4" got 0.0507
+    Dataset "5" got 0.0564
+
+  neighborcf_smd
+    Dataset "1" got 0.0849
+    Dataset "2" got 0.0859
+    Dataset "3" got 0.0861
+    Dataset "4" got 0.0725
+    Dataset "5" got 0.0776
+
+
+Evaluation information
+  Total records: 151000
+  Evaluated records: 151000
+  Evaluation percentage: 100.0%
+  Elapsed time: 3 hours 34 minutes 39 seconds
+  Started date: 2021-02-16 05-00-20
+  Ended date: 2021-02-16 08-34-59
+
+
+Algorithm parameters
+
+  neighborcf_dice
+    minmax_rating_bound=true
+    recommend_fast=true
+    hybrid=false
+    minmax_rating_reconfigure=false
+    alg_support_cache=true
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+
+  neighborcf_ij
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+  neighborcf_jaccard
+    minmax_rating_bound=true
+    recommend_fast=true
+    hybrid=false
+    minmax_rating_reconfigure=false
+    alg_support_cache=true
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+
+  neighborcf_rj
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+  neighborcf_smd
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+
+Algorithm descriptions
+
+  neighborcf_dice
+    Dataset "1" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got User-based nearest neighbors collaborative filtering algorithm
+
+  neighborcf_ij
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  neighborcf_jaccard
+    Dataset "1" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got User-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got User-based nearest neighbors collaborative filtering algorithm
+
+  neighborcf_rj
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  neighborcf_smd
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-1m-csv-r0.7-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-1m-csv-r0.7-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-1m-csv-r0.7-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-1m-csv-r0.7-k5/hdp_rating4.test"
+  Testing dataset "5" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-1m-csv-r0.7-k5/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows Server 2012 R2, amd64, version 6.3
+  Network: Local address is 192.168.116.200
+  Memory (VM): Allocated memory = 12770.00MB, Free memory = 11590.09MB, Max memory = 22756.00MB
+  CPU: Intel64 Family 6 Model 62 Stepping 4, GenuineIntel, AMD64, the number of processors is 16
+  Directory: Current working directory is "c:\GoogleDrive\todeploy\working\projects\sim"

@@ -11,13 +11,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * SMD + TA measure.
+ * SMD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerTxTA extends net.temp.hudup.alg.cf.nb.beans.smd.AmerTxTA implements ForTest {
+public class Amer extends net.hudup.alg.cf.nb.beans.smd.Amer implements ForTest {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class AmerTxTA extends net.temp.hudup.alg.cf.nb.beans.smd.AmerTxTA implem
 	/**
 	 * Default constructor.
 	 */
-	public AmerTxTA() {
+	public Amer() {
 
 	}
 
@@ -40,7 +40,7 @@ public class AmerTxTA extends net.temp.hudup.alg.cf.nb.beans.smd.AmerTxTA implem
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a22.01.10.01.amertxta";
+			return "a22.01.amer";
 	}
 
 

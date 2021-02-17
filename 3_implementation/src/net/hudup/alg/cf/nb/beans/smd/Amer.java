@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.temp.hudup.alg.cf.nb.beans.smd;
+package net.hudup.alg.cf.nb.beans.smd;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +14,6 @@ import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.ForTest;
 
 /**
  * SMD measure.
@@ -23,7 +22,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class AmerT extends NeighborCFExtUserBased implements ForTest {
+public class Amer extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -35,7 +34,7 @@ public class AmerT extends NeighborCFExtUserBased implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public AmerT() {
+	public Amer() {
 
 	}
 
@@ -54,7 +53,7 @@ public class AmerT extends NeighborCFExtUserBased implements ForTest {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.AMERT;
+		return Measure.AMER;
 	}
 
 
@@ -83,7 +82,7 @@ public class AmerT extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amerThreshold(vRating1, vRating2, profile1, profile2);
+		return amer(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -93,7 +92,7 @@ public class AmerT extends NeighborCFExtUserBased implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amert";
+			return "neighborcf_amer";
 	}
 
 

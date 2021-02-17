@@ -11,13 +11,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * SMD measure.
+ * SMD + CPC measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT implements ForTest {
+public class AmerxCPC extends net.hudup.alg.cf.nb.beans.smd.AmerxCPC implements ForTest {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT implements F
 	/**
 	 * Default constructor.
 	 */
-	public AmerT() {
+	public AmerxCPC() {
 
 	}
 
@@ -40,7 +40,7 @@ public class AmerT extends net.temp.hudup.alg.cf.nb.beans.smd.AmerT implements F
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a22.01.amert";
+			return "a22.01.02.02.amerxcpc";
 	}
 
 

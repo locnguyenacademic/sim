@@ -90,9 +90,9 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 
 	
 	/**
-	 * Amer-Threshold measure.
+	 * Amer measure.
 	 */
-	public static final String AMERT = "amert";
+	public static final String AMER = "amer";
 	
 	
 	/**

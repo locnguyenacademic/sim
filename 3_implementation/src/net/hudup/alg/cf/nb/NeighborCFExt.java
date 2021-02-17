@@ -203,7 +203,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.SMD2J);
 		mSet.add(Measure.QUASI_TFIDF_JACCARD);
 		mSet.add(Measure.TAJ);
-		mSet.add(Measure.AMERT);
+		mSet.add(Measure.AMER);
 		
 		List<String> measures = Util.newList();
 		measures.addAll(mSet);
@@ -308,8 +308,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return mu(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMTP))
 			return smtp(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.AMERT))
-			return amerThreshold(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.AMER))
+			return amer(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD))
 			return smd(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD2))
@@ -460,7 +460,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 		}
-		else if (measure.equals(Measure.AMERT)) {
+		else if (measure.equals(Measure.AMER)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -1125,22 +1125,22 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return SMD measure between both two rating vectors and profiles.
 	 */
 	protected double smd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> itemIds1 = vRating1.fieldIds(true);
-		Set<Integer> itemIds2 = vRating2.fieldIds(true);
-		Set<Integer> itemIds = Util.newSet(itemIds1.size());
-		itemIds.addAll(itemIds1);
-		itemIds.addAll(itemIds2);
+		Set<Integer> fieldIds1 = vRating1.fieldIds(true);
+		Set<Integer> fieldIds2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(fieldIds1.size());
+		union.addAll(fieldIds1);
+		union.addAll(fieldIds2);
 		
 		int Nab = 0;
-		for (int itemId : itemIds) {
+		for (int itemId : union) {
 			boolean rated1 = vRating1.isRated(itemId);
 			boolean rated2 = vRating2.isRated(itemId);
 			
 			if (rated1 == rated2) Nab++;
 		}
 		
-		double M = itemIds1.size() + itemIds2.size();
-		double N = itemIds.size();
+		double M = fieldIds1.size() + fieldIds2.size();
+		double N = union.size();
 		return Nab * (1/M + 0.5/N);
 	}
 	
@@ -1180,7 +1180,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
-	 * Calculating the Amer-Threshold measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
+	 * Calculating the Amer measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * 
@@ -1189,29 +1189,32 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer, Loc Nguyen
-	 * @return Amer-Threshold measure between both two rating vectors and profiles.
+	 * @return Amer measure between both two rating vectors and profiles.
 	 */
-	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> itemIds1 = vRating1.fieldIds(true);
-		Set<Integer> itemIds2 = vRating2.fieldIds(true);
-		Set<Integer> itemIds = Util.newSet(itemIds1.size());
-		itemIds.addAll(itemIds1);
-		itemIds.addAll(itemIds2);
+	protected double amer(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds1 = vRating1.fieldIds(true);
+		Set<Integer> fieldIds2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(fieldIds1.size());
+		union.addAll(fieldIds1);
+		union.addAll(fieldIds2);
 		
-		double Nab = 0;
-		for (int itemId : itemIds) {
-			boolean rated1 = vRating1.isRated(itemId);
-			boolean rated2 = vRating2.isRated(itemId);
+		int Nab = 0;
+		for (int fieldId : union) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			if (rated1 == rated2)
+				Nab++;
+			else
+				continue;
 			
-			if (rated1 == rated2) {
-				double sim = 1 / (1 + Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value));
-				Nab += 1 + sim;
-			}
+			boolean relevant1 = Accuracy.isRelevant(vRating1.get(fieldId).value, ratingMedian);
+			boolean relevant2 = Accuracy.isRelevant(vRating2.get(fieldId).value, ratingMedian);
+			if (relevant1 == relevant2) Nab++;
 		}
 		
-		double M = itemIds1.size() + itemIds2.size();
-		double N = itemIds.size();
-		return Nab * (1/M + 0.5/N);
+		double M = fieldIds1.size() + fieldIds2.size();
+		double N = union.size();
+		return Nab * (0.5/M + 0.25/N);
 	}
 
 	
@@ -1231,21 +1234,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double smd2(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-		if (itemIds.size() == 0) return Constants.UNUSED;
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
 		
 		double X = 0, Y = 0, U = 0, V = 0;
-		for (int itemId : itemIds) {
-			boolean rated1 = vRating1.isRated(itemId);
-			boolean rated2 = vRating2.isRated(itemId);
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
 			
 			if (rated1) {
-				double value = vRating1.get(itemId).value;
+				double value = vRating1.get(fieldId).value;
 				U += value;
 				if (!rated2) X += value;
 			}
 			if (rated2) {
-				double value = vRating2.get(itemId).value;
+				double value = vRating2.get(fieldId).value;
 				V += value;
 				if (!rated1) Y += value;
 			}
@@ -1294,16 +1297,16 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double quasiTfIdf(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-		if (itemIds.size() == 0) return Constants.UNUSED;
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
 		
 		double X1 = 0, Y1 = 0, X2 = 0, Y2 = 0, U = 0, V = 0;
-		for (int itemId : itemIds) {
-			boolean rated1 = vRating1.isRated(itemId);
-			boolean rated2 = vRating2.isRated(itemId);
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
 			
 			if (rated1) {
-				double value1 = vRating1.get(itemId).value;
+				double value1 = vRating1.get(fieldId).value;
 				U += value1;
 				if (rated2)
 					X1 += value1;
@@ -1312,7 +1315,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			}
 			
 			if (rated2) {
-				double value2 = vRating2.get(itemId).value;
+				double value2 = vRating2.get(fieldId).value;
 				V += value2;
 				if (rated1)
 					Y1 += value2;
@@ -1343,17 +1346,17 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double quasiTfIdfJaccard(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-		if (itemIds.size() == 0) return Constants.UNUSED;
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
 		
 		double X1 = 0, Y1 = 0, X2 = 0, Y2 = 0, U = 0, V = 0;
 		int commonCount = 0;
-		for (int itemId : itemIds) {
-			boolean rated1 = vRating1.isRated(itemId);
-			boolean rated2 = vRating2.isRated(itemId);
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
 			
 			if (rated1) {
-				double value1 = vRating1.get(itemId).value;
+				double value1 = vRating1.get(fieldId).value;
 				U += value1;
 				if (rated2) {
 					X1 += value1;
@@ -1364,7 +1367,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			}
 			
 			if (rated2) {
-				double value2 = vRating2.get(itemId).value;
+				double value2 = vRating2.get(fieldId).value;
 				V += value2;
 				if (rated1)
 					Y1 += value2;
@@ -1374,7 +1377,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		
 		double N = U * V;
-		double jac = (double)commonCount / (double)itemIds.size();
+		double jac = (double)commonCount / (double)fieldIds.size();
 		return ((X1*Y1)*jac/N) * (1.0 - (X2*Y2)*(1.0-jac)/N);
 	}
 
