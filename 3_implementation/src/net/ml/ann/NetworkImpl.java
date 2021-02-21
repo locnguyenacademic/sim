@@ -378,8 +378,8 @@ public class NetworkImpl implements Network {
 
 	
 	/**
-	 * Getting backbone which is main layers.
-	 * @return backbone which is main layers.
+	 * Getting backbone which is chain of main layers.
+	 * @return backbone which is chain of main layers.
 	 */
 	public List<Layer> getBackbone() {
 		List<Layer> backbone = Util.newList(2);
@@ -463,7 +463,11 @@ public class NetworkImpl implements Network {
 		ribbone.add(layer);
 		while (ribLayer != null) {
 			ribbone.add(ribLayer);
-			ribLayer = ribLayer.getNextLayer();
+			Layer nextLayer = ribLayer.getNextLayer();
+			if (nextLayer == null || nextLayer.getRibinLayer() != ribLayer)
+				ribLayer = nextLayer;
+			else
+				ribLayer = null;
 		}
 		
 		return ribbone;
@@ -707,7 +711,7 @@ public class NetworkImpl implements Network {
 		int maxIteration = config.getAsInt(LEARN_MAX_ITERATION_FIELD);
 		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
 		double learningRate = config.getAsReal(LEARN_RATE_FIELD);
-		return pgLearn(sample, learningRate, terminatedThreshold, maxIteration);
+		return bpLearn(sample, learningRate, terminatedThreshold, maxIteration);
 	}
 
 	
@@ -719,7 +723,7 @@ public class NetworkImpl implements Network {
 	 * @param maxIteration maximum iteration.
 	 * @return learned error.
 	 */
-	protected double[] pgLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
+	protected double[] bpLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
 		if (sample == null || sample.size() == 0) return null;
 		List<Layer> backbone = getBackbone();
 		if (backbone.size() < 2) return null;
