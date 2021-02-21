@@ -7,6 +7,9 @@
  */
 package net.ml.hmm;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +26,18 @@ public class Util {
 	/**
 	 * Decimal format.
 	 */
-	public static String DECIMAL_FORMAT = "%." + net.ml.hmm.adapter.Util.DECIMAL_PRECISION + "f";
+	public static String DECIMAL_FORMAT = "%.12f";;
 
+	
+	/**
+	 * Static code.
+	 */
+	static {
+		try {
+			DECIMAL_FORMAT = "%." + net.ml.hmm.adapter.Util.DECIMAL_PRECISION + "f";
+		} catch (Throwable e) {}
+	}
+	
 	
 	/**
 	 * Creating a new array.
@@ -34,7 +47,14 @@ public class Util {
 	 * @return new array
 	 */
 	public static <T> T[] newArray(Class<T> tClass, int length) {
-	    return net.ml.hmm.adapter.Util.newArray(tClass, length);
+		try {
+		    return net.ml.hmm.adapter.Util.newArray(tClass, length);
+		}
+		catch (Throwable e) {}
+		
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(tClass, length);
+		return array;
 	}
 
 	
@@ -45,7 +65,12 @@ public class Util {
 	 * @return new list with initial capacity.
 	 */
 	public static <T> List<T> newList(int initialCapacity) {
-	    return net.ml.hmm.adapter.Util.newList(initialCapacity);
+		try {
+		    return net.ml.hmm.adapter.Util.newList(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new ArrayList<T>(initialCapacity);
 	}
 	
 	
@@ -92,7 +117,12 @@ public class Util {
 	 * @return new map.
 	 */
 	public static <K, V> Map<K, V> newMap(int initialCapacity) {
-	    return net.ml.hmm.adapter.Util.newMap(initialCapacity);
+		try {
+		    return net.ml.hmm.adapter.Util.newMap(initialCapacity);
+		}
+		catch (Throwable e) {}
+		
+	    return new HashMap<K, V>(initialCapacity);
 	}
 
 
@@ -101,7 +131,12 @@ public class Util {
 	 * @param e throwable error.
 	 */
 	public static void trace(Throwable e) {
-		net.ml.hmm.adapter.Util.trace(e);
+		try {
+			net.ml.hmm.adapter.Util.trace(e);
+		}
+		catch (Throwable ex) {
+			e.printStackTrace();
+		}
 	}
 	
 	

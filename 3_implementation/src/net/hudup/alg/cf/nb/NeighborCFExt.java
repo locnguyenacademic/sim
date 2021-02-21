@@ -1181,9 +1181,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	/**
 	 * Calculating the Amer measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
-	 * The first pair includes the first rating vector and the first profile.
-	 * The second pair includes the second rating vector and the second profile.
-	 * 
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
@@ -1215,6 +1212,86 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double M = fieldIds1.size() + fieldIds2.size();
 		double N = union.size();
 		return Nab * (0.5/M + 0.25/N);
+	}
+
+	
+	/**
+	 * Calculating the Amer2 measure between two pairs. Amer2 measure is developed by Ali Amer.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer
+	 * @return Amer2 measure between both two rating vectors and profiles.
+	 */
+	protected double amer2(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds1 = vRating1.fieldIds(true);
+		Set<Integer> fieldIds2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(fieldIds1.size());
+		union.addAll(fieldIds1);
+		union.addAll(fieldIds2);
+		
+		int Nab = 0, Na = 0, Nb = 0;
+		for (int fieldId : union) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			
+			if (rated1) {
+				boolean relevant1 = Accuracy.isRelevant(vRating1.get(fieldId).value, ratingMedian);
+				if (rated2) {
+					boolean relevant2 = Accuracy.isRelevant(vRating2.get(fieldId).value, ratingMedian);
+					if (relevant2) {
+						Na++;
+						Nb++;
+						if (relevant1) Nab++;
+					}
+					else if (relevant1)
+						Nb++;
+				}
+				else if (relevant1)
+					Na++;
+			}
+			else if (rated2) {
+				boolean relevant2 = Accuracy.isRelevant(vRating2.get(fieldId).value, ratingMedian);
+				if (relevant2) Nb++;
+			}
+		}
+		
+		return 2.0*Nab / (double)(Na + Nb);
+	}
+
+	
+	/**
+	 * Calculating the Amer3 measure between two pairs. Amer3 measure is developed by Ali Amer, and converted by Loc Nguyen.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer, Loc Nguyen
+	 * @return Amer3 measure between both two rating vectors and profiles.
+	 */
+	protected double amer3(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds1 = vRating1.fieldIds(true);
+		Set<Integer> fieldIds2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(fieldIds1.size());
+		union.addAll(fieldIds1);
+		union.addAll(fieldIds2);
+		
+		int Nab = 0;
+		for (int fieldId : union) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			if (rated1 == rated2)
+				Nab++;
+			else
+				continue;
+			
+			boolean relevant1 = Accuracy.isRelevant(vRating1.get(fieldId).value, ratingMedian);
+			boolean relevant2 = Accuracy.isRelevant(vRating2.get(fieldId).value, ratingMedian);
+			if (relevant1 == relevant2) Nab++;
+		}
+		
+		return 2.0 * Nab / (double)union.size();
 	}
 
 	

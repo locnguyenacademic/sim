@@ -7,9 +7,6 @@
  */
 package net.ml.hmm.adapter;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,14 +47,7 @@ public class Util {
 	 * @return new array
 	 */
 	public static <T> T[] newArray(Class<T> tClass, int length) {
-		try {
-			return net.hudup.core.Util.newArray(tClass, length);
-		}
-		catch (Throwable e) {}
-		
-		@SuppressWarnings("unchecked")
-		T[] array = (T[]) Array.newInstance(tClass, length);
-		return array;
+		return net.hudup.core.Util.newArray(tClass, length);
 	}
 
 	
@@ -68,12 +58,7 @@ public class Util {
 	 * @return new list with initial capacity.
 	 */
 	public static <T> List<T> newList(int initialCapacity) {
-		try {
-		    return net.hudup.core.Util.newList(initialCapacity);
-		}
-		catch (Throwable e) {}
-		
-	    return new ArrayList<T>(initialCapacity);
+	    return net.hudup.core.Util.newList(initialCapacity);
 	}
 	
 	
@@ -85,12 +70,7 @@ public class Util {
 	 * @return new map.
 	 */
 	public static <K, V> Map<K, V> newMap(int initialCapacity) {
-		try {
-		    return net.hudup.core.Util.newMap(initialCapacity);
-		}
-		catch (Throwable e) {}
-		
-	    return new HashMap<K, V>(initialCapacity);
+	    return net.hudup.core.Util.newMap(initialCapacity);
 	}
 
 
@@ -99,12 +79,7 @@ public class Util {
 	 * @param e throwable error.
 	 */
 	public static void trace(Throwable e) {
-		try {
-			net.hudup.core.logistic.LogUtil.trace(e);
-		}
-		catch (Throwable ex) {
-			e.printStackTrace();
-		}
+		net.hudup.core.logistic.LogUtil.trace(e);
 	}
 
 

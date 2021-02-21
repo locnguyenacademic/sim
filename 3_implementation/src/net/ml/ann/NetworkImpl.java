@@ -581,7 +581,6 @@ public class NetworkImpl implements Network {
 		
 		for (int i = 0; i < backbone.size(); i++) {
 			Layer layer = backbone.get(i);
-			
 			List<Layer> ribinbone = getRibinbone(layer);
 			if (ribinbone != null && ribinbone.size() > 1) {
 				int id = ribinbone.get(0).id();
@@ -700,20 +699,33 @@ public class NetworkImpl implements Network {
 		double out = neuron.getActivateRef().eval(in);
 		neuron.setOutput(out);
 		return out;
-		
 	}
+	
 	
 	@Override
 	public synchronized double[] learn(Collection<Record> sample) throws RemoteException {
+		int maxIteration = config.getAsInt(LEARN_MAX_ITERATION_FIELD);
+		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
+		double learningRate = config.getAsReal(LEARN_RATE_FIELD);
+		return pgLearn(sample, learningRate, terminatedThreshold, maxIteration);
+	}
+
+	
+	/**
+	 * Learning neural network by back propagate algorithm.
+	 * @param sample learning sample.
+	 * @param learningRate learning rate.
+	 * @param terminatedThreshold terminated threshold.
+	 * @param maxIteration maximum iteration.
+	 * @return learned error.
+	 */
+	protected double[] pgLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
 		if (sample == null || sample.size() == 0) return null;
 		List<Layer> backbone = getBackbone();
 		if (backbone.size() < 2) return null;
 		
-		int maxIteration = config.getAsInt(LEARN_MAX_ITERATION_FIELD);
 		maxIteration = maxIteration >= 0 ? maxIteration :  LEARN_MAX_ITERATION_DEFAULT;
-		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
 		terminatedThreshold = Double.isNaN(terminatedThreshold) ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold;
-		double learningRate = config.getAsReal(LEARN_RATE_FIELD);
 		learningRate = Double.isNaN(learningRate) || learningRate <= 0 || learningRate > 1 ? LEARN_RATE_DEFAULT : learningRate;
 		
 		double[] error = null;
@@ -732,8 +744,9 @@ public class NetworkImpl implements Network {
 				Map<Integer, List<double[]>> riboutErrorMap = Util.newMap(0);
 
 				//Evaluating layers.
-				eval(record, true);
-				
+				try {
+					eval(record, true);
+				} catch (Throwable e) {Util.trace(e);}
 				
 				//Calculating errors.
 				errors = calcErrors(backbone, output);
@@ -972,7 +985,7 @@ public class NetworkImpl implements Network {
 	 * Getting an array of listeners.
 	 * @return array of listeners.
 	 */
-	protected NetworkListener[] getNetworkListeners() {
+	protected NetworkListener[] getListeners() {
 		if (listenerList == null) return new NetworkListener[] {};
 		synchronized (listenerList) {
 			return listenerList.getListeners(NetworkListener.class);
@@ -988,7 +1001,7 @@ public class NetworkImpl implements Network {
 	protected void fireInfoEvent(NetworkInfoEvent evt) {
 		if (listenerList == null) return;
 		
-		NetworkListener[] listeners = getNetworkListeners();
+		NetworkListener[] listeners = getListeners();
 		for (NetworkListener listener : listeners) {
 			try {
 				listener.receivedInfo(evt);
@@ -1007,7 +1020,7 @@ public class NetworkImpl implements Network {
 	protected void fireDoEvent(NetworkDoEvent evt) {
 		if (listenerList == null) return;
 		
-		NetworkListener[] listeners = getNetworkListeners();
+		NetworkListener[] listeners = getListeners();
 		for (NetworkListener listener : listeners) {
 			try {
 				listener.receivedDo(evt);

@@ -1523,12 +1523,11 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	 * Getting an array of listeners.
 	 * @return array of listeners.
 	 */
-	protected HMMListener[] getHMMListeners() {
+	protected HMMListener[] getListeners() {
 		if (listenerList == null) return new HMMListener[] {};
 		synchronized (listenerList) {
 			return listenerList.getListeners(HMMListener.class);
 		}
-
 	}
 	
 	
@@ -1539,14 +1538,12 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	protected void fireInfoEvent(HMMInfoEvent evt) {
 		if (listenerList == null) return;
 		
-		HMMListener[] listeners = getHMMListeners();
+		HMMListener[] listeners = getListeners();
 		for (HMMListener listener : listeners) {
 			try {
 				listener.receivedInfo(evt);
 			}
-			catch (Throwable e) { 
-				Util.trace(e);
-			}
+			catch (Throwable e) { Util.trace(e);}
 		}
 	}
 
@@ -1558,14 +1555,12 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 	protected void fireDoEvent(HMMDoEvent evt) {
 		if (listenerList == null) return;
 		
-		HMMListener[] listeners = getHMMListeners();
+		HMMListener[] listeners = getListeners();
 		for (HMMListener listener : listeners) {
 			try {
 				listener.receivedDo(evt);
 			}
-			catch (Throwable e) {
-				Util.trace(e);
-			}
+			catch (Throwable e) {Util.trace(e);}
 		}
 	}
 
@@ -1582,9 +1577,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		try {
 			wait();
 		} 
-		catch (Throwable e) {
-			Util.trace(e);
-		}
+		catch (Throwable e) {Util.trace(e);}
 		
 		return true;
 	}
@@ -1621,9 +1614,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 		try {
 			wait();
 		} 
-		catch (Throwable e) {
-			Util.trace(e);
-		}
+		catch (Throwable e) {Util.trace(e);}
 		
 		return true;
 	}
@@ -1764,9 +1755,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 			
 			if (B != null) B.clear();
 		}
-		catch (Throwable e) {
-			Util.trace(e);
-		}
+		catch (Throwable e) {Util.trace(e);}
 	}
 
 
