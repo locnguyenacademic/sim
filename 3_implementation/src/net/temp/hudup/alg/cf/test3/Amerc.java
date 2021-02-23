@@ -15,14 +15,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
-/**
- * SMD measure.
- * 
- * @author Loc Nguyen
- * @version 1.0
- *
- */
-public class Amer3 extends NeighborCFExtUserBased implements ForTest {
+public class Amerc extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**
@@ -34,7 +27,7 @@ public class Amer3 extends NeighborCFExtUserBased implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public Amer3() {
+	public Amerc() {
 
 	}
 
@@ -53,7 +46,7 @@ public class Amer3 extends NeighborCFExtUserBased implements ForTest {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amer3";
+		return "amerc";
 	}
 
 
@@ -82,7 +75,7 @@ public class Amer3 extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amer3(vRating1, vRating2, profile1, profile2);
+		return 0;
 	}
 
 	
@@ -92,7 +85,7 @@ public class Amer3 extends NeighborCFExtUserBased implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "amer3";
+			return "amerc";
 	}
 
 
