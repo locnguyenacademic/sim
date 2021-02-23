@@ -1,0 +1,641 @@
+General evaluation
+
+  a08.01.smd
+    Exact recall = 0.9276
+    Hudup recall = 0.9266
+    MAE.recommend = 0.7624
+    MSE.recommend = 0.9564
+    Precision.recommend = 0.0619
+    R.recommend = 0.2104
+    Recall.recommend = 0.7538
+    Setup time = 0.0030
+    Speed = 0.4970
+
+  a22.01.amer
+    Exact recall = 0.9386
+    Hudup recall = 0.9376
+    MAE.recommend = 0.7595
+    MSE.recommend = 0.9495
+    Precision.recommend = 0.0634
+    R.recommend = 0.2134
+    Recall.recommend = 0.7797
+    Setup time = 0.0000
+    Speed = 0.5159
+
+  amer2
+    Exact recall = 0.9083
+    Hudup recall = 0.9073
+    MAE.recommend = 0.7636
+    MSE.recommend = 0.9590
+    Precision.recommend = 0.0506
+    R.recommend = 0.2057
+    Recall.recommend = 0.6893
+    Setup time = 0.0004
+    Speed = 0.5043
+
+  amer3
+    Exact recall = 0.9998
+    Hudup recall = 0.9987
+    MAE.recommend = 0.7596
+    MSE.recommend = 0.9497
+    Precision.recommend = 0.0639
+    R.recommend = 0.2136
+    Recall.recommend = 0.7867
+    Setup time = 0.0000
+    Speed = 0.5342
+
+
+Dataset evaluation
+
+  Dataset "1"
+    a08.01.smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7617
+      MSE.recommend = 0.9572
+      Precision.recommend = 0.0609
+      R.recommend = 0.2086
+      Recall.recommend = 0.7451
+      Setup time = 0.0000
+      Speed = 0.5239
+    a22.01.amer
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7583
+      MSE.recommend = 0.9470
+      Precision.recommend = 0.0645
+      R.recommend = 0.2204
+      Recall.recommend = 0.7882
+      Setup time = 0.0000
+      Speed = 0.6115
+    amer2
+      Exact recall = 0.9947
+      Hudup recall = 0.9936
+      MAE.recommend = 0.7629
+      MSE.recommend = 0.9525
+      Precision.recommend = 0.0583
+      R.recommend = 0.2077
+      Recall.recommend = 0.7801
+      Setup time = 0.0000
+      Speed = 0.6008
+    amer3
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7595
+      MSE.recommend = 0.9484
+      Precision.recommend = 0.0658
+      R.recommend = 0.2192
+      Recall.recommend = 0.8044
+      Setup time = 0.0000
+      Speed = 0.5461
+
+  Dataset "2"
+    a08.01.smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7602
+      MSE.recommend = 0.9447
+      Precision.recommend = 0.0500
+      R.recommend = 0.2118
+      Recall.recommend = 0.6121
+      Setup time = 0.0000
+      Speed = 0.5449
+    a22.01.amer
+      Exact recall = 0.6932
+      Hudup recall = 0.6925
+      MAE.recommend = 0.7615
+      MSE.recommend = 0.9514
+      Precision.recommend = 0.0665
+      R.recommend = 0.1991
+      Recall.recommend = 0.8009
+      Setup time = 0.0000
+      Speed = 0.3691
+    amer2
+      Exact recall = 0.9936
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7636
+      MSE.recommend = 0.9592
+      Precision.recommend = 0.0535
+      R.recommend = 0.2047
+      Recall.recommend = 0.7240
+      Setup time = 0.0000
+      Speed = 0.5454
+    amer3
+      Exact recall = 0.9989
+      Hudup recall = 0.9979
+      MAE.recommend = 0.7641
+      MSE.recommend = 0.9613
+      Precision.recommend = 0.0685
+      R.recommend = 0.2058
+      Recall.recommend = 0.8410
+      Setup time = 0.0000
+      Speed = 0.5290
+
+  Dataset "3"
+    a08.01.smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7601
+      MSE.recommend = 0.9528
+      Precision.recommend = 0.0646
+      R.recommend = 0.2032
+      Recall.recommend = 0.7950
+      Setup time = 0.0150
+      Speed = 0.5289
+    a22.01.amer
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7588
+      MSE.recommend = 0.9514
+      Precision.recommend = 0.0627
+      R.recommend = 0.2118
+      Recall.recommend = 0.7788
+      Setup time = 0.0000
+      Speed = 0.5463
+    amer2
+      Exact recall = 0.9936
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7565
+      MSE.recommend = 0.9458
+      Precision.recommend = 0.0436
+      R.recommend = 0.2053
+      Recall.recommend = 0.5994
+      Setup time = 0.0000
+      Speed = 0.5329
+    amer3
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7592
+      MSE.recommend = 0.9497
+      Precision.recommend = 0.0678
+      R.recommend = 0.2029
+      Recall.recommend = 0.8373
+      Setup time = 0.0000
+      Speed = 0.5371
+
+  Dataset "4"
+    a08.01.smd
+      Exact recall = 0.6380
+      Hudup recall = 0.6373
+      MAE.recommend = 0.7624
+      MSE.recommend = 0.9607
+      Precision.recommend = 0.0693
+      R.recommend = 0.2287
+      Recall.recommend = 0.8277
+      Setup time = 0.0000
+      Speed = 0.3508
+    a22.01.amer
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7554
+      MSE.recommend = 0.9408
+      Precision.recommend = 0.0581
+      R.recommend = 0.2202
+      Recall.recommend = 0.7287
+      Setup time = 0.0000
+      Speed = 0.5296
+    amer2
+      Exact recall = 0.9936
+      Hudup recall = 0.9926
+      MAE.recommend = 0.7676
+      MSE.recommend = 0.9702
+      Precision.recommend = 0.0536
+      R.recommend = 0.2003
+      Recall.recommend = 0.7353
+      Setup time = 0.0020
+      Speed = 0.5355
+    amer3
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7514
+      MSE.recommend = 0.9311
+      Precision.recommend = 0.0485
+      R.recommend = 0.2310
+      Recall.recommend = 0.6092
+      Setup time = 0.0000
+      Speed = 0.5285
+
+  Dataset "5"
+    a08.01.smd
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7676
+      MSE.recommend = 0.9668
+      Precision.recommend = 0.0647
+      R.recommend = 0.1999
+      Recall.recommend = 0.7891
+      Setup time = 0.0000
+      Speed = 0.5365
+    a22.01.amer
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7637
+      MSE.recommend = 0.9571
+      Precision.recommend = 0.0651
+      R.recommend = 0.2154
+      Recall.recommend = 0.8018
+      Setup time = 0.0000
+      Speed = 0.5229
+    amer2
+      Exact recall = 0.5658
+      Hudup recall = 0.5652
+      MAE.recommend = 0.7676
+      MSE.recommend = 0.9675
+      Precision.recommend = 0.0440
+      R.recommend = 0.2104
+      Recall.recommend = 0.6076
+      Setup time = 0.0000
+      Speed = 0.3067
+    amer3
+      Exact recall = 1.0000
+      Hudup recall = 0.9989
+      MAE.recommend = 0.7637
+      MSE.recommend = 0.9579
+      Precision.recommend = 0.0687
+      R.recommend = 0.2094
+      Recall.recommend = 0.8414
+      Setup time = 0.0000
+      Speed = 0.5305
+
+
+Exact recall evaluation
+
+  a08.01.smd
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 0.6380
+    Dataset "5" got 1.0000
+
+  a22.01.amer
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.6932
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+  amer2
+    Dataset "1" got 0.9947
+    Dataset "2" got 0.9936
+    Dataset "3" got 0.9936
+    Dataset "4" got 0.9936
+    Dataset "5" got 0.5658
+
+  amer3
+    Dataset "1" got 1.0000
+    Dataset "2" got 0.9989
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
+
+
+Hudup recall evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.9989
+    Dataset "2" got 0.9989
+    Dataset "3" got 0.9989
+    Dataset "4" got 0.6373
+    Dataset "5" got 0.9989
+
+  a22.01.amer
+    Dataset "1" got 0.9989
+    Dataset "2" got 0.6925
+    Dataset "3" got 0.9989
+    Dataset "4" got 0.9989
+    Dataset "5" got 0.9989
+
+  amer2
+    Dataset "1" got 0.9936
+    Dataset "2" got 0.9926
+    Dataset "3" got 0.9926
+    Dataset "4" got 0.9926
+    Dataset "5" got 0.5652
+
+  amer3
+    Dataset "1" got 0.9989
+    Dataset "2" got 0.9979
+    Dataset "3" got 0.9989
+    Dataset "4" got 0.9989
+    Dataset "5" got 0.9989
+
+
+MAE.recommend evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.7617
+    Dataset "2" got 0.7602
+    Dataset "3" got 0.7601
+    Dataset "4" got 0.7624
+    Dataset "5" got 0.7676
+
+  a22.01.amer
+    Dataset "1" got 0.7583
+    Dataset "2" got 0.7615
+    Dataset "3" got 0.7588
+    Dataset "4" got 0.7554
+    Dataset "5" got 0.7637
+
+  amer2
+    Dataset "1" got 0.7629
+    Dataset "2" got 0.7636
+    Dataset "3" got 0.7565
+    Dataset "4" got 0.7676
+    Dataset "5" got 0.7676
+
+  amer3
+    Dataset "1" got 0.7595
+    Dataset "2" got 0.7641
+    Dataset "3" got 0.7592
+    Dataset "4" got 0.7514
+    Dataset "5" got 0.7637
+
+
+MSE.recommend evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.9572
+    Dataset "2" got 0.9447
+    Dataset "3" got 0.9528
+    Dataset "4" got 0.9607
+    Dataset "5" got 0.9668
+
+  a22.01.amer
+    Dataset "1" got 0.9470
+    Dataset "2" got 0.9514
+    Dataset "3" got 0.9514
+    Dataset "4" got 0.9408
+    Dataset "5" got 0.9571
+
+  amer2
+    Dataset "1" got 0.9525
+    Dataset "2" got 0.9592
+    Dataset "3" got 0.9458
+    Dataset "4" got 0.9702
+    Dataset "5" got 0.9675
+
+  amer3
+    Dataset "1" got 0.9484
+    Dataset "2" got 0.9613
+    Dataset "3" got 0.9497
+    Dataset "4" got 0.9311
+    Dataset "5" got 0.9579
+
+
+Precision.recommend evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.0609
+    Dataset "2" got 0.0500
+    Dataset "3" got 0.0646
+    Dataset "4" got 0.0693
+    Dataset "5" got 0.0647
+
+  a22.01.amer
+    Dataset "1" got 0.0645
+    Dataset "2" got 0.0665
+    Dataset "3" got 0.0627
+    Dataset "4" got 0.0581
+    Dataset "5" got 0.0651
+
+  amer2
+    Dataset "1" got 0.0583
+    Dataset "2" got 0.0535
+    Dataset "3" got 0.0436
+    Dataset "4" got 0.0536
+    Dataset "5" got 0.0440
+
+  amer3
+    Dataset "1" got 0.0658
+    Dataset "2" got 0.0685
+    Dataset "3" got 0.0678
+    Dataset "4" got 0.0485
+    Dataset "5" got 0.0687
+
+
+R.recommend evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.2086
+    Dataset "2" got 0.2118
+    Dataset "3" got 0.2032
+    Dataset "4" got 0.2287
+    Dataset "5" got 0.1999
+
+  a22.01.amer
+    Dataset "1" got 0.2204
+    Dataset "2" got 0.1991
+    Dataset "3" got 0.2118
+    Dataset "4" got 0.2202
+    Dataset "5" got 0.2154
+
+  amer2
+    Dataset "1" got 0.2077
+    Dataset "2" got 0.2047
+    Dataset "3" got 0.2053
+    Dataset "4" got 0.2003
+    Dataset "5" got 0.2104
+
+  amer3
+    Dataset "1" got 0.2192
+    Dataset "2" got 0.2058
+    Dataset "3" got 0.2029
+    Dataset "4" got 0.2310
+    Dataset "5" got 0.2094
+
+
+Recall.recommend evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.7451
+    Dataset "2" got 0.6121
+    Dataset "3" got 0.7950
+    Dataset "4" got 0.8277
+    Dataset "5" got 0.7891
+
+  a22.01.amer
+    Dataset "1" got 0.7882
+    Dataset "2" got 0.8009
+    Dataset "3" got 0.7788
+    Dataset "4" got 0.7287
+    Dataset "5" got 0.8018
+
+  amer2
+    Dataset "1" got 0.7801
+    Dataset "2" got 0.7240
+    Dataset "3" got 0.5994
+    Dataset "4" got 0.7353
+    Dataset "5" got 0.6076
+
+  amer3
+    Dataset "1" got 0.8044
+    Dataset "2" got 0.8410
+    Dataset "3" got 0.8373
+    Dataset "4" got 0.6092
+    Dataset "5" got 0.8414
+
+
+Setup time evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  a22.01.amer
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+  amer2
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0020
+    Dataset "5" got 0.0000
+
+  amer3
+    Dataset "1" got 0.0000
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+    Dataset "5" got 0.0000
+
+
+Speed evaluation
+
+  a08.01.smd
+    Dataset "1" got 0.5239
+    Dataset "2" got 0.5449
+    Dataset "3" got 0.5289
+    Dataset "4" got 0.3508
+    Dataset "5" got 0.5365
+
+  a22.01.amer
+    Dataset "1" got 0.6115
+    Dataset "2" got 0.3691
+    Dataset "3" got 0.5463
+    Dataset "4" got 0.5296
+    Dataset "5" got 0.5229
+
+  amer2
+    Dataset "1" got 0.6008
+    Dataset "2" got 0.5454
+    Dataset "3" got 0.5329
+    Dataset "4" got 0.5355
+    Dataset "5" got 0.3067
+
+  amer3
+    Dataset "1" got 0.5461
+    Dataset "2" got 0.5290
+    Dataset "3" got 0.5371
+    Dataset "4" got 0.5285
+    Dataset "5" got 0.5305
+
+
+Evaluation information
+  Total records: 18860
+  Evaluated records: 18860
+  Evaluation percentage: 100.0%
+  Elapsed time: 2 hours 44 minutes 21 seconds
+  Started date: 2021-02-20 23-05-37
+  Ended date: 2021-02-21 01-49-58
+
+
+Algorithm parameters
+
+  a08.01.smd
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+  a22.01.amer
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+  amer2
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+
+  amer3
+    minmax_rating_bound=true
+    minmax_rating_reconfigure=false
+    delay_unsetup=false
+    similarity_threshold=NaN
+    recommend_reversed=false
+    knn=100.0000
+    recommend_fast=true
+    hybrid=false
+    alg_support_cache=true
+    min_rating=1.0000
+    max_rating=5.0000
+
+
+Algorithm descriptions
+
+  a08.01.smd
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  a22.01.amer
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  amer2
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+  amer3
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-100k-csv-r0.7-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-100k-csv-r0.7-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-100k-csv-r0.7-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-100k-csv-r0.7-k5/hdp_rating4.test"
+  Testing dataset "5" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/movielens-100k-csv-r0.7-k5/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 1.8.0_60-b27, Java HotSpot(TM) 64-Bit Server VM version 25.60-b23, Class version 52.0, Vendor "Oracle Corporation" at http://java.oracle.com/
+  OS: Windows Server 2012 R2, amd64, version 6.3
+  Network: Local address is 192.168.116.200
+  Memory (VM): Allocated memory = 10218.00MB, Free memory = 9002.48MB, Max memory = 22756.00MB
+  CPU: Intel64 Family 6 Model 62 Stepping 4, GenuineIntel, AMD64, the number of processors is 16
+  Directory: Current working directory is "c:\GoogleDrive\todeploy\working\projects\sim"

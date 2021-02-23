@@ -9,8 +9,10 @@ package net.temp.hudup.alg.cf.test3;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.Util;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -75,7 +77,28 @@ public class Amerb extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return 0;
+		Set<Integer> fieldIds1 = vRating1.fieldIds(true);
+		Set<Integer> fieldIds2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(fieldIds1.size());
+		union.addAll(fieldIds1);
+		union.addAll(fieldIds2);
+		
+		int Nab = 0, N = 0;
+		for (int fieldId : union) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			
+			if (rated1 == rated2) {
+				if (vRating1.get(fieldId).value == vRating2.get(fieldId).value)
+					Nab++;
+				else
+					N += 2;
+			}
+			else
+				N++;
+		}
+		
+		return 2.0*Nab / (double)N;
 	}
 
 	
