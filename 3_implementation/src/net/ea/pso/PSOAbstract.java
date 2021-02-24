@@ -7,21 +7,13 @@
  */
 package net.ea.pso;
 
+import java.rmi.NoSuchObjectException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import net.hudup.core.Util;
-import net.hudup.core.alg.AllowNullTrainingSet;
-import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
-import net.hudup.core.alg.SetupAlgEvent.Type;
-import net.hudup.core.data.DataConfig;
-import net.hudup.core.data.NullPointer;
-import net.hudup.core.data.Profile;
-import net.hudup.core.logistic.Inspector;
-import net.hudup.core.logistic.LogUtil;
-import net.hudup.core.logistic.ui.DescriptionDlg;
-import net.hudup.core.logistic.ui.UIUtil;
-import net.hudup.core.parser.TextParserUtil;
+import net.ea.pso.PSODoEvent.Type;
 
 /**
  * This class implements partially the particle swarm optimization (PSO) algorithm.
@@ -31,7 +23,7 @@ import net.hudup.core.parser.TextParserUtil;
  * @version 1.0
  *
  */
-public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implements PSO, PSORemote, AllowNullTrainingSet {
+public abstract class PSOAbstract<T> implements PSO<T> {
 
 
 	/**
@@ -97,71 +89,54 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	/**
 	 * Internal swarm contains particles.
 	 */
-	protected List<Particle<T>> swarm = Util.newList();
+	protected List<Particle<T>> swarm = Util.newList(0);
 	
+	
+	/**
+	 * Holding a list of listeners.
+	 */
+    protected transient PSOListenerList listenerList = new PSOListenerList();
+
+    
+    /**
+     * Flag to indicate whether algorithm learning process was started.
+     */
+    protected volatile boolean doStarted = false;
+    
+    
+    /**
+     * Flag to indicate whether algorithm learning process was paused.
+     */
+    protected volatile boolean doPaused = false;
+
+    
+	/**
+	 * Internal configuration.
+	 */
+	protected PSOConfig config = new PSOConfig();
+	
+	
+	/**
+	 * Flag to indicate whether this PSO was exported.
+	 */
+	protected boolean exported = false;
+
 	
 	/**
 	 * Default constructor.
 	 */
 	public PSOAbstract() {
-
+		config.put(MINIMIZE_MODE_FIELD, MINIMIZE_MODE_DEFAULT);
+		config.put(FUNC_EXPR_FIELD, FUNC_EXPR_DEFAULT);
+		config.put(FUNC_VARNAMES_FIELD, FUNC_VARNAMES_DEFAULT);
+		config.put(MAX_ITERATION_FIELD, MAX_ITERATION_DEFAULT);
+		config.put(PSOSetting.PARTICLE_NUMBER_FIELD, PSOSetting.PARTICLE_NUMBER_DEFAULT);
 	}
 
 	
 	@Override
-	public void setup() throws RemoteException {
-		try {
-			super.setup(new NullPointer());
-		}
-		catch (Throwable e) {
-			LogUtil.trace(e);
-		}
-	}
-	
-	
-	/**
-	 * New setting up method with target function.
-	 * @param func target function (cost function).
-	 */
-	public void setup(Function<T> func) {
-		try {
-			setFunction(func);
-			setup();
-		}
-		catch (Exception e) {
-			LogUtil.trace(e);
-		}
-	}
-
-	
-	/**
-	 * New setting up method with mathematical expression of function.
-	 * @param varNames variable names.
-	 * @param funcExpr mathematical expression of function.
-	 */
-	public void setup(List<String> varNames, String funcExpr) {
-		config.put(FUNC_EXPR_FIELD, funcExpr);
-		this.config.put(FUNC_VARNAMES_FIELD, TextParserUtil.toText(varNames, ","));
-
-		try {
-			setup();
-		}
-		catch (Exception e) {
-			LogUtil.trace(e);
-		}
-	}
-	
-	
-	/**
-	 * Learning the PSO algorithm based on specified configuration and mathematical expression.
-	 * @param psoConfig specified configuration. It can be null.
-	 * @param funcExpr mathematical expression to represent a function. It can be null.
-	 * @return target function.
-	 * @throws RemoteException if any error raises.
-	 */
-	@SuppressWarnings("unchecked")
-	protected Object learn(PSOConfig<T> psoConfig, String funcExpr) throws RemoteException {
-		if (isLearnStarted()) return null;
+	public Object learn(PSOSetting<T> setting, String funcExpr) throws RemoteException {
+		if (isDoStarted()) return null;
 		
 		swarm.clear();
 		
@@ -174,14 +149,14 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		}
 		if (func == null) return func;
 		
-		if (psoConfig == null) psoConfig = (PSOConfig<T>)getPSOConfig();
+		if (setting == null) setting = getPSOSetting();
 
 		func.setOptimizer(null);
 		
-		int N = config.getAsInt(PSOConfig.PARTICLE_NUMBER_FIELD);
-		N = N > 0 ? N : PSOConfig.PARTICLE_NUMBER_DEFAULT;
-		T[] lower = psoConfig.lower;
-		T[] upper = psoConfig.upper;
+		int N = config.getAsInt(PSOSetting.PARTICLE_NUMBER_FIELD);
+		N = N > 0 ? N : PSOSetting.PARTICLE_NUMBER_DEFAULT;
+		T[] lower = setting.lower;
+		T[] upper = setting.upper;
 		
 		Optimizer<T> optimizer = null;
 		N = 2*N; //Solving the problem of invalid randomization.
@@ -201,17 +176,17 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 
 		int maxIteration = config.getAsInt(MAX_ITERATION_FIELD);
 		maxIteration = maxIteration < 0 ? 0 : maxIteration;  
-		T cognitiveWeight = psoConfig.cognitiveWeight;
-		T socialWeightGlobal = psoConfig.socialWeightGlobal;
-		T socialWeightLocal = psoConfig.socialWeightLocal;
-		Vector<T> inertialWeight = psoConfig.inertialWeight;
-		Vector<T> constrictWeight = psoConfig.constrictWeight;
+		T cognitiveWeight = setting.cognitiveWeight;
+		T socialWeightGlobal = setting.socialWeightGlobal;
+		T socialWeightLocal = setting.socialWeightLocal;
+		Vector<T> inertialWeight = setting.inertialWeight;
+		Vector<T> constrictWeight = setting.constrictWeight;
 		
 		T elementZero = func.zero().elementZero();
 		int iteration = 0;
 		Optimizer<T> preOptimizer = null;
-		learnStarted = true;
-		while (learnStarted && (maxIteration <= 0 || iteration < maxIteration)) {
+		doStarted = true;
+		while (doStarted && (maxIteration <= 0 || iteration < maxIteration)) {
 			for (Particle<T> x : swarm) {
 				Vector<T> inertialWeightCustom = customizeInertialWeight(x, optimizer);
 				if (inertialWeightCustom != null && inertialWeightCustom.getAttCount() > 0)
@@ -264,19 +239,19 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 			
 			iteration ++;
 			
-			fireSetupEvent(new PSOLearnEvent(this, Type.doing, getName(),
+			fireDoEvent(new PSODoEventImpl(this, Type.doing, "pso",
 					"At iteration " + iteration + ": optimizer is " + optimizer.toString(),
 					iteration, maxIteration));
 			
 			if (terminatedCondition(optimizer, preOptimizer))
-				learnStarted = false;
+				doStarted = false;
 			
 			synchronized (this) {
-				while (learnPaused) {
+				while (doPaused) {
 					notifyAll();
 					try {
 						wait();
-					} catch (Exception e) {LogUtil.trace(e);}
+					} catch (Exception e) {Util.trace(e);}
 				}
 			}
 
@@ -285,10 +260,10 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		func.setOptimizer(optimizer);
 		
 		synchronized (this) {
-			learnStarted = false;
-			learnPaused = false;
+			doStarted = false;
+			doPaused = false;
 			
-			fireSetupEvent(new PSOLearnEvent(this, Type.done, getName(),
+			fireDoEvent(new PSODoEventImpl(this, Type.done, "pso",
 				"At final iteration " + iteration + ": final optimizer is " + optimizer.toString(),
 				iteration, iteration));
 
@@ -299,63 +274,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 	
 	
-	@Override
-	public Object executeAsLearn(Object input) throws RemoteException {
-		if (input == null) {
-			PSOConfig<T> psoConfig = null;
-			String funcExpr = null;
-			try {
-				while (sample.next()) {
-					Profile profile = sample.pick();
-					if (profile == null) continue;
-					
-					Functor<T> functor = createFunctor(profile);
-					if (functor != null && functor.psoConfig != null && functor.func != null) {
-						psoConfig = functor.psoConfig;
-						if (functor.func instanceof ExprFunction)
-							funcExpr = ((ExprFunction)functor.func).getExpr();
-						
-						break;
-					}
-				}
-			}
-			catch (Throwable e) {
-				psoConfig = null;
-				funcExpr = null;
-				LogUtil.trace(e);
-			}
-			finally {
-				sample.reset();
-			}
-			
-			return learn(psoConfig, funcExpr);
-		}
-		
-		if (input instanceof Vector<?>) {
-			if (func == null)
-				return null;
-			else {
-				@SuppressWarnings("unchecked")
-				Vector<T> arg = (Vector<T>)input;
-				return func.eval(arg);
-			}
-		}
-
-		if (!(input instanceof Profile)) return null;
-		
-		Profile profile = (Profile)input;
-		Functor<T> functor = createFunctor(profile);
-		if (functor == null || functor.func == null) return null;
-		
-		String funcExpr = functor.func instanceof ExprFunction ? ((ExprFunction)functor.func).getExpr() : null;
-		Object f = learn(functor.psoConfig, funcExpr);
-		if (f == null) return null;
-		
-		Optimizer<T> optimizer = func.getOptimizer();
-		return optimizer != null ? optimizer.toArray() : null;
-	}
-
-
 	/**
 	 * Checking whether the terminated condition is satisfied.
 	 * @param curOptimizer current optimizer.
@@ -380,7 +298,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 * @return list of neighbors of the given particle. Returning empty list in case of fully connected swarm topology.
 	 */
 	protected List<Particle<T>> defineNeighbors(Particle<T> targetParticle) {
-		return Util.newList();
+		return Util.newList(0);
 	}
 	
 	
@@ -416,7 +334,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	
 
 	@Override
-	public Function<?> getFunction() throws RemoteException {
+	public Function<T> getFunction() throws RemoteException {
 		return func;
 	}
 	
@@ -426,10 +344,8 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 * @param func target function (cost function).
 	 * @throws RemoteException if any error raises.
 	 */
-	@SuppressWarnings("unchecked")
-	public synchronized void setFunction(Function<?> func) throws RemoteException {
-		this.func = (Function<T>) func;
-		
+	public synchronized void setFunction(Function<T> func) throws RemoteException {
+		this.func = func;
 		if (func != null) {
 			this.config.put(FUNC_EXPR_FIELD, "");
 			this.config.put(FUNC_VARNAMES_FIELD, "");
@@ -447,63 +363,10 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		
 		this.func = exprFunc;
 		this.config.put(FUNC_EXPR_FIELD, funcExpr);
-		this.config.put(FUNC_VARNAMES_FIELD, TextParserUtil.toText(varNames, ","));
+		this.config.put(FUNC_VARNAMES_FIELD, Util.toText(varNames, ","));
 	}
 
 	
-	@Override
-	public Object getParameter() throws RemoteException {
-		return func;
-	}
-
-	
-	@Override
-	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		if (parameter == null)
-			return "";
-		else if (parameter instanceof Function<?>)
-			return func.toString();
-		else
-			return "";
-	}
-
-	
-	@Override
-	public synchronized String getDescription() throws RemoteException {
-		return parameterToShownText(getParameter());
-	}
-
-	
-	@Override
-	public Inspector getInspector() {
-		String desc = "";
-		try {
-			desc = getDescription();
-		} catch (Exception e) {LogUtil.trace(e);}
-		
-		return new DescriptionDlg(UIUtil.getFrameForComponent(null), "Inspector", desc);
-	}
-
-	
-	@Override
-	public String[] getBaseRemoteInterfaceNames() throws RemoteException {
-		return new String[] {PSORemote.class.getName()};
-	}
-
-	
-	@Override
-	public DataConfig createDefaultConfig() {
-		DataConfig config = super.createDefaultConfig();
-		config.put(MINIMIZE_MODE_FIELD, MINIMIZE_MODE_DEFAULT);
-		config.put(FUNC_EXPR_FIELD, FUNC_EXPR_DEFAULT);
-		config.put(FUNC_VARNAMES_FIELD, FUNC_VARNAMES_DEFAULT);
-		config.put(MAX_ITERATION_FIELD, MAX_ITERATION_DEFAULT);
-		config.put(PSOConfig.PARTICLE_NUMBER_FIELD, PSOConfig.PARTICLE_NUMBER_DEFAULT);
-		
-		return config;
-	}
-
-
 	/**
 	 * Extracting variable names.
 	 * @return variable names.
@@ -511,9 +374,9 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	private List<String> extractVarNames() {
 		String names = config.getAsString(FUNC_VARNAMES_FIELD);
 		if (names == null)
-			return Util.newList();
+			return Util.newList(0);
 		else
-			return TextParserUtil.parseListByClass(names, String.class, ",");
+			return Util.parseListByClass(names, String.class, ",");
 	}
 	
 	
@@ -523,6 +386,222 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 * @return functor created from profile.
 	 */
 	public abstract Functor<T> createFunctor(Profile profile);
+
+	
+	@Override
+	public void addListener(PSOListener listener) throws RemoteException {
+		synchronized (listenerList) {
+			listenerList.add(PSOListener.class, listener);
+		}
+	}
+
+
+	@Override
+	public void removeListener(PSOListener listener) throws RemoteException {
+		synchronized (listenerList) {
+			listenerList.remove(PSOListener.class, listener);
+		}
+	}
 	
 	
+	/**
+	 * Getting an array of listeners.
+	 * @return array of listeners.
+	 */
+	protected PSOListener[] getPSOListeners() {
+		if (listenerList == null) return new PSOListener[] {};
+		synchronized (listenerList) {
+			return listenerList.getListeners(PSOListener.class);
+		}
+
+	}
+	
+	
+	/**
+	 * Firing information event.
+	 * @param evt information event.
+	 */
+	protected void fireInfoEvent(PSOInfoEvent evt) {
+		if (listenerList == null) return;
+		
+		PSOListener[] listeners = getPSOListeners();
+		for (PSOListener listener : listeners) {
+			try {
+				listener.receivedInfo(evt);
+			}
+			catch (Throwable e) { 
+				Util.trace(e);
+			}
+		}
+	}
+
+	
+	/**
+	 * Firing learning event.
+	 * @param evt learning event.
+	 */
+	protected void fireDoEvent(PSODoEvent evt) {
+		if (listenerList == null) return;
+		
+		PSOListener[] listeners = getPSOListeners();
+		for (PSOListener listener : listeners) {
+			try {
+				listener.receivedDo(evt);
+			}
+			catch (Throwable e) {
+				Util.trace(e);
+			}
+		}
+	}
+
+
+	@Override
+	public boolean doPause() throws RemoteException {
+		if (!isDoRunning()) return false;
+		
+		doPaused  = true;
+		
+		try {
+			wait();
+		} 
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+		
+		return true;
+	}
+
+
+	@Override
+	public boolean doResume() throws RemoteException {
+		if (!isDoPaused()) return false;
+		
+		doPaused = false;
+		notifyAll();
+		
+		return true;
+	}
+
+
+	@Override
+	public boolean doStop() throws RemoteException {
+		if (!isDoStarted()) return false;
+		
+		doStarted = false;
+		
+		if (doPaused) {
+			doPaused = false;
+			notifyAll();
+		}
+		
+		try {
+			wait();
+		} 
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+		
+		return true;
+	}
+
+
+	@Override
+	public boolean isDoStarted() throws RemoteException {
+		return doStarted;
+	}
+
+
+	@Override
+	public boolean isDoPaused() throws RemoteException {
+		return doStarted && doPaused;
+	}
+
+
+	@Override
+	public boolean isDoRunning() throws RemoteException {
+		return doStarted && !doPaused;
+	}
+
+	
+	@Override
+	public PSOConfig getConfig() throws RemoteException {
+		return config;
+	}
+
+
+	@Override
+	public void setConfig(PSOConfig config) throws RemoteException {
+		if (config != null) this.config.putAll(config);
+	}
+
+
+	@Override
+	public synchronized Remote export(int serverPort) throws RemoteException {
+		if (exported) return null;
+		
+		Remote stub = null;
+		try {
+			stub = UnicastRemoteObject.exportObject(this, serverPort);
+		}
+		catch (Exception e) {
+			try {
+				if (stub != null) UnicastRemoteObject.unexportObject(this, true);
+			}
+			catch (Exception e2) {}
+			stub = null;
+		}
+	
+		exported = stub != null;
+		return stub;
+	}
+
+
+	@Override
+	public synchronized void unexport() throws RemoteException {
+		if (!exported) return;
+
+		try {
+        	UnicastRemoteObject.unexportObject(this, true);
+			exported = false;
+		}
+		catch (NoSuchObjectException e) {
+			exported = false;
+			Util.trace(e);
+		}
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+	}
+
+	
+	@Override
+	public void close() throws Exception {
+		try {
+			unexport();
+		}
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+	}
+
+
+	@Override
+	public String toString() {
+		if (func == null)
+			return super.toString();
+		else
+			return func.toString();
+	}
+
+
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			close();
+		} catch (Throwable e) {}
+		
+		//super.finalize();
+	}
+
+
 }

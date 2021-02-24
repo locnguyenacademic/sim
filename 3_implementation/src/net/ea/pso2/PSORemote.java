@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.ea.pso;
+package net.ea.pso2;
 
 import java.rmi.RemoteException;
 import java.util.List;

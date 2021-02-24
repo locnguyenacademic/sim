@@ -5,15 +5,15 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.ea.pso.evaluate;
+package net.ea.pso2.evaluate;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-import net.ea.pso.Functor;
-import net.ea.pso.Optimizer;
-import net.ea.pso.PSO;
-import net.ea.pso.PSOAbstract;
+import net.ea.pso2.Functor;
+import net.ea.pso2.Optimizer;
+import net.ea.pso2.PSO;
+import net.ea.pso2.PSOAbstract;
 import net.hudup.Evaluator;
 import net.hudup.core.alg.Alg;
 import net.hudup.core.data.Profile;

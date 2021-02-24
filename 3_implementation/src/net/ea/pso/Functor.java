@@ -3,10 +3,6 @@ package net.ea.pso;
 import java.io.Serializable;
 import java.util.List;
 
-import net.hudup.core.data.Profile;
-import net.hudup.core.logistic.LogUtil;
-import net.hudup.core.parser.TextParserUtil;
-
 /**
  * This class is a starter or manifest of function
  * .
@@ -29,9 +25,9 @@ public class Functor<T> implements Serializable, Cloneable {
 	
 	
 	/**
-	 * PSO configuration.
+	 * PSO setting.
 	 */
-	public PSOConfig<T> psoConfig = null;
+	public PSOSetting<T> setting = null;
 	
 	
 	/**
@@ -58,28 +54,28 @@ public class Functor<T> implements Serializable, Cloneable {
 		String expr = profile.getValueAsString(0);
 		expr = expr != null ? expr.trim() : null;
 		if (expr == null) return null;
-		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
+		List<String> varNames = Util.parseListByClass(profile.getValueAsString(1), String.class, ",");
 		if (varNames.size() == 0) return null;
 		
 		functor.func = pso.defineExprFunction(varNames, expr);
 		if (functor.func == null) return null;
 		
 		try {
-			functor.psoConfig = (PSOConfig<T>) functor.func.extractPSOConfig(pso.getConfig());
-			functor.psoConfig.lower = functor.func.extractBound(profile.getValueAsString(2));
-			functor.psoConfig.upper = functor.func.extractBound(profile.getValueAsString(3));
-		} catch (Exception e) {LogUtil.trace(e);}
+			functor.setting = (PSOSetting<T>) functor.func.extractPSOSetting(pso.getConfig());
+			functor.setting.lower = functor.func.extractBound(profile.getValueAsString(2));
+			functor.setting.upper = functor.func.extractBound(profile.getValueAsString(3));
+		} catch (Exception e) {Util.trace(e);}
 		
 		T elementZero = functor.func.zero().elementZero();
 		Vector<T> bestPosition = functor.func.createVector(elementZero);
-		List<T> position = (List<T>) TextParserUtil.parseListByClass(profile.getValueAsString(4), elementZero.getClass(), ",");
+		List<T> position = (List<T>) Util.parseListByClass(profile.getValueAsString(4), elementZero.getClass(), ",");
 		int n = Math.min(bestPosition.getAttCount(), position.size());
 		for (int i = 0; i < n; i++) {
 			bestPosition.setValue(i, position.get(i));
 		}
 		
 		String bestValueText = profile.getValueAsString(5);
-		T bestValue = (T) TextParserUtil.parseObjectByClass(bestValueText, elementZero.getClass());
+		T bestValue = (T) Util.parseObjectByClass(bestValueText, elementZero.getClass());
 		
 		functor.func.setOptimizer(new Optimizer<T>(bestPosition, bestValue));
 		

@@ -10,8 +10,6 @@ package net.ea.pso;
 import java.util.List;
 
 import net.ea.pso.logistic.speqmath.Parser;
-import net.hudup.core.Util;
-import net.hudup.core.logistic.LogUtil;
 
 /**
  * This class represents the function is specified by mathematical expression.
@@ -64,14 +62,11 @@ public class ExprFunction extends FunctionReal {
 		for (int i = 0; i < n; i++) {
 			String attName =  arg.getAtt(i).getName();
 			String replacedText = expr.contains(VAR_INDEX_SPECIAL_CHAR) ? VAR_INDEX_SPECIAL_CHAR + attName : attName;   
-			if(!expr.contains(replacedText))
-				continue;
+			if(!expr.contains(replacedText)) continue;
 			
-			if(arg.isMissing(i))
-				return null; //Cannot evaluate
+			if(arg.isMissing(i)) return null;
 			Double value = arg.getValueAsReal(attName);
-			if(!Util.isUsed(value))
-				return null; //Cannot evaluate
+			if(value == Double.NaN) return null;
 			
 			expr = expr.replaceAll(replacedText, value.toString());
 		}
@@ -79,13 +74,13 @@ public class ExprFunction extends FunctionReal {
 		try {
 			Parser parser = new Parser();
 			double value = parser.parse2(expr);
-			if (Util.isUsed(value))
+			if (value != Double.NaN)
 				return value;
 			else
 				return null;
 		}
 		catch (Throwable e) {
-			LogUtil.trace(e);
+			Util.trace(e);
 		}
 		
 		return null;

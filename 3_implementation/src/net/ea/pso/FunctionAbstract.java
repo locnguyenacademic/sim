@@ -9,11 +9,7 @@ package net.ea.pso;
 
 import java.util.List;
 
-import net.hudup.core.Util;
-import net.hudup.core.data.Attribute;
-import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.data.AttributeList;
-import net.hudup.core.parser.TextParserUtil;
+import net.ea.pso.Attribute.Type;
 
 /**
  * This abstract class represents the abstract function which is implements partially the interface {@link Function}.
@@ -88,7 +84,7 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 	@SuppressWarnings("unused")
 	@Deprecated
 	private static <T> List<T> extractBound(Function<T> func, String bounds) {
-		List<T> boundList = Util.newList();
+		List<T> boundList = Util.newList(0);
 		if (func == null) return boundList;
 		
 		try {
@@ -96,7 +92,7 @@ public abstract class FunctionAbstract<T> implements Function<T> {
 			Class<T> tClass = (Class<T>) func.zero().elementZero().getClass();
 			bounds = bounds != null ? bounds : "";
 			
-			boundList = TextParserUtil.parseListByClass(bounds, tClass, ",");
+			boundList = Util.parseListByClass(bounds, tClass, ",");
 			if (boundList.size() == 0) return boundList;
 			
 			int n = func.getVarNum();

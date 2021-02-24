@@ -9,9 +9,6 @@ package net.ea.pso;
 
 import java.io.Serializable;
 
-import net.hudup.core.data.Attribute;
-import net.hudup.core.data.DataConfig;
-
 /**
  * This interface represents function.
  * 
@@ -112,11 +109,11 @@ public interface Function<T> extends Serializable, Cloneable {
 	
 	
 	/**
-	 * Extracting PSO configuration from data configuration.
+	 * Extracting PSO setting from configuration.
 	 * @param config data configuration.
-	 * @return PSO configuration.
+	 * @return PSO setting.
 	 */
-	PSOConfig<T> extractPSOConfig(DataConfig config);
+	PSOSetting<T> extractPSOSetting(PSOConfig config);
 
 
 	/**

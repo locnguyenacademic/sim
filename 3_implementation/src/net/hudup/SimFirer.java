@@ -7,8 +7,8 @@
  */
 package net.hudup;
 
-import net.ea.pso.PSORemote;
-import net.ea.pso.PSORemoteWrapper;
+import net.ea.pso2.PSORemote;
+import net.ea.pso2.PSORemoteWrapper;
 import net.hudup.core.Firer;
 import net.hudup.core.alg.AlgRemote;
 import net.hudup.core.alg.AlgRemoteWrapper;

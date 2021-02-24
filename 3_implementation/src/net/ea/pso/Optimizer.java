@@ -9,10 +9,7 @@ package net.ea.pso;
 
 import java.io.Serializable;
 
-import net.hudup.core.Util;
-import net.hudup.core.data.Attribute;
-import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.logistic.MathUtil;
+import net.ea.pso.Attribute.Type;
 
 /**
  * This class implements the optimizer of a function, which is also called optimal point.
@@ -101,7 +98,7 @@ public class Optimizer<T> implements Serializable, Cloneable {
 				if (value == null) continue;
 				
 				if ((att.getType() == Type.real) && (value instanceof Number))
-					buffer.append(MathUtil.format(((Number)value).doubleValue()));
+					buffer.append(Util.format(((Number)value).doubleValue()));
 				else
 					buffer.append(value.toString());
 			}
@@ -114,7 +111,7 @@ public class Optimizer<T> implements Serializable, Cloneable {
 			buffer.append("best value = ");
 			
 			if ((bestValue instanceof Double) || (bestValue instanceof Float))
-				buffer.append(MathUtil.format(((Number)bestValue).doubleValue()));
+				buffer.append(Util.format(((Number)bestValue).doubleValue()));
 			else
 				buffer.append(bestValue.toString());
 		}

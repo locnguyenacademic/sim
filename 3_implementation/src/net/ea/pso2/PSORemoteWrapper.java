@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.ea.pso;
+package net.ea.pso2;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -94,7 +94,7 @@ public class PSORemoteWrapper extends ExecuteAsLearnAlgRemoteWrapper implements 
 	public Inspector getInspector() {
 		String desc = "";
 		try {
-			desc = getDescription() + ".\n" + parameterToShownText(getParameter());
+			desc = getDescription();
 		} catch (Exception e) {LogUtil.trace(e);}
 		
 		return new DescriptionDlg(UIUtil.getFrameForComponent(null), "Inspector", desc);

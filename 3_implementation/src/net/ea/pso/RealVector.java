@@ -9,9 +9,6 @@ package net.ea.pso;
 
 import java.util.Collection;
 
-import net.hudup.core.Util;
-import net.hudup.core.data.AttributeList;
-
 /**
  * This class models a profile as real number vector.
  * 
@@ -66,7 +63,7 @@ public class RealVector extends Vector<Double> {
 
 
 	@Override
-	public Object clone() {
+	public Vector<Double> duplicate() {
 		RealVector profile = new RealVector();
 		profile.attRef = this.attRef;
 		
@@ -76,16 +73,10 @@ public class RealVector extends Vector<Double> {
 		return profile;
 	}
 
-	
-	@Override
-	public Vector<Double> duplicate() {
-		return (RealVector)clone();
-	}
-
 
 	@Override
 	public boolean isValid(Double value) {
-		return value != null && Util.isUsed(value);
+		return value != null && value != Double.NaN;
 	}
 
 

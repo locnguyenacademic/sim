@@ -12,13 +12,6 @@ import java.util.List;
 
 import org.apache.commons.math3.random.RandomDataGenerator;
 
-import net.hudup.core.Constants;
-import net.hudup.core.Util;
-import net.hudup.core.data.DataConfig;
-import net.hudup.core.data.Profile;
-import net.hudup.core.logistic.LogUtil;
-import net.hudup.core.parser.TextParserUtil;
-
 /**
  * This class is the default implementation of particle swarm optimization (PSO) algorithm.
  * 
@@ -64,6 +57,19 @@ public class PSOImpl extends PSOAbstract<Double> {
 	 */
 	public PSOImpl() {
 		super();
+		
+		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
+		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
+		config.put(PSOSetting.POSITION_LOWER_BOUND_FIELD, PSOSetting.POSITION_LOWER_BOUND_DEFAULT);
+		config.put(PSOSetting.POSITION_UPPER_BOUND_FIELD, PSOSetting.POSITION_UPPER_BOUND_DEFAULT);
+		config.put(PSOSetting.COGNITIVE_WEIGHT_FIELD, PSOSetting.COGNITIVE_WEIGHT_DEFAULT);
+		config.put(PSOSetting.SOCIAL_WEIGHT_GLOBAL_FIELD, PSOSetting.SOCIAL_WEIGHT_GLOBAL_DEFAULT);
+		config.put(PSOSetting.SOCIAL_WEIGHT_LOCAL_FIELD, PSOSetting.SOCIAL_WEIGHT_LOCAL_DEFAULT);
+		config.put(PSOSetting.INERTIAL_WEIGHT_FIELD, PSOSetting.INERTIAL_WEIGHT_DEFAULT);
+		config.put(PSOSetting.CONSTRICT_WEIGHT_FIELD, PSOSetting.CONSTRICT_WEIGHT_DEFAULT);
+		config.put(PSOSetting.CONSTRICT_WEIGHT_PROB_MODE_FIELD, PSOSetting.CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
+		config.put(PSOSetting.NEIGHBORS_FDR_MODE_FIELD, PSOSetting.NEIGHBORS_FDR_MODE_DEFAULT);
+		config.put(PSOSetting.NEIGHBORS_FDR_THRESHOLD_FIELD, PSOSetting.NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 	}
 
 	
@@ -72,7 +78,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		if (curOptimizer == null || preOptimizer == null) return false;
 		
 		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
-		terminatedThreshold = Util.isUsed(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
+		terminatedThreshold = terminatedThreshold != Double.NaN && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
 		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_MODE_FIELD);
 		if (terminatedRatio)
 			return Math.abs(curOptimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold * Math.abs(preOptimizer.bestValue);
@@ -96,17 +102,17 @@ public class PSOImpl extends PSOAbstract<Double> {
 	@Override
 	protected List<Particle<Double>> defineNeighbors(Particle<Double> targetParticle) {
 		if (func == null || targetParticle == null || targetParticle.position == null)
-			return Util.newList();
-		boolean fdrMode = config.getAsBoolean(PSOConfig.NEIGHBORS_FDR_MODE_FIELD);
-		double fdrThreshold = config.getAsReal(PSOConfig.NEIGHBORS_FDR_THRESHOLD_FIELD);
-		if (!fdrMode || !Util.isUsed(fdrThreshold)) return Util.newList();
+			return Util.newList(0);
+		boolean fdrMode = config.getAsBoolean(PSOSetting.NEIGHBORS_FDR_MODE_FIELD);
+		double fdrThreshold = config.getAsReal(PSOSetting.NEIGHBORS_FDR_THRESHOLD_FIELD);
+		if (!fdrMode || fdrThreshold == Double.NaN) return Util.newList(0);
 		
 		if (!targetParticle.position.isValid(targetParticle.value))
 			targetParticle.value = func.eval(targetParticle.position);
 		if (!targetParticle.position.isValid(targetParticle.value))
-			return Util.newList();
+			return Util.newList(0);
 
-		List<Particle<Double>> neighbors = Util.newList();
+		List<Particle<Double>> neighbors = Util.newList(0);
 		for (Particle<Double> particle : swarm) {
 			if (particle.position == null || particle == targetParticle) continue;
 			
@@ -117,7 +123,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 			
 			double fdis = Math.abs(targetParticle.value - particle.value);
 			double xdis = targetParticle.position.distance(particle.position);
-			if (Util.isUsed(fdis) && Util.isUsed(xdis) && fdis >= fdrThreshold*xdis) {
+			if (fdis != Double.NaN && xdis != Double.NaN && fdis >= fdrThreshold*xdis) {
 				neighbors.add(particle);
 			}
 		}
@@ -134,11 +140,11 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	@Override
 	protected Vector<Double> customizeConstrictWeight(Particle<Double> targetParticle, Optimizer<Double> optimizer) {
-		boolean probMode = config.getAsBoolean(PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_FIELD);
+		boolean probMode = config.getAsBoolean(PSOSetting.CONSTRICT_WEIGHT_PROB_MODE_FIELD);
 		if (!probMode || func == null) return null;
 		
-		double weight = config.getAsReal(PSOConfig.CONSTRICT_WEIGHT_FIELD);
-		weight = Util.isUsed(weight) ? weight : PSOConfig.CONSTRICT_WEIGHT_DEFAULT;
+		double weight = config.getAsReal(PSOSetting.CONSTRICT_WEIGHT_FIELD);
+		weight = weight != Double.NaN ? weight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
 		int n = func.getVarNum();
 		Vector<Double> constrictWeight = func.createVector(0.0);
 		for (int i = 0; i < n; i++) constrictWeight.setValue(i, weight);
@@ -153,7 +159,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 			double deviate = Math.abs(targetParticle.bestPosition.getValueAsReal(i) - optimizer.bestPosition.getValueAsReal(i));
 			double variance = deviate * deviate;
 			
-			double w = Constants.UNUSED;
+			double w = Double.NaN;
 			if (variance == 0) {
 				w = weight;
 			}
@@ -163,7 +169,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 				w = Math.exp(-0.5*d*d/variance);
 			}
 			
-			if (Util.isUsed(w)) constrictWeight.setValue(i, w);
+			if (w != Double.NaN) constrictWeight.setValue(i, w);
 		}
 		
 		return constrictWeight;
@@ -171,26 +177,23 @@ public class PSOImpl extends PSOAbstract<Double> {
 	
 	
 	@Override
-	public PSOConfig<?> getPSOConfig() throws RemoteException {
+	public PSOSetting<Double> getPSOSetting() throws RemoteException {
 		if (func == null)
-			return new PSOConfig<Double>();
+			return new PSOSetting<Double>();
 		else
-			return func.extractPSOConfig(config);
+			return func.extractPSOSetting(config);
 	}
 
 
 	@Override
-	public void setPSOConfig(PSOConfig<?> psoConfig) throws RemoteException {
-		@SuppressWarnings("unchecked")
-		PSOConfig<Double> psoc = (PSOConfig<Double>)psoConfig;
-
-		config.put(PSOConfig.COGNITIVE_WEIGHT_FIELD, psoc.cognitiveWeight);
-		config.put(PSOConfig.SOCIAL_WEIGHT_GLOBAL_FIELD, psoc.socialWeightGlobal);
-		config.put(PSOConfig.SOCIAL_WEIGHT_LOCAL_FIELD, psoc.socialWeightLocal);
-		config.put(PSOConfig.INERTIAL_WEIGHT_FIELD, psoc.inertialWeight);
-		config.put(PSOConfig.CONSTRICT_WEIGHT_FIELD, psoc.constrictWeight);
-		config.put(PSOConfig.POSITION_LOWER_BOUND_FIELD, TextParserUtil.toText(psoc.lower, ","));
-		config.put(PSOConfig.POSITION_UPPER_BOUND_FIELD, TextParserUtil.toText(psoc.upper, ","));
+	public void setPSOSetting(PSOSetting<Double> setting) throws RemoteException {
+		config.put(PSOSetting.COGNITIVE_WEIGHT_FIELD, setting.cognitiveWeight);
+		config.put(PSOSetting.SOCIAL_WEIGHT_GLOBAL_FIELD, setting.socialWeightGlobal);
+		config.put(PSOSetting.SOCIAL_WEIGHT_LOCAL_FIELD, setting.socialWeightLocal);
+		config.put(PSOSetting.INERTIAL_WEIGHT_FIELD, setting.inertialWeight);
+		config.put(PSOSetting.CONSTRICT_WEIGHT_FIELD, setting.constrictWeight);
+		config.put(PSOSetting.POSITION_LOWER_BOUND_FIELD, Util.toText(setting.lower, ","));
+		config.put(PSOSetting.POSITION_UPPER_BOUND_FIELD, Util.toText(setting.upper, ","));
 	}
 
 
@@ -206,7 +209,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 			if (!config.containsKey(key))
 				return func != null ? RealVector.toArray(func.zero()) : new Double[0];
 
-			List<Double> boundList = TextParserUtil.parseListByClass(config.getAsString(key), Double.class, ",");
+			List<Double> boundList = Util.parseListByClass(config.getAsString(key), Double.class, ",");
 			if (boundList == null || boundList.size() == 0)
 				return func != null ? RealVector.toArray(func.zero()) : new Double[0];
 			if (func == null) return boundList.toArray(new Double[] {});
@@ -229,32 +232,6 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 
 	@Override
-	public String getName() {
-		return "pso_general";
-	}
-
-
-	@Override
-	public DataConfig createDefaultConfig() {
-		DataConfig config = super.createDefaultConfig();
-		config.put(TERMINATED_THRESHOLD_FIELD, TERMINATED_THRESHOLD_DEFAULT);
-		config.put(TERMINATED_RATIO_MODE_FIELD, TERMINATED_RATIO_MODE_DEFAULT);
-		config.put(PSOConfig.POSITION_LOWER_BOUND_FIELD, PSOConfig.POSITION_LOWER_BOUND_DEFAULT);
-		config.put(PSOConfig.POSITION_UPPER_BOUND_FIELD, PSOConfig.POSITION_UPPER_BOUND_DEFAULT);
-		config.put(PSOConfig.COGNITIVE_WEIGHT_FIELD, PSOConfig.COGNITIVE_WEIGHT_DEFAULT);
-		config.put(PSOConfig.SOCIAL_WEIGHT_GLOBAL_FIELD, PSOConfig.SOCIAL_WEIGHT_GLOBAL_DEFAULT);
-		config.put(PSOConfig.SOCIAL_WEIGHT_LOCAL_FIELD, PSOConfig.SOCIAL_WEIGHT_LOCAL_DEFAULT);
-		config.put(PSOConfig.INERTIAL_WEIGHT_FIELD, PSOConfig.INERTIAL_WEIGHT_DEFAULT);
-		config.put(PSOConfig.CONSTRICT_WEIGHT_FIELD, PSOConfig.CONSTRICT_WEIGHT_DEFAULT);
-		config.put(PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_FIELD, PSOConfig.CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
-		config.put(PSOConfig.NEIGHBORS_FDR_MODE_FIELD, PSOConfig.NEIGHBORS_FDR_MODE_DEFAULT);
-		config.put(PSOConfig.NEIGHBORS_FDR_THRESHOLD_FIELD, PSOConfig.NEIGHBORS_FDR_THRESHOLD_DEFAULT);
-		
-		return config;
-	}
-
-
-	@Override
 	public Functor<Double> createFunctor(Profile profile) {
 		if (profile == null || profile.getAttCount() < 6) return null;
 		
@@ -263,20 +240,18 @@ public class PSOImpl extends PSOAbstract<Double> {
 		String expr = profile.getValueAsString(0);
 		expr = expr != null ? expr.trim() : null;
 		if (expr == null) return null;
-		List<String> varNames = TextParserUtil.parseListByClass(profile.getValueAsString(1), String.class, ",");
+		List<String> varNames = Util.parseListByClass(profile.getValueAsString(1), String.class, ",");
 		if (varNames.size() == 0) return null;
 		
 		functor.func = defineExprFunction(varNames, expr);
 		if (functor.func == null) return null;
 		
-		try {
-			functor.psoConfig = functor.func.extractPSOConfig(getConfig());
-			functor.psoConfig.lower = functor.func.extractBound(profile.getValueAsString(2));
-			functor.psoConfig.upper = functor.func.extractBound(profile.getValueAsString(3));
-		} catch (Exception e) {LogUtil.trace(e);}
+		functor.setting = functor.func.extractPSOSetting(config);
+		functor.setting.lower = functor.func.extractBound(profile.getValueAsString(2));
+		functor.setting.upper = functor.func.extractBound(profile.getValueAsString(3));
 		
 		Vector<Double> bestPosition = functor.func.createVector(0.0);
-		List<Double> position = TextParserUtil.parseListByClass(profile.getValueAsString(4), Double.class, ",");
+		List<Double> position = Util.parseListByClass(profile.getValueAsString(4), Double.class, ",");
 		int n = Math.min(bestPosition.getAttCount(), position.size());
 		for (int i = 0; i < n; i++) {
 			bestPosition.setValue(i, position.get(i));
@@ -285,7 +260,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		Double bestValue = null;
 		try {
 			bestValue = Double.parseDouble(profile.getValueAsString(5));
-		} catch (Exception e) {LogUtil.trace(e);}
+		} catch (Exception e) {Util.trace(e);}
 		
 		functor.func.setOptimizer(new Optimizer<Double>(bestPosition, bestValue));
 		

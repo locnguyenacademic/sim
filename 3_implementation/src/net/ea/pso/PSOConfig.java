@@ -8,203 +8,255 @@
 package net.ea.pso;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * This class specifies configuration of particle swarm optimization (PSO) algorithm.
+ * This class represents normal configuration of particle swarm optimization (PSO) algorithm.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
- * @param <T> parameter type.
  */
-public class PSOConfig<T> implements Cloneable, Serializable {
-
-
+public class PSOConfig implements Serializable, Cloneable {
+	
+	
 	/**
-	 * Serial version UID for serializable class.
+	 * Serial version UID for serializable class. 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	
 	/**
-	 * Particle number.
+	 * Built-in properties map.
 	 */
-	public final static String PARTICLE_NUMBER_FIELD = "pso_particle_number";
-	
-	
-	/**
-	 * Default value for particle number.
-	 */
-	public final static int PARTICLE_NUMBER_DEFAULT = 50;
+	protected Map<String, Serializable> properties = Util.newMap(0);
 
-	
-	/**
-	 * Lower bound of position.
-	 */
-	public final static String POSITION_LOWER_BOUND_FIELD = "pso_position_lower_bound";
-	
-	
-	/**
-	 * Default value for lower bound of position.
-	 */
-	public final static String POSITION_LOWER_BOUND_DEFAULT = "-1";
-
-
-	/**
-	 * Upper bound of position.
-	 */
-	public final static String POSITION_UPPER_BOUND_FIELD = "pso_position_upper_bound";
-	
-	
-	/**
-	 * Default value for upper bound of position.
-	 */
-	public final static String POSITION_UPPER_BOUND_DEFAULT = "1";
-	
-	
-	/**
-	 * Cognitive weight.
-	 */
-	public final static String COGNITIVE_WEIGHT_FIELD = "pso_cognitive_weight";
-
-	
-	/**
-	 * Default value for cognitive weight parameter.
-	 */
-	public final static double COGNITIVE_WEIGHT_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Global social weight.
-	 */
-	public final static String SOCIAL_WEIGHT_GLOBAL_FIELD = "pso_social_weight_global";
-
-	
-	/**
-	 * Default value for global social weight.
-	 */
-	public final static double SOCIAL_WEIGHT_GLOBAL_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Global social weight.
-	 */
-	public final static String SOCIAL_WEIGHT_LOCAL_FIELD = "pso_social_weight_local";
-
-	
-	/**
-	 * Default value for local social weight.
-	 */
-	public final static double SOCIAL_WEIGHT_LOCAL_DEFAULT = 1.4962;
-
-	
-	/**
-	 * Inertial weight.
-	 */
-	public final static String INERTIAL_WEIGHT_FIELD = "pso_inertial_weight";
-
-	
-	/**
-	 * Default value for inertial weight.
-	 */
-	public final static double INERTIAL_WEIGHT_DEFAULT = 0.7298;
-
-	
-	/**
-	 * Constriction weight.
-	 */
-	public final static String CONSTRICT_WEIGHT_FIELD = "pso_constrict_weight";
-
-	
-	/**
-	 * Default value for constriction weight.
-	 */
-	public final static double CONSTRICT_WEIGHT_DEFAULT = 1;
-
-	
-	/**
-	 * Probabilistic constriction weight mode.
-	 */
-	public final static String CONSTRICT_WEIGHT_PROB_MODE_FIELD = "pso_constrict_weight_prob_mode";
-
-	
-	/**
-	 * Default value for probabilistic constriction weight mode.
-	 */
-	public final static boolean CONSTRICT_WEIGHT_PROB_MODE_DEFAULT = false;
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";
-
-	
-	/**
-	 * Fitness distance ratio mode.
-	 */
-	public final static boolean NEIGHBORS_FDR_MODE_DEFAULT = false;
-	
-	
-	/**
-	 * Fitness distance ratio threshold.
-	 */
-	public final static String NEIGHBORS_FDR_THRESHOLD_FIELD = "neighbors_fdr_threshold";
-
-	
-	/**
-	 * Default value for fitness distance ratio threshold.
-	 */
-	public final static double NEIGHBORS_FDR_THRESHOLD_DEFAULT = 2;
-
-	
-	/**
-	 * Cognitive weight.
-	 */
-	public T cognitiveWeight;
-
-	
-	/**
-	 * Global social weight.
-	 */
-	public T socialWeightGlobal;
-
-	
-	/**
-	 * Local social weight.
-	 */
-	public T socialWeightLocal;
-
-	
-	/**
-	 * Inertial weight.
-	 */
-	public Vector<T> inertialWeight;
-
-	
-	/**
-	 * Restriction weight.
-	 */
-	public Vector<T> constrictWeight;
-
-	
-	/**
-	 * Lower bound parameter.
-	 */
-	public T[] lower;
-
-	
-	/**
-	 * Upper bound parameter.
-	 */
-	public T[] upper;
-	
 	
 	/**
 	 * Default constructor.
 	 */
 	public PSOConfig() {
 
+	}
+
+	
+	/**
+	 * Clearing all entries.
+	 */
+	public void clear() {
+		properties.clear();
+	}
+	
+	
+	/**
+	 * Getting the size of configuration.
+	 * @return Size of this configuration
+	 */
+	public int size() {
+		return properties.size();
+	}
+	
+	
+	/**
+	 * Extracting set of keys over all entries.
+	 * @return Set of keys
+	 */
+	public Set<String> keySet() {
+		return properties.keySet();
+	}
+	
+	
+	/**
+	 * Testing whether the configuration contains the specific key.
+	 * @param key The specific key
+	 * @return Whether contains this key
+	 */
+	public boolean containsKey(String key) {
+		return properties.containsKey(key);
+	}
+	
+	
+	/**
+	 * Putting the pair of key and value to the configuration.
+	 * @param key Specific key
+	 * @param value Associated value with the key. The value must be serializable.
+	 * @return the previous value.
+	 */
+	public Serializable put(String key, Serializable value) {
+		return properties.put(key, value); 
+	}
+	
+	
+	/**
+	 * Putting entire other configuration into this list.
+	 * @param config Other configuration
+	 */
+	public void putAll(PSOConfig config) {
+		Set<String> keys = config.keySet();
+		for (String key : keys) {
+			put(key, config.get(key));
+		}
+	}
+
+
+	/**
+	 * Getting value associated with specific key.
+	 * @param key Specific key
+	 * @return Value by key
+	 */
+	public Serializable get(String key) {
+		return properties.get(key);
+	}
+	
+	
+	/**
+	 * Removing entry identified by the specific key.
+	 * @param key Specific key.
+	 * @return removed value.
+	 */
+	public Serializable remove(String key) {
+		if (!properties.containsKey(key)) return null;
+
+		return properties.remove(key);
+	}
+	
+	
+	/**
+	 * Getting value associated with the specified key as a string.
+	 * @param key Specified key
+	 * @return Value as string
+	 */
+	public String getAsString(String key) {
+		if (!containsKey(key)) return null;
+
+		Serializable value = properties.get(key);
+		if (value instanceof String)
+			return (String)value;
+		else
+			return value.toString();
+	}
+	
+	
+	/**
+	 * Getting value associated with the specified key as a real number.
+	 * @param key Specified key
+	 * @return Value as real number
+	 */
+	public double getAsReal(String key) {
+		if (!containsKey(key))
+			return Double.NaN;
+		
+		if (isRealValue(key) || isLongValue(key) || isIntValue(key))
+			return ((Number) get(key)).doubleValue();
+		else
+			return Double.parseDouble(get(key).toString());
+	}
+
+	
+	/**
+	 * Getting value associated with the specified key as a long number. In Hudup framework, long number is also time in mili-seconds.
+	 * @param key Specified key
+	 * @return Value as a long number.
+	 */
+	public long getAsLong(String key) {
+		if (!containsKey(key))
+			return -1;
+		
+		if (isIntValue(key) || isLongValue(key) || isRealValue(key))
+			return ((Number) get(key)).longValue();
+		else
+			return Long.parseLong(get(key).toString());
+	}
+
+	
+	/**
+	 * Getting value associated with the specified key as an integer.
+	 * @param key Specified key
+	 * @return Value as integer
+	 */
+	public int getAsInt(String key) {
+		if (!containsKey(key))
+			return -1;
+		
+		if (isIntValue(key) || isLongValue(key) || isRealValue(key))
+			return ((Number) get(key)).intValue();
+		else
+			return Integer.parseInt(get(key).toString());
+	}
+
+	
+	/**
+	 * Getting value associated with the specified key as a boolean value.
+	 * @param key Specified key
+	 * @return Value as boolean
+	 */
+	public boolean getAsBoolean(String key) {
+		if (!containsKey(key))
+			return false;
+		
+		if (isBooleanValue(key))
+			return (Boolean) get(key);
+		else
+			return Boolean.parseBoolean(get(key).toString());
+	}
+	
+	
+	/**
+	 * Testing whether value associated with the specified key is real number.
+	 * @param key Specified key
+	 * @return whether is real value
+	 */
+	public boolean isRealValue(String key) {
+		if (!containsKey(key))
+			return false;
+		
+		Serializable value = get(key);
+		return (value instanceof Double) || (value instanceof Float);
+	}
+
+	
+	/**
+	 * Testing whether value associated with the specified key is long number. In Hudup framework, long number is also time in mili-seconds.
+	 * @param key Specified key
+	 * @return whether is long value.
+	 */
+	public boolean isLongValue(String key) {
+		if (!containsKey(key))
+			return false;
+		
+		Serializable value = get(key);
+		return value instanceof Long;
+	}
+
+	
+	/**
+	 * Testing whether value associated with the specified key is integer.
+	 * @param key Specified key
+	 * @return whether is integer value
+	 */
+	public boolean isIntValue(String key) {
+		if (!containsKey(key))
+			return false;
+		
+		Serializable value = get(key);
+		return  (value instanceof Integer) || 
+				(value instanceof Short) || 
+				(value instanceof Byte);
+	}
+
+	
+	/**
+	 * Testing whether value associated with the specified key is boolean value.
+	 * @param key Specified key
+	 * @return whether is boolean value
+	 */
+	public boolean isBooleanValue(String key) {
+		if (!containsKey(key))
+			return false;
+		
+		Serializable value = get(key);
+		return (value instanceof Boolean);
 	}
 
 	

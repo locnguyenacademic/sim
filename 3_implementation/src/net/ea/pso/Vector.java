@@ -9,9 +9,6 @@ package net.ea.pso;
 
 import java.util.Collection;
 
-import net.hudup.core.data.AttributeList;
-import net.hudup.core.data.Profile;
-
 /**
  * This class models a profile as vector.
  * 

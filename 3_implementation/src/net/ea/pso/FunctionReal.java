@@ -10,10 +10,7 @@ package net.ea.pso;
 import java.util.List;
 import java.util.Random;
 
-import net.hudup.core.data.Attribute.Type;
-import net.hudup.core.parser.TextParserUtil;
-import net.hudup.core.Util;
-import net.hudup.core.data.DataConfig;
+import net.ea.pso.Attribute.Type;
 
 /**
  * This abstract class represents the abstract function whose image domain is real space.
@@ -149,39 +146,39 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 
 
 	@Override
-	public PSOConfig<Double> extractPSOConfig(DataConfig config) {
-		PSOConfig<Double> psoConfig = new PSOConfig<Double>();
-		if (config == null) return psoConfig;
+	public PSOSetting<Double> extractPSOSetting(PSOConfig config) {
+		PSOSetting<Double> setting = new PSOSetting<Double>();
+		if (config == null) return setting;
 		
-		double cognitiveWeight = config.getAsReal(PSOConfig.COGNITIVE_WEIGHT_FIELD);
-		psoConfig.cognitiveWeight = Util.isUsed(cognitiveWeight) && cognitiveWeight > 0 ? cognitiveWeight : PSOConfig.COGNITIVE_WEIGHT_DEFAULT;
+		double cognitiveWeight = config.getAsReal(PSOSetting.COGNITIVE_WEIGHT_FIELD);
+		setting.cognitiveWeight = cognitiveWeight != Double.NaN && cognitiveWeight > 0 ? cognitiveWeight : PSOSetting.COGNITIVE_WEIGHT_DEFAULT;
 		
-		double socialWeightGlobal = config.getAsReal(PSOConfig.SOCIAL_WEIGHT_GLOBAL_FIELD);
-		psoConfig.socialWeightGlobal = Util.isUsed(socialWeightGlobal) && socialWeightGlobal > 0 ? socialWeightGlobal : PSOConfig.SOCIAL_WEIGHT_GLOBAL_DEFAULT;
+		double socialWeightGlobal = config.getAsReal(PSOSetting.SOCIAL_WEIGHT_GLOBAL_FIELD);
+		setting.socialWeightGlobal = socialWeightGlobal != Double.NaN && socialWeightGlobal > 0 ? socialWeightGlobal : PSOSetting.SOCIAL_WEIGHT_GLOBAL_DEFAULT;
 
-		double socialWeightLocal = config.getAsReal(PSOConfig.SOCIAL_WEIGHT_LOCAL_FIELD);
-		psoConfig.socialWeightLocal = Util.isUsed(socialWeightLocal) && socialWeightLocal > 0 ? socialWeightLocal : PSOConfig.SOCIAL_WEIGHT_LOCAL_DEFAULT;
+		double socialWeightLocal = config.getAsReal(PSOSetting.SOCIAL_WEIGHT_LOCAL_FIELD);
+		setting.socialWeightLocal = socialWeightLocal != Double.NaN && socialWeightLocal > 0 ? socialWeightLocal : PSOSetting.SOCIAL_WEIGHT_LOCAL_DEFAULT;
 
-		double inertialWeight = config.getAsReal(PSOConfig.INERTIAL_WEIGHT_FIELD);
-		inertialWeight = Util.isUsed(inertialWeight) && inertialWeight > 0 ? inertialWeight : PSOConfig.INERTIAL_WEIGHT_DEFAULT;
-		psoConfig.inertialWeight = createVector(inertialWeight);
+		double inertialWeight = config.getAsReal(PSOSetting.INERTIAL_WEIGHT_FIELD);
+		inertialWeight = inertialWeight != Double.NaN && inertialWeight > 0 ? inertialWeight : PSOSetting.INERTIAL_WEIGHT_DEFAULT;
+		setting.inertialWeight = createVector(inertialWeight);
 
-		double constrictWeight = config.getAsReal(PSOConfig.CONSTRICT_WEIGHT_FIELD);
-		constrictWeight = Util.isUsed(constrictWeight) && constrictWeight > 0 ? constrictWeight : PSOConfig.CONSTRICT_WEIGHT_DEFAULT;
-		psoConfig.constrictWeight = createVector(constrictWeight);
+		double constrictWeight = config.getAsReal(PSOSetting.CONSTRICT_WEIGHT_FIELD);
+		constrictWeight = constrictWeight != Double.NaN && constrictWeight > 0 ? constrictWeight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
+		setting.constrictWeight = createVector(constrictWeight);
 
-		psoConfig.lower = extractBound(config.getAsString(PSOConfig.POSITION_LOWER_BOUND_FIELD));
+		setting.lower = extractBound(config.getAsString(PSOSetting.POSITION_LOWER_BOUND_FIELD));
 		
-		psoConfig.upper = extractBound(config.getAsString(PSOConfig.POSITION_UPPER_BOUND_FIELD));
+		setting.upper = extractBound(config.getAsString(PSOSetting.POSITION_UPPER_BOUND_FIELD));
 
-		return psoConfig;
+		return setting;
 	}
 
 
 	@Override
 	public Double[] extractBound(String bounds) {
 		if (bounds == null) return RealVector.toArray(zero());
-		List<Double> boundList = TextParserUtil.parseListByClass(bounds, Double.class, ",");
+		List<Double> boundList = Util.parseListByClass(bounds, Double.class, ",");
 		if (boundList.size() == 0) return RealVector.toArray(zero());
 		
 		int n = getVarNum();
