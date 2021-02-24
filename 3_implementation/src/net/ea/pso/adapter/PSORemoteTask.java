@@ -8,6 +8,7 @@
 package net.ea.pso.adapter;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import net.hudup.core.alg.ExecuteAsLearnAlgRemoteTask;
 
@@ -26,6 +27,15 @@ public interface PSORemoteTask extends ExecuteAsLearnAlgRemoteTask {
 	 * @throws RemoteException if any error raises.
 	 */
 	void setup() throws RemoteException;
+
+	
+	/**
+	 * New setting up method with mathematical expression of function.
+	 * @param varNames variable names.
+	 * @param funcExpr mathematical expression of function.
+	 * @throws RemoteException if any error raises.
+	 */
+	void setup(List<String> varNames, String funcExpr) throws RemoteException;
 
 	
 }

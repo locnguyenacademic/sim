@@ -1,9 +1,9 @@
 package net.temp.ea.pso.test;
 
-import net.ea.pso2.PSOConfig;
-import net.ea.pso2.PSOImpl;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
+import net.temp.ea.pso.PSOConfig;
+import net.temp.ea.pso.PSOImpl;
 
 /**
  * Testing general PSO with probabilistic constriction coefficient.

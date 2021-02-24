@@ -8,6 +8,7 @@
 package net.ea.pso.adapter;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import net.hudup.core.alg.AllowNullTrainingSet;
 import net.hudup.core.alg.ExecuteAsLearnAlgRemoteWrapper;
@@ -56,6 +57,12 @@ public class PSORemoteWrapper extends ExecuteAsLearnAlgRemoteWrapper implements 
 	@Override
 	public void setup() throws RemoteException {
 		((PSORemote)this.remoteAlg).setup();
+	}
+
+
+	@Override
+	public void setup(List<String> varNames, String funcExpr) throws RemoteException {
+		((PSORemote)this.remoteAlg).setup(varNames, funcExpr);
 	}
 
 

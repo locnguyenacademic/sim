@@ -16,7 +16,7 @@ import java.util.Collection;
  * @version 1.0
  *
  */
-public class RealVector extends Vector<Double> {
+public final class RealVector extends Vector<Double> {
 	
 
 	/**

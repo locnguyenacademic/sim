@@ -8,20 +8,24 @@
 package net.ea.pso.adapter;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import net.ea.pso.ExprFunction;
 import net.ea.pso.Functor;
 import net.ea.pso.Optimizer;
-import net.ea.pso.PSOConfig;
+import net.ea.pso.PSODoEvent;
+import net.ea.pso.PSOInfoEvent;
 import net.ea.pso.PSOListener;
 import net.ea.pso.PSOSetting;
 import net.ea.pso.Vector;
 import net.hudup.core.alg.AllowNullTrainingSet;
 import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
-import net.hudup.core.data.DataConfig;
+import net.hudup.core.alg.SetupAlgEvent;
+import net.hudup.core.alg.SetupAlgEvent.Type;
 import net.hudup.core.data.NullPointer;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
+import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.ui.DescriptionDlg;
 import net.hudup.core.logistic.ui.UIUtil;
 
@@ -53,6 +57,14 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	 */
 	public PSOAbstract() {
 		pso = createPSO();
+		
+		try {
+			config.putAll(Util.toConfig(pso.getConfig()));
+		} catch (Throwable e) {Util.trace(e);}
+		
+		try {
+			pso.addListener(this);
+		} catch (Throwable e) {Util.trace(e);}
 	}
 
 	
@@ -66,20 +78,36 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		}
 	}
 	
+
+	@Override
+	public void setup(List<String> varNames, String funcExpr) throws RemoteException {
+		config.put(net.ea.pso.PSO.FUNC_EXPR_FIELD, funcExpr);
+		config.put(net.ea.pso.PSO.FUNC_VARNAMES_FIELD, Util.toText(varNames, ","));
+
+		try {
+			setup();
+		}
+		catch (Exception e) {
+			LogUtil.trace(e);
+		}
+	}
+
 	
 	@Override
 	public Object executeAsLearn(Object input) throws RemoteException {
-		pso.getConfig().putAll(toPSOConfig(config));
+		pso.getConfig().putAll(Util.transferToPSOConfig(config));
 
 		if (input == null) {
 			PSOSetting<T> setting = null;
 			String funcExpr = null;
 			try {
+				net.ea.pso.AttributeList newAttRef = null;
 				while (sample.next()) {
 					Profile profile = sample.pick();
 					if (profile == null) continue;
+					if (newAttRef == null) newAttRef = Util.extractPSOAttributes(profile);
 					
-					Functor<T> functor = pso.createFunctor(toPSOProfile(profile));
+					Functor<T> functor = pso.createFunctor(Util.toPSOProfile(newAttRef, profile));
 					if (functor != null && functor.setting != null && functor.func != null) {
 						setting = functor.setting;
 						if (functor.func instanceof ExprFunction)
@@ -114,7 +142,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 		if (!(input instanceof Profile)) return null;
 		
 		Profile profile = (Profile)input;
-		Functor<T> functor = pso.createFunctor(toPSOProfile(profile));
+		Functor<T> functor = pso.createFunctor(Util.toPSOProfile(profile));
 		if (functor == null || functor.func == null) return null;
 		
 		String funcExpr = functor.func instanceof ExprFunction ? ((ExprFunction)functor.func).getExpr() : null;
@@ -133,30 +161,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	protected abstract net.ea.pso.PSOAbstract<T> createPSO();
 	
 	
-	/**
-	 * Converting Hudup profile into PSO profile.
-	 * @param profile Hudup profile.
-	 * @return PSO profile.
-	 */
-	protected abstract net.ea.pso.Profile toPSOProfile(Profile profile);
-
-	
-	/**
-	 * Convert Hudup configuration to PSO configuration.
-	 * @param config Hudup configuration.
-	 * @return PSO configuration.
-	 */
-	protected abstract PSOConfig toPSOConfig(DataConfig config);
-	
-	
-	/**
-	 * Convert PSO configuration to Hudup configuration.
-	 * @param psoConfig PSO configuration.
-	 * @return Hudup configuration.
-	 */
-	protected abstract DataConfig toConfig(PSOConfig psoConfig);
-	
-	
 	@Override
 	public Object getParameter() throws RemoteException {
 		return pso;
@@ -165,8 +169,9 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	
 	@Override
 	public String parameterToShownText(Object parameter, Object... info) throws RemoteException {
-		if (parameter == null) return "";
-		if (!(parameter instanceof net.ea.pso.PSO))
+		if (parameter == null)
+			return "";
+		else if (!(parameter instanceof net.ea.pso.PSO))
 			return "";
 		else
 			return ((net.ea.pso.PSO<?>)parameter).toString();
@@ -197,12 +202,23 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 
 	
 	@Override
-	public DataConfig createDefaultConfig() {
-		DataConfig config = super.createDefaultConfig();
-		try {
-			config.putAll(toConfig(pso.getConfig()));
-		} catch (Throwable e) {Util.trace(e);}
-		return config;
+	public void receivedInfo(PSOInfoEvent evt) throws RemoteException {
+
+	}
+
+	
+	@Override
+	public void receivedDo(PSODoEvent evt) throws RemoteException {
+		if (evt.getType() == PSODoEvent.Type.doing) {
+			fireSetupEvent(new SetupAlgEvent(this, Type.doing, getName(), null,
+				evt.getLearnResult(),
+				evt.getProgressStep(), evt.getProgressTotalEstimated()));
+		}
+		else if (evt.getType() == PSODoEvent.Type.done) {
+			fireSetupEvent(new SetupAlgEvent(this, Type.done, getName(), null,
+					evt.getLearnResult(),
+					evt.getProgressStep(), evt.getProgressTotalEstimated()));
+		}
 	}
 
 

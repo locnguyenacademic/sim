@@ -111,6 +111,11 @@ public class Util {
 	 * @return text format of number of the specified number.
 	 */
 	public static String format(double number) {
+		try {
+		    return net.ea.pso.adapter.Util.format(number);
+		}
+		catch (Throwable e) {}
+
 		return String.format(DECIMAL_FORMAT, number);
 	}
 
@@ -123,14 +128,17 @@ public class Util {
 	 * @return Text form (string) of the specified array of objects, in which each object is converted as a word in such text form.
 	 */
 	public static <T extends Object> String toText(T[] array, String sep) {
+		try {
+		    return net.ea.pso.adapter.Util.toText(array, sep);
+		}
+		catch (Throwable e) {}
+
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < array.length; i++) {
 			if ( i > 0) buffer.append(sep + " ");
 			buffer.append(array[i]);
 		}
-		
 		return buffer.toString();
-		
 	}
 
 	
@@ -142,15 +150,18 @@ public class Util {
 	 * @return Text form (string) of the specified collection of objects, in which each object is converted as a word in such text form.
 	 */
 	public static <T extends Object> String toText(Collection<T> list, String sep) {
+		try {
+		    return net.ea.pso.adapter.Util.toText(list, sep);
+		}
+		catch (Throwable e) {}
+
 		StringBuffer buffer = new StringBuffer();
 		int i = 0;
 		for (T value : list) {
 			if (i > 0) buffer.append(sep + " ");
 			buffer.append(value);
-			
 			i++;
 		}
-			
 		return buffer.toString();
 	}
 
@@ -163,19 +174,19 @@ public class Util {
 	 * @return list of words (tokens) from splitting the specified string.
 	 */
 	public static List<String> split(String source, String sep, String remove) {
+		try {
+		    return net.ea.pso.adapter.Util.split(source, sep, remove);
+		}
+		catch (Throwable e) {}
+
 		String[] array = source.split(sep);
-		
 		List<String> result = Util.newList(0);
 		for (String str : array) {
 			if (str == null) continue;
-			
-			if (remove != null && remove.length() > 0)
-				str = str.replaceAll(remove, "");
+			if (remove != null && remove.length() > 0) str = str.replaceAll(remove, "");
 			str = str.trim();
-			if (str.length() > 0)
-				result.add(str);
+			if (str.length() > 0) result.add(str);
 		}
-		
 		return result;
 	}
 
@@ -190,16 +201,18 @@ public class Util {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Object> List<T> parseListByClass(String string, Class<T> type, String sep) {
+		try {
+		    return net.ea.pso.adapter.Util.parseListByClass(string, type, sep);
+		}
+		catch (Throwable e) {}
+
 		string = string.trim();
 		List<String> array = split(string, sep, null);
-		
 		List<T> list = Util.newList(0);
 		for (String el : array) {
 			T v = (T) parseObjectByClass(el, type);
-			if (v != null)
-				list.add(v);
+			if (v != null) list.add(v);
 		}
-		
 		return list;
 	}
 
@@ -210,7 +223,12 @@ public class Util {
 	 * @param type class of the parsed object.
 	 * @return parsed object.
 	 */
-	protected static Object parseObjectByClass(String string, Class<?> type) {
+	public static Object parseObjectByClass(String string, Class<?> type) {
+		try {
+		    return net.ea.pso.adapter.Util.parseObjectByClass(string, type);
+		}
+		catch (Throwable e) {}
+
 		Object v = null;
 		try {
 			if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type))
@@ -232,17 +250,16 @@ public class Util {
 			else if (String.class.isAssignableFrom(type))
 				v = string; 
 			else if (Date.class.isAssignableFrom(type))
-				v = new SimpleDateFormat(Util.DATE_FORMAT).parse(string); 
+				v = new SimpleDateFormat(DATE_FORMAT).parse(string); 
 			else if (File.class.isAssignableFrom(type))
 				v = new File(string);
 			else
 				v = null;
 		}
 		catch (Throwable e) {
-			Util.trace(e);
 			v = null;
+			Util.trace(e);
 		} 
-	
 		return v;
 	}
 

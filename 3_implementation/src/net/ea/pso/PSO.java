@@ -24,6 +24,42 @@ public interface PSO<T> extends Remote, Serializable, Cloneable, AutoCloseable {
 
 	
 	/**
+	 * Minimization mode.
+	 */
+	public final static String MINIMIZE_MODE_FIELD = "minimize_mode";
+	
+	
+	/**
+	 * Default value for minimization mode.
+	 */
+	public final static boolean MINIMIZE_MODE_DEFAULT = true;
+
+	
+	/**
+	 * Function expression.
+	 */
+	public final static String FUNC_EXPR_FIELD = "function_expression";
+	
+	
+	/**
+	 * Default value for function expression.
+	 */
+	public final static String FUNC_EXPR_DEFAULT = "(x1 + x2)^2";
+
+	
+	/**
+	 * Function variable names.
+	 */
+	public final static String FUNC_VARNAMES_FIELD = "function_variables";
+	
+	
+	/**
+	 * Default value for variable names.
+	 */
+	public final static String FUNC_VARNAMES_DEFAULT = "x1, x2";
+
+	
+	/**
 	 * Learning the PSO algorithm based on specified setting and mathematical expression.
 	 * @param setting specified setting. It can be null.
 	 * @param funcExpr mathematical expression to represent a function. It can be null.
