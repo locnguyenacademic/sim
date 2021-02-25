@@ -353,6 +353,28 @@ public class LayerImpl implements Layer {
 		return this.activateRef = activateRef;
 	}
 
+
+	@Override
+	public double[] getInput() {
+		if (neurons.size() == 0) return null;
+		double[] array = new double[neurons.size()];
+		for (int j = 0; j < array.length; j++) {
+			array[j] = neurons.get(j).getInput();
+		}
+		return array;
+	}
+
+
+	@Override
+	public double[] getOutput() {
+		if (neurons.size() == 0) return null;
+		double[] array = new double[neurons.size()];
+		for (int j = 0; j < array.length; j++) {
+			array[j] = neurons.get(j).getOutput();
+		}
+		return array;
+	}
+
 	
 //	/**
 //	 * Getting previous neurons of specified neuron.

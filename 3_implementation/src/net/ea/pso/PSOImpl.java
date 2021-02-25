@@ -78,7 +78,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		if (curOptimizer == null || preOptimizer == null) return false;
 		
 		double terminatedThreshold = config.getAsReal(TERMINATED_THRESHOLD_FIELD);
-		terminatedThreshold = terminatedThreshold != Double.NaN && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
+		terminatedThreshold = !Double.isNaN(terminatedThreshold) && terminatedThreshold >= 0 ? terminatedThreshold : TERMINATED_THRESHOLD_DEFAULT;
 		boolean terminatedRatio = config.getAsBoolean(TERMINATED_RATIO_MODE_FIELD);
 		if (terminatedRatio)
 			return Math.abs(curOptimizer.bestValue - preOptimizer.bestValue) <= terminatedThreshold * Math.abs(preOptimizer.bestValue);
@@ -105,7 +105,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 			return Util.newList(0);
 		boolean fdrMode = config.getAsBoolean(PSOSetting.NEIGHBORS_FDR_MODE_FIELD);
 		double fdrThreshold = config.getAsReal(PSOSetting.NEIGHBORS_FDR_THRESHOLD_FIELD);
-		if (!fdrMode || fdrThreshold == Double.NaN) return Util.newList(0);
+		if (!fdrMode || Double.isNaN(fdrThreshold)) return Util.newList(0);
 		
 		if (!targetParticle.position.isValid(targetParticle.value))
 			targetParticle.value = func.eval(targetParticle.position);
@@ -123,7 +123,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 			
 			double fdis = Math.abs(targetParticle.value - particle.value);
 			double xdis = targetParticle.position.distance(particle.position);
-			if (fdis != Double.NaN && xdis != Double.NaN && fdis >= fdrThreshold*xdis) {
+			if (!Double.isNaN(fdis) && !Double.isNaN(xdis) && fdis >= fdrThreshold*xdis) {
 				neighbors.add(particle);
 			}
 		}
@@ -144,7 +144,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		if (!probMode || func == null) return null;
 		
 		double weight = config.getAsReal(PSOSetting.CONSTRICT_WEIGHT_FIELD);
-		weight = weight != Double.NaN ? weight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
+		weight = !Double.isNaN(weight) ? weight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
 		int n = func.getVarNum();
 		Vector<Double> constrictWeight = func.createVector(0.0);
 		for (int i = 0; i < n; i++) constrictWeight.setValue(i, weight);
@@ -169,7 +169,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 				w = Math.exp(-0.5*d*d/variance);
 			}
 			
-			if (w != Double.NaN) constrictWeight.setValue(i, w);
+			if (!Double.isNaN(w)) constrictWeight.setValue(i, w);
 		}
 		
 		return constrictWeight;

@@ -76,7 +76,7 @@ public final class RealVector extends Vector<Double> {
 
 	@Override
 	public boolean isValid(Double value) {
-		return value != null && value != Double.NaN;
+		return value != null && !Double.isNaN(value);
 	}
 
 

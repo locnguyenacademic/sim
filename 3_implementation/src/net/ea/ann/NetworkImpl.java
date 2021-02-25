@@ -603,15 +603,45 @@ public class NetworkImpl implements Network {
 			for (int j = 0; j < memoryLayer.size(); j++) eval(memoryLayer.get(j), refresh);
 		}
 		
-		Layer outputLayer = backbone.get(backbone.size() - 1);
-		double[] output = new double[outputLayer.size()];
-		for (int j = 0; j < output.length; j++) {
-			output[j] = outputLayer.get(j).getOutput();
-		}
-		return output;
+		return backbone.get(backbone.size() - 1).getOutput();
 	}
 
 
+	/**
+	 * Evaluating bone with specified input.
+	 * @param bone list of layers including input layer.
+	 * @param input specified input.
+	 * @param refresh refresh mode.
+	 * @return evaluated output.
+	 */
+	public static double[] eval(List<Layer> bone, double[] input) {
+		if (bone == null || bone.size() == 0) return null;
+		
+		for (Layer layer : bone) {
+			for (int j = 0; j < layer.size(); j++) {
+				Neuron neuron = layer.get(j);
+				neuron.setInput(0);
+				neuron.setOutput(0);
+			}
+		}
+
+		Layer layer0 = bone.get(0);
+		input = adjustArray(input, layer0.size());
+		for (int j = 0; j < layer0.size(); j++) {
+			Neuron neuron = layer0.get(j);
+			neuron.setInput(input[j]);
+			neuron.setOutput(input[j]);
+		}
+		
+		for (int i = 1;  i < bone.size(); i++) {
+			Layer layer = bone.get(i);
+			for (int j = 0; j < layer.size(); j++) layer.get(j).eval();
+		}
+		
+		return bone.get(bone.size() - 1).getOutput();
+	}
+	
+	
 	/**
 	 * Evaluating bone with specified input.
 	 * @param bone list of layers including input layer.
@@ -624,13 +654,7 @@ public class NetworkImpl implements Network {
 		for (int i = 0; i < bone.size(); i++) {
 			eval(bone, i, input, refresh);
 		}
-		
-		Layer outputLayer = bone.get(bone.size() - 1);
-		double[] output = new double[outputLayer.size()];
-		for (int j = 0; j < output.length; j++) {
-			output[j] = outputLayer.get(j).getOutput();
-		}
-		return output;
+		return bone.get(bone.size() - 1).getOutput();
 	}
 	
 	
@@ -644,13 +668,7 @@ public class NetworkImpl implements Network {
 	 */
 	private double[] eval(List<Layer> bone, int index, double[] input, boolean refresh) {
 		Layer layer = bone.get(index);
-		if (input == null || input.length == 0) {
-			input = new double[layer.size()];
-			for (int j = 0; j < input.length; j++) input[j] = 0;
-		}
-		else if (input.length < layer.size()) {
-			input = Arrays.copyOfRange(input, 0, layer.size());
-		}
+		input = adjustArray(input, layer.size());
 		
 		if (index == 0) {
 			for (int j = 0; j < layer.size(); j++) {
@@ -660,16 +678,10 @@ public class NetworkImpl implements Network {
 			}
 		}
 		else {
-			for (int j = 0; j < layer.size(); j++) {
-				eval(layer.get(j), refresh);
-			}
+			for (int j = 0; j < layer.size(); j++) eval(layer.get(j), refresh);
 		}
 		
-		double[] output = new double[layer.size()];
-		for (int j = 0; j < output.length; j++) {
-			output[j] = layer.get(j).getOutput();
-		}
-		return output;
+		return layer.getOutput();
 	}
 
 	
@@ -723,13 +735,13 @@ public class NetworkImpl implements Network {
 	 * @param maxIteration maximum iteration.
 	 * @return learned error.
 	 */
-	protected double[] bpLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
+	public double[] bpLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
 		if (sample == null || sample.size() == 0) return null;
 		List<Layer> backbone = getBackbone();
 		if (backbone.size() < 2) return null;
 		
 		maxIteration = maxIteration >= 0 ? maxIteration :  LEARN_MAX_ITERATION_DEFAULT;
-		terminatedThreshold = Double.isNaN(terminatedThreshold) ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold;
+		terminatedThreshold = Double.isNaN(terminatedThreshold) || terminatedThreshold < 0 ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold;
 		learningRate = Double.isNaN(learningRate) || learningRate <= 0 || learningRate > 1 ? LEARN_RATE_DEFAULT : learningRate;
 		
 		double[] error = null;
@@ -739,8 +751,7 @@ public class NetworkImpl implements Network {
 			List<double[]> errors = Util.newList(0);
 			for (Record record : sample) {
 				if (record == null || record.input == null || record.output == null) continue;
-				int nOutput = backbone.get(backbone.size()-1).size();
-				double[] output = record.output.length < nOutput ? Arrays.copyOfRange(record.output, 0, nOutput) : record.output;
+				double[] output = adjustArray(record.output, backbone.get(backbone.size()-1).size());
 				
 				List<List<Layer>> ribinbones = getRibinbones();
 				List<List<Layer>> riboutbones = getRiboutbones();
@@ -753,7 +764,7 @@ public class NetworkImpl implements Network {
 				} catch (Throwable e) {Util.trace(e);}
 				
 				//Calculating errors.
-				errors = calcErrors(backbone, output);
+				errors = bpCalcErrors(backbone, output);
 				
 				for (List<Layer> ribinbone : ribinbones) {
 					Layer layer = ribinbone.get(ribinbone.size() - 1);
@@ -761,7 +772,7 @@ public class NetworkImpl implements Network {
 					for (int j = 0; j < ribOutput.length; j++)
 						ribOutput[j] = layer.get(j).getOutput();
 					
-					List<double[]> ribinErrors = calcErrors(ribinbone, ribOutput);
+					List<double[]> ribinErrors = bpCalcErrors(ribinbone, ribOutput);
 					if (ribinErrors != null && ribinErrors.size() > 0)
 						ribinErrorMap.put(layer.id(), ribinErrors);
 				}
@@ -771,31 +782,31 @@ public class NetworkImpl implements Network {
 					int id = riboutbone.get(riboutbone.size() - 1).id();
 					if (!record.ribOutput.containsKey(id)) continue;
 					
-					List<double[]> riboutErrors = calcErrors(riboutbone, record.ribOutput.get(id));
+					List<double[]> riboutErrors = bpCalcErrors(riboutbone, record.ribOutput.get(id));
 					if (riboutErrors != null && riboutErrors.size() > 0)
 						riboutErrorMap.put(id, riboutErrors);
 				}
 				
 				
 				//Updating weights and biases.
-				updateWeightsBiases(backbone, errors, learningRate);
+				bpUpdateWeightsBiases(backbone, errors, learningRate);
 				
 				for (List<Layer> ribinbone : ribinbones) {
 					int id = ribinbone.get(ribinbone.size() - 1).id();
 					if (ribinErrorMap.containsKey(id))
-						updateWeightsBiases(ribinbone, ribinErrorMap.get(id), learningRate);
+						bpUpdateWeightsBiases(ribinbone, ribinErrorMap.get(id), learningRate);
 				}
 
 				for (List<Layer> riboutbone : riboutbones) {
 					int id = riboutbone.get(0).id();
 					if (riboutErrorMap.containsKey(id))
-						updateWeightsBiases(riboutbone, riboutErrorMap.get(id), learningRate);
+						bpUpdateWeightsBiases(riboutbone, riboutErrorMap.get(id), learningRate);
 				}
 
 				
 				//Updating weights and biases related to memory layer.
 				if (memoryLayer != null && memoryLayer.size() > 0)
-					updateWeightsBiasesAttachedTriple(memoryLayer, backbone, errors, learningRate);
+					bpUpdateWeightsBiasesAttachedTriple(memoryLayer, backbone, errors, learningRate);
 				
 				
 				error = (errors != null && errors.size() > 0) ? errors.get(errors.size()-1) : null;
@@ -813,7 +824,6 @@ public class NetworkImpl implements Network {
 				double errorMean = 0;
 				for (double r : error) errorMean += Math.abs(r);
 				errorMean = errorMean / error.length;
-				
 				if (errorMean < terminatedThreshold) doStarted = false; 
 			}
 			
@@ -843,12 +853,64 @@ public class NetworkImpl implements Network {
 
 	
 	/**
+	 * Learning bone by back propagate algorithm.
+	 * @param bone list of layers including input layer.
+	 * @param input input values.
+	 * @param output output values.
+	 * @param learningRate learning rate.
+	 * @param terminatedThreshold terminated threshold.
+	 * @param maxIteration maximum iteration.
+	 * @return learned error.
+	 */
+	public static double[] bpLearn(List<Layer> bone, double[] input, double[] output, double learningRate, double terminatedThreshold, int maxIteration) {
+		if (bone == null || bone.size() < 2) return null;
+		output = adjustArray(output, bone.get(bone.size()-1).size());
+		
+		maxIteration = maxIteration >= 0 ? maxIteration :  LEARN_MAX_ITERATION_DEFAULT;
+		terminatedThreshold = Double.isNaN(terminatedThreshold) || terminatedThreshold < 0 ? LEARN_TERMINATED_THRESHOLD_DEFAULT : terminatedThreshold;
+		learningRate = Double.isNaN(learningRate) || learningRate <= 0 || learningRate > 1 ? LEARN_RATE_DEFAULT : learningRate;
+		
+		double[] error = null;
+		int iteration = 0;
+		boolean doStarted = true;
+		while (doStarted && (maxIteration <= 0 || iteration < maxIteration)) {
+			List<double[]> errors = Util.newList(0);
+
+			//Evaluating layers.
+			eval(bone, input);
+			
+			//Calculating errors.
+			errors = bpCalcErrors(bone, output);
+			
+			//Updating weights and biases.
+			bpUpdateWeightsBiases(bone, errors, learningRate);
+			
+			error = (errors != null && errors.size() > 0) ? errors.get(errors.size()-1) : null;
+			
+			iteration ++;
+			
+			if (error == null || error.length == 0)
+				doStarted = false;
+			else {
+				double errorMean = 0;
+				for (double r : error) errorMean += Math.abs(r);
+				errorMean = errorMean / error.length;
+				if (errorMean < terminatedThreshold) doStarted = false; 
+			}
+			
+		}
+		
+		return error;
+	}
+	
+	
+	/**
 	 * Calculating errors.
 	 * @param bone list of layers including input layer.
 	 * @param errors list of errors. Error list excludes input error and so it is 1 less than backbone. 
 	 * @return list of errors.
 	 */
-	private static List<double[]> calcErrors(List<Layer> bone, double[] output) {
+	private static List<double[]> bpCalcErrors(List<Layer> bone, double[] output) {
 		List<double[]> errors = Util.newList(0);
 		if (bone.size() < 2) return errors;
 		
@@ -887,7 +949,7 @@ public class NetworkImpl implements Network {
 	 * @param errors list of errors. Error list excludes input error and so it is 1 less than backbone. 
 	 * @param learningRate learning rate.
 	 */
-	private static void updateWeightsBiases(List<Layer> bone, List<double[]> errors, double learningRate) {
+	private static void bpUpdateWeightsBiases(List<Layer> bone, List<double[]> errors, double learningRate) {
 		if (bone.size() < 2) return;
 		
 		for (int i = 0; i < bone.size() - 1; i++) {
@@ -927,7 +989,7 @@ public class NetworkImpl implements Network {
 	 * @param errors list of errors. Error list excludes input error and so it is 1 less than backbone. 
 	 * @param learningRate learning rate.
 	 */
-	private static void updateWeightsBiasesAttachedTriple(Layer centerLayer, List<Layer> bone, List<double[]> errors, double learningRate) {
+	private static void bpUpdateWeightsBiasesAttachedTriple(Layer centerLayer, List<Layer> bone, List<double[]> errors, double learningRate) {
 		if (bone.size() < 2) return;
 
 		Layer prevLayer = centerLayer.getPrevLayer();
@@ -965,10 +1027,30 @@ public class NetworkImpl implements Network {
 		newErrors.add(centerError);
 		newErrors.add(nextError);
 		
-		updateWeightsBiases(newBackbone, newErrors, learningRate);
+		bpUpdateWeightsBiases(newBackbone, newErrors, learningRate);
 	}
 
 
+	/**
+	 * Adjusting array by length.
+	 * @param array specified array.
+	 * @param length specified length.
+	 * @return adjusted array.
+	 */
+	private static double[] adjustArray(double[] array, int length) {
+		if (length <= 0) return array;
+		if (array == null || array.length == 0) {
+			array = new double[length];
+			for (int j = 0; j < array.length; j++) array[j] = 0;
+		}
+		else if (array.length < length) {
+			array = Arrays.copyOfRange(array, 0, length);
+		}
+		
+		return array;
+	}
+	
+	
 	@Override
 	public void addListener(NetworkListener listener) throws RemoteException {
 		synchronized (listenerList) {

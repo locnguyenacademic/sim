@@ -151,20 +151,20 @@ public abstract class FunctionReal extends FunctionAbstract<Double> {
 		if (config == null) return setting;
 		
 		double cognitiveWeight = config.getAsReal(PSOSetting.COGNITIVE_WEIGHT_FIELD);
-		setting.cognitiveWeight = cognitiveWeight != Double.NaN && cognitiveWeight > 0 ? cognitiveWeight : PSOSetting.COGNITIVE_WEIGHT_DEFAULT;
+		setting.cognitiveWeight = !Double.isNaN(cognitiveWeight) && cognitiveWeight > 0 ? cognitiveWeight : PSOSetting.COGNITIVE_WEIGHT_DEFAULT;
 		
 		double socialWeightGlobal = config.getAsReal(PSOSetting.SOCIAL_WEIGHT_GLOBAL_FIELD);
-		setting.socialWeightGlobal = socialWeightGlobal != Double.NaN && socialWeightGlobal > 0 ? socialWeightGlobal : PSOSetting.SOCIAL_WEIGHT_GLOBAL_DEFAULT;
+		setting.socialWeightGlobal = !Double.isNaN(socialWeightGlobal) && socialWeightGlobal > 0 ? socialWeightGlobal : PSOSetting.SOCIAL_WEIGHT_GLOBAL_DEFAULT;
 
 		double socialWeightLocal = config.getAsReal(PSOSetting.SOCIAL_WEIGHT_LOCAL_FIELD);
-		setting.socialWeightLocal = socialWeightLocal != Double.NaN && socialWeightLocal > 0 ? socialWeightLocal : PSOSetting.SOCIAL_WEIGHT_LOCAL_DEFAULT;
+		setting.socialWeightLocal = !Double.isNaN(socialWeightLocal) && socialWeightLocal > 0 ? socialWeightLocal : PSOSetting.SOCIAL_WEIGHT_LOCAL_DEFAULT;
 
 		double inertialWeight = config.getAsReal(PSOSetting.INERTIAL_WEIGHT_FIELD);
-		inertialWeight = inertialWeight != Double.NaN && inertialWeight > 0 ? inertialWeight : PSOSetting.INERTIAL_WEIGHT_DEFAULT;
+		inertialWeight = !Double.isNaN(inertialWeight) && inertialWeight > 0 ? inertialWeight : PSOSetting.INERTIAL_WEIGHT_DEFAULT;
 		setting.inertialWeight = createVector(inertialWeight);
 
 		double constrictWeight = config.getAsReal(PSOSetting.CONSTRICT_WEIGHT_FIELD);
-		constrictWeight = constrictWeight != Double.NaN && constrictWeight > 0 ? constrictWeight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
+		constrictWeight = !Double.isNaN(constrictWeight) && constrictWeight > 0 ? constrictWeight : PSOSetting.CONSTRICT_WEIGHT_DEFAULT;
 		setting.constrictWeight = createVector(constrictWeight);
 
 		setting.lower = extractBound(config.getAsString(PSOSetting.POSITION_LOWER_BOUND_FIELD));

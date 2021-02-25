@@ -66,7 +66,7 @@ public class ExprFunction extends FunctionReal {
 			
 			if(arg.isMissing(i)) return null;
 			Double value = arg.getValueAsReal(attName);
-			if(value == Double.NaN) return null;
+			if(Double.isNaN(value)) return null;
 			
 			expr = expr.replaceAll(replacedText, value.toString());
 		}
@@ -74,10 +74,10 @@ public class ExprFunction extends FunctionReal {
 		try {
 			Parser parser = new Parser();
 			double value = parser.parse2(expr);
-			if (value != Double.NaN)
-				return value;
-			else
+			if (Double.isNaN(value))
 				return null;
+			else
+				return value;
 		}
 		catch (Throwable e) {
 			Util.trace(e);

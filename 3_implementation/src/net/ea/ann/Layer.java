@@ -175,4 +175,18 @@ public interface Layer extends Serializable, Cloneable {
 	Function setActivateRef(Function activateRef);
 	
 	
+	/**
+	 * Getting input values.
+	 * @return input values.
+	 */
+	double[] getInput();
+	
+	
+	/**
+	 * Getting output values.
+	 * @return output values.
+	 */
+	double[] getOutput();
+	
+	
 }
