@@ -25,6 +25,12 @@ import java.util.Map;
  *
  */
 public class Util {
+
+	
+	/**
+	 * Decimal format.
+	 */
+	public static String DECIMAL_FORMAT = "%.12f";;
 	
 	
 	/**
@@ -34,21 +40,15 @@ public class Util {
 
 	
 	/**
-	 * Decimal format.
-	 */
-	public static String DECIMAL_FORMAT = "%.12f";;
-
-	
-	/**
 	 * Static code.
 	 */
 	static {
 		try {
-			DATE_FORMAT = net.ea.pso.adapter.Util.DATE_FORMAT;
-		} catch (Throwable e) {}
-		
-		try {
 			DECIMAL_FORMAT = "%." + net.ea.pso.adapter.Util.DECIMAL_PRECISION + "f";
+		} catch (Throwable e) {}
+
+		try {
+			DATE_FORMAT = net.ea.pso.adapter.Util.DATE_FORMAT;
 		} catch (Throwable e) {}
 	}
 	

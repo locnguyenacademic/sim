@@ -10,7 +10,6 @@ package net.ea.ann;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Collection;
 
 /**
  * This interface represents neural network.
@@ -56,7 +55,7 @@ public interface Network extends Remote, Serializable, Cloneable, AutoCloseable 
 	 * @return learned error.
 	 * @throws RemoteException if any error raises.
 	 */
-	double[] learn(Collection<Record> sample) throws RemoteException;
+	double[] learn(Iterable<Record> sample) throws RemoteException;
 	
 	
 	/**

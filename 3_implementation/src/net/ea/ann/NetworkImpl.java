@@ -12,7 +12,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -718,8 +717,22 @@ public class NetworkImpl implements Network {
 	}
 	
 	
+	/**
+	 * Learning the neural network.
+	 * @param sample sample for learning.
+	 * @return learned error.
+	 * @throws RemoteException if any error raises.
+	 */
+	public double[] learn(Record[] sample) {
+		try {
+			return learn(Arrays.asList(sample));
+		} catch (Throwable e) {Util.trace(e);}
+		return null;
+	}
+	
+	
 	@Override
-	public synchronized double[] learn(Collection<Record> sample) throws RemoteException {
+	public synchronized double[] learn(Iterable<Record> sample) throws RemoteException {
 		int maxIteration = config.getAsInt(LEARN_MAX_ITERATION_FIELD);
 		double terminatedThreshold = config.getAsReal(LEARN_TERMINATED_THRESHOLD_FIELD);
 		double learningRate = config.getAsReal(LEARN_RATE_FIELD);
@@ -735,8 +748,7 @@ public class NetworkImpl implements Network {
 	 * @param maxIteration maximum iteration.
 	 * @return learned error.
 	 */
-	public double[] bpLearn(Collection<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
-		if (sample == null || sample.size() == 0) return null;
+	public double[] bpLearn(Iterable<Record> sample, double learningRate, double terminatedThreshold, int maxIteration) {
 		List<Layer> backbone = getBackbone();
 		if (backbone.size() < 2) return null;
 		
@@ -872,8 +884,7 @@ public class NetworkImpl implements Network {
 		
 		double[] error = null;
 		int iteration = 0;
-		boolean doStarted = true;
-		while (doStarted && (maxIteration <= 0 || iteration < maxIteration)) {
+		while (maxIteration <= 0 || iteration < maxIteration) {
 			List<double[]> errors = Util.newList(0);
 
 			//Evaluating layers.
@@ -890,12 +901,12 @@ public class NetworkImpl implements Network {
 			iteration ++;
 			
 			if (error == null || error.length == 0)
-				doStarted = false;
+				break;
 			else {
 				double errorMean = 0;
 				for (double r : error) errorMean += Math.abs(r);
 				errorMean = errorMean / error.length;
-				if (errorMean < terminatedThreshold) doStarted = false; 
+				if (errorMean < terminatedThreshold) break; 
 			}
 			
 		}

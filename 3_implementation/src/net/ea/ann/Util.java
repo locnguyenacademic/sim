@@ -24,6 +24,22 @@ public class Util {
 	
 	
 	/**
+	 * Default date format.
+	 */
+	public static String  DATE_FORMAT = "yyyy-MM-dd HH-mm-ss";
+	
+	
+	/**
+	 * Static code.
+	 */
+	static {
+		try {
+			DATE_FORMAT = net.ea.ann.adapter.Util.DATE_FORMAT;
+		} catch (Throwable e) {}
+	}
+
+	
+	/**
 	 * Creating a new array.
 	 * @param <T> element type.
 	 * @param tClass element type.

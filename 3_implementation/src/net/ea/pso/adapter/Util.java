@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.ea.pso.AttributeList;
 import net.ea.pso.PSOConfig;
 import net.hudup.core.Constants;
 import net.hudup.core.data.Attribute.Type;
@@ -209,9 +208,9 @@ public class Util {
 	 * @return list of PSO attributes.
 	 */
 	public static net.ea.pso.AttributeList extractPSOAttributes(Profile profile) {
-		if (profile == null) return new AttributeList();
+		if (profile == null) return new net.ea.pso.AttributeList();
 		
-		net.ea.pso.AttributeList newAttRef = new AttributeList();
+		net.ea.pso.AttributeList newAttRef = new net.ea.pso.AttributeList();
 		for (int i = 0; i < profile.getAttCount(); i++) {
 			Type type = profile.getAtt(i).getType();
 			String name = profile.getAtt(i).getName();
