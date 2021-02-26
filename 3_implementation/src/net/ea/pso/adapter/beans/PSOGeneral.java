@@ -5,7 +5,9 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.ea.pso.adapter;
+package net.ea.pso.adapter.beans;
+
+import net.ea.pso.adapter.PSOAbstract;
 
 /**
  * This class is the default implementation of particle swarm optimization (PSO) algorithm.
@@ -14,7 +16,7 @@ package net.ea.pso.adapter;
  * @version 1.0
  *
  */
-public class PSOImpl extends PSOAbstract<Double> {
+public class PSOGeneral extends PSOAbstract<Double> {
 
 
 	/**
@@ -26,21 +28,25 @@ public class PSOImpl extends PSOAbstract<Double> {
 	/**
 	 * Default constructor.
 	 */
-	public PSOImpl() {
+	public PSOGeneral() {
 
 	}
 
 	
-	@Override
-	public String getName() {
-		return "pso_general";
-	}
-
-
 	@Override
 	protected net.ea.pso.PSOAbstract<Double> createPSO() {
 		return new net.ea.pso.PSOImpl();
 	}
 
 	
+	@Override
+	public String getName() {
+		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
+		if (name != null && !name.isEmpty())
+			return name;
+		else
+			return "pso_general";
+	}
+
+
 }

@@ -65,7 +65,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Cognitive weight.
 	 */
-	public final static String COGNITIVE_WEIGHT_FIELD = "pso_cognitive_weight";
+	public final static String COGNITIVE_WEIGHT_FIELD = "pso_weight_cognitive";
 
 	
 	/**
@@ -77,7 +77,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Global social weight.
 	 */
-	public final static String SOCIAL_WEIGHT_GLOBAL_FIELD = "pso_social_weight_global";
+	public final static String SOCIAL_WEIGHT_GLOBAL_FIELD = "pso_weight_social_global";
 
 	
 	/**
@@ -89,7 +89,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Global social weight.
 	 */
-	public final static String SOCIAL_WEIGHT_LOCAL_FIELD = "pso_social_weight_local";
+	public final static String SOCIAL_WEIGHT_LOCAL_FIELD = "pso_weight_social_local";
 
 	
 	/**
@@ -101,7 +101,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Inertial weight.
 	 */
-	public final static String INERTIAL_WEIGHT_FIELD = "pso_inertial_weight";
+	public final static String INERTIAL_WEIGHT_FIELD = "pso_weight_inertial";
 
 	
 	/**
@@ -113,7 +113,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Constriction weight.
 	 */
-	public final static String CONSTRICT_WEIGHT_FIELD = "pso_constrict_weight";
+	public final static String CONSTRICT_WEIGHT_FIELD = "pso_weight_constrict";
 
 	
 	/**
@@ -125,7 +125,7 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 	/**
 	 * Probabilistic constriction weight mode.
 	 */
-	public final static String CONSTRICT_WEIGHT_PROB_MODE_FIELD = "pso_constrict_weight_prob_mode";
+	public final static String CONSTRICT_WEIGHT_PROB_MODE_FIELD = "pso_weight_constrict_prob_mode";
 
 	
 	/**

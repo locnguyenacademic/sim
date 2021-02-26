@@ -35,13 +35,37 @@ public abstract class PSOAbstract<T> implements PSO<T> {
 	/**
 	 * Maximum iteration.
 	 */
-	public final static String MAX_ITERATION_FIELD = "max_iteration";
+	public final static String MAX_ITERATION_FIELD = "terminate_max_iteration";
 	
 	
 	/**
 	 * Default value for maximum iteration.
 	 */
 	public final static int MAX_ITERATION_DEFAULT = 1000;
+
+	
+	/**
+	 * Terminated threshold.
+	 */
+	public final static String TERMINATED_THRESHOLD_FIELD = "terminate_threshold";
+
+	
+	/**
+	 * Default value for terminated threshold .
+	 */
+	public final static double TERMINATED_THRESHOLD_DEFAULT = 0.001;
+	
+	
+	/**
+	 * Terminated ratio mode.
+	 */
+	public final static String TERMINATED_RATIO_MODE_FIELD = "terminate_ratio_mode";
+
+	
+	/**
+	 * Default value for terminated ratio mode.
+	 */
+	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
 
 	
 	/**

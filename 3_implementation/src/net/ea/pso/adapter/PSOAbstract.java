@@ -19,6 +19,7 @@ import net.ea.pso.PSOListener;
 import net.ea.pso.PSOSetting;
 import net.ea.pso.Vector;
 import net.hudup.core.alg.AllowNullTrainingSet;
+import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.alg.SetupAlgEvent.Type;
@@ -37,7 +38,7 @@ import net.hudup.core.logistic.ui.UIUtil;
  * @version 1.0
  *
  */
-public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implements PSO, PSORemote, PSOListener, AllowNullTrainingSet {
+public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implements PSO, PSORemote, PSOListener, AllowNullTrainingSet, DuplicatableAlg {
 
 
 	/**
@@ -222,4 +223,10 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 
 
+	@Override
+	public void setName(String name) {
+		getConfig().put(DUPLICATED_ALG_NAME_FIELD, name);
+	}
+
+	
 }

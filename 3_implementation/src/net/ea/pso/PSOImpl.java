@@ -29,30 +29,6 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	
 	/**
-	 * Terminated threshold.
-	 */
-	public final static String TERMINATED_THRESHOLD_FIELD = "terminated_threshold";
-
-	
-	/**
-	 * Default value for terminated threshold .
-	 */
-	public final static double TERMINATED_THRESHOLD_DEFAULT = 0.001;
-	
-	
-	/**
-	 * Terminated ratio mode.
-	 */
-	public final static String TERMINATED_RATIO_MODE_FIELD = "terminated_ratio_mode";
-
-	
-	/**
-	 * Default value for terminated ratio mode.
-	 */
-	public final static boolean TERMINATED_RATIO_MODE_DEFAULT = false;
-
-	
-	/**
 	 * Default constructor.
 	 */
 	public PSOImpl() {
@@ -134,7 +110,10 @@ public class PSOImpl extends PSOAbstract<Double> {
 
 	@Override
 	protected Function<Double> defineExprFunction(List<String> varNames, String expr) {
-		return new ExprFunction(varNames, expr);
+		if (varNames.size() == 0 || expr == null)
+			return null;
+		else
+			return new ExprFunction(varNames, expr);
 	}
 
 
