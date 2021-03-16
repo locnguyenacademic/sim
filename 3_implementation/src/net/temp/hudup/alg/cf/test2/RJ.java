@@ -11,36 +11,36 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * Amer + NHSM measure.
+ * Jaccard measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerxNHSM extends net.hudup.alg.cf.nb.beans.smd.AmerxNHSM implements ForTest {
+public class RJ extends net.hudup.alg.cf.nb.beans.RJ implements ForTest {
 
 	
 	/**
-	 * Serial version UID for serializable class. 
+	 * Default serial version UID.
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	
 	/**
 	 * Default constructor.
 	 */
-	public AmerxNHSM() {
+	public RJ() {
 
 	}
 
-
+	
 	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a22.01.05.02.amerxnhsm";
+			return "a03.05.rj";
 	}
 
 

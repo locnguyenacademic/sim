@@ -11,7 +11,7 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * SMD + CPC measure.
+ * Amer + CPC measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
