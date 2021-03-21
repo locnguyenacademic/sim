@@ -1705,12 +1705,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 		for (int id : PO) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
 			if (PNE == null) continue;
-			numerator += Math.sqrt(PNE[0]*PNE[2]);
+			denominator += Math.sqrt(PNE[0]*PNE[2]);
 		}
 		for (int id : NO) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
 			if (PNE == null) continue;
-			numerator += Math.sqrt(PNE[1]*PNE[2]);
+			denominator += Math.sqrt(PNE[1]*PNE[2]);
 		}
 		
 		return numerator / denominator;
