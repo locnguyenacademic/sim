@@ -59,6 +59,10 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
  * <br>
  * Sujoy Bag, Sri Krishna Kumar, and Manoj Kumar Tiwari contributed relevant Jaccard (RJ) measure.<br>
+ * <br>
+ * Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem contributed rating Jaccard measure.
+ * <br>
+ * Soojung Lee contributed indexed Jaccard measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -146,6 +150,30 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Threshold of rating relevant measure.
+	 */
+	protected static final String RATINGJ_THRESHOLD_FIELD = "ratingj_threshold";
+
+	
+	/**
+	 * Default value for the threshold of rating relevant measure..
+	 */
+	protected static final double RATINGJ_THRESHOLD_DEFAULT = 0.1;
+
+	
+	/**
+	 * Intervals of indexed Jaccard measures.
+	 */
+	protected static final String INDEXEDJ_INTERVALS_FIELD = "indexedj_intervals";
+
+	
+	/**
+	 * Default value for intervals of indexed Jaccard measures.
+	 */
+	protected static final String INDEXEDJ_INTERVALS_DEFAULT = "2, 4";
+
+	
+	/**
 	 * Value bins.
 	 */
 	protected List<Double> valueBins = Util.newList();
@@ -203,7 +231,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.SMD2J);
 		mSet.add(Measure.QUASI_TFIDF_JACCARD);
 		mSet.add(Measure.TAJ);
-		mSet.add(Measure.AMER);
 		
 		List<String> measures = Util.newList();
 		measures.addAll(mSet);
@@ -230,8 +257,11 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.TA);
 		mSet.add(Measure.COCO);
 		mSet.add(Measure.NNSM);
+		mSet.add(Measure.AMER);
 		mSet.add(Measure.IJ);
 		mSet.add(Measure.RJ);
+		mSet.add(Measure.RATINGJ);
+		mSet.add(Measure.INDEXEDJ);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -332,6 +362,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return improvedJaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.RJ))
 			return relevantJaccard(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.RATINGJ))
+			return ratingJaccard(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.INDEXEDJ))
+			return indexedJaccard(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -349,6 +383,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(SMTP_LAMBDA_FIELD);
 		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
 		config.removeReadOnly(TA_NORMALIZED_FIELD);
+		config.removeReadOnly(RATINGJ_THRESHOLD_FIELD);
+		config.removeReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		if (measure.equals(Measure.PSS)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -358,6 +394,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.NHSM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -368,6 +406,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.BCF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -377,6 +417,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.BCFJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -386,6 +428,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.SRC)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -395,6 +439,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -405,6 +451,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.PC)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -415,6 +463,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.MMD)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -424,6 +474,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.CJACMD)) {
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -432,6 +484,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.FENG)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -442,6 +496,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.MU)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -451,6 +507,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.SMTP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -459,6 +517,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.AMER)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -469,6 +529,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -479,6 +541,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -489,6 +553,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2J)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -499,6 +565,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -509,6 +577,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -519,6 +589,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.TA)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -528,6 +600,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.TAJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -537,6 +611,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.COCO)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -547,6 +623,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.NNSM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -557,6 +635,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else if (measure.equals(Measure.IJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -567,6 +647,30 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+		}
+		else if (measure.equals(Measure.RATINGJ)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+		}
+		else if (measure.equals(Measure.INDEXEDJ)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 		}
 		else {
 			super.updateConfig(measure);
@@ -1143,40 +1247,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double N = union.size();
 		return Nab * (1/M + 0.5/N);
 	}
-	
-	
-//	/**
-//	 * Calculating the Amer-Threshold measure between two pairs. Amer measure is developed by Ali Amer, and converted by Loc Nguyen.
-//	 * The first pair includes the first rating vector and the first profile.
-//	 * The second pair includes the second rating vector and the second profile.
-//	 * 
-//	 * @param vRating1 first rating vector.
-//	 * @param vRating2 second rating vector.
-//	 * @param profile1 first profile.
-//	 * @param profile2 second profile.
-//	 * @param itemIds set of all item identifiers
-//	 * @author Ali Amer, Loc Nguyen
-//	 * @return Amer-Threshold measure between both two rating vectors and profiles.
-//	 */
-//	protected double amerThreshold(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-//		double sim = 0;
-//		double sum = 0;
-//		Set<Integer> itemIds = unionFieldIds(vRating1, vRating2);
-//		for (int itemId : itemIds) {
-//			boolean rated1 = vRating1.isRated(itemId);
-//			boolean rated2 = vRating2.isRated(itemId);
-//			
-//			if (rated1 == rated2) {
-//				double sim0 = 1 + 1/(1 + Math.abs(vRating1.get(itemId).value-vRating2.get(itemId).value));
-//				sim += sim0;
-//				sum += sim0;
-//			}
-//			else
-//				sum += 1;
-//		}
-//		
-//		return sim / sum;
-//	}
 	
 	
 	/**
@@ -1783,21 +1853,115 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 	
 	
-//	protected double relevantJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-//		Set<Integer> set1 = vRating1.fieldIds(true);
-//		Set<Integer> set2 = vRating2.fieldIds(true);
-//		Set<Integer> common = Util.newSet();
-//		common.addAll(set1);
-//		common.retainAll(set2);
-//
-//		double n = common.size();
-//		double N = set1.size() + set2.size() - n;
-//		double M = getColumnIds().size();
-//		
-//		double a = n/N;
-//		double b = (M-N)/(M-n);
-//		return (n/N + (M-N)/(M-n)) / 2;
-//	}
+	/**
+	 * Calculating the rating Jaccard measure between two pairs.
+	 * Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem developed the rating Jaccard measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Rating Jaccard measure between both two rating vectors and profiles.
+	 * @author Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem
+	 */
+	protected double ratingJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return 0;
+		
+		int nt = 0;
+		boolean equal = true;
+		for (int fieldId : common) {
+			double v1 = vRating1.get(fieldId).value;
+			double v2 = vRating2.get(fieldId).value;
+			if (Math.abs(v1) == Math.abs(v2)) nt++;
+			
+			if (!equal) continue;
+			if (v1 != v2) equal = false;
+		}
+		
+		if (equal)
+			nt++;
+		else {
+			double mean1 = vRating1.mean(), mean2 = vRating1.mean();
+			double t = config.getAsReal(RATINGJ_THRESHOLD_FIELD);
+			if (Util.isUsed(t)) {
+				double bias = Math.abs(mean2 - mean1);
+				if (bias <= t * Math.min(mean1, mean2)) nt++;
+			}
+		}
+		
+		return (double)nt / common.size();
+	}
+	
+	
+	/**
+	 * Calculating the indexed Jaccard measure between two pairs.
+	 * Soojung Lee developed the indexed Jaccard measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Indexed Jaccard measure between both two rating vectors and profiles.
+	 * @author Soojung Lee
+	 */
+	protected double indexedJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		List<Double> intervals = TextParserUtil.parseListByClass(getConfig().getAsString(INDEXEDJ_INTERVALS_FIELD), Double.class, ",");
+		if (intervals.size() == 0) return jaccard(vRating1, vRating2, profile1, profile2);
+		
+		Set<Integer> A = vRating1.fieldIds(true);
+		Set<Integer> B = vRating2.fieldIds(true);
+		List<Set<Integer>> setList1 = Util.newList(intervals.size());
+		List<Set<Integer>> setList2 = Util.newList(intervals.size());
+		for (int i = 0; i < intervals.size(); i++) {
+			Set<Integer> set1 = Util.newSet();
+			for (int id : A) {
+				double v = vRating1.get(id).value;
+				if (i == 0) {
+					if (v < intervals.get(i)) set1.add(id);
+				}
+				else if (i < intervals.size() - 1 ) {
+					if (v >= intervals.get(i) && v < intervals.get(i+1)) set1.add(id);
+				}
+				else {
+					if (v >= intervals.get(i)) set1.add(id);
+				}
+
+			}
+			setList1.add(set1);
+			
+			Set<Integer> set2 = Util.newSet();
+			for (int id : B) {
+				double v = vRating2.get(id).value;
+				if (i == 0) {
+					if (v < intervals.get(i)) set2.add(id);
+				}
+				else if (i < intervals.size() - 1 ) {
+					if (v >= intervals.get(i) && v < intervals.get(i+1)) set2.add(id);
+				}
+				else {
+					if (v >= intervals.get(i)) set2.add(id);
+				}
+			}
+			setList2.add(set2);
+		}
+		
+		double sumJ = 0;
+		int M = 0;
+		for (int i = 0; i < intervals.size(); i++) {
+			Set<Integer> set1 = setList1.get(i);
+			Set<Integer> set2 = setList2.get(i);
+			if (set1.size() == 0 && set2.size() == 0) continue;
+			
+			Set<Integer> common = Util.newSet();
+			common.addAll(set1);
+			common.retainAll(set2);
+			double n = common.size();
+			double N = set1.size() + set2.size() - n;
+			sumJ += n / N;
+			M++;
+		}
+		
+		return sumJ / M;
+	}
 	
 	
 	/**
@@ -1913,6 +2077,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
 		config.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
 		config.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
+		config.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
+		config.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
 		
 		return config;
 	}

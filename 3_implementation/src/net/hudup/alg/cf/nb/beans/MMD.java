@@ -75,6 +75,8 @@ public class MMD extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 

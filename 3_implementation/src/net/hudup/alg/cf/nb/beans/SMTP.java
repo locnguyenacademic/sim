@@ -74,6 +74,8 @@ public class SMTP extends NeighborCFExtUserBased {
 		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 

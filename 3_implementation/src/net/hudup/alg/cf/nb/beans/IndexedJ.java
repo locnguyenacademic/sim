@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * TA measure.
+ * Indexed Jaccard measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class TA extends NeighborCFExtUserBased {
+public class IndexedJ extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class TA extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public TA() {
+	public IndexedJ() {
 
 	}
 
@@ -53,7 +53,7 @@ public class TA extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.TA;
+		return Measure.INDEXEDJ;
 	}
 
 
@@ -75,15 +75,15 @@ public class TA extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
+		config.remove(TA_NORMALIZED_FIELD);
 		config.remove(RATINGJ_THRESHOLD_FIELD);
-		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return triangleArea(vRating1, vRating2, profile1, profile2);
+		return indexedJaccard(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -93,7 +93,7 @@ public class TA extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_ta";
+			return "neighborcf_indexj";
 	}
 
 

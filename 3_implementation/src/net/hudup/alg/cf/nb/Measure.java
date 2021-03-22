@@ -161,4 +161,16 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	public static final String RJ = "rj";
 
 	
+	/**
+	 * Rating Jaccard measure.
+	 */
+	public static final String RATINGJ = "ratingj";
+
+	
+	/**
+	 * Indexed Jaccard measure.
+	 */
+	public static final String INDEXEDJ = "indexedj";
+	
+	
 }

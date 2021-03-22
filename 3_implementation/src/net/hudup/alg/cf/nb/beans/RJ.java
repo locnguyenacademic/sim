@@ -16,7 +16,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * IJ measure.
+ * Relevant Jaccard measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -76,6 +76,8 @@ public class RJ extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 
