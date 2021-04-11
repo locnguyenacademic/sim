@@ -41,6 +41,9 @@ public interface RMRemoteTask extends ExecutableAlgRemoteTask {
 	final static String R_INDICES_DEFAULT = "{1, #x2, -1, (#x3 + #x4)^2, log(#y)}"; //Use default indices in which n-1 first variables are regressors and the last variable is response variable
 	
 	
+	/**
+	 * Guidance note.
+	 */
 	final static String note = "The attribute \"r_indices\" indicates indices of independent variables (regressors) and dependent variables (responsors).\n" +
 			"Its pattern is \"{1, 2}, {#x3, 4, 5), {x5, 6}, {log(x5), 6, 7, 8}, {#x9^#x10, 10}\" or \"1, 2, #x3 + #x4, 5, x6, 7, 8, log(x9), #y^2\".\n" +
 			"The first complex pattern in current implementation is not made the best yet, for instance, given index {#x3, 4, 5), only the first #x3 is used.\n" +

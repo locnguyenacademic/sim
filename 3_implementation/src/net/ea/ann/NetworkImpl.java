@@ -610,7 +610,6 @@ public class NetworkImpl implements Network {
 	 * Evaluating bone with specified input.
 	 * @param bone list of layers including input layer.
 	 * @param input specified input.
-	 * @param refresh refresh mode.
 	 * @return evaluated output.
 	 */
 	public static double[] eval(List<Layer> bone, double[] input) {
@@ -721,7 +720,6 @@ public class NetworkImpl implements Network {
 	 * Learning the neural network.
 	 * @param sample sample for learning.
 	 * @return learned error.
-	 * @throws RemoteException if any error raises.
 	 */
 	public double[] learn(Record[] sample) {
 		try {

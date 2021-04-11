@@ -12,7 +12,6 @@ import net.hudup.core.alg.ExecuteAsLearnAlg;
 /**
  * <code>PSO</code> is the most abstract interface for all particle swarm optimization (PSO) algorithms.
  * 
- * @param <T> data type.
  * @author Loc Nguyen
  * @version 1.0
  *

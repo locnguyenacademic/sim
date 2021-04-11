@@ -582,6 +582,9 @@ public class BnetBinaryGraph extends InferenceGraph implements Serializable {
 	}
 	
 	
+	/**
+	 * Updating nodes.
+	 */
 	@SuppressWarnings("unchecked")
 	protected void updateNodes() {
 		Vector<InferenceGraphNode> nodes = this.get_nodes();
@@ -612,6 +615,12 @@ public class BnetBinaryGraph extends InferenceGraph implements Serializable {
 	}
 	
 	
+	/**
+	 * Loading graph from URI.
+	 * @param uri specified URI.
+	 * @return binary Bayesian network graph.
+	 * @throws Exception if any error raises.
+	 */
 	@SuppressWarnings("unchecked")
 	public static BnetBinaryGraph load(xURI uri) throws Exception {
 		

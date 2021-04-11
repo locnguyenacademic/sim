@@ -106,7 +106,7 @@ public class Util {
 
 	
 	/**
-	 * Converting the specified number into a string. The number of decimal digits is specified by {@link Constants#DECIMAL_PRECISION}.
+	 * Converting the specified number into a string.
 	 * @param number specified number.
 	 * @return text format of number of the specified number.
 	 */
