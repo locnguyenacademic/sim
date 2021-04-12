@@ -106,6 +106,12 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	protected List<REMImpl> rems = null;
 
 	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
 	/**
 	 * Setting up this model from other model.
 	 * @param other other model. When the other model was specified, this method will call method {@link #learnStart(Object...)} which in turn calls {@link #prepareInternalData(AbstractMixtureREM)}.
@@ -116,11 +122,12 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object learnStart(Object...info) throws RemoteException {
 		boolean prepared = false;
 		if (info == null || info.length == 0 || !(info[0] instanceof DefaultMixtureREM))
-			prepared = prepareInternalData(this.sample);
+			prepared = prepareInternalData((Fetcher<Profile>)sample);
 		else
 			prepared = prepareInternalData((AbstractMixtureREM)info[0]);
 		if (!prepared) {
@@ -158,8 +165,9 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 	 * @return true if data preparation is successful.
 	 * @throws RemoteException if any error raises.
 	 */
+	@SuppressWarnings("unchecked")
 	protected boolean prepareInternalData(AbstractMixtureREM other) throws RemoteException {
-		return prepareInternalData(this.sample);
+		return prepareInternalData((Fetcher<Profile>)sample);
 	}
 	
 	
@@ -218,9 +226,10 @@ public abstract class AbstractMixtureREM extends ExponentialEM implements RM, RM
 			 */
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public synchronized Object learnStart(Object...info) throws RemoteException {
-				boolean prepared = prepareInternalData(sample);
+				boolean prepared = prepareInternalData((Fetcher<Profile>)sample);
 				if (prepared)
 					return prepared;
 				else

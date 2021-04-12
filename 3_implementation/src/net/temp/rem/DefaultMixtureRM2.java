@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.hudup.core.Util;
+import net.hudup.core.data.Fetcher;
+import net.hudup.core.data.Profile;
 import net.rem.regression.DefaultMixtureRM;
 import net.rem.regression.em.DefaultMixtureREM;
 import net.rem.regression.em.ExchangedParameter;
@@ -65,7 +67,7 @@ public class DefaultMixtureRM2 extends DefaultMixtureRM {
 				mixREM.getConfig().put(COMP_NUMBER_FIELD, prevParameters.size() + 1);
 			}
 			if (prevMixREM == null)
-				mixREM.setup(this.sample);
+				mixREM.setup((Fetcher<Profile>)sample);
 			else
 				mixREM.setup(prevMixREM);
 			

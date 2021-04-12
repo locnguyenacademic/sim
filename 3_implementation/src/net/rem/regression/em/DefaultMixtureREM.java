@@ -582,9 +582,10 @@ public class DefaultMixtureREM extends AbstractMixtureREM implements Duplicatabl
 		 */
 		private static final long serialVersionUID = 1L;
 		
+		@SuppressWarnings("unchecked")
 		@Override
 		public synchronized Object learnStart(Object...info) throws RemoteException {
-			boolean prepared = prepareInternalData(sample);
+			boolean prepared = prepareInternalData((Fetcher<Profile>)sample);
 			if (prepared)
 				return prepared;
 			else

@@ -15,6 +15,7 @@ import java.util.Set;
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.Rating;
@@ -76,6 +77,12 @@ public class Soco extends ExponentialEM {
 	 */
 	public Soco() {
 
+	}
+
+	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
 	}
 
 	
@@ -143,14 +150,15 @@ public class Soco extends ExponentialEM {
 	 * @return true if data preparation is successful.
 	 * @throws RemoteException if any error raises.
 	 */
+	@SuppressWarnings("unchecked")
 	protected boolean prepareInternalDataBySample() throws RemoteException {
 		clearInternalData();
 		
 		this.matrix = Util.newMap();
 		this.transposedMatrix = Util.newMap();
 		int rowId = 1;
-		while (this.sample.next()) {
-			Profile profile = this.sample.pick();
+		while (((Fetcher<Profile>)sample).next()) {
+			Profile profile = ((Fetcher<Profile>)sample).pick();
 			if (profile == null || profile.isAllMissing())
 				continue;
 			
@@ -176,7 +184,7 @@ public class Soco extends ExponentialEM {
 			
 			rowId++;
 		}
-		this.sample.reset();
+		((Fetcher<Profile>)sample).reset();
 		
 		return this.matrix.size() > 0 && this.transposedMatrix.size() > 0;
 	}

@@ -21,6 +21,7 @@ import net.hudup.core.Util;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.MemFetcher;
 import net.hudup.core.data.Profile;
@@ -58,13 +59,20 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 	protected List<Double> weights = Util.newList();
 	
 	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
 	/*
 	 * This method is not marked synchronized because it is called by setup method.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
-		if (!prepareInternalData(this.sample)) {
+		if (!prepareInternalData(((Fetcher<Profile>)sample))) {
 			clearInternalData();
 			return null;
 		}
@@ -98,7 +106,7 @@ public abstract class MutualRegressionEM extends ExponentialEM implements RM, Du
 		newParameters.clear();
 		this.rems.clear();
 		this.rems = newRems;
-		this.weights = calcResidualWeights(this.rems, this.sample);
+		this.weights = calcResidualWeights(this.rems, ((Fetcher<Profile>)sample));
 		//this.weights = calcUniformWeights(this.rems.size());
 		//this.weights = calcRegressWeights(this.rems, this.sample);
 		

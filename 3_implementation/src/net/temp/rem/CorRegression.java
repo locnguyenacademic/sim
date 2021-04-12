@@ -14,6 +14,7 @@ import net.hudup.core.Constants;
 import net.hudup.core.Util;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.xURI;
@@ -162,6 +163,7 @@ public class CorRegression extends RMAbstract implements DuplicatableAlg {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean prepareInternalData() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -169,8 +171,8 @@ public class CorRegression extends RMAbstract implements DuplicatableAlg {
 			return false;
 		
 		//Begin extracting data
-		while (this.sample.next()) {
-			Profile profile = this.sample.pick(); //profile = (x1, x2,..., x(n-1), z)
+		while (((Fetcher<Profile>)sample).next()) {
+			Profile profile = ((Fetcher<Profile>)sample).pick(); //profile = (x1, x2,..., x(n-1), z)
 			if (profile == null)
 				continue;
 			
@@ -197,7 +199,7 @@ public class CorRegression extends RMAbstract implements DuplicatableAlg {
 			double lastValue = extractNumber(extractResponseValue(profile));
 			this.zVector.add((double)transformResponse(lastValue, false));
 		}
-		this.sample.reset();
+		((Fetcher<Profile>)sample).reset();
 		//End extracting data
 		
 		return true;

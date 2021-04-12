@@ -160,9 +160,16 @@ public class REMImpl extends REMAbstract implements DuplicatableAlg {
 	
 	
 	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public Object learnStart(Object...info) throws RemoteException {
 		Object resulted = null;
-		if (prepareInternalData(this.sample))
+		if (prepareInternalData((Fetcher<Profile>)sample))
 			resulted = super.learnStart();
 		if (resulted == null)
 			clearInternalData();

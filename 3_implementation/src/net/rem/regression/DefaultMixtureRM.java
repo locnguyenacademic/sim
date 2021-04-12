@@ -29,6 +29,9 @@ import net.hudup.core.alg.MemoryBasedAlg;
 import net.hudup.core.alg.MemoryBasedAlgRemote;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
+import net.hudup.core.data.Fetcher;
+import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.NextUpdate;
@@ -73,6 +76,12 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 	public final static int COMP_MAX_NUMBER_DEFAULT = 10;
 
 	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object learnStart(Object... info) throws RemoteException {
@@ -101,7 +110,7 @@ public class DefaultMixtureRM extends ExecutableAlgAbstract implements RM, RMRem
 				mixREM.getConfig().put(COMP_NUMBER_FIELD, prevParameters.size() + 1);
 			}
 			if (prevMixREM == null)
-				mixREM.setup(this.sample);
+				mixREM.setup((Fetcher<Profile>)sample);
 			else
 				mixREM.setup(prevMixREM);
 			

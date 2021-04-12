@@ -44,6 +44,12 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	
 	
 	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
+	@Override
 	public void setup(Dataset dataset, Object... info) throws RemoteException {
 		List<Object> additionalInfo = Util.newList();
 		List<RM> regressions = Util.newList();
@@ -139,12 +145,13 @@ public abstract class MultipleRMAbstract extends ExecutableAlgAbstract implement
 	/*
 	 * This method is not marked synchronized because it is called by setup method.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		List<Object> parameterList = Util.newList();
 		boolean success = false;
 		for (RM regression : this.regressions) {
-			regression.setup(this.sample);
+			regression.setup((Fetcher<Profile>)sample);
 			Object parameter = regression.getParameter();
 			parameterList.add(parameter);
 			if (parameter != null)

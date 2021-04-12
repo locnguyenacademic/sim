@@ -8,6 +8,7 @@
 package net.ea.pso.adapter;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.List;
 
 import net.ea.pso.ExprFunction;
@@ -23,6 +24,7 @@ import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
 import net.hudup.core.alg.SetupAlgEvent;
 import net.hudup.core.alg.SetupAlgEvent.Type;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.NullPointer;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
@@ -70,6 +72,12 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 
 	
 	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample2() : null;
+	}
+
+
+	@Override
 	public void setup() throws RemoteException {
 		try {
 			super.setup(new NullPointer());
@@ -94,6 +102,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object executeAsLearn(Object input) throws RemoteException {
 		pso.getConfig().putAll(Util.transferToPSOConfig(config));
@@ -103,8 +112,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 			String funcExpr = null;
 			try {
 				net.ea.pso.AttributeList newAttRef = null;
-				while (sample.next()) {
-					Profile profile = sample.pick();
+				for (Profile profile : (Collection<Profile>)sample) {
 					if (profile == null) continue;
 					if (newAttRef == null) newAttRef = Util.extractPSOAttributes(profile);
 					
@@ -123,9 +131,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 				funcExpr = null;
 				Util.trace(e);
 			}
-			finally {
-				sample.reset();
-			}
 			
 			return pso.learn(setting, funcExpr);
 		}
@@ -134,7 +139,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 			if (pso.getFunction() == null)
 				return null;
 			else {
-				@SuppressWarnings("unchecked")
 				Vector<T> arg = (Vector<T>)input;
 				return pso.getFunction().eval(arg);
 			}

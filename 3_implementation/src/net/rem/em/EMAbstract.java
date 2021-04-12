@@ -9,9 +9,8 @@ package net.rem.em;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
-import net.hudup.core.Util;
 import net.hudup.core.alg.ExecutableAlgAbstract;
 import net.hudup.core.alg.MemoryBasedAlg;
 import net.hudup.core.alg.MemoryBasedAlgRemote;
@@ -20,7 +19,6 @@ import net.hudup.core.alg.SetupAlgEvent.Type;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
-import net.hudup.core.data.Profile;
 
 /**
  * <code>AbstractEM</code> is the most abstract class for expectation maximization (EM) algorithm.
@@ -95,22 +93,27 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	}
 
 	
-	/*
-	 * In the this version, the setup method is not marked synchronized because it calls learnStart method.
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ void setup(Dataset dataset, Object...info) throws RemoteException {
 		unsetup();
 		this.dataset = dataset;
-		if (info != null && info.length > 0 && (info[0] instanceof Fetcher<?>))
-			this.sample = (Fetcher<Profile>)info[0];
-		else if (dataset != null)
-			this.sample = dataset.fetchSample();
+		if (info != null && info.length > 0 && (info[0] instanceof Fetcher<?> || info[0] instanceof Collection<?>)) {
+			this.sample = info[0];
+			if (info.length ==  1)
+				info = null;
+			else
+				info = Arrays.copyOfRange(info, 1, info.length);
+		}
+		else
+			this.sample = fetchSample(dataset);
 		
 		this.estimatedParameter = this.currentParameter = this.previousParameter = this.statistics = null;
 		this.currentIteration = 0;
-		learnStart(info);
+		
+		if (info != null)
+			learnStart(info);
+		else
+			learnStart();
 		
 		SetupAlgEvent evt = new SetupAlgEvent(
 				this,
@@ -122,16 +125,6 @@ public abstract class EMAbstract extends ExecutableAlgAbstract implements EM, EM
 	}
 
 	
-	@Override
-	public void setup(Fetcher<Profile> sample, Object... info) throws RemoteException {
-		List<Object> additionalInfo = Util.newList();
-		additionalInfo.add(sample);
-		additionalInfo.addAll(Arrays.asList(info));
-
-		setup((Dataset)null, additionalInfo.toArray());
-	}
-
-
 	/**
 	 * Initializing parameter at the first iteration of EM process.
 	 * @return initialized parameter at the first iteration of EM process.

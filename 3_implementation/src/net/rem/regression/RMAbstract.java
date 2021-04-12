@@ -35,6 +35,8 @@ import net.hudup.core.alg.MemoryBasedAlgRemote;
 import net.hudup.core.data.Attribute;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
+import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
@@ -102,6 +104,12 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	
 	
 	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
+	@Override
 	public synchronized Object learnStart(Object...info) throws RemoteException {
 		Object resulted = null;
 		if (prepareInternalData())
@@ -126,14 +134,15 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 	 * @return true if data preparation is successful.
 	 * @throws RemoteException if any error raises.
 	 */
+	@SuppressWarnings("unchecked")
 	protected boolean prepareInternalData() throws RemoteException {
 		clearInternalData();
 		
 		Profile profile0 = null;
-		if (this.sample.next()) {
-			profile0 = this.sample.pick();
+		if (((Fetcher<Profile>)sample).next()) {
+			profile0 = ((Fetcher<Profile>)sample).pick();
 		}
-		this.sample.reset();
+		((Fetcher<Profile>)sample).reset();
 		if (profile0 == null)
 			return false;
 		if (profile0.getAttCount() < 2) //x1, x2,..., x(n-1), z
@@ -150,8 +159,8 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		boolean zExists = false;
 		boolean[] xExists = new boolean[xIndices.size() - 1]; //profile = (x1, x2,..., x(n-1), z)
 		Arrays.fill(xExists, false);
-		while (this.sample.next()) {
-			Profile profile = this.sample.pick(); //profile = (x1, x2,..., x(n-1), z)
+		while (((Fetcher<Profile>)sample).next()) {
+			Profile profile = ((Fetcher<Profile>)sample).pick(); //profile = (x1, x2,..., x(n-1), z)
 			if (profile == null)
 				continue;
 			
@@ -165,7 +174,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 					xExists[j - 1] = xExists[j - 1] || true;
 			}
 		}
-		this.sample.reset();
+		((Fetcher<Profile>)sample).reset();
 
 		List<Object[]> xIndicesTemp = Util.newList();
 		xIndicesTemp.add(xIndices.get(0)); //adding -1

@@ -23,6 +23,7 @@ import net.hudup.core.Util;
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.data.AttributeList;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.Fetcher;
 import net.hudup.core.data.MemFetcher;
 import net.hudup.core.data.Profile;
@@ -108,14 +109,21 @@ public class RegressionEMImpl extends ExponentialEM implements REM, Duplicatable
 	}
 	
 	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample() : null;
+	}
+
+	
 	/*
 	 * This method is not marked synchronized because it is called by setup method.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public /*synchronized*/ Object learnStart(Object...info) throws RemoteException {
 		// TODO Auto-generated method stub
 		Object resulted = null;
-		if (prepareInternalData(this.sample))
+		if (prepareInternalData((Fetcher<Profile>)sample))
 			resulted = super.learnStart();
 		if (resulted == null)
 			clearInternalData();

@@ -8,6 +8,7 @@
 package net.temp.ea.pso2;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.List;
 
 import net.hudup.core.Util;
@@ -15,6 +16,7 @@ import net.hudup.core.alg.AllowNullTrainingSet;
 import net.hudup.core.alg.ExecuteAsLearnAlgAbstract;
 import net.hudup.core.alg.SetupAlgEvent.Type;
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Dataset;
 import net.hudup.core.data.NullPointer;
 import net.hudup.core.data.Profile;
 import net.hudup.core.logistic.Inspector;
@@ -108,6 +110,12 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 
 	
+	@Override
+	protected Object fetchSample(Dataset dataset) {
+		return dataset != null ? dataset.fetchSample2() : null;
+	}
+
+
 	@Override
 	public void setup() throws RemoteException {
 		try {
@@ -299,14 +307,14 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object executeAsLearn(Object input) throws RemoteException {
 		if (input == null) {
 			PSOConfig<T> psoConfig = null;
 			String funcExpr = null;
 			try {
-				while (sample.next()) {
-					Profile profile = sample.pick();
+				for (Profile profile : (Collection<Profile>)sample) {
 					if (profile == null) continue;
 					
 					Functor<T> functor = createFunctor(profile);
@@ -324,9 +332,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 				funcExpr = null;
 				LogUtil.trace(e);
 			}
-			finally {
-				sample.reset();
-			}
 			
 			return learn(psoConfig, funcExpr);
 		}
@@ -335,7 +340,6 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 			if (func == null)
 				return null;
 			else {
-				@SuppressWarnings("unchecked")
 				Vector<T> arg = (Vector<T>)input;
 				return func.eval(arg);
 			}

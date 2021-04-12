@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/hudup.jar" sourcepath="lib/src/hudup-src.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.recommenders.jayes-2.6.0-158.jar" sourcepath="lib/src/org.eclipse.recommenders.jayes-2.6.0-158-sources.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.recommenders.jayes.io-2.6.0-158.jar" sourcepath="lib/src/org.eclipse.recommenders.jayes.io-2.6.0-158-sources.jar"/>
