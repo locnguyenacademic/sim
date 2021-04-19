@@ -18,13 +18,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with type support.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NeighborCFExtUserBased extends NeighborCFExt implements DuplicatableAlg {
+public class NeighborCFTypeUserBased extends NeighborCFType implements DuplicatableAlg {
 
 	
 	/**
@@ -36,7 +36,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	/**
 	 * Default constructor.
 	 */
-	public NeighborCFExtUserBased() {
+	public NeighborCFTypeUserBased() {
 
 	}
 
@@ -111,12 +111,21 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 
 
 	@Override
+	protected RatingVector convertToTypeVector(RatingVector vRating) {
+		if (vRating == null)
+			return null;
+		else
+			return userTypeMap.get(vRating.id());
+	}
+
+
+	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_userbased_ext";
+			return "neighborcf_userbased_type";
 	}
 
 
@@ -128,7 +137,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		return "Extended user-based nearest neighbors collaborative filtering algorithm";
+		return "Type-supported user-based nearest neighbors collaborative filtering algorithm";
 	}
 
 
