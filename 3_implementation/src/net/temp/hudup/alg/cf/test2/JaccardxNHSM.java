@@ -11,13 +11,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * CPC measure for test.
+ * Jaccard + NHSM (NHSM) measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
+public class JaccardxNHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForTest {
 
 	
 	/**
@@ -27,10 +27,10 @@ public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
 
 	
 	/**
-	 * Default constructor.
+	 * Default constructor
 	 */
-	public CPC() {
-		
+	public JaccardxNHSM() {
+
 	}
 
 	
@@ -40,7 +40,7 @@ public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a02.02.cpc";
+			return "a03.01.05.02.jaccardxnhsm";
 	}
 
 

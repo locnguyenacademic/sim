@@ -15,7 +15,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD + NHSM measure.
+ * Amer + NHSM measure.
  * 
  * @author Loc Nguyen
  * @version 1.0

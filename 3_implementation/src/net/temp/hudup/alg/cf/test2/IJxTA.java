@@ -93,7 +93,7 @@ public class IJxTA extends NeighborCFExtUserBased implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a03.03.10.01.amerxta";
+			return "a03.03.10.01.ijxta";
 	}
 
 

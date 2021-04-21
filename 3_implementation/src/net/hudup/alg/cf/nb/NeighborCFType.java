@@ -48,7 +48,7 @@ public abstract class NeighborCFType extends NeighborCFExt {
 	/**
 	 * Dataset name.
 	 */
-	protected static final String DATASET_FIELD = "dataset";
+	protected static final String DATASET_FIELD = "type_dataset";
 
 	
 	/**
@@ -66,13 +66,25 @@ public abstract class NeighborCFType extends NeighborCFExt {
 	/**
 	 * Frequency mode.
 	 */
-	protected static final String FREQUENCY_FIELD = "frequency";
+	protected static final String FREQUENCY_FIELD = "type_frequency";
 
 	
 	/**
 	 * Default value for frequency mode.
 	 */
-	protected static final boolean FREQUENCY_DEFAULT = false;
+	protected static final boolean FREQUENCY_DEFAULT = true;
+
+	
+	/**
+	 * Zero acceptance mode.
+	 */
+	protected static final String ZERO_ACCEPT_FIELD = "type_zero_accept";
+
+	
+	/**
+	 * Default value for zero acceptance mode.
+	 */
+	protected static final boolean ZERO_ACCEPT_DEFAULT = false;
 
 	
 	/**
@@ -257,6 +269,7 @@ public abstract class NeighborCFType extends NeighborCFExt {
 		TypeSupport ts = getTypeSupport();
 		if (ts == null) return null;
 		
+		boolean zeroAccept = config.getAsBoolean(ZERO_ACCEPT_FIELD);
 		RatingVector vType = new RatingVector(vRating.id());
 		Set<Integer> fieldIds = vRating.fieldIds(true);
 		for (int fieldId : fieldIds) {
@@ -268,17 +281,20 @@ public abstract class NeighborCFType extends NeighborCFExt {
 			
 			double value = vRating.get(fieldId).value;
 			for (int i = 0; i < types.length; i++) {
-				if (!types[i]) continue;
-				Rating rating = null;
-				if (vType.contains(i)) {
-					rating = vType.get(i);
-					rating.value = (rating.value * rating.ratedDate + value) / (rating.ratedDate + 1);
-					rating.ratedDate = rating.ratedDate + 1;
+				if (types[i]) {
+					if (vType.contains(i)) {
+						Rating rating = vType.get(i);
+						rating.value = (rating.value * rating.ratedDate + value) / (rating.ratedDate + 1);
+						rating.ratedDate = rating.ratedDate + 1;
+					}
+					else {
+						Rating rating = new Rating(value);
+						rating.ratedDate = 1;
+						vType.put(i, rating);
+					}
 				}
-				else {
-					rating = new Rating(value);
-					rating.ratedDate = 1;
-					vType.put(i, rating);
+				else if (zeroAccept) {
+					vType.put(i, new Rating(0));
 				}
 			}
 		}
@@ -296,6 +312,7 @@ public abstract class NeighborCFType extends NeighborCFExt {
 		TypeSupport ts = getTypeSupport();
 		if (ts == null) return null;
 		
+		boolean zeroAccept = config.getAsBoolean(ZERO_ACCEPT_FIELD);
 		RatingVector vType = new RatingVector(vRating.id());
 		Set<Integer> fieldIds = vRating.fieldIds(true);
 		for (int fieldId : fieldIds) {
@@ -307,17 +324,20 @@ public abstract class NeighborCFType extends NeighborCFExt {
 			
 			double value = vRating.get(fieldId).value;
 			for (int i = 0; i < types.length; i++) {
-				if (!types[i]) continue;
-				Rating rating = null;
-				if (vType.contains(i)) {
-					rating = vType.get(i);
-					rating.value = (rating.value * rating.ratedDate + value) / (rating.ratedDate + 1);
-					rating.ratedDate = rating.ratedDate + 1;
+				if (types[i]) {
+					if (vType.contains(i)) {
+						Rating rating = vType.get(i);
+						rating.value = (rating.value * rating.ratedDate + value) / (rating.ratedDate + 1);
+						rating.ratedDate = rating.ratedDate + 1;
+					}
+					else {
+						Rating rating = new Rating(value);
+						rating.ratedDate = 1;
+						vType.put(i, rating);
+					}
 				}
-				else {
-					rating = new Rating(value);
-					rating.ratedDate = 1;
-					vType.put(i, rating);
+				else if (zeroAccept) {
+					vType.put(i, new Rating(0));
 				}
 			}
 		}
@@ -331,6 +351,7 @@ public abstract class NeighborCFType extends NeighborCFExt {
 		DataConfig tempConfig = super.createDefaultConfig();
 		tempConfig.put(DATASET_FIELD, DATASET_MOVIELENS100K);
 		tempConfig.put(FREQUENCY_FIELD, FREQUENCY_DEFAULT);
+		tempConfig.put(ZERO_ACCEPT_FIELD, ZERO_ACCEPT_DEFAULT);
 
 		DataConfig config = new DataConfig() {
 

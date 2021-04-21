@@ -11,13 +11,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * CPC measure for test.
+ * MSD measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
+public class MSD extends net.hudup.core.alg.cf.nb.beans.MSDJ implements ForTest {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public CPC() {
+	public MSD() {
 		
 	}
 
@@ -40,7 +40,7 @@ public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a02.02.cpc";
+			return "a04.01.msd";
 	}
 
 

@@ -15,7 +15,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD + TA measure.
+ * Amer + TA measure.
  * 
  * @author Loc Nguyen
  * @version 1.0

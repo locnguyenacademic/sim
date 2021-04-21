@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans.smd;
+package net.temp.hudup.alg.cf.test2;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,15 +13,16 @@ import java.util.List;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.ForTest;
 
 /**
- * Amer + CPC measure.
+ * Jaccard + CPC measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerxCPC extends NeighborCFExtUserBased {
+public class JaccardxCPC extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**
@@ -33,7 +34,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public AmerxCPC() {
+	public JaccardxCPC() {
 
 	}
 
@@ -52,7 +53,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amerxcpc";
+		return "a03.01.02.02.jaccardxcpc";
 	}
 
 
@@ -75,13 +76,15 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amer(vRating1, vRating2, profile1, profile2) * cpc(vRating1, vRating2, profile1, profile2);
+		return jaccard(vRating1, vRating2, profile1, profile2) * cpc(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -91,7 +94,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amerxcpc";
+			return "a03.01.02.02.jaccardxcpc";
 	}
 
 

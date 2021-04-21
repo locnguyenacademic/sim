@@ -11,36 +11,36 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * CPC measure for test.
+ * Amer + MSD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
+public class AmerxMSD extends net.hudup.alg.cf.nb.beans.smd.AmerxMSD implements ForTest {
 
 	
 	/**
-	 * Default serial version UID.
+	 * Serial version UID for serializable class. 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	
 	/**
 	 * Default constructor.
 	 */
-	public CPC() {
-		
+	public AmerxMSD() {
+
 	}
 
-	
+
 	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a02.02.cpc";
+			return "a22.01.04.01.amerxmsd";
 	}
 
 

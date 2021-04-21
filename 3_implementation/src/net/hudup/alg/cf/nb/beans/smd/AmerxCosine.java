@@ -15,13 +15,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * Amer + CPC measure.
+ * Amer + Cosine measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class AmerxCPC extends NeighborCFExtUserBased {
+public class AmerxCosine extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -33,7 +33,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public AmerxCPC() {
+	public AmerxCosine() {
 
 	}
 
@@ -52,7 +52,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return "amerxcpc";
+		return "amerxcosine";
 	}
 
 
@@ -68,7 +68,6 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 		
 		config.remove(MEASURE);
 		config.remove(VALUE_BINS_FIELD);
-		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(MU_ALPHA_FIELD);
@@ -81,7 +80,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amer(vRating1, vRating2, profile1, profile2) * cpc(vRating1, vRating2, profile1, profile2);
+		return amer(vRating1, vRating2, profile1, profile2) * cosine(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -91,7 +90,7 @@ public class AmerxCPC extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amerxcpc";
+			return "neighborcf_amerxcosine";
 	}
 
 
