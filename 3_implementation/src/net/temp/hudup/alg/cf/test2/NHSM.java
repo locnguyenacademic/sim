@@ -8,6 +8,8 @@
 package net.temp.hudup.alg.cf.test2;
 
 import net.hudup.core.data.DataConfig;
+import net.hudup.core.data.Profile;
+import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
 /**
@@ -44,6 +46,14 @@ public class NHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForTest {
 	}
 
 
+	@Override
+	protected double nhsm(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		return pss(vRating1, vRating2, profile1, profile2) * urp;
+	}
+
+	
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
