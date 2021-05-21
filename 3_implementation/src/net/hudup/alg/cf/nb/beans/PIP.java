@@ -78,6 +78,7 @@ public class PIP extends NeighborCFExtUserBased {
 		config.remove(TA_NORMALIZED_FIELD);
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
+		config.remove(ESIM_TYPE_FIELD);
 	}
 
 

@@ -171,6 +171,12 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * Indexed Jaccard measure.
 	 */
 	public static final String INDEXEDJ = "indexedj";
+
+	
+	/**
+	 * ESim measure.
+	 */
+	public static final String ESIM = "esim";
 	
 	
 }

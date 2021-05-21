@@ -76,6 +76,7 @@ public class SMD extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(ESIM_TYPE_FIELD);
 	}
 
 

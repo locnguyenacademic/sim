@@ -5,7 +5,7 @@
  * Email: ng_phloc@yahoo.com
  * Phone: +84-975250362
  */
-package net.hudup.alg.cf.nb.beans.smd;
+package net.hudup.alg.cf.nb.beans;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SMD measure.
+ * ESim measure.
  * 
- * @author Loc Nguyen
+ * @author Ali Amer
  * @version 1.0
  *
  */
-public class Amer extends NeighborCFExtUserBased {
+public class ESim extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class Amer extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public Amer() {
+	public ESim() {
 
 	}
 
@@ -53,7 +53,7 @@ public class Amer extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.AMER;
+		return Measure.ESIM;
 	}
 
 
@@ -76,14 +76,15 @@ public class Amer extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
-		config.remove(ESIM_TYPE_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 	}
 
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return amer(vRating1, vRating2, profile1, profile2);
+		return esim(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -93,7 +94,7 @@ public class Amer extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_amer";
+			return "neighborcf_esim";
 	}
 
 

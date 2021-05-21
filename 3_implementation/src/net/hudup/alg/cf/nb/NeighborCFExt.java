@@ -62,7 +62,9 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * <br>
  * Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem contributed rating Jaccard measure.
  * <br>
- * Soojung Lee contributed indexed Jaccard measure.
+ * Soojung Lee contributed indexed Jaccard measure.<br>
+ * <br>
+ * Ali Amer contributed ESim measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -174,6 +176,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Type of ESim measure.
+	 */
+	protected static final String ESIM_TYPE_FIELD = "esim_type";
+
+	
+	/**
+	 * Default value for type of ESim measure.
+	 */
+	protected static final int ESIM_TYPE_DEFAULT = 0;
+
+	
+	/**
 	 * Value bins.
 	 */
 	protected List<Double> valueBins = Util.newList();
@@ -262,6 +276,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.RJ);
 		mSet.add(Measure.RATINGJ);
 		mSet.add(Measure.INDEXEDJ);
+		mSet.add(Measure.ESIM);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -366,6 +381,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return ratingJaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.INDEXEDJ))
 			return indexedJaccard(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.ESIM))
+			return esim(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -1965,6 +1982,102 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
+	 * Calculating the ESim measure between two pairs.
+	 * Ali Amer developed the ESim measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return ESim measure between both two rating vectors and profiles.
+	 * @author Ali Amer
+	 */
+	protected double esim(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		int type = config.getAsInt(ESIM_TYPE_FIELD);
+		double product = 0;
+		double length1 = 0;
+		double length2 = 0;
+		Set<Integer> union = unionFieldIds(vRating1, vRating2);
+		if (type == 0) { //ESim
+			for (int id : union) {
+				boolean rated1 = vRating1.isRated(id);
+				boolean rated2 = vRating2.isRated(id);
+				if (rated1 && rated2)
+					product += vRating1.get(id).value * vRating2.get(id).value;
+				else if (rated1)
+					length1 += vRating1.get(id).value;
+				else
+					length2 += vRating2.get(id).value;
+			}
+			
+			return product / (length1+length2);
+		}
+		else if (type == 1) { //IZSM
+			int n = 0;
+			for (int id : union) {
+				boolean rated1 = vRating1.isRated(id);
+				boolean rated2 = vRating2.isRated(id);
+				if (rated1 && rated2) {
+					product += vRating1.get(id).value * vRating2.get(id).value;
+					n++;
+				}
+				else if (rated1)
+					length1 += vRating1.get(id).value;
+				else
+					length2 += vRating2.get(id).value;
+			}
+
+			return n*product / (length1*length2);
+		}
+		else if (type == 2) { //ESim2
+			int n = 0;
+			for (int id : union) {
+				boolean rated1 = vRating1.isRated(id);
+				boolean rated2 = vRating2.isRated(id);
+				if (rated1 && rated2) {
+					product += vRating1.get(id).value * vRating2.get(id).value;
+					n++;
+				}
+				else if (rated1) {
+					length1 += vRating1.get(id).value;
+					product += vRating1.get(id).value;
+					n++;
+				}
+				else {
+					length2 += vRating2.get(id).value;
+					product += vRating2.get(id).value;
+					n++;
+				}
+			}
+
+			return n*product / (length1*length2);
+		}
+		else if (type == 2) { //ESim3
+			int n = 0;
+			for (int id : union) {
+				boolean rated1 = vRating1.isRated(id);
+				boolean rated2 = vRating2.isRated(id);
+				if (rated1 && rated2) {
+					product += vRating1.get(id).value * vRating2.get(id).value;
+					n++;
+				}
+				else if (rated1) {
+					length1 += vRating1.get(id).value;
+					n++;
+				}
+				else {
+					length2 += vRating2.get(id).value;
+					n++;
+				}
+			}
+
+			return n*product / (length1*length2);
+		}
+		else
+			return Constants.UNUSED;
+	}
+	
+	
+	/**
 	 * Computing common field IDs of two rating vectors as list.
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
@@ -2079,6 +2192,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
 		config.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
 		config.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
+		config.put(ESIM_TYPE_FIELD, ESIM_TYPE_DEFAULT);
 		
 		return config;
 	}

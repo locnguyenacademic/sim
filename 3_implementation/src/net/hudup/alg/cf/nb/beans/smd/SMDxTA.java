@@ -74,6 +74,7 @@ public class SMDxTA extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
+		config.remove(ESIM_TYPE_FIELD);
 	}
 
 
