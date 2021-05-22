@@ -2038,20 +2038,22 @@ public abstract class NeighborCFExt extends NeighborCF {
 					n++;
 				}
 				else if (rated1) {
-					length1 += vRating1.get(id).value;
-					product += vRating1.get(id).value;
+					double value = vRating1.get(id).value;
+					length1 += value;
+					product += value;
 					n++;
 				}
 				else {
-					length2 += vRating2.get(id).value;
-					product += vRating2.get(id).value;
+					double value = vRating2.get(id).value;
+					length2 += value;
+					product += value;
 					n++;
 				}
 			}
 
 			return n*product / (length1*length2);
 		}
-		else if (type == 2) { //ESim3
+		else if (type == 3) { //ESim3
 			int n = 0;
 			for (int id : union) {
 				boolean rated1 = vRating1.isRated(id);
