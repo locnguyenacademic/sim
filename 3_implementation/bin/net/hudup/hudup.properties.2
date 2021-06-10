@@ -36,14 +36,19 @@ debug=true
 plugin_manager=net.hudup.SimFirer
 
 #Setting pull mode advice. If this property is true, connection to server is advised to be in pull mode to prevent server from unexpected deadlock.
-#It is better if setting this flag to be true.
-#pull_mode_advice=true
-pull_mode_advice=false
+#It is good for local connection if setting this flag to be true.
+pull_mode_advice=true
+#pull_mode_advice=false
 
 #If flag is true, server has UI. Otherwise, server has no UI, in this case, server is automatically set up at the first time running.
 #server_ui=true
 
 #Try to use random port if the default port was in used. Value here is true, which means that ports are flexible.
 #It is better if setting this flag to be false.
-#try_random_port=false
-try_random_port=true
+try_random_port=false
+#try_random_port=true
+
+#If flag is true, the server will watch something, concretely, the working library directory working/lib.
+#If it is set to be false in case of saving resources.
+watcher_enabled=false
+#watcher_enabled=true
