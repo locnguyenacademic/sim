@@ -7,11 +7,15 @@
  */
 package net.hudup.alg.cf.nb;
 
+import java.awt.Component;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import net.hudup.core.Constants;
 import net.hudup.core.Util;
@@ -182,9 +186,27 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Default value for type of ESim measure.
+	 * ESim type: ESIM.
 	 */
-	protected static final int ESIM_TYPE_DEFAULT = 0;
+	protected static final String ESIM_TYPE_ESIM = "esim";
+
+	
+	/**
+	 * ESim type: ESIM2.
+	 */
+	protected static final String ESIM_TYPE_ESIM2 = "esim2";
+
+	
+	/**
+	 * ESim type: ESIM3.
+	 */
+	protected static final String ESIM_TYPE_ESIM3 = "esim3";
+
+	
+	/**
+	 * ESim type: ZSIM.
+	 */
+	protected static final String ESIM_TYPE_ZSIM = "zsim";
 
 	
 	/**
@@ -1992,12 +2014,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer
 	 */
 	protected double esim(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		int type = config.getAsInt(ESIM_TYPE_FIELD);
+		String type = config.getAsString(ESIM_TYPE_FIELD);
 		double product = 0;
 		double length1 = 0;
 		double length2 = 0;
 		Set<Integer> union = unionFieldIds(vRating1, vRating2);
-		if (type == 0) { //ESim
+		if (type.equals(ESIM_TYPE_ESIM)) { //ESim
 			for (int id : union) {
 				boolean rated1 = vRating1.isRated(id);
 				boolean rated2 = vRating2.isRated(id);
@@ -2011,7 +2033,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			
 			return product / (length1+length2);
 		}
-		else if (type == 1) { //IZSM
+		else if (type.equals(ESIM_TYPE_ZSIM)) { //ZSM
 			int n = 0;
 			for (int id : union) {
 				boolean rated1 = vRating1.isRated(id);
@@ -2028,7 +2050,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 			return n*product / (length1*length2);
 		}
-		else if (type == 2) { //ESim2
+		else if (type.equals(ESIM_TYPE_ESIM2)) { //ESim2
 			int n = 0;
 			for (int id : union) {
 				boolean rated1 = vRating1.isRated(id);
@@ -2053,7 +2075,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 			return n*product / (length1*length2);
 		}
-		else if (type == 3) { //ESim3
+		else if (type.equals(ESIM_TYPE_ESIM3)) { //ESim3
 			int n = 0;
 			for (int id : union) {
 				boolean rated1 = vRating1.isRated(id);
@@ -2185,16 +2207,45 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	@Override
 	public DataConfig createDefaultConfig() {
-		DataConfig config = super.createDefaultConfig();
-		config.put(VALUE_BINS_FIELD, VALUE_BINS_DEFAULT);
-		config.put(BCF_MEDIAN_MODE_FIELD, BCF_MEDIAN_MODE_DEFAULT);
-		config.put(MU_ALPHA_FIELD, MU_ALPHA_DEFAULT);
-		config.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
-		config.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
-		config.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
-		config.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
-		config.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
-		config.put(ESIM_TYPE_FIELD, ESIM_TYPE_DEFAULT);
+		DataConfig tempConfig = super.createDefaultConfig();
+		tempConfig.put(VALUE_BINS_FIELD, VALUE_BINS_DEFAULT);
+		tempConfig.put(BCF_MEDIAN_MODE_FIELD, BCF_MEDIAN_MODE_DEFAULT);
+		tempConfig.put(MU_ALPHA_FIELD, MU_ALPHA_DEFAULT);
+		tempConfig.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
+		tempConfig.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
+		tempConfig.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
+		tempConfig.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
+		tempConfig.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
+		tempConfig.put(ESIM_TYPE_FIELD, ESIM_TYPE_ESIM);
+
+		DataConfig config = new DataConfig() {
+
+			/**
+			 * Serial version UID for serializable class. 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
+				if (key.equals(ESIM_TYPE_FIELD)) {
+					String type = getAsString(ESIM_TYPE_FIELD);
+					type = type == null ? getDefaultMeasure() : type;
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one ESim type", 
+						"Choosing ESim type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						new String[] {ESIM_TYPE_ESIM, ESIM_TYPE_ESIM2, ESIM_TYPE_ESIM3, ESIM_TYPE_ZSIM}, 
+						type);
+				}
+				else 
+					return tempConfig.userEdit(comp, key, defaultValue);
+			}
+			
+		};
+
+		config.putAll(tempConfig);
 		
 		return config;
 	}
