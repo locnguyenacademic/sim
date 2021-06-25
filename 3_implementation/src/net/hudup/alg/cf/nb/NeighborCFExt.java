@@ -34,7 +34,7 @@ import net.hudup.data.DocumentVector;
 import net.hudup.evaluate.ui.EvaluateGUI;
 
 /**
- * This class sets up an advanced version of nearest neighbors collaborative filtering algorithm with more similarity measures.
+ * This class sets up an extended version of nearest neighbors collaborative filtering algorithm with more similarity measures.
  * <br>
  * There are many authors who contributed measure to this class.<br>
  * <br>
@@ -50,7 +50,7 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * <br>
  * Junmei Feng, Xiaoyi Fengs, Ning Zhang, and Jinye Peng contributed Feng model.<br>
  * <br>
- * Yi Mua, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
+ * Yi Mu, Nianhao Xiao, Ruichun Tang, Liang Luo, and Xiaohan Yin contributed Mu measure.<br>
  * <br>
  * Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
  * <br>
@@ -424,6 +424,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(TA_NORMALIZED_FIELD);
 		config.removeReadOnly(RATINGJ_THRESHOLD_FIELD);
 		config.removeReadOnly(INDEXEDJ_INTERVALS_FIELD);
+		config.removeReadOnly(ESIM_TYPE_FIELD);
 		if (measure.equals(Measure.PSS)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -435,6 +436,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.NHSM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -447,6 +449,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.BCF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -458,6 +461,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.BCFJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -469,6 +473,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.SRC)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -480,6 +485,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -492,6 +498,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.PC)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -504,6 +511,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.MMD)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -515,6 +523,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.CJACMD)) {
 			config.addReadOnly(MSD_FRACTION_FIELD);
@@ -525,6 +534,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.FENG)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -537,6 +547,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.MU)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -548,6 +559,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.SMTP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -558,6 +570,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.AMER)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -570,6 +583,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -582,6 +596,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -594,6 +609,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2J)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -606,6 +622,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -618,6 +635,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -630,6 +648,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.TA)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -641,6 +660,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.TAJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -652,6 +672,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.COCO)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -664,6 +685,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.NNSM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -676,6 +698,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.IJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -688,6 +711,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.RATINGJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -699,6 +723,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
 		else if (measure.equals(Measure.INDEXEDJ)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -710,6 +735,19 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
+		}
+		else if (measure.equals(Measure.ESIM)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		}
 		else {
 			super.updateConfig(measure);
@@ -729,8 +767,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu.
 	 * @return PSS measure between both two rating vectors and profiles.
 	 */
-	protected abstract double pss(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2);
+	protected abstract double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
 
 
 	/**

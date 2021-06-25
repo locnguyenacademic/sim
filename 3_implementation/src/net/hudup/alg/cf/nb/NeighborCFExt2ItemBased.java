@@ -12,19 +12,19 @@ import java.util.Set;
 
 import net.hudup.core.alg.DuplicatableAlg;
 import net.hudup.core.alg.RecommendParam;
-import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
+import net.hudup.core.alg.cf.nb.NeighborCFItemBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This class sets up an extended version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an advanced version of item-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NeighborCFExtUserBased extends NeighborCFExt implements DuplicatableAlg {
+public class NeighborCFExt2ItemBased extends NeighborCFExt2 implements DuplicatableAlg {
 
 	
 	/**
@@ -36,14 +36,14 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	/**
 	 * Default constructor.
 	 */
-	public NeighborCFExtUserBased() {
+	public NeighborCFExt2ItemBased() {
 
 	}
 
-	
+
 	@Override
 	public RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
-		return NeighborCFUserBased.estimate(this, param, queryIds);
+		return NeighborCFItemBased.estimate(this, param, queryIds);
 	}
 
 	
@@ -51,72 +51,73 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	protected double cod(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return cod(vRating1, vRating2, getItemMeans());
+		return cod(vRating1, vRating2, getUserMeans());
 	}
 
 	
 	@Override
 	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, getItemMeans());
+		return pip(vRating1, vRating2, getUserMeans());
 	}
 
 
 	@Override
-	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, getItemMeans());
+	protected double pss(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		return pss(vRating1, vRating2, getUserMeans());
 	}
 
 	
 	@Override
 	protected double pc(RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, int fixedColumnId) {
-		return pc(vRating1, vRating2, fixedColumnId, getItemMeans());
+		return pc(vRating1, vRating2, fixedColumnId, getUserMeans());
 	}
 
 
 	@Override
 	protected Set<Integer> getRowIds() {
-		return getUserIds();
+		return getItemIds();
 	}
 
-
+	
 	@Override
 	protected RatingVector getRowRating(int rowId) {
-		return dataset.getUserRating(rowId);
+		return dataset.getItemRating(rowId);
 	}
 
-
+	
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, getUserMeans(), vRating);
+		return calcMean(this, getItemMeans(), vRating);
 	}
 
 
 	@Override
 	protected Set<Integer> getColumnIds() {
-		return getItemIds();
+		return getUserIds();
 	}
 
-
+	
 	@Override
 	protected RatingVector getColumnRating(int columnId) {
-		return dataset.getItemRating(columnId);
+		return dataset.getUserRating(columnId);
 	}
 
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, getItemMeans(), vRating);
+		return calcMean(this, getUserMeans(), vRating);
 	}
 
-
+	
 	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_userbased_ext";
+			return "neighborcf_itembased_ext2";
 	}
 
 
@@ -128,7 +129,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		return "Extended user-based nearest neighbors collaborative filtering algorithm";
+		return "Advanced item-based nearest neighbors collaborative filtering algorithm";
 	}
 
 

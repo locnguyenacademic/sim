@@ -18,7 +18,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This class sets up an advanced version of item-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an extended version of item-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
  * 
  * @author Loc Nguyen
  * @version 1.0

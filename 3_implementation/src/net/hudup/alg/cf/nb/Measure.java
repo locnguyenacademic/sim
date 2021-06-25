@@ -177,6 +177,12 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * ESim measure.
 	 */
 	public static final String ESIM = "esim";
+
+	
+	/**
+	 * RES measure.
+	 */
+	public static final String RES = "res";
 	
 	
 }

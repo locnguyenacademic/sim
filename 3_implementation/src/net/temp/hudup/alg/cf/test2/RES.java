@@ -11,13 +11,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * ESim measure for test.
+ * RES measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class ESim extends net.hudup.alg.cf.nb.beans.ESim implements ForTest {
+public class RES extends net.hudup.alg.cf.nb.beans.RES implements ForTest {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class ESim extends net.hudup.alg.cf.nb.beans.ESim implements ForTest {
 	/**
 	 * Default constructor.
 	 */
-	public ESim() {
+	public RES() {
 
 	}
 
@@ -40,7 +40,7 @@ public class ESim extends net.hudup.alg.cf.nb.beans.ESim implements ForTest {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "a23.01.esim";
+			return "a24.01.res";
 	}
 
 

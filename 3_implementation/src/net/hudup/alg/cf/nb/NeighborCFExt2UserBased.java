@@ -18,13 +18,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * This class sets up an extended version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
+ * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NeighborCFExtUserBased extends NeighborCFExt implements DuplicatableAlg {
+public class NeighborCFExt2UserBased extends NeighborCFExt2 implements DuplicatableAlg {
 
 	
 	/**
@@ -36,7 +36,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	/**
 	 * Default constructor.
 	 */
-	public NeighborCFExtUserBased() {
+	public NeighborCFExt2UserBased() {
 
 	}
 
@@ -116,7 +116,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_userbased_ext";
+			return "neighborcf_userbased_ext2";
 	}
 
 
@@ -128,7 +128,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 	
 	@Override
 	public String getDescription() throws RemoteException {
-		return "Extended user-based nearest neighbors collaborative filtering algorithm";
+		return "Advanced user-based nearest neighbors collaborative filtering algorithm";
 	}
 
 
