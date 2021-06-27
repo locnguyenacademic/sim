@@ -222,12 +222,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
-	 * Value cache.
-	 */
-	protected Map<Integer, Object> valueCache = Util.newMap();
-
-	
-	/**
 	 * Default constructor.
 	 */
 	public NeighborCFExt() {
@@ -241,8 +235,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		
 		this.valueBins = extractConfigValueBins();
 		this.rankBins = convertValueBinsToRankBins(this.valueBins);
-		
-		this.valueCache.clear();
 	}
 
 
@@ -252,8 +244,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		
 		this.rankBins.clear();
 		this.valueBins.clear();
-		
-		this.valueCache.clear();
 	}
 
 
@@ -417,6 +407,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(VALUE_BINS_FIELD);
 		config.removeReadOnly(COSINE_NORMALIZED_FIELD);
 		config.removeReadOnly(MSD_FRACTION_FIELD);
+		config.removeReadOnly(ENTROPY_SUPPORT_FIELD);
 		config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
 		config.removeReadOnly(MU_ALPHA_FIELD);
 		config.removeReadOnly(SMTP_LAMBDA_FIELD);
@@ -429,6 +420,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -442,6 +434,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -455,6 +448,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
@@ -467,6 +461,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
@@ -478,6 +473,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		else if (measure.equals(Measure.SRC)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -491,6 +487,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -504,6 +501,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -516,6 +514,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		else if (measure.equals(Measure.MMD)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -527,6 +526,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		else if (measure.equals(Measure.CJACMD)) {
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -540,6 +540,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -553,6 +554,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
@@ -565,6 +567,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(TA_NORMALIZED_FIELD);
@@ -576,6 +579,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -589,6 +593,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -602,6 +607,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -615,6 +621,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -628,6 +635,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -641,6 +649,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -654,6 +663,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -666,6 +676,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -678,6 +689,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -691,6 +703,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -704,6 +717,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -717,6 +731,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -729,6 +744,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -741,6 +757,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -1033,18 +1050,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 		if (common.size() == 0) return Constants.UNUSED;
 		
 		double pip = 0.0;
+		double range = getMaxRating()-getMinRating();
 		for (int id : common) {
 			double r1 = vRating1.get(id).value;
 			double r2 = vRating2.get(id).value;
 			boolean agreed = agree(r1, r2);
 			
 			double d = agreed ? Math.abs(r1-r2) : 2*Math.abs(r1-r2);
-			double pro = (2*(getMaxRating()-getMinRating())+1) - d;
+			double pro = (2*range + 1) - d;
 			pro = pro*pro;
 			
 			double impact = (Math.abs(r1-this.ratingMedian)+1) * (Math.abs(r2-this.ratingMedian)+1);
-			if (!agreed)
-				impact = 1 / impact;
+			if (!agreed) impact = 1 / impact;
 			
 			double mean = fieldMeans.get(id);
 			double pop = 1;

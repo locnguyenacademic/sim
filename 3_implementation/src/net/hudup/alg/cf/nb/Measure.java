@@ -183,6 +183,18 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * RES measure.
 	 */
 	public static final String RES = "res";
+
+	
+	/**
+	 * Singularity measure (SM).
+	 */
+	public static final String SM = "sm";
+
+	
+	/**
+	 * MPIP measure.
+	 */
+	public static final String MPIP = "mpip";
 	
 	
 }

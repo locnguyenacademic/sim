@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.hudup.core.Constants;
@@ -18,6 +19,7 @@ import net.hudup.core.Util;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.evaluate.recommend.Accuracy;
 
 /**
  * This class sets up another advanced version of nearest neighbors collaborative filtering algorithm with more similarity measures.
@@ -25,6 +27,10 @@ import net.hudup.core.data.RatingVector;
  * There are many authors who contributed measure to this class.<br>
  * <br>
  * Zhenhua Tan and Liangliang He contributed RES measure.<br>
+ * <br>
+ * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando contributed singularity measure (SM).<br>
+ * <br>
+ * Manochandar and Punniyamoorthy contributed MPIP measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -65,6 +71,8 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(measures);
 		mSet.add(Measure.RES);
+		mSet.add(Measure.SM);
+		mSet.add(Measure.MPIP);
 
 		measures.clear();
 		measures.addAll(mSet);
@@ -80,6 +88,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		config.removeReadOnly(VALUE_BINS_FIELD);
 		config.removeReadOnly(COSINE_NORMALIZED_FIELD);
 		config.removeReadOnly(MSD_FRACTION_FIELD);
+		config.removeReadOnly(ENTROPY_SUPPORT_FIELD);
 		config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
 		config.removeReadOnly(MU_ALPHA_FIELD);
 		config.removeReadOnly(SMTP_LAMBDA_FIELD);
@@ -92,6 +101,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
 			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
 			config.addReadOnly(MU_ALPHA_FIELD);
 			config.addReadOnly(SMTP_LAMBDA_FIELD);
@@ -110,6 +120,10 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object... params) {
 		if (measure.equals(Measure.RES))
 			return res(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.SM))
+			return sm(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.MPIP))
+			return mpip(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -172,6 +186,137 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	}
 	
 	
+	/**
+	 * Calculating the singularity measure (SM) between two pairs.
+	 * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando developed the SM. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return singularity measure (SM) between both two rating vectors and profiles.
+	 * @author Jesús Bobadilla, Fernando Ortega, Antonio Hernando
+	 */
+	protected double sm(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> PA = Util.newSet(), NA = Util.newSet(), D = Util.newSet();
+		Set<Integer> ids = commonFieldIds(vRating1, vRating2);
+		if (ids.size() == 0) return Constants.UNUSED;
+		
+		for (int id : ids) {
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			if (Accuracy.isRelevant(v1, this.ratingMedian) && Accuracy.isRelevant(v2, this.ratingMedian))
+				PA.add(id);
+			else if ((!Accuracy.isRelevant(v1, this.ratingMedian)) && (!Accuracy.isRelevant(v2, this.ratingMedian)))
+				NA.add(id);
+			else
+				D.add(id);
+		}
+		
+		double range = getMaxRating() - getMinRating();
+		double paSum = 0;
+		for (int id : PA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			paSum += d*PNE[0]*PNE[0];
+		}
+		paSum = PA.size() > 0 ? paSum/(double)PA.size() : paSum;
+		
+		double naSum = 0;
+		for (int id : NA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			naSum += d*PNE[1]*PNE[1];
+		}
+		naSum = NA.size() > 0 ? naSum/(double)NA.size() : naSum;
+		
+		double dSum = 0;
+		for (int id : D) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			dSum += d*PNE[0]*PNE[1];
+		}
+		dSum = D.size() > 0 ? dSum/(double)D.size() : dSum;
+		
+		return (paSum + naSum + dSum) / 3.0;
+	}
+	
+	
+	/**
+	 * Calculating the MPIP measure between two pairs.
+	 * Manochandar and Punniyamoorthy developed the MPIP. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return MPIP measure between both two rating vectors and profiles.
+	 * @author Manochandar, Punniyamoorthy
+	 */
+	protected abstract double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
+
+	
+	/**
+	 * Calculating the MPIP measure between two pairs.
+	 * Manochandar and Punniyamoorthy developed the MPIP. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return MPIP measure between both two rating vectors and profiles.
+	 * @author Manochandar, Punniyamoorthy
+	 */
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
+		
+		double mpip = 0.0;
+		double range = getMaxRating() - getMinRating();
+		for (int id : common) {
+			double r1 = vRating1.get(id).value;
+			double r2 = vRating2.get(id).value;
+			boolean agreed = agree(r1, r2);
+			
+			double pro = 0;
+			if (agreed) {
+				double d = (Math.abs(r1-r2) - ratingMedian) / range;
+				pro = d*d;
+			}
+			else {
+				double bias = Math.abs(r1 - r2);
+				double d = 1 / (bias*range);
+				if (bias > ratingMedian)
+					pro = 0.75*d*d;
+				else if (bias == ratingMedian)
+					pro = 0.5*d*d;
+				else
+					pro = 0.25*d*d;
+			}
+			
+			double impact = (Math.abs(r1-this.ratingMedian)+1) * (Math.abs(r2-this.ratingMedian)+1);
+			impact = agreed ? Math.exp(-1/impact) : 1/impact;
+			
+			double mean = fieldMeans.get(id);
+			double pop = 0.3010;
+			if ((r1 > mean && r2 > mean) || (r1 < mean && r2 < mean)) {
+				double bias = (r1+r2)/2 - mean;
+				pop = Math.log10(2 + bias*bias);
+			}
+			
+			mpip += pro * impact * pop;
+		}
+		
+		return mpip;
+	}
+
+	
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig tempConfig = super.createDefaultConfig();
@@ -179,7 +324,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		DataConfig config = new DataConfig() {
 
 			/**
-			 * Serial version UID for serializable class. 
+			 * Serial version UID for serializable class.
 			 */
 			private static final long serialVersionUID = 1L;
 

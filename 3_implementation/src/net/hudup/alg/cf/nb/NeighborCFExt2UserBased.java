@@ -75,6 +75,12 @@ public class NeighborCFExt2UserBased extends NeighborCFExt2 implements Duplicata
 
 
 	@Override
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return mpip(vRating1, vRating2, getItemMeans());
+	}
+
+	
+	@Override
 	protected Set<Integer> getRowIds() {
 		return getUserIds();
 	}

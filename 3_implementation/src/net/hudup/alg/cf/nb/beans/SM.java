@@ -11,18 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.hudup.alg.cf.nb.Measure;
-import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.alg.cf.nb.NeighborCFExt2UserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * Mu measure.
+ * Singularity measure (SM).
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class Mu extends NeighborCFExtUserBased {
+public class SM extends NeighborCFExt2UserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class Mu extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public Mu() {
+	public SM() {
 
 	}
 
@@ -53,7 +53,7 @@ public class Mu extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.MU;
+		return Measure.SM;
 	}
 
 
@@ -73,6 +73,7 @@ public class Mu extends NeighborCFExtUserBased {
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(ENTROPY_SUPPORT_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
+		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
@@ -85,7 +86,7 @@ public class Mu extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return mu(vRating1, vRating2, profile1, profile2);
+		return sm(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -95,7 +96,7 @@ public class Mu extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_mu";
+			return "neighborcf_sm";
 	}
 
 

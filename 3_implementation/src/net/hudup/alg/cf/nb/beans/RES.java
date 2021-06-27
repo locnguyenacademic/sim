@@ -16,7 +16,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * PSS measure.
+ * RES measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -71,6 +71,7 @@ public class RES extends NeighborCFExt2UserBased {
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
+		config.remove(ENTROPY_SUPPORT_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
