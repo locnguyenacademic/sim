@@ -195,6 +195,12 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * MPIP measure.
 	 */
 	public static final String MPIP = "mpip";
+
+	
+	/**
+	 * SMCC measure.
+	 */
+	public static final String SMCC = "smcc";
 	
 	
 }

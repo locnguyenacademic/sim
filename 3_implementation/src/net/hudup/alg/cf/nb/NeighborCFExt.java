@@ -1149,10 +1149,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			vxy += d1 * d2 * columnSim;
 		}
 		
-		if (vx == 0 || vy == 0)
-			return Constants.UNUSED;
-		else
-			return vxy / Math.sqrt(vx * vy);
+		return vxy / Math.sqrt(vx * vy);
 	}
 
 	
@@ -1777,12 +1774,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer
 	 * @return numerical nearby similarity measure (NNSM) between both two rating vectors and profiles.
 	 */
-	protected double nnsm(
-			RatingVector vRating1, RatingVector vRating2,
+	protected double nnsm(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		
 		Set<Integer> fieldIds = commonFieldIds(vRating1, vRating2);
 		int n = fieldIds.size();
+		if (n == 0) return Constants.UNUSED;
 		double product = 0;
 		for (int fieldId : fieldIds) {
 			double value1 = vRating1.get(fieldId).value;

@@ -31,6 +31,8 @@ import net.hudup.core.evaluate.recommend.Accuracy;
  * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando contributed singularity measure (SM).<br>
  * <br>
  * Manochandar and Punniyamoorthy contributed MPIP measure.<br>
+ * <br>
+ * Vijay Verma and Rajesh Kumar Aggarwal contributed SMCC measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -73,6 +75,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		mSet.add(Measure.RES);
 		mSet.add(Measure.SM);
 		mSet.add(Measure.MPIP);
+		mSet.add(Measure.SMCC);
 
 		measures.clear();
 		measures.addAll(mSet);
@@ -111,6 +114,48 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 			config.addReadOnly(ESIM_TYPE_FIELD);
 		}
+		else if (measure.equals(Measure.SM)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
+		}
+		else if (measure.equals(Measure.MPIP)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
+		}
+		else if (measure.equals(Measure.SMCC)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE_FIELD);
+		}
 		else
 			super.updateConfig(measure);
 	}
@@ -124,6 +169,8 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 			return sm(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.MPIP))
 			return mpip(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.SMCC))
+			return smcc(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -140,14 +187,8 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	 * @author Zhenhua Tan, Liangliang He
 	 */
 	protected double res(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> set1 = vRating1.fieldIds(true);
-		Set<Integer> set2 = vRating2.fieldIds(true);
-		Set<Integer> common = Util.newSet();
-		common.addAll(set1);
-		common.retainAll(set2);
-		double n = common.size();
-		double N = set1.size() + set2.size() - n;
-		double jacc = n/N;
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
 		
 		double range = Math.PI / (getMaxRating()-getMinRating());
 		double mean = getRatingMean();
@@ -179,7 +220,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 			double d2 = Math.exp(0.5 * (Math.abs(v1-ri)+Math.abs(v2-ri)));
 			double D = d1*d2;
 			
-			res += C*D*jacc;
+			res += C*D;
 		}
 		
 		return Math.atan(res) / (0.5*Math.PI);
@@ -268,8 +309,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	 * Manochandar and Punniyamoorthy developed the MPIP. Loc Nguyen implements it.
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
-	 * @param profile1 first profile.
-	 * @param profile2 second profile.
+	 * @param fieldMeans means of fields.
 	 * @return MPIP measure between both two rating vectors and profiles.
 	 * @author Manochandar, Punniyamoorthy
 	 */
@@ -316,6 +356,40 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		return mpip;
 	}
 
+	
+	/**
+	 * Calculating the SMCC measure between two pairs.
+	 * Vijay Verma and Rajesh Kumar Aggarwal developed the MPIP. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return SMCC measure between both two rating vectors and profiles.
+	 * @author Vijay Verma, Rajesh Kumar Aggarwal
+	 */
+	protected double smcc(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> set1 = vRating1.fieldIds(true);
+		Set<Integer> set2 = vRating2.fieldIds(true);
+		Set<Integer> common = Util.newSet();
+		common.addAll(set1);
+		common.retainAll(set2);
+		double N = set1.size() + set2.size() - common.size();
+		if (N == 0) return Constants.UNUSED;
+		
+		int matchedCount = 0;
+		for (int id : common) {
+			double v1 = vRating1.get(id).value;
+			boolean r1 = Accuracy.isRelevant(v1, ratingMedian);
+			double v2 = vRating2.get(id).value;
+			boolean r2 = Accuracy.isRelevant(v2, ratingMedian);
+			
+			if ((r1 && r2) || ((!r1) && (!r2)) || (v1 == ratingMedian && v2 == ratingMedian))
+				matchedCount++;
+		}
+		
+		return (double)matchedCount / (double)N;
+	}
+	
 	
 	@Override
 	public DataConfig createDefaultConfig() {

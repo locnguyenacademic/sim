@@ -1,7 +1,5 @@
 package net.temp;
 
-import net.hudup.core.logistic.NetUtil;
-
 /**
  * This is temporal testing class.
  * 
@@ -135,7 +133,7 @@ public class Test {
 //		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
 //		System.out.println(1.0 / Float.MIN_VALUE);
 		
-		System.out.println(NetUtil.testPort(80));
+		System.out.println(Math.atan(0));
 	}
 
 	
