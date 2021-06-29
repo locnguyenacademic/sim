@@ -88,7 +88,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, getUserMeans(), vRating);
+		return calcUserMean(vRating);
 	}
 
 
@@ -106,7 +106,7 @@ public class NeighborCFExtUserBased extends NeighborCFExt implements Duplicatabl
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, getItemMeans(), vRating);
+		return calcItemMean(vRating);
 	}
 
 

@@ -89,7 +89,7 @@ public class NeighborCFTwosCombinedUserBased extends NeighborCFTwosCombined impl
 
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, getUserMeans(), vRating);
+		return calcUserMean(vRating);
 	}
 
 
@@ -107,7 +107,7 @@ public class NeighborCFTwosCombinedUserBased extends NeighborCFTwosCombined impl
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, getItemMeans(), vRating);
+		return calcItemMean(vRating);
 	}
 
 	

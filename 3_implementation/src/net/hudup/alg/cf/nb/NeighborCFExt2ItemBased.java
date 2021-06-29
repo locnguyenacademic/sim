@@ -95,7 +95,7 @@ public class NeighborCFExt2ItemBased extends NeighborCFExt2 implements Duplicata
 	
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, getItemMeans(), vRating);
+		return calcItemMean(vRating);
 	}
 
 
@@ -113,7 +113,7 @@ public class NeighborCFExt2ItemBased extends NeighborCFExt2 implements Duplicata
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, getUserMeans(), vRating);
+		return calcUserMean(vRating);
 	}
 
 	

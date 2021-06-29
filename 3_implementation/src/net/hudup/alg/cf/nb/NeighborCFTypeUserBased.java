@@ -88,7 +88,7 @@ public class NeighborCFTypeUserBased extends NeighborCFType implements Duplicata
 
 	@Override
 	protected double calcRowMean(RatingVector vRating) {
-		return calcMean(this, getUserMeans(), vRating);
+		return calcUserMean(vRating);
 	}
 
 
@@ -106,7 +106,7 @@ public class NeighborCFTypeUserBased extends NeighborCFType implements Duplicata
 
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
-		return calcMean(this, getItemMeans(), vRating);
+		return calcItemMean(vRating);
 	}
 
 
