@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class SMD extends net.hudup.alg.cf.nb.beans.smd.SMD implements ForTest {
+public class SMD extends net.hudup.alg.cf.nb.beans.SMD implements ForTest {
 
 	
 	/**

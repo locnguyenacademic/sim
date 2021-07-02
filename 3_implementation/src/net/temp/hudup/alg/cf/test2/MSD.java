@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class MSD extends net.hudup.core.alg.cf.nb.beans.MSDJ implements ForTest {
+public class MSD extends net.hudup.core.alg.cf.nb.beans.MSD implements ForTest {
 
 	
 	/**

@@ -7,17 +7,19 @@
  */
 package net.temp.hudup.alg.cf.test2;
 
+import net.hudup.alg.cf.nb.Measure;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 /**
- * Jaccard measure for test.
+ * Improved Jaccard measure for test.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class IJ extends net.hudup.alg.cf.nb.beans.IJ implements ForTest {
+public class IJ extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**
@@ -31,6 +33,12 @@ public class IJ extends net.hudup.alg.cf.nb.beans.IJ implements ForTest {
 	 */
 	public IJ() {
 
+	}
+
+	
+	@Override
+	public String getDefaultMeasure() {
+		return Measure.JACCARD;
 	}
 
 	
@@ -49,6 +57,7 @@ public class IJ extends net.hudup.alg.cf.nb.beans.IJ implements ForTest {
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(JACCARD_TYPE, JACCARD_TYPE_IJ);
 		
 		return config;
 	}

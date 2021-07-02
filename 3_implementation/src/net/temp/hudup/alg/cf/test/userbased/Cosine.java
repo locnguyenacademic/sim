@@ -46,7 +46,7 @@ public class Cosine extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return cosine(vRating1, vRating2, profile1, profile2);
+		return cosineNormal(vRating1, vRating2, profile1, profile2);
 	}
 
 	

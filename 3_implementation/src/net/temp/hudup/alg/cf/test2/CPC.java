@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
+public class CPC extends net.hudup.core.alg.cf.nb.beans.Pearson implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class CPC extends net.hudup.core.alg.cf.nb.beans.CPC implements ForTest {
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(PEARSON_TYPE, PEARSON_TYPE_CPC);
 		
 		return config;
 	}

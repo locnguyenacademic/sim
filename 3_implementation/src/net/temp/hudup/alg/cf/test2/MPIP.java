@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class MPIP extends net.hudup.alg.cf.nb.beans.MPIP implements ForTest {
+public class MPIP extends net.hudup.alg.cf.nb.beans.PIP implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class MPIP extends net.hudup.alg.cf.nb.beans.MPIP implements ForTest {
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(BCF_TYPE, BCF_TYPE_JACCARD);
 		
 		return config;
 	}

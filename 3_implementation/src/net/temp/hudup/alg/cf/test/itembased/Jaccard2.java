@@ -17,14 +17,13 @@ public class Jaccard2 extends NeighborCFExtItemBased implements ForTest {
 	 * Default constructor.
 	 */
 	public Jaccard2() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	
 	@Override
 	public String getDefaultMeasure() {
-		// TODO Auto-generated method stub
-		return Measure.JACCARD2;
+		return Measure.JACCARD;
 	}
 
 	

@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class Dice extends net.hudup.core.alg.cf.nb.beans.Dice implements ForTest {
+public class Dice extends net.hudup.core.alg.cf.nb.beans.Jaccard implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class Dice extends net.hudup.core.alg.cf.nb.beans.Dice implements ForTest
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(JACCARD_TYPE, JACCARD_TYPE_DICE);
 		
 		return config;
 	}

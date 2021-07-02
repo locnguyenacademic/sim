@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.temp.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.nb.Measure;
@@ -5,6 +12,13 @@ import net.hudup.alg.cf.nb.NeighborCFTwosCombinedItemBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
+/**
+ * SMD + SPC measure.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
 public class SMDSPC extends NeighborCFTwosCombinedItemBased implements ForTest {
 
 	
@@ -18,13 +32,12 @@ public class SMDSPC extends NeighborCFTwosCombinedItemBased implements ForTest {
 	 * Default constructor.
 	 */
 	public SMDSPC() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 
 	@Override
 	public String getDefaultMeasure() {
-		// TODO Auto-generated method stub
 		return Measure.SMD;
 	}
 
@@ -43,7 +56,8 @@ public class SMDSPC extends NeighborCFTwosCombinedItemBased implements ForTest {
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, Measure.SMD);
-		config.put(OTHER_MEASURE, Measure.SPC);
+		config.put(OTHER_MEASURE, Measure.PEARSON);
+		config.put(PEARSON_TYPE, PEARSON_TYPE_SPC);
 		
 		return config;
 	}

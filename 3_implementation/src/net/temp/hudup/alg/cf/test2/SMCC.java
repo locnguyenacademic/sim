@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class SMCC extends net.hudup.alg.cf.nb.beans.SMCC implements ForTest {
+public class SMCC extends net.hudup.core.alg.cf.nb.beans.SMCC implements ForTest {
 
 	
 	/**

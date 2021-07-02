@@ -19,7 +19,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class NHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForTest {
+public class NHSM extends net.hudup.alg.cf.nb.beans.PSS implements ForTest {
 
 	
 	/**
@@ -47,18 +47,18 @@ public class NHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForTest {
 
 
 	@Override
-	protected double nhsm(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
-		double urp = urp(vRating1, vRating2, profile1, profile2);
-		return pss(vRating1, vRating2, profile1, profile2) * urp;
+	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
+			Profile profile2, Object... params) {
+		return nhsm(vRating1, vRating2, profile1, profile2);
 	}
 
-	
+
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(PSS_TYPE, PSS_TYPE_NHSM);
 		
 		return config;
 	}

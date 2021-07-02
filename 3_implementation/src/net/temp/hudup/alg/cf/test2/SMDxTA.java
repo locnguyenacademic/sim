@@ -7,6 +7,7 @@
  */
 package net.temp.hudup.alg.cf.test2;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
@@ -17,7 +18,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class SMDxTA extends net.hudup.alg.cf.nb.beans.smd.SMDxTA implements ForTest {
+public class SMDxTA extends net.hudup.alg.cf.nb.beans.SMDCombined implements ForTest {
 
 	
 	/**
@@ -49,6 +50,7 @@ public class SMDxTA extends net.hudup.alg.cf.nb.beans.smd.SMDxTA implements ForT
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(OTHER_MEASURE, Measure.TA);
 		
 		return config;
 	}

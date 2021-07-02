@@ -23,7 +23,7 @@ public class Jaccard2 extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.JACCARD2;
+		return Measure.JACCARD;
 	}
 
 	

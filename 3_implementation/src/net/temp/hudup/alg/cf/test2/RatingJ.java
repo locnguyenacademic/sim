@@ -7,6 +7,8 @@
  */
 package net.temp.hudup.alg.cf.test2;
 
+import net.hudup.alg.cf.nb.Measure;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
@@ -17,7 +19,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class RatingJ extends net.hudup.alg.cf.nb.beans.RatingJ implements ForTest {
+public class RatingJ extends NeighborCFExtUserBased implements ForTest {
 
 	
 	/**
@@ -31,6 +33,12 @@ public class RatingJ extends net.hudup.alg.cf.nb.beans.RatingJ implements ForTes
 	 */
 	public RatingJ() {
 
+	}
+
+	
+	@Override
+	public String getDefaultMeasure() {
+		return Measure.JACCARD;
 	}
 
 	
@@ -49,6 +57,7 @@ public class RatingJ extends net.hudup.alg.cf.nb.beans.RatingJ implements ForTes
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(JACCARD_TYPE, JACCARD_TYPE_RATINGJ);
 		
 		return config;
 	}

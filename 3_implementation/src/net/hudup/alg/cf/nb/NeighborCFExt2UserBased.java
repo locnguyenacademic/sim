@@ -16,6 +16,7 @@ import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.NextUpdate;
 
 /**
  * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
@@ -24,6 +25,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
+@NextUpdate
 public class NeighborCFExt2UserBased extends NeighborCFExt2 implements DuplicatableAlg {
 
 	
@@ -56,14 +58,20 @@ public class NeighborCFExt2UserBased extends NeighborCFExt2 implements Duplicata
 
 	
 	@Override
-	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, getItemMeans());
+	protected double pipNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pipNormal(vRating1, vRating2, getItemMeans());
 	}
 
 
 	@Override
-	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, getItemMeans());
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return mpip(vRating1, vRating2, getItemMeans());
+	}
+
+	
+	@Override
+	protected double pssNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pssNormal(vRating1, vRating2, getItemMeans());
 	}
 
 	
@@ -74,12 +82,6 @@ public class NeighborCFExt2UserBased extends NeighborCFExt2 implements Duplicata
 	}
 
 
-	@Override
-	protected double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return mpip(vRating1, vRating2, getItemMeans());
-	}
-
-	
 	@Override
 	protected Set<Integer> getRowIds() {
 		return getUserIds();

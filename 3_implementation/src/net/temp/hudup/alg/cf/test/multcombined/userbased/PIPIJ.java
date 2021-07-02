@@ -1,3 +1,10 @@
+/**
+ * SIM: MACHINE LEARNING ALGORITHMS FRAMEWORK
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: sim.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.temp.hudup.alg.cf.test.multcombined.userbased;
 
 import net.hudup.alg.cf.nb.Measure;
@@ -5,6 +12,13 @@ import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 import net.temp.hudup.alg.cf.test.multcombined.NeighborCFTwosCombinedMultUserBased;
 
+/**
+ * PIP + IJ measure.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
 public class PIPIJ extends NeighborCFTwosCombinedMultUserBased implements ForTest {
 
 	
@@ -18,20 +32,18 @@ public class PIPIJ extends NeighborCFTwosCombinedMultUserBased implements ForTes
 	 * Default constructor.
 	 */
 	public PIPIJ() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 
 	@Override
 	public String getDefaultMeasure() {
-		// TODO Auto-generated method stub
 		return Measure.PIP;
 	}
 
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())
 			return name;
@@ -44,7 +56,8 @@ public class PIPIJ extends NeighborCFTwosCombinedMultUserBased implements ForTes
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, Measure.PIP);
-		config.put(OTHER_MEASURE, Measure.IJ);
+		config.put(OTHER_MEASURE, Measure.JACCARD);
+		config.put(JACCARD_TYPE, JACCARD_TYPE_IJ);
 		
 		return config;
 	}

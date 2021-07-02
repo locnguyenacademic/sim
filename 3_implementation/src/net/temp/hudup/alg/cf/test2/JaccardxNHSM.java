@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class JaccardxNHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForTest {
+public class JaccardxNHSM extends net.hudup.alg.cf.nb.beans.PSS implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class JaccardxNHSM extends net.hudup.alg.cf.nb.beans.NHSM implements ForT
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(PSS_TYPE, PSS_TYPE_NHSM);
 		
 		return config;
 	}

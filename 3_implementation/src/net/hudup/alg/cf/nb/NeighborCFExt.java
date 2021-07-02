@@ -84,6 +84,48 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Improved Jaccard (IJ).
+	 */
+	public static final String JACCARD_TYPE_IJ = "ij";
+
+	
+	/**
+	 * Relevant Jaccard (IJ).
+	 */
+	public static final String JACCARD_TYPE_RJ = "rj";
+
+	
+	/**
+	 * Rating Jaccard.
+	 */
+	public static final String JACCARD_TYPE_RATINGJ = "ratingj";
+
+	
+	/**
+	 * Indexed Jaccard.
+	 */
+	public static final String JACCARD_TYPE_INDEXEDJ = "indexedj";
+
+	
+	/**
+	 * PSS type.
+	 */
+	protected static final String PSS_TYPE = "pss_type";
+
+	
+	/**
+	 * Normal PSS.
+	 */
+	protected static final String PSS_TYPE_NORMAL = "pss";
+
+	
+	/**
+	 * NHSM is an advanced version of PSS measure.
+	 */
+	protected static final String PSS_TYPE_NHSM = "nhsm";
+
+	
+	/**
 	 * Value bins.
 	 */
 	protected static final String VALUE_BINS_FIELD = "value_bins";
@@ -93,6 +135,24 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * Default value bins.
 	 */
 	protected static final String VALUE_BINS_DEFAULT = "1, 2, 3, 4, 5";
+
+	
+	/**
+	 * BCF type.
+	 */
+	protected static final String BCF_TYPE = "bcf_type";
+
+	
+	/**
+	 * Normal BCF.
+	 */
+	protected static final String BCF_TYPE_NORMAL = "bcf";
+
+	
+	/**
+	 * Jaccard BCF (BCFJ).
+	 */
+	protected static final String BCF_TYPE_JACCARD = "bcfj";
 
 	
 	/**
@@ -106,6 +166,42 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 */
 	protected static final boolean BCF_MEDIAN_MODE_DEFAULT = true;
 
+	
+	/**
+	 * PIP type.
+	 */
+	protected static final String PIP_TYPE = "pip_type";
+
+	
+	/**
+	 * Normal PIP.
+	 */
+	protected static final String PIP_TYPE_NORMAL = "pip";
+
+	
+	/**
+	 * MPIP.
+	 */
+	protected static final String PIP_TYPE_MPIP = "mpip";
+
+	
+	/**
+	 * MMD type.
+	 */
+	protected static final String MMD_TYPE = "mmd_type";
+
+	
+	/**
+	 * Normal MMD.
+	 */
+	protected static final String MMD_TYPE_NORMAL = "mmd";
+
+	
+	/**
+	 * CjacMD measure which is developed by Suryakant and Tripti Mahara.
+	 */
+	protected static final String MMD_TYPE_CJACMD = "cjacmd";
+	
 	
 	/**
 	 * Mu alpha field.
@@ -144,6 +240,24 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Triangle area type.
+	 */
+	protected static final String TA_TYPE = "ta_type";
+
+	
+	/**
+	 * Normal triangle area.
+	 */
+	protected static final String TA_TYPE_NORMAL = "ta";
+
+	
+	/**
+	 * Triangle area + Jaccard measure..
+	 */
+	protected static final String TA_TYPE_JACCARD = "taj";
+	
+	
+	/**
 	 * TA normalized mode.
 	 */
 	protected static final String TA_NORMALIZED_FIELD = "ta_normalized";
@@ -153,6 +267,42 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * Default TA normalized mode.
 	 */
 	protected static final boolean TA_NORMALIZED_DEFAULT = false;
+
+	
+	/**
+	 * SMD type.
+	 */
+	protected static final String SMD2_TYPE = "smd2_type";
+
+	
+	/**
+	 * Normal SMD.
+	 */
+	protected static final String SMD2_TYPE_NORMAL = "smd2";
+
+	
+	/**
+	 * SMD2 + Jaccard measure.
+	 */
+	protected static final String SMD2_TYPE_JACCARD = "smd2j";
+
+	
+	/**
+	 * Quasi-TfIdf type.
+	 */
+	protected static final String QUASI_TFIDF_TYPE = "qti_type";
+
+	
+	/**
+	 * Normal Quasi-TfIdf.
+	 */
+	protected static final String QUASI_TFIDF_TYPE_NORMAL = "qti";
+
+	
+	/**
+	 * Quasi-TfIdf + Jaccard measure.
+	 */
+	protected static final String QUASI_TFIDF_TYPE_JACCARD = "qtij";
 
 	
 	/**
@@ -182,7 +332,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	/**
 	 * Type of ESim measure.
 	 */
-	protected static final String ESIM_TYPE_FIELD = "esim_type";
+	protected static final String ESIM_TYPE = "esim_type";
 
 	
 	/**
@@ -251,12 +401,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	public List<String> getAllMeasures() {
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(getMainMeasures());
-		mSet.add(Measure.NHSM);
-		mSet.add(Measure.BCFJ);
-		mSet.add(Measure.CJACMD);
-		mSet.add(Measure.SMD2J);
-		mSet.add(Measure.QUASI_TFIDF_JACCARD);
-		mSet.add(Measure.TAJ);
 		
 		List<String> measures = Util.newList();
 		measures.addAll(mSet);
@@ -284,11 +428,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.COCO);
 		mSet.add(Measure.NNSM);
 		mSet.add(Measure.AMER);
-		mSet.add(Measure.IJ);
-		mSet.add(Measure.RJ);
-		mSet.add(Measure.RATINGJ);
-		mSet.add(Measure.INDEXEDJ);
 		mSet.add(Measure.ESIM);
+		mSet.add(Measure.RES);
+		mSet.add(Measure.SM);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -314,7 +456,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected boolean requireDiscreteRatingBins(String measure) {
 		if (measure == null)
 			return false;
-		else if (measure.equals(Measure.BCF) || measure.equals(Measure.BCFJ) ||  measure.equals(Measure.MMD))
+		else if (measure.equals(Measure.BCF) ||  measure.equals(Measure.MMD))
 			return true;
 		else
 			return false;
@@ -337,12 +479,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object...params) {
 		if (measure.equals(Measure.PSS))
 			return pss(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.NHSM))
-			return nhsm(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.BCF))
 			return bcf(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.BCFJ))
-			return bcfj(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SRC))
 			return src(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.PIP))
@@ -357,8 +495,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		else if (measure.equals(Measure.MMD))
 			return mmd(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.CJACMD))
-			return cosine(vRating1, vRating2, profile1, profile2) + mmd(vRating1, vRating2, profile1, profile2) + jaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.FENG))
 			return feng(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.MU))
@@ -371,30 +507,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return smd(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD2))
 			return smd2(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.SMD2J))
-			return smd2j(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.QUASI_TFIDF))
 			return quasiTfIdf(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD))
-			return quasiTfIdfJaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.TA))
 			return triangleArea(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.TAJ))
-			return triangleAreaJaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.COCO))
 			return coco(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.NNSM))
 			return nnsm(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.IJ))
-			return improvedJaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.RJ))
-			return relevantJaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.RATINGJ))
-			return ratingJaccard(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.INDEXEDJ))
-			return indexedJaccard(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.ESIM))
 			return esim(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.RES))
+			return res(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.SM))
+			return sm(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -415,7 +541,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.removeReadOnly(TA_NORMALIZED_FIELD);
 		config.removeReadOnly(RATINGJ_THRESHOLD_FIELD);
 		config.removeReadOnly(INDEXEDJ_INTERVALS_FIELD);
-		config.removeReadOnly(ESIM_TYPE_FIELD);
+		config.removeReadOnly(ESIM_TYPE);
+		config.removeReadOnly(JACCARD_TYPE);
+		config.removeReadOnly(COSINE_TYPE);
+		config.removeReadOnly(PEARSON_TYPE);
+		config.removeReadOnly(MSD_TYPE);
+		config.removeReadOnly(TRIANGLE_TYPE);
+		config.removeReadOnly(PSS_TYPE);
+		config.removeReadOnly(BCF_TYPE);
+		config.removeReadOnly(PIP_TYPE);
+		config.removeReadOnly(MMD_TYPE);
+		config.removeReadOnly(TA_TYPE);
+		config.removeReadOnly(SMD2_TYPE);
+		config.removeReadOnly(QUASI_TFIDF_TYPE);
+		config.removeReadOnly(IPWR_ALPHA_FIELD);
+		config.removeReadOnly(IPWR_BETA_FIELD);
 		if (measure.equals(Measure.PSS)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -428,21 +568,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.NHSM)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.BCF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -455,20 +594,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.BCFJ)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SRC)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -481,7 +620,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -495,7 +648,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.PC)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -509,7 +675,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.MMD)) {
 			config.addReadOnly(COSINE_NORMALIZED_FIELD);
@@ -522,19 +702,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.CJACMD)) {
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.FENG)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -548,7 +729,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.MU)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -561,7 +756,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SMTP)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -573,7 +782,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.AMER)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -587,7 +810,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -601,7 +838,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -615,21 +866,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.SMD2J)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -643,21 +893,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.QUASI_TFIDF_JACCARD)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.TA)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -670,20 +919,20 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.TAJ)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.COCO)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -697,7 +946,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.NNSM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -711,47 +974,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.IJ)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.RATINGJ)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
-		}
-		else if (measure.equals(Measure.INDEXEDJ)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(ESIM_TYPE_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.ESIM)) {
 			config.addReadOnly(VALUE_BINS_FIELD);
@@ -765,6 +1002,76 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.addReadOnly(TA_NORMALIZED_FIELD);
 			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
+		}
+		else if (measure.equals(Measure.RES)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
+		}
+		else if (measure.equals(Measure.SM)) {
+			config.addReadOnly(VALUE_BINS_FIELD);
+			config.addReadOnly(COSINE_NORMALIZED_FIELD);
+			config.addReadOnly(MSD_FRACTION_FIELD);
+			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.addReadOnly(MU_ALPHA_FIELD);
+			config.addReadOnly(SMTP_LAMBDA_FIELD);
+			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+			config.addReadOnly(TA_NORMALIZED_FIELD);
+			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+			config.addReadOnly(ESIM_TYPE);
+			config.addReadOnly(JACCARD_TYPE);
+			config.addReadOnly(COSINE_TYPE);
+			config.addReadOnly(PEARSON_TYPE);
+			config.addReadOnly(MSD_TYPE);
+			config.addReadOnly(TRIANGLE_TYPE);
+			config.addReadOnly(PSS_TYPE);
+			config.addReadOnly(BCF_TYPE);
+			config.addReadOnly(PIP_TYPE);
+			config.addReadOnly(MMD_TYPE);
+			config.addReadOnly(TA_TYPE);
+			config.addReadOnly(SMD2_TYPE);
+			config.addReadOnly(QUASI_TFIDF_TYPE);
+			config.addReadOnly(IPWR_ALPHA_FIELD);
+			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else {
 			super.updateConfig(measure);
@@ -784,7 +1091,30 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu.
 	 * @return PSS measure between both two rating vectors and profiles.
 	 */
-	protected abstract double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
+	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String ttype = config.getAsString(PSS_TYPE);
+		if (ttype.equals(PSS_TYPE_NORMAL))
+			return pssNormal(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(PSS_TYPE_NHSM))
+			return nhsm(vRating1, vRating2, profile1, profile2);
+		else
+			return pssNormal(vRating1, vRating2, profile1, profile2);
+	}
+
+	
+	/**
+	 * Calculating the PSS measure between two pairs. PSS measure is developed by Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu, and implemented by Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * 
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu.
+	 * @return PSS measure between both two rating vectors and profiles.
+	 */
+	protected abstract double pssNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
 
 
 	/**
@@ -795,7 +1125,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu.
 	 * @return PSS measure between two rating vectors.
 	 */
-	protected double pss(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
+	protected double pssNormal(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
 		Set<Integer> common = commonFieldIds(vRating1, vRating2);
 		if (common.size() == 0) return Constants.UNUSED;
 		
@@ -835,8 +1165,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double nhsm(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		double urp = urp(vRating1, vRating2, profile1, profile2);
-		double jaccard2 = jaccard2(vRating1, vRating2, profile1, profile2);
-		return pss(vRating1, vRating2, profile1, profile2) * jaccard2 * urp;
+		double jaccard = jaccardMulti(vRating1, vRating2, profile1, profile2);
+		return pssNormal(vRating1, vRating2, profile1, profile2) * jaccard * urp;
 	}
 
 
@@ -849,7 +1179,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi.
 	 * @return Bhattacharyya measure from specified rating vectors.
 	 */
-	@NextUpdate
 	protected double bc(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Task task = new Task() {
@@ -900,8 +1229,29 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi.
 	 * @return BCF measure between both two rating vectors and profiles.
 	 */
-	@NextUpdate
-	protected double bcf(RatingVector vRating1, RatingVector vRating2,
+	protected double bcf(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String btype = config.getAsString(BCF_TYPE);
+		if (btype.equals(BCF_TYPE_NORMAL))
+			return bcfNormal(vRating1, vRating2, profile1, profile2);
+		else if (btype.equals(BCF_TYPE_JACCARD))
+			return bcfj(vRating1, vRating2, profile1, profile2);
+		else
+			return bcfNormal(vRating1, vRating2, profile1, profile2);
+	}
+
+	
+	/**
+	 * Calculating the advanced BCF measure between two pairs. BCF measure is developed by Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi, and implemented by Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi.
+	 * @return BCF measure between both two rating vectors and profiles.
+	 */
+	protected double bcfNormal(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		
 		Set<Integer> columnIds1 = vRating1.fieldIds(true);
@@ -952,7 +1302,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 */
 	protected double bcfj(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return bcf(vRating1, vRating2, profile1, profile2) + jaccard(vRating1, vRating2, profile1, profile2);
+		return bcfNormal(vRating1, vRating2, profile1, profile2) + jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
@@ -1022,19 +1372,38 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
+	 * Calculating the general PIP measure between two pairs. 
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return PIP measure between both two rating vectors and profiles.
+	 */
+	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String ttype = config.getAsString(PIP_TYPE);
+		if (ttype.equals(PIP_TYPE_NORMAL))
+			return pipNormal(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(PIP_TYPE_MPIP))
+			return mpip(vRating1, vRating2, profile1, profile2);
+		else
+			return pipNormal(vRating1, vRating2, profile1, profile2);
+	}
+
+	
+	/**
 	 * Calculating the PIP measure between two pairs. PIP measure is developed by Hyung Jun Ahn, and implemented by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
-	 * 
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Hyung Jun Ahn.
-	 * @return NHSM measure between both two rating vectors and profiles.
+	 * @return PIP measure between both two rating vectors and profiles.
 	 */
-	protected abstract double pip(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2);
+	protected abstract double pipNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
 	
 	
 	/**
@@ -1045,7 +1414,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Hyung Jun Ahn
 	 * @return PIP measure between two rating vectors.
 	 */
-	protected double pip(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
+	protected double pipNormal(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
 		Set<Integer> common = commonFieldIds(vRating1, vRating2);
 		if (common.size() == 0) return Constants.UNUSED;
 		
@@ -1074,6 +1443,72 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		
 		return pip;
+	}
+
+	
+	/**
+	 * Calculating the MPIP measure between two pairs.
+	 * Manochandar and Punniyamoorthy developed the MPIP. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return MPIP measure between both two rating vectors and profiles.
+	 * @author Manochandar, Punniyamoorthy
+	 */
+	protected abstract double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2);
+
+	
+	/**
+	 * Calculating the MPIP measure between two pairs.
+	 * Manochandar and Punniyamoorthy developed the MPIP. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param fieldMeans means of fields.
+	 * @return MPIP measure between both two rating vectors and profiles.
+	 * @author Manochandar, Punniyamoorthy
+	 */
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Map<Integer, Double> fieldMeans) {
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
+		
+		double mpip = 0.0;
+		double range = getMaxRating() - getMinRating();
+		for (int id : common) {
+			double r1 = vRating1.get(id).value;
+			double r2 = vRating2.get(id).value;
+			boolean agreed = agree(r1, r2);
+			
+			double pro = 0;
+			if (agreed) {
+				double d = (Math.abs(r1-r2) - ratingMedian) / range;
+				pro = d*d;
+			}
+			else {
+				double bias = Math.abs(r1 - r2);
+				double d = 1 / (bias*range);
+				if (bias > ratingMedian)
+					pro = 0.75*d*d;
+				else if (bias == ratingMedian)
+					pro = 0.5*d*d;
+				else
+					pro = 0.25*d*d;
+			}
+			
+			double impact = (Math.abs(r1-this.ratingMedian)+1) * (Math.abs(r2-this.ratingMedian)+1);
+			impact = agreed ? Math.exp(-1/impact) : 1/impact;
+			
+			double mean = fieldMeans.get(id);
+			double pop = 0.3010;
+			if ((r1 > mean && r2 > mean) || (r1 < mean && r2 < mean)) {
+				double bias = (r1+r2)/2 - mean;
+				pop = Math.log10(2 + bias*bias);
+			}
+			
+			mpip += pro * impact * pop;
+		}
+		
+		return mpip;
 	}
 
 	
@@ -1165,7 +1600,30 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Suryakant, Tripti Mahara
 	 * @return MMD measure between both two rating vectors and profiles.
 	 */
-	protected double mmd(RatingVector vRating1, RatingVector vRating2,
+	protected double mmd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String mtype = config.getAsString(MMD_TYPE);
+		if (mtype.equals(MMD_TYPE_NORMAL))
+			return mmdNormal(vRating1, vRating2, profile1, profile2);
+		else if (mtype.equals(MMD_TYPE_CJACMD))
+			return cosineNormal(vRating1, vRating2, profile1, profile2) + mmdNormal(vRating1, vRating2, profile1, profile2) + jaccardNormal(vRating1, vRating2, profile1, profile2);
+		else
+			return mmdNormal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
+	 * Calculating the Mean Measure of Divergence (MMD) measure between two pairs.
+	 * Suryakant and Tripti Mahara proposed use of MMD for collaborative filtering. Loc Nguyen implements it.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Suryakant, Tripti Mahara
+	 * @return MMD measure between both two rating vectors and profiles.
+	 */
+	protected double mmdNormal(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> ids1 = vRating1.fieldIds(true);
 		Set<Integer> ids2 = vRating2.fieldIds(true);
@@ -1254,10 +1712,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double mu(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		double alpha = config.getAsReal(MU_ALPHA_FIELD);
-		double pearson = corr(vRating1, vRating2, profile1, profile2);
+		double pearson = pearson(vRating1, vRating2, profile1, profile2);
 		double hg = 1 - bc(vRating1, vRating2, profile1, profile2);
 //		double hg = bc(vRating1, vRating2, profile1, profile2);
-		double jaccard = jaccard(vRating1, vRating2, profile1, profile2);
+		double jaccard = jaccardNormal(vRating1, vRating2, profile1, profile2);
 		
 		return alpha*pearson + (1-alpha)*(hg+jaccard);
 	}
@@ -1376,11 +1834,34 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Calculating the general SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * SMD2 measure is only applied into positive ratings.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer.
+	 * @return General SMD2 measure between both two rating vectors and profiles.
+	 */
+	protected double smd2(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		String stype = config.getAsString(SMD2_TYPE);
+		if (stype.equals(SMD2_TYPE_NORMAL))
+			return smd2Normal(vRating1, vRating2, profile1, profile2);
+		else if (stype.equals(PIP_TYPE_MPIP))
+			return smd2j(vRating1, vRating2, profile1, profile2);
+		else
+			return smd2Normal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
 	 * Calculating the SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
 	 * SMD2 measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
-	 * 
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
@@ -1388,8 +1869,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer.
 	 * @return SMD2 measure between both two rating vectors and profiles.
 	 */
-	protected double smd2(
-			RatingVector vRating1, RatingVector vRating2,
+	protected double smd2Normal(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
 		if (fieldIds.size() == 0) return Constants.UNUSED;
@@ -1433,7 +1913,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double smd2j(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return smd2(vRating1, vRating2, profile1, profile2) * jaccard(vRating1, vRating2, profile1, profile2);
+		return smd2Normal(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
@@ -1451,8 +1931,33 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer, Loc Nguyen.
 	 * @return Quasi-TfIdf measure between both two rating vectors.
 	 */
-	protected double quasiTfIdf(
-			RatingVector vRating1, RatingVector vRating2,
+	protected double quasiTfIdf(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		String stype = config.getAsString(QUASI_TFIDF_TYPE);
+		if (stype.equals(QUASI_TFIDF_TYPE_NORMAL))
+			return quasiTfIdfNormal(vRating1, vRating2, profile1, profile2);
+		else if (stype.equals(QUASI_TFIDF_TYPE_JACCARD))
+			return quasiTfIdfJaccard(vRating1, vRating2, profile1, profile2);
+		else
+			return quasiTfIdfNormal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
+	 * Calculating the quasi-TfIdf measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
+	 * Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf measure is only applied into positive ratings.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * 
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer, Loc Nguyen.
+	 * @return Quasi-TfIdf measure between both two rating vectors.
+	 */
+	protected double quasiTfIdfNormal(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
 		if (fieldIds.size() == 0) return Constants.UNUSED;
@@ -1544,7 +2049,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * The current version does not support positive cosine. The next version will fix it.
-	 * 
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
@@ -1552,8 +2056,30 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Loc Nguyen.
 	 * @return TA measure between both two rating vectors and profiles.
 	 */
-	protected double triangleArea(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
+	protected double triangleArea(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String ttype = config.getAsString(TA_TYPE);
+		if (ttype.equals(TA_TYPE_NORMAL))
+			return triangleAreaNormal(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(TA_TYPE_JACCARD))
+			return triangleAreaJaccard(vRating1, vRating2, profile1, profile2);
+		else
+			return triangleAreaNormal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
+	 * Calculating the TA (triangle area) measure between two pairs. TA is developed by Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * The current version does not support positive cosine. The next version will fix it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Loc Nguyen.
+	 * @return TA measure between both two rating vectors and profiles.
+	 */
+	protected double triangleAreaNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		Set<Integer> common = commonFieldIds(vRating1, vRating2);
 		if (common.size() == 0) return Constants.UNUSED;
 		
@@ -1608,7 +2134,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 */
 	protected double triangleAreaJaccard(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return triangleArea(vRating1, vRating2, profile1, profile2) * jaccard(vRating1, vRating2, profile1, profile2);
+		return triangleAreaNormal(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -1796,6 +2322,24 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 	
 	
+	@Override
+	protected double jaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String jtype = config.getAsString(JACCARD_TYPE);
+		if (jtype == null)
+			return super.jaccard(vRating1, vRating2, profile1, profile2);
+		else if (jtype.equals(JACCARD_TYPE_IJ))
+			return improvedJaccard(vRating1, vRating2, profile1, profile2);
+		else if (jtype.equals(JACCARD_TYPE_RJ))
+			return relevantJaccard(vRating1, vRating2, profile1, profile2);
+		else if (jtype.equals(JACCARD_TYPE_RATINGJ))
+			return ratingJaccard(vRating1, vRating2, profile1, profile2);
+		else if (jtype.equals(JACCARD_TYPE_INDEXEDJ))
+			return indexedJaccard(vRating1, vRating2, profile1, profile2);
+		else
+			return super.jaccard(vRating1, vRating2, profile1, profile2);
+	}
+
+
 	/**
 	 * Calculating the improved Jaccard (IJ) measure between two pairs.
 	 * Shunpan Liang, Lin Ma, and Fuyong YuanShunpan Liang, Lin Ma, and Fuyong Yuan developed the improved Jaccard (IJ) measure. Loc Nguyen implements it.
@@ -1995,7 +2539,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 */
 	protected double indexedJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		List<Double> intervals = TextParserUtil.parseListByClass(getConfig().getAsString(INDEXEDJ_INTERVALS_FIELD), Double.class, ",");
-		if (intervals.size() == 0) return jaccard(vRating1, vRating2, profile1, profile2);
+		if (intervals.size() == 0) return jaccardNormal(vRating1, vRating2, profile1, profile2);
 		
 		Set<Integer> A = vRating1.fieldIds(true);
 		Set<Integer> B = vRating2.fieldIds(true);
@@ -2065,7 +2609,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Ali Amer
 	 */
 	protected double esim(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		String type = config.getAsString(ESIM_TYPE_FIELD);
+		String type = config.getAsString(ESIM_TYPE);
 		double product = 0;
 		double length1 = 0;
 		double length2 = 0;
@@ -2149,6 +2693,121 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		else
 			return Constants.UNUSED;
+	}
+	
+	
+	/**
+	 * Calculating the RES measure between two pairs.
+	 * Zhenhua Tan and Liangliang He developed the RES measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return RES measure between both two rating vectors and profiles.
+	 * @author Zhenhua Tan, Liangliang He
+	 */
+	protected double res(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
+		
+		double range = Math.PI / (getMaxRating()-getMinRating());
+		double mean = getRatingMean();
+		double mean1 = vRating1.mean() - mean;
+		double mean2 = vRating2.mean() - mean;
+		double res = 0;
+		for (int id : common) {
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			double phibase1 = v1 - ratingMedian;
+			double phibase2 = v2 - ratingMedian;
+			
+			double phi1 = Constants.UNUSED;
+			if (phibase1 * mean1 >= 0)
+				phi1 = range * (1/(1+Math.abs(mean1))) * phibase1;
+			else
+				phi1 = range * (1+Math.abs(mean1)/ratingMedian) * phibase1;
+			
+			double phi2 = Constants.UNUSED;
+			if (phibase2 * mean2 >= 0)
+				phi2 = range * (1/(1+Math.abs(mean2))) * phibase2;
+			else
+				phi2 = range * (1+Math.abs(mean2)/ratingMedian) * phibase2;
+			
+			double C = Math.sqrt(0.5 + 0.5*Math.cos(phi1-phi2));
+			
+			double d1 = Math.exp(-Math.abs(v1-v2));
+			double ri = getColumnRating(id).mean();
+			double d2 = Math.exp(0.5 * (Math.abs(v1-ri)+Math.abs(v2-ri)));
+			double D = d1*d2;
+			
+			res += C*D;
+		}
+		
+		return Math.atan(res) / (0.5*Math.PI);
+	}
+	
+	
+	/**
+	 * Calculating the singularity measure (SM) between two pairs.
+	 * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando developed the SM. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return singularity measure (SM) between both two rating vectors and profiles.
+	 * @author Jesús Bobadilla, Fernando Ortega, Antonio Hernando
+	 */
+	protected double sm(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> PA = Util.newSet(), NA = Util.newSet(), D = Util.newSet();
+		Set<Integer> ids = commonFieldIds(vRating1, vRating2);
+		if (ids.size() == 0) return Constants.UNUSED;
+		
+		for (int id : ids) {
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			if (Accuracy.isRelevant(v1, this.ratingMedian) && Accuracy.isRelevant(v2, this.ratingMedian))
+				PA.add(id);
+			else if ((!Accuracy.isRelevant(v1, this.ratingMedian)) && (!Accuracy.isRelevant(v2, this.ratingMedian)))
+				NA.add(id);
+			else
+				D.add(id);
+		}
+		
+		double range = getMaxRating() - getMinRating();
+		double paSum = 0;
+		for (int id : PA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			paSum += d*PNE[0]*PNE[0];
+		}
+		paSum = PA.size() > 0 ? paSum/(double)PA.size() : paSum;
+		
+		double naSum = 0;
+		for (int id : NA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			naSum += d*PNE[1]*PNE[1];
+		}
+		naSum = NA.size() > 0 ? naSum/(double)NA.size() : naSum;
+		
+		double dSum = 0;
+		for (int id : D) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double d = (vRating1.get(id).value - vRating2.get(id).value) / range;
+			d = 1.0 - d*d;
+			dSum += d*PNE[0]*PNE[1];
+		}
+		dSum = D.size() > 0 ? dSum/(double)D.size() : dSum;
+		
+		return (paSum + naSum + dSum) / 3.0;
 	}
 	
 	
@@ -2267,7 +2926,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
 		tempConfig.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
 		tempConfig.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
-		tempConfig.put(ESIM_TYPE_FIELD, ESIM_TYPE_ESIM);
+		tempConfig.put(ESIM_TYPE, ESIM_TYPE_ESIM);
+		tempConfig.put(PSS_TYPE, PSS_TYPE_NORMAL);
+		tempConfig.put(BCF_TYPE, BCF_TYPE_NORMAL);
+		tempConfig.put(PIP_TYPE, PIP_TYPE_NORMAL);
+		tempConfig.put(MMD_TYPE, MMD_TYPE_NORMAL);
+		tempConfig.put(TA_TYPE, TA_TYPE_NORMAL);
 
 		DataConfig config = new DataConfig() {
 
@@ -2278,8 +2942,31 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 			@Override
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
-				if (key.equals(ESIM_TYPE_FIELD)) {
-					String type = getAsString(ESIM_TYPE_FIELD);
+				if (key.equals(JACCARD_TYPE)) {
+					String jtype = getAsString(JACCARD_TYPE);
+					jtype = jtype == null ? JACCARD_TYPE_NORMAL : jtype;
+					List<String> jtypes = Util.newList();
+					jtypes.add(JACCARD_TYPE_DICE);
+					jtypes.add(JACCARD_TYPE_MULTI);
+					jtypes.add(JACCARD_TYPE_NORMAL);
+					jtypes.add(JACCARD_TYPE_PNCR);
+					jtypes.add(JACCARD_TYPE_IJ);
+					jtypes.add(JACCARD_TYPE_RJ);
+					jtypes.add(JACCARD_TYPE_RATINGJ);
+					jtypes.add(JACCARD_TYPE_INDEXEDJ);
+					Collections.sort(jtypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one Jaccard type", 
+						"Choosing Jaccard type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						jtypes.toArray(new String[] {}), 
+						jtype);
+				}
+				else if (key.equals(ESIM_TYPE)) {
+					String type = getAsString(ESIM_TYPE);
 					type = type == null ? getDefaultMeasure() : type;
 					return (Serializable) JOptionPane.showInputDialog(
 						comp, 
@@ -2290,7 +2977,126 @@ public abstract class NeighborCFExt extends NeighborCF {
 						new String[] {ESIM_TYPE_ESIM, ESIM_TYPE_ESIM2, ESIM_TYPE_ESIM3, ESIM_TYPE_ZSIM}, 
 						type);
 				}
-				else 
+				else if (key.equals(PSS_TYPE)) {
+					String ttype = getAsString(PSS_TYPE);
+					ttype = ttype == null ? PSS_TYPE_NORMAL : ttype;
+					List<String> ttypes = Util.newList();
+					ttypes.add(PSS_TYPE_NORMAL);
+					ttypes.add(PSS_TYPE_NHSM);
+					Collections.sort(ttypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one PSS type", 
+						"Choosing PSS type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						ttypes.toArray(new String[] {}), 
+						ttype);
+				}
+				else if (key.equals(BCF_TYPE)) {
+					String btype = getAsString(BCF_TYPE);
+					btype = btype == null ? BCF_TYPE_NORMAL : btype;
+					List<String> btypes = Util.newList();
+					btypes.add(BCF_TYPE_NORMAL);
+					btypes.add(BCF_TYPE_JACCARD);
+					Collections.sort(btypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one BCF type", 
+						"Choosing BCF type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						btypes.toArray(new String[] {}), 
+						btype);
+				}
+				else if (key.equals(PIP_TYPE)) {
+					String ptype = getAsString(PIP_TYPE);
+					ptype = ptype == null ? PIP_TYPE_NORMAL : ptype;
+					List<String> ptypes = Util.newList();
+					ptypes.add(PIP_TYPE_NORMAL);
+					ptypes.add(PIP_TYPE_MPIP);
+					Collections.sort(ptypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one PIP type", 
+						"Choosing PIP type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						ptypes.toArray(new String[] {}), 
+						ptype);
+				}
+				else if (key.equals(MMD_TYPE)) {
+					String mtype = getAsString(MMD_TYPE);
+					mtype = mtype == null ? MMD_TYPE_NORMAL : mtype;
+					List<String> mtypes = Util.newList();
+					mtypes.add(MMD_TYPE_NORMAL);
+					mtypes.add(MMD_TYPE_CJACMD);
+					Collections.sort(mtypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one MMD type", 
+						"Choosing MMD type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						mtypes.toArray(new String[] {}), 
+						mtype);
+				}
+				else if (key.equals(TA_TYPE)) {
+					String ttype = getAsString(TA_TYPE);
+					ttype = ttype == null ? TA_TYPE_NORMAL : ttype;
+					List<String> ttypes = Util.newList();
+					ttypes.add(TA_TYPE_NORMAL);
+					ttypes.add(TA_TYPE_JACCARD);
+					Collections.sort(ttypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp,
+						"Please choose one TA type",
+						"Choosing TA type",
+						JOptionPane.INFORMATION_MESSAGE,
+						null,
+						ttypes.toArray(new String[] {}),
+						ttype);
+				}
+				else if (key.equals(SMD2_TYPE)) {
+					String stype = getAsString(SMD2_TYPE);
+					stype = stype == null ? SMD2_TYPE_NORMAL : stype;
+					List<String> stypes = Util.newList();
+					stypes.add(SMD2_TYPE_NORMAL);
+					stypes.add(SMD2_TYPE_JACCARD);
+					Collections.sort(stypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp,
+						"Please choose one SMD2 type",
+						"Choosing SMD2 type",
+						JOptionPane.INFORMATION_MESSAGE,
+						null,
+						stypes.toArray(new String[] {}),
+						stype);
+				}
+				else if (key.equals(QUASI_TFIDF_TYPE)) {
+					String qtype = getAsString(QUASI_TFIDF_TYPE);
+					qtype = qtype == null ? QUASI_TFIDF_TYPE_NORMAL : qtype;
+					List<String> qtypes = Util.newList();
+					qtypes.add(QUASI_TFIDF_TYPE_NORMAL);
+					qtypes.add(QUASI_TFIDF_TYPE_JACCARD);
+					Collections.sort(qtypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp,
+						"Please choose one Quasi-TfIdf type",
+						"Choosing Quasi-TfIdf type",
+						JOptionPane.INFORMATION_MESSAGE,
+						null,
+						qtypes.toArray(new String[] {}),
+						qtype);
+				}
+				else
 					return tempConfig.userEdit(comp, key, defaultValue);
 			}
 			

@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class Amer extends net.hudup.alg.cf.nb.beans.smd.Amer implements ForTest {
+public class Amer extends net.hudup.alg.cf.nb.beans.Amer implements ForTest {
 
 	
 	/**

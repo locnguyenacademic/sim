@@ -57,14 +57,20 @@ public class NeighborCFTwosCombinedUserBased extends NeighborCFTwosCombined impl
 
 	
 	@Override
-	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, getItemMeans());
+	protected double pipNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pipNormal(vRating1, vRating2, getItemMeans());
 	}
 
 
 	@Override
-	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, getItemMeans());
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return mpip(vRating1, vRating2, getItemMeans());
+	}
+
+	
+	@Override
+	protected double pssNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pssNormal(vRating1, vRating2, getItemMeans());
 	}
 
 	

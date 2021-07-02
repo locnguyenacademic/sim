@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class JaccardxMSD extends net.hudup.core.alg.cf.nb.beans.MSDJ implements ForTest {
+public class JaccardxMSD extends net.hudup.core.alg.cf.nb.beans.MSD implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class JaccardxMSD extends net.hudup.core.alg.cf.nb.beans.MSDJ implements 
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(MSD_TYPE, MSD_TYPE_JACCARD);
 		
 		return config;
 	}

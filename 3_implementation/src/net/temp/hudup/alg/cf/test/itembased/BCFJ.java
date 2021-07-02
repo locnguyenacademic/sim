@@ -2,6 +2,7 @@ package net.temp.hudup.alg.cf.test.itembased;
 
 import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.ForTest;
 
 public class BCFJ extends NeighborCFExtItemBased implements ForTest {
@@ -23,7 +24,7 @@ public class BCFJ extends NeighborCFExtItemBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.BCFJ;
+		return Measure.BCF;
 	}
 
 	
@@ -37,4 +38,11 @@ public class BCFJ extends NeighborCFExtItemBased implements ForTest {
 	}
 
 
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(BCF_TYPE, BCF_TYPE_JACCARD);
+		
+		return config;
+	}
 }

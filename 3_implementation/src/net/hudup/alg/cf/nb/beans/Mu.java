@@ -78,7 +78,21 @@ public class Mu extends NeighborCFExtUserBased {
 		config.remove(TA_NORMALIZED_FIELD);
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
-		config.remove(ESIM_TYPE_FIELD);
+		config.remove(ESIM_TYPE);
+		config.remove(JACCARD_TYPE);
+		config.remove(COSINE_TYPE);
+		config.remove(PEARSON_TYPE);
+		config.remove(MSD_TYPE);
+		config.remove(TRIANGLE_TYPE);
+		config.remove(PSS_TYPE);
+		config.remove(BCF_TYPE);
+		config.remove(PIP_TYPE);
+		config.remove(MMD_TYPE);
+		config.remove(TA_TYPE);
+		config.remove(SMD2_TYPE);
+		config.remove(QUASI_TFIDF_TYPE);
+		config.remove(IPWR_ALPHA_FIELD);
+		config.remove(IPWR_BETA_FIELD);
 	}
 
 

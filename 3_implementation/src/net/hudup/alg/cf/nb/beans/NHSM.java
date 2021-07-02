@@ -16,7 +16,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * NHMS measure.
+ * NHSM measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -35,7 +35,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	 * Default constructor.
 	 */
 	public NHSM() {
-		
+
 	}
 
 
@@ -53,7 +53,7 @@ public class NHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.NHSM;
+		return Measure.PSS;
 	}
 
 
@@ -79,7 +79,20 @@ public class NHSM extends NeighborCFExtUserBased {
 		config.remove(TA_NORMALIZED_FIELD);
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
-		config.remove(ESIM_TYPE_FIELD);
+		config.remove(ESIM_TYPE);
+		config.remove(JACCARD_TYPE);
+		config.remove(COSINE_TYPE);
+		config.remove(PEARSON_TYPE);
+		config.remove(MSD_TYPE);
+		config.remove(TRIANGLE_TYPE);
+		config.remove(BCF_TYPE);
+		config.remove(PIP_TYPE);
+		config.remove(MMD_TYPE);
+		config.remove(TA_TYPE);
+		config.remove(SMD2_TYPE);
+		config.remove(QUASI_TFIDF_TYPE);
+		config.remove(IPWR_ALPHA_FIELD);
+		config.remove(IPWR_BETA_FIELD);
 	}
 
 
@@ -96,7 +109,7 @@ public class NHSM extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_nhms";
+			return "neighborcf_nhsm";
 	}
 
 

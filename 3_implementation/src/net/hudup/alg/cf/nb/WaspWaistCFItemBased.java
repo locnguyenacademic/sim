@@ -226,14 +226,20 @@ public class WaspWaistCFItemBased extends WaspWaistCF implements DuplicatableAlg
 
 	
 	@Override
-	protected double pip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pip(vRating1, vRating2, getUserMeans());
+	protected double pipNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pipNormal(vRating1, vRating2, getUserMeans());
 	}
 
 
 	@Override
-	protected double pss(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		return pss(vRating1, vRating2, getUserMeans());
+	protected double mpip(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return mpip(vRating1, vRating2, getUserMeans());
+	}
+
+	
+	@Override
+	protected double pssNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return pssNormal(vRating1, vRating2, getUserMeans());
 	}
 
 

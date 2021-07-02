@@ -24,21 +24,9 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 
 	
 	/**
-	 * NHSM measure.
-	 */
-	public static final String NHSM = "nhsm";
-
-	
-	/**
 	 * BCF measure.
 	 */
 	public static final String BCF = "bcf";
-
-	
-	/**
-	 * BCFJ measure (BCF + Jaccard).
-	 */
-	public static final String BCFJ = "bcfj";
 
 	
 	/**
@@ -63,12 +51,6 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * MMD measure.
 	 */
 	public static final String MMD = "mmd";
-
-	
-	/**
-	 * CjacMD measure which is developed by Suryakant and Tripti Mahara.
-	 */
-	public static final String CJACMD = "cjacmd";
 
 	
 	/**
@@ -108,33 +90,15 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 
 	
 	/**
-	 * SMD2 + Jaccard measure.
-	 */
-	public static final String SMD2J = "smd2j";
-
-	
-	/**
 	 * Quasi-TfIdf measure.
 	 */
 	public static final String QUASI_TFIDF = "qti";
 
 	
 	/**
-	 * Quasi-TfIdf + Jaccard measure.
-	 */
-	public static final String QUASI_TFIDF_JACCARD = "qtij";
-
-	
-	/**
 	 * Triangle area measure.
 	 */
 	public static final String TA = "ta";
-
-	
-	/**
-	 * Triangle area + Jaccard measure.
-	 */
-	public static final String TAJ = "taj";
 
 	
 	/**
@@ -147,30 +111,6 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 * Numerical nearby similarity measure (NNSM).
 	 */
 	public static final String NNSM = "nnsm";
-
-	
-	/**
-	 * Improved Jaccard (IJ) measure.
-	 */
-	public static final String IJ = "ij";
-
-	
-	/**
-	 * Relevant Jaccard (IJ) measure.
-	 */
-	public static final String RJ = "rj";
-
-	
-	/**
-	 * Rating Jaccard measure.
-	 */
-	public static final String RATINGJ = "ratingj";
-
-	
-	/**
-	 * Indexed Jaccard measure.
-	 */
-	public static final String INDEXEDJ = "indexedj";
 
 	
 	/**
@@ -190,17 +130,5 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	 */
 	public static final String SM = "sm";
 
-	
-	/**
-	 * MPIP measure.
-	 */
-	public static final String MPIP = "mpip";
-
-	
-	/**
-	 * SMCC measure.
-	 */
-	public static final String SMCC = "smcc";
-	
 	
 }

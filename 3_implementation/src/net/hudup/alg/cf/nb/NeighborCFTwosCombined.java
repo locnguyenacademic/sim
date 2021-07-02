@@ -43,61 +43,61 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	/**
 	 * Name of weight 1 field.
 	 */
-	public static final String COMBINED_WEIGHT1_FIELD = "combined_weight1";
+	protected static final String COMBINED_WEIGHT1_FIELD = "combined_weight1";
 
 	
 	/**
 	 * Default weight 1 field.
 	 */
-	public static final double COMBINED_WEIGHT1_DEFAULT = 0.5;
+	protected static final double COMBINED_WEIGHT1_DEFAULT = 0.5;
 
 	
 	/**
 	 * Name of other measure field.
 	 */
-	public static final String OTHER_MEASURE = "measure_other";
+	protected static final String OTHER_MEASURE = "measure_other";
 
 	
 	/**
 	 * Name of weight 2 field.
 	 */
-	public static final String COMBINED_WEIGHT2_FIELD = "combined_weight2";
+	protected static final String COMBINED_WEIGHT2_FIELD = "combined_weight2";
 
 	
 	/**
 	 * Default weight 2 field.
 	 */
-	public static final double COMBINED_WEIGHT2_DEFAULT = 0.5;
+	protected static final double COMBINED_WEIGHT2_DEFAULT = 0.5;
 
 	
 	/**
 	 * Combined min-max mode.
 	 */
-	public static final String COMBINED_MINMAX_MODE_FIELD = "combined_minmax";
+	protected static final String COMBINED_MINMAX_MODE_FIELD = "combined_minmax";
 
 	
 	/**
 	 * Default combined measure.
 	 */
-	public static final boolean COMBINED_MINMAX_MODE_DEFAULT = true;
+	protected static final boolean COMBINED_MINMAX_MODE_DEFAULT = true;
 
 	
 	/**
 	 * Combined type field.
 	 */
-	public static final String COMBINED_TYPE_FIELD = "combined_type";
+	protected static final String COMBINED_TYPE_FIELD = "combined_type";
 
 	
 	/**
 	 * Additional combined type
 	 */
-	public static final int COMBINED_TYPE_ADD = 0;
+	protected static final int COMBINED_TYPE_ADD = 0;
 	
 	
 	/**
 	 * Multiplication combined type
 	 */
-	public static final int COMBINED_TYPE_MULTIPLY = 1;
+	protected static final int COMBINED_TYPE_MULTIPLY = 1;
 
 	
 	/**
@@ -244,7 +244,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 		DataConfig tempConfig = super.createDefaultConfig();
 		tempConfig.put(MEASURE, Measure.SMD);
 		tempConfig.put(COMBINED_WEIGHT1_FIELD, COMBINED_WEIGHT1_DEFAULT);
-		tempConfig.put(OTHER_MEASURE, Measure.SMD2); tempConfig.addReadOnly(OTHER_MEASURE);
+		tempConfig.put(OTHER_MEASURE, Measure.COSINE); tempConfig.addReadOnly(OTHER_MEASURE);
 		tempConfig.put(COMBINED_WEIGHT2_FIELD, COMBINED_WEIGHT2_DEFAULT);
 		tempConfig.put(COMBINED_MINMAX_MODE_FIELD, COMBINED_MINMAX_MODE_DEFAULT);
 		tempConfig.put(COMBINED_TYPE_FIELD, COMBINED_TYPE_ADD); tempConfig.addReadOnly(COMBINED_TYPE_FIELD);

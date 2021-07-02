@@ -17,7 +17,7 @@ import net.hudup.core.logistic.ForTest;
  * @version 1.0
  *
  */
-public class JaccardxTA extends net.hudup.alg.cf.nb.beans.TAJ implements ForTest {
+public class JaccardxTA extends net.hudup.alg.cf.nb.beans.TA implements ForTest {
 
 	
 	/**
@@ -49,6 +49,7 @@ public class JaccardxTA extends net.hudup.alg.cf.nb.beans.TAJ implements ForTest
 		DataConfig config = super.createDefaultConfig();
 		config.put(KNN, 100);
 		config.put(FAST_RECOMMEND, true);
+		config.put(TA_TYPE, TA_TYPE_JACCARD);
 		
 		return config;
 	}
