@@ -90,24 +90,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Relevant Jaccard (IJ).
-	 */
-	public static final String JACCARD_TYPE_RJ = "rj";
-
-	
-	/**
-	 * Rating Jaccard.
-	 */
-	public static final String JACCARD_TYPE_RATINGJ = "ratingj";
-
-	
-	/**
-	 * Indexed Jaccard.
-	 */
-	public static final String JACCARD_TYPE_INDEXEDJ = "indexedj";
-
-	
-	/**
 	 * PSS type.
 	 */
 	protected static final String PSS_TYPE = "pss_type";
@@ -306,30 +288,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Threshold of rating relevant measure.
-	 */
-	protected static final String RATINGJ_THRESHOLD_FIELD = "ratingj_threshold";
-
-	
-	/**
-	 * Default value for the threshold of rating relevant measure..
-	 */
-	protected static final double RATINGJ_THRESHOLD_DEFAULT = 0.1;
-
-	
-	/**
-	 * Intervals of indexed Jaccard measures.
-	 */
-	protected static final String INDEXEDJ_INTERVALS_FIELD = "indexedj_intervals";
-
-	
-	/**
-	 * Default value for intervals of indexed Jaccard measures.
-	 */
-	protected static final String INDEXEDJ_INTERVALS_DEFAULT = "2, 4";
-
-	
-	/**
 	 * Type of ESim measure.
 	 */
 	protected static final String ESIM_TYPE = "esim_type";
@@ -420,6 +378,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.PIP);
 		mSet.add(Measure.PC);
 		mSet.add(Measure.MMD);
+		mSet.add(Measure.FENG);
+		mSet.add(Measure.MU);
 		mSet.add(Measure.SMTP);
 		mSet.add(Measure.SMD);
 		mSet.add(Measure.SMD2);
@@ -530,548 +490,85 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected void updateConfig(String measure) {
 		if (measure == null) return;
 		
-		config.removeReadOnly(VALUE_BINS_FIELD);
-		config.removeReadOnly(COSINE_NORMALIZED_FIELD);
-		config.removeReadOnly(MSD_FRACTION_FIELD);
-		config.removeReadOnly(ENTROPY_SUPPORT_FIELD);
-		config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
-		config.removeReadOnly(MU_ALPHA_FIELD);
-		config.removeReadOnly(SMTP_LAMBDA_FIELD);
-		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
-		config.removeReadOnly(TA_NORMALIZED_FIELD);
-		config.removeReadOnly(RATINGJ_THRESHOLD_FIELD);
-		config.removeReadOnly(INDEXEDJ_INTERVALS_FIELD);
-		config.removeReadOnly(ESIM_TYPE);
-		config.removeReadOnly(JACCARD_TYPE);
-		config.removeReadOnly(COSINE_TYPE);
-		config.removeReadOnly(PEARSON_TYPE);
-		config.removeReadOnly(MSD_TYPE);
-		config.removeReadOnly(TRIANGLE_TYPE);
-		config.removeReadOnly(PSS_TYPE);
-		config.removeReadOnly(BCF_TYPE);
-		config.removeReadOnly(PIP_TYPE);
-		config.removeReadOnly(MMD_TYPE);
-		config.removeReadOnly(TA_TYPE);
-		config.removeReadOnly(SMD2_TYPE);
-		config.removeReadOnly(QUASI_TFIDF_TYPE);
-		config.removeReadOnly(IPWR_ALPHA_FIELD);
-		config.removeReadOnly(IPWR_BETA_FIELD);
+		config.addReadOnly(VALUE_BINS_FIELD);
+		config.addReadOnly(COSINE_NORMALIZED_FIELD);
+		config.addReadOnly(MSD_FRACTION_FIELD);
+		config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+		config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+		config.addReadOnly(MU_ALPHA_FIELD);
+		config.addReadOnly(SMTP_LAMBDA_FIELD);
+		config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+		config.addReadOnly(TA_NORMALIZED_FIELD);
+		config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+		config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+		config.addReadOnly(ESIM_TYPE);
+		config.addReadOnly(JACCARD_TYPE);
+		config.addReadOnly(COSINE_TYPE);
+		config.addReadOnly(PEARSON_TYPE);
+		config.addReadOnly(MSD_TYPE);
+		config.addReadOnly(TRIANGLE_TYPE);
+		config.addReadOnly(PSS_TYPE);
+		config.addReadOnly(BCF_TYPE);
+		config.addReadOnly(PIP_TYPE);
+		config.addReadOnly(MMD_TYPE);
+		config.addReadOnly(TA_TYPE);
+		config.addReadOnly(SMD2_TYPE);
+		config.addReadOnly(QUASI_TFIDF_TYPE);
+		config.addReadOnly(IPWR_ALPHA_FIELD);
+		config.addReadOnly(IPWR_BETA_FIELD);
+		
 		if (measure.equals(Measure.PSS)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(PSS_TYPE);
 		}
 		else if (measure.equals(Measure.BCF)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
+			config.removeReadOnly(BCF_TYPE);
 		}
 		else if (measure.equals(Measure.SRC)) {
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(VALUE_BINS_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(PIP_TYPE);
 		}
 		else if (measure.equals(Measure.PC)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.MMD)) {
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(VALUE_BINS_FIELD);
+			config.removeReadOnly(MMD_TYPE);
 		}
 		else if (measure.equals(Measure.FENG)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.MU)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(MU_ALPHA_FIELD);
 		}
 		else if (measure.equals(Measure.SMTP)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(SMTP_LAMBDA_FIELD);
+			config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
 		}
 		else if (measure.equals(Measure.AMER)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SMD)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SMD2)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(SMD2_TYPE);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(QUASI_TFIDF_TYPE);
 		}
 		else if (measure.equals(Measure.TA)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(TA_NORMALIZED_FIELD);
+			config.removeReadOnly(TA_TYPE);
 		}
 		else if (measure.equals(Measure.COCO)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.NNSM)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.ESIM)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
+			config.removeReadOnly(ESIM_TYPE);
 		}
 		else if (measure.equals(Measure.RES)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else if (measure.equals(Measure.SM)) {
-			config.addReadOnly(VALUE_BINS_FIELD);
-			config.addReadOnly(COSINE_NORMALIZED_FIELD);
-			config.addReadOnly(MSD_FRACTION_FIELD);
-			config.addReadOnly(ENTROPY_SUPPORT_FIELD);
-			config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
-			config.addReadOnly(MU_ALPHA_FIELD);
-			config.addReadOnly(SMTP_LAMBDA_FIELD);
-			config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
-			config.addReadOnly(TA_NORMALIZED_FIELD);
-			config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
-			config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
-			config.addReadOnly(ESIM_TYPE);
-			config.addReadOnly(JACCARD_TYPE);
-			config.addReadOnly(COSINE_TYPE);
-			config.addReadOnly(PEARSON_TYPE);
-			config.addReadOnly(MSD_TYPE);
-			config.addReadOnly(TRIANGLE_TYPE);
-			config.addReadOnly(PSS_TYPE);
-			config.addReadOnly(BCF_TYPE);
-			config.addReadOnly(PIP_TYPE);
-			config.addReadOnly(MMD_TYPE);
-			config.addReadOnly(TA_TYPE);
-			config.addReadOnly(SMD2_TYPE);
-			config.addReadOnly(QUASI_TFIDF_TYPE);
-			config.addReadOnly(IPWR_ALPHA_FIELD);
-			config.addReadOnly(IPWR_BETA_FIELD);
 		}
 		else {
 			super.updateConfig(measure);
@@ -2325,16 +1822,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	@Override
 	protected double jaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		String jtype = config.getAsString(JACCARD_TYPE);
-		if (jtype == null)
-			return super.jaccard(vRating1, vRating2, profile1, profile2);
-		else if (jtype.equals(JACCARD_TYPE_IJ))
+		if (jtype.equals(JACCARD_TYPE_IJ))
 			return improvedJaccard(vRating1, vRating2, profile1, profile2);
-		else if (jtype.equals(JACCARD_TYPE_RJ))
-			return relevantJaccard(vRating1, vRating2, profile1, profile2);
-		else if (jtype.equals(JACCARD_TYPE_RATINGJ))
-			return ratingJaccard(vRating1, vRating2, profile1, profile2);
-		else if (jtype.equals(JACCARD_TYPE_INDEXEDJ))
-			return indexedJaccard(vRating1, vRating2, profile1, profile2);
 		else
 			return super.jaccard(vRating1, vRating2, profile1, profile2);
 	}
@@ -2460,143 +1949,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		return (double[])cacheTask(columnId, this.valueCache, task);
 	}
 
-	
-	/**
-	 * Calculating the relevant Jaccard (RJ) measure between two pairs.
-	 * Sujoy Bag, Sri Krishna Kumar, and Manoj Kumar Tiwari developed the relevant Jaccard (RJ) measure. Loc Nguyen implements it.
-	 * @param vRating1 first rating vector.
-	 * @param vRating2 second rating vector.
-	 * @param profile1 first profile.
-	 * @param profile2 second profile.
-	 * @return Relevant Jaccard (RJ) measure between both two rating vectors and profiles.
-	 * @author Sujoy Bag, Sri Krishna Kumar, Manoj Kumar Tiwari
-	 */
-	protected double relevantJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> set1 = vRating1.fieldIds(true);
-		Set<Integer> set2 = vRating2.fieldIds(true);
-		Set<Integer> common = Util.newSet();
-		common.addAll(set1);
-		common.retainAll(set2);
-		
-		double n = common.size();
-		if (n == 0 && (set1.size() != 0 || set2.size() != 0)) return 0;
-		double n1 = set1.size() - n;
-		double n2 = set2.size() - n;
-		
-		return 1 / (1 + 1/n + n1/(1+n1) + 1/(1+n2));
-	}
-	
-	
-	/**
-	 * Calculating the rating Jaccard measure between two pairs.
-	 * Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem developed the rating Jaccard measure. Loc Nguyen implements it.
-	 * @param vRating1 first rating vector.
-	 * @param vRating2 second rating vector.
-	 * @param profile1 first profile.
-	 * @param profile2 second profile.
-	 * @return Rating Jaccard measure between both two rating vectors and profiles.
-	 * @author Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem
-	 */
-	protected double ratingJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		Set<Integer> common = commonFieldIds(vRating1, vRating2);
-		if (common.size() == 0) return 0;
-		
-		int nt = 0;
-		boolean equal = true;
-		for (int fieldId : common) {
-			double v1 = vRating1.get(fieldId).value;
-			double v2 = vRating2.get(fieldId).value;
-			if (Math.abs(v1) == Math.abs(v2)) nt++;
-			
-			if (!equal) continue;
-			if (v1 != v2) equal = false;
-		}
-		
-		if (equal)
-			nt++;
-		else {
-			double mean1 = vRating1.mean(), mean2 = vRating1.mean();
-			double t = config.getAsReal(RATINGJ_THRESHOLD_FIELD);
-			if (Util.isUsed(t)) {
-				double bias = Math.abs(mean2 - mean1);
-				if (bias <= t * Math.min(mean1, mean2)) nt++;
-			}
-		}
-		
-		return (double)nt / common.size();
-	}
-	
-	
-	/**
-	 * Calculating the indexed Jaccard measure between two pairs.
-	 * Soojung Lee developed the indexed Jaccard measure. Loc Nguyen implements it.
-	 * @param vRating1 first rating vector.
-	 * @param vRating2 second rating vector.
-	 * @param profile1 first profile.
-	 * @param profile2 second profile.
-	 * @return Indexed Jaccard measure between both two rating vectors and profiles.
-	 * @author Soojung Lee
-	 */
-	protected double indexedJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		List<Double> intervals = TextParserUtil.parseListByClass(getConfig().getAsString(INDEXEDJ_INTERVALS_FIELD), Double.class, ",");
-		if (intervals.size() == 0) return jaccardNormal(vRating1, vRating2, profile1, profile2);
-		
-		Set<Integer> A = vRating1.fieldIds(true);
-		Set<Integer> B = vRating2.fieldIds(true);
-		List<Set<Integer>> setList1 = Util.newList(intervals.size());
-		List<Set<Integer>> setList2 = Util.newList(intervals.size());
-		for (int i = 0; i < intervals.size(); i++) {
-			Set<Integer> set1 = Util.newSet();
-			for (int id : A) {
-				double v = vRating1.get(id).value;
-				if (i == 0) {
-					if (v < intervals.get(i)) set1.add(id);
-				}
-				else if (i < intervals.size() - 1 ) {
-					if (v >= intervals.get(i) && v < intervals.get(i+1)) set1.add(id);
-				}
-				else {
-					if (v >= intervals.get(i)) set1.add(id);
-				}
-
-			}
-			setList1.add(set1);
-			
-			Set<Integer> set2 = Util.newSet();
-			for (int id : B) {
-				double v = vRating2.get(id).value;
-				if (i == 0) {
-					if (v < intervals.get(i)) set2.add(id);
-				}
-				else if (i < intervals.size() - 1 ) {
-					if (v >= intervals.get(i) && v < intervals.get(i+1)) set2.add(id);
-				}
-				else {
-					if (v >= intervals.get(i)) set2.add(id);
-				}
-			}
-			setList2.add(set2);
-		}
-		
-		double sumJ = 0;
-		int M = 0;
-		for (int i = 0; i < intervals.size(); i++) {
-			Set<Integer> set1 = setList1.get(i);
-			Set<Integer> set2 = setList2.get(i);
-			if (set1.size() == 0 && set2.size() == 0) continue;
-			
-			Set<Integer> common = Util.newSet();
-			common.addAll(set1);
-			common.retainAll(set2);
-			double n = common.size();
-			double N = set1.size() + set2.size() - n;
-			sumJ += n / N;
-			M++;
-		}
-		
-		return sumJ / M;
-	}
-	
 	
 	/**
 	 * Calculating the ESim measure between two pairs.
@@ -2924,8 +2276,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
 		tempConfig.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
 		tempConfig.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
-		tempConfig.put(RATINGJ_THRESHOLD_FIELD, RATINGJ_THRESHOLD_DEFAULT);
-		tempConfig.put(INDEXEDJ_INTERVALS_FIELD, INDEXEDJ_INTERVALS_DEFAULT);
 		tempConfig.put(ESIM_TYPE, ESIM_TYPE_ESIM);
 		tempConfig.put(PSS_TYPE, PSS_TYPE_NORMAL);
 		tempConfig.put(BCF_TYPE, BCF_TYPE_NORMAL);
@@ -2950,10 +2300,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 					jtypes.add(JACCARD_TYPE_MULTI);
 					jtypes.add(JACCARD_TYPE_NORMAL);
 					jtypes.add(JACCARD_TYPE_PNCR);
-					jtypes.add(JACCARD_TYPE_IJ);
 					jtypes.add(JACCARD_TYPE_RJ);
 					jtypes.add(JACCARD_TYPE_RATINGJ);
 					jtypes.add(JACCARD_TYPE_INDEXEDJ);
+					jtypes.add(JACCARD_TYPE_IJ);
 					Collections.sort(jtypes);
 					
 					return (Serializable) JOptionPane.showInputDialog(

@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * NHSM measure.
+ * TAJ measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NHSM extends NeighborCFExtUserBased {
+public class TAJ extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public NHSM() {
+	public TAJ() {
 
 	}
 
@@ -53,7 +53,7 @@ public class NHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.PSS;
+		return Measure.TA;
 	}
 
 
@@ -76,7 +76,6 @@ public class NHSM extends NeighborCFExtUserBased {
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
-		config.remove(TA_NORMALIZED_FIELD);
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
 		config.remove(ESIM_TYPE);
@@ -100,7 +99,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return nhsm(vRating1, vRating2, profile1, profile2);
+		return triangleAreaJaccard(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -110,7 +109,7 @@ public class NHSM extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_nhsm";
+			return "neighborcf_taj";
 	}
 
 

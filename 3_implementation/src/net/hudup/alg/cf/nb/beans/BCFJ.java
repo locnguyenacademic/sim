@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * NHSM measure.
+ * BCFJ measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NHSM extends NeighborCFExtUserBased {
+public class BCFJ extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public NHSM() {
+	public BCFJ() {
 
 	}
 
@@ -53,7 +53,7 @@ public class NHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.PSS;
+		return Measure.BCF;
 	}
 
 
@@ -72,7 +72,6 @@ public class NHSM extends NeighborCFExtUserBased {
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(ENTROPY_SUPPORT_FIELD);
-		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(MU_ALPHA_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
@@ -100,7 +99,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return nhsm(vRating1, vRating2, profile1, profile2);
+		return bcfj(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -110,7 +109,7 @@ public class NHSM extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_nhsm";
+			return "neighborcf_bcfj";
 	}
 
 

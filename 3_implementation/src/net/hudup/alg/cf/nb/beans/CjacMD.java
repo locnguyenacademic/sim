@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * NHSM measure.
+ * CjacMD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class NHSM extends NeighborCFExtUserBased {
+public class CjacMD extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public NHSM() {
+	public CjacMD() {
 
 	}
 
@@ -53,7 +53,7 @@ public class NHSM extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.PSS;
+		return Measure.MMD;
 	}
 
 
@@ -68,7 +68,6 @@ public class NHSM extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
-		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(ENTROPY_SUPPORT_FIELD);
@@ -100,7 +99,7 @@ public class NHSM extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return nhsm(vRating1, vRating2, profile1, profile2);
+		return cosineNormal(vRating1, vRating2, profile1, profile2) + mmdNormal(vRating1, vRating2, profile1, profile2) + jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -110,7 +109,7 @@ public class NHSM extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_nhsm";
+			return "neighborcf_cjacmd";
 	}
 
 

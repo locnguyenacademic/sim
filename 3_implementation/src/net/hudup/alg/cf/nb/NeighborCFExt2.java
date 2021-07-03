@@ -79,32 +79,32 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	protected void updateConfig(String measure) {
 		if (measure == null) return;
 		
-		config.removeReadOnly(VALUE_BINS_FIELD);
-		config.removeReadOnly(COSINE_NORMALIZED_FIELD);
-		config.removeReadOnly(MSD_FRACTION_FIELD);
-		config.removeReadOnly(ENTROPY_SUPPORT_FIELD);
-		config.removeReadOnly(BCF_MEDIAN_MODE_FIELD);
-		config.removeReadOnly(MU_ALPHA_FIELD);
-		config.removeReadOnly(SMTP_LAMBDA_FIELD);
-		config.removeReadOnly(SMTP_GENERAL_VAR_FIELD);
-		config.removeReadOnly(TA_NORMALIZED_FIELD);
-		config.removeReadOnly(RATINGJ_THRESHOLD_FIELD);
-		config.removeReadOnly(INDEXEDJ_INTERVALS_FIELD);
-		config.removeReadOnly(ESIM_TYPE);
-		config.removeReadOnly(JACCARD_TYPE);
-		config.removeReadOnly(COSINE_TYPE);
-		config.removeReadOnly(PEARSON_TYPE);
-		config.removeReadOnly(MSD_TYPE);
-		config.removeReadOnly(TRIANGLE_TYPE);
-		config.removeReadOnly(PSS_TYPE);
-		config.removeReadOnly(BCF_TYPE);
-		config.removeReadOnly(PIP_TYPE);
-		config.removeReadOnly(MMD_TYPE);
-		config.removeReadOnly(TA_TYPE);
-		config.removeReadOnly(SMD2_TYPE);
-		config.removeReadOnly(QUASI_TFIDF_TYPE);
-		config.removeReadOnly(IPWR_ALPHA_FIELD);
-		config.removeReadOnly(IPWR_BETA_FIELD);
+		config.addReadOnly(VALUE_BINS_FIELD);
+		config.addReadOnly(COSINE_NORMALIZED_FIELD);
+		config.addReadOnly(MSD_FRACTION_FIELD);
+		config.addReadOnly(ENTROPY_SUPPORT_FIELD);
+		config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
+		config.addReadOnly(MU_ALPHA_FIELD);
+		config.addReadOnly(SMTP_LAMBDA_FIELD);
+		config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
+		config.addReadOnly(TA_NORMALIZED_FIELD);
+		config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
+		config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
+		config.addReadOnly(ESIM_TYPE);
+		config.addReadOnly(JACCARD_TYPE);
+		config.addReadOnly(COSINE_TYPE);
+		config.addReadOnly(PEARSON_TYPE);
+		config.addReadOnly(MSD_TYPE);
+		config.addReadOnly(TRIANGLE_TYPE);
+		config.addReadOnly(PSS_TYPE);
+		config.addReadOnly(BCF_TYPE);
+		config.addReadOnly(PIP_TYPE);
+		config.addReadOnly(MMD_TYPE);
+		config.addReadOnly(TA_TYPE);
+		config.addReadOnly(SMD2_TYPE);
+		config.addReadOnly(QUASI_TFIDF_TYPE);
+		config.addReadOnly(IPWR_ALPHA_FIELD);
+		config.addReadOnly(IPWR_BETA_FIELD);
 		
 		super.updateConfig(measure);
 	}
