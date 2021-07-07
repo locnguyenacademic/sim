@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.hudup.alg.cf.nb.Measure;
-import net.hudup.alg.cf.nb.NeighborCFExt2UserBased;
+import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
@@ -22,7 +22,7 @@ import net.hudup.core.data.RatingVector;
  * @version 1.0
  *
  */
-public class RES extends NeighborCFExt2UserBased {
+public class RES extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -70,6 +70,10 @@ public class RES extends NeighborCFExt2UserBased {
 		config.remove(MEASURE);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
+		config.remove(COSINE_WEIGHTED_FIELD);
+		config.remove(COSINE_RA_FIELD);
+		config.remove(PEARSON_RA_FIELD);
+		config.remove(PEARSON_WEIGHTED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(ENTROPY_SUPPORT_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
@@ -94,6 +98,7 @@ public class RES extends NeighborCFExt2UserBased {
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);
+		config.remove(KL_TYPE);
 	}
 
 

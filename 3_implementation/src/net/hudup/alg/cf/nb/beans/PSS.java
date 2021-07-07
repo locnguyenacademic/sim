@@ -70,6 +70,10 @@ public class PSS extends NeighborCFExtUserBased {
 		config.remove(MEASURE);
 		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
+		config.remove(COSINE_WEIGHTED_FIELD);
+		config.remove(COSINE_RA_FIELD);
+		config.remove(PEARSON_RA_FIELD);
+		config.remove(PEARSON_WEIGHTED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
 		config.remove(ENTROPY_SUPPORT_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
@@ -93,6 +97,7 @@ public class PSS extends NeighborCFExtUserBased {
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);
+		config.remove(KL_TYPE);
 	}
 
 

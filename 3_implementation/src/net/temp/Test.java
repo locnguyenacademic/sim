@@ -133,7 +133,8 @@ public class Test {
 //		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
 //		System.out.println(1.0 / Float.MIN_VALUE);
 		
-		System.out.println(Math.atan(0));
+		System.out.println(Math.log(Float.MIN_VALUE));
+		System.out.println(Math.log(2 + Float.MIN_VALUE));
 	}
 
 	

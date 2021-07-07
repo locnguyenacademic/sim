@@ -22,17 +22,12 @@ import net.hudup.core.data.RatingVector;
  * This class sets up another advanced version of nearest neighbors collaborative filtering algorithm with more similarity measures.
  * <br>
  * There are many authors who contributed measure to this class.<br>
- * <br>
- * Zhenhua Tan and Liangliang He contributed RES measure.<br>
- * <br>
- * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando contributed singularity measure (SM).<br>
- * <br>
- * Manochandar and Punniyamoorthy contributed MPIP measure.<br>
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
+@Deprecated
 public abstract class NeighborCFExt2 extends NeighborCFExt {
 
 	
@@ -81,6 +76,8 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		
 		config.addReadOnly(VALUE_BINS_FIELD);
 		config.addReadOnly(COSINE_NORMALIZED_FIELD);
+		config.addReadOnly(COSINE_WEIGHTED_FIELD);
+		config.addReadOnly(PEARSON_WEIGHTED_FIELD);
 		config.addReadOnly(MSD_FRACTION_FIELD);
 		config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 		config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
@@ -105,6 +102,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		config.addReadOnly(QUASI_TFIDF_TYPE);
 		config.addReadOnly(IPWR_ALPHA_FIELD);
 		config.addReadOnly(IPWR_BETA_FIELD);
+		config.addReadOnly(KL_TYPE);
 		
 		super.updateConfig(measure);
 	}

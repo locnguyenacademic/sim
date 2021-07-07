@@ -69,6 +69,17 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * Soojung Lee contributed indexed Jaccard measure.<br>
  * <br>
  * Ali Amer contributed ESim measure.<br>
+ * <br>
+ * Manochandar and Punniyamoorthy contributed MPIP measure.<br>
+ * <br>
+ * Zhenhua Tan and Liangliang He contributed RES measure.<br>
+ * <br>
+ * Jesús Bobadilla, Fernando Ortega, and Antonio Hernando contributed singularity measure (SM).<br>
+ * <br>
+ * Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, and Younghee Park contributed Kullback–Leibler divergence measure (KL).<br>
+ * <br>
+ * Yitong Meng, Xinyan Dai, Xiao Yan, James Cheng, Weiwen Liu, Jun Guo, Benben Liao, and Guangyong Chen contributed Preference Mover Distance (PMD) measure.<br>
+ * <br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -318,6 +329,24 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * SMD type.
+	 */
+	protected static final String KL_TYPE = "kl_type";
+
+	
+	/**
+	 * Normal SMD.
+	 */
+	protected static final String KL_TYPE_NORMAL = "kl";
+
+	
+	/**
+	 * SMD2 + Jaccard measure.
+	 */
+	protected static final String KL_TYPE_ADVANCED = "kl_advanced";
+
+	
+	/**
 	 * Value bins.
 	 */
 	protected List<Double> valueBins = Util.newList();
@@ -391,6 +420,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.ESIM);
 		mSet.add(Measure.RES);
 		mSet.add(Measure.SM);
+		mSet.add(Measure.KL);
+		mSet.add(Measure.PMD);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -481,6 +512,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return res(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SM))
 			return sm(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.KL))
+			return kl(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -492,6 +525,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 		
 		config.addReadOnly(VALUE_BINS_FIELD);
 		config.addReadOnly(COSINE_NORMALIZED_FIELD);
+		config.addReadOnly(COSINE_WEIGHTED_FIELD);
+		config.addReadOnly(COSINE_RA_FIELD);
+		config.addReadOnly(PEARSON_WEIGHTED_FIELD);
+		config.addReadOnly(PEARSON_RA_FIELD);
 		config.addReadOnly(MSD_FRACTION_FIELD);
 		config.addReadOnly(ENTROPY_SUPPORT_FIELD);
 		config.addReadOnly(BCF_MEDIAN_MODE_FIELD);
@@ -516,6 +553,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.addReadOnly(QUASI_TFIDF_TYPE);
 		config.addReadOnly(IPWR_ALPHA_FIELD);
 		config.addReadOnly(IPWR_BETA_FIELD);
+		config.addReadOnly(KL_TYPE);
 		
 		if (measure.equals(Measure.PSS)) {
 			config.removeReadOnly(PSS_TYPE);
@@ -569,6 +607,11 @@ public abstract class NeighborCFExt extends NeighborCF {
 		else if (measure.equals(Measure.RES)) {
 		}
 		else if (measure.equals(Measure.SM)) {
+		}
+		else if (measure.equals(Measure.KL)) {
+			config.removeReadOnly(KL_TYPE);
+		}
+		else if (measure.equals(Measure.PMD)) {
 		}
 		else {
 			super.updateConfig(measure);
@@ -2164,6 +2207,183 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
+	 * Calculating the Kullback–Leibler divergence measure (KL) between two pairs.
+	 * Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, and Younghee Park developed the SM. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Kullback–Leibler divergence measure (KL) between both two rating vectors and profiles.
+	 * @author Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, Younghee Park
+	 */
+	protected double kl(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String ttype = config.getAsString(KL_TYPE);
+		if (ttype.equals(KL_TYPE_NORMAL))
+			return klNormal(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(KL_TYPE_ADVANCED))
+			return klAdvanced(vRating1, vRating2, profile1, profile2);
+		else
+			return klNormal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
+	 * Calculating the normal Kullback–Leibler divergence measure (KL) between two pairs.
+	 * Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, and Younghee Park developed the SM. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Normal Kullback–Leibler divergence measure (KL) between both two rating vectors and profiles.
+	 * @author Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, Younghee Park
+	 */
+	protected double klNormal(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return 1 / (1 + calcKL(vRating1.id(), vRating2.id(), true, null));
+	}
+
+	
+	/**
+	 * Calculating the advanced Kullback–Leibler divergence measure (KL) between two pairs.
+	 * Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, and Younghee Park developed the SM. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Advanced Kullback–Leibler divergence measure (KL) between both two rating vectors and profiles.
+	 * @author Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, Younghee Park
+	 */
+	protected double klAdvanced(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> ids1 = vRating1.fieldIds(true);
+		Set<Integer> ids2 = vRating2.fieldIds(true);
+		
+		double mean1 = vRating1.mean();
+		double mean2 = vRating1.mean();
+		double sim = 0;
+		for (int id1 : ids1) {
+			double value1 = vRating1.get(id1).value;
+			for (int id2 : ids2) {
+				double value2 = vRating2.get(id2).value;
+				double s = 1 / (1 + Math.exp(-(value1-mean1)*(value2-mean2)));
+				double kl1 = calcKLSingle(id1, id2, false, valueCache, isCached());
+				double kl2 = calcKLSingle(id2, id1, false, valueCache, isCached());
+				double kl = 1 / (1+ (kl1+kl2)/2);
+				
+				sim += s*kl;
+			}
+		}
+		
+		
+		return sim;
+	}
+
+	
+	/**
+	 * Calculating the Kullback–Leibler divergence (KL) of rating vectors given main identifier.
+	 * @param mainId main identifier.
+	 * @param auxId auxiliary identifier.
+	 * @param isRow flag to indicate whether the specified identifier is of row rating vector.
+	 * @param cachedMap cached map.
+	 * @param cached flag to indicate whether to cache the entropy.
+	 * @return the Kullback–Leibler divergence (KL) of rating vectors given main identifiers.
+	 */
+	protected double calcKLSingle(int mainId, int auxId, boolean isRow,  Map<Integer, Object> cachedMap, boolean cached) {
+		Task task = new Task() {
+			
+			@Override
+			public Object perform(Object...params) {
+				double minRating = getMinRating();
+				double maxRating = getMaxRating();
+				double value = minRating;
+				double count1 = count(mainId, isRow);
+				double count2 = count(auxId, isRow);
+				double lambda1 = count1 / (count1+count2);
+				double kl = 0;
+				while (value <= maxRating) {
+					double prob1 = prob(mainId, value, isRow);
+					double prob2 = prob(auxId, value, isRow);
+
+					double a = lambda1*prob1;
+					double b = (1-lambda1)*prob2;
+					kl += a * Math.log(a/b+Float.MIN_VALUE);
+
+					value = value + 1;
+				}
+				
+				return kl;
+			}
+		};
+		
+		if (cached && cachedMap != null)
+			return (double)cacheTask(mainId, cachedMap, task);
+		else
+			return (Double)task.perform();
+	}
+
+	
+	/**
+	 * Calculating the Kullback–Leibler divergence (KL) of rating vectors given two identifiers.
+	 * @param id1 given identifier 1.
+	 * @param id2 given identifier 2.
+	 * @param isRow flag to indicate whether the specified identifier is of row rating vector.
+	 * @param cachedMap cached map.
+	 * @return the Kullback–Leibler divergence (KL) of rating vectors given two identifiers.
+	 */
+	protected double calcKL(int id1, int id2, boolean isRow,  Map<Integer, Map<Integer, Object>> cachedMap) {
+		Task task = new Task() {
+			
+			@Override
+			public Object perform(Object...params) {
+				double minRating = getMinRating();
+				double maxRating = getMaxRating();
+				double value = minRating;
+				double count1 = count(id1, isRow);
+				double count2 = count(id2, isRow);
+				double lambda1 = count1 / (count1+count2);
+				double lambda2 = count2 / (count1+count2);
+				double kl1 = 0;
+				double kl2 = 0;
+				while (value <= maxRating) {
+					double prob1 = prob(id1, value, isRow);
+					double prob2 = prob(id2, value, isRow);
+
+					double a = lambda1*prob1;
+					double b = (1-lambda1)*prob2;
+					kl1 += a * Math.log(a/b+Float.MIN_VALUE);
+					
+					double c = lambda2*prob2;
+					double d = (1-lambda2)*prob1;
+					kl1 += c * Math.log(c/d+Float.MIN_VALUE);
+
+					value = value + 1;
+				}
+				
+				return (kl1 + kl2) / 2.0;
+			}
+		};
+		
+		if (cachedMap != null)
+			return (double)cacheTask(id1, id2, cachedMap, task);
+		else
+			return (Double)task.perform();
+	}
+
+	
+	/**
+	 * Calculating the Preference Mover Distance (PMD) measure between two pairs.
+	 * Yitong Meng, Xinyan Dai, Xiao Yan, James Cheng, Weiwen Liu, Jun Guo, Benben Liao, and Guangyong Chen developed the Preference Mover Distance (PMD) measure. Loc Nguyen implements it.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return Preference Mover Distance (PMD) measure between both two rating vectors and profiles.
+	 * @author Yitong Meng, Xinyan Dai, Xiao Yan, James Cheng, Weiwen Liu, Jun Guo, Benben Liao, Guangyong Chen
+	 */
+	protected double pmd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		return Constants.UNUSED;
+	}
+
+	
+	/**
 	 * Computing common field IDs of two rating vectors as list.
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
@@ -2282,6 +2502,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(PIP_TYPE, PIP_TYPE_NORMAL);
 		tempConfig.put(MMD_TYPE, MMD_TYPE_NORMAL);
 		tempConfig.put(TA_TYPE, TA_TYPE_NORMAL);
+		tempConfig.put(KL_TYPE, KL_TYPE_NORMAL);
 
 		DataConfig config = new DataConfig() {
 
@@ -2445,6 +2666,23 @@ public abstract class NeighborCFExt extends NeighborCF {
 						null,
 						qtypes.toArray(new String[] {}),
 						qtype);
+				}
+				else if (key.equals(KL_TYPE)) {
+					String ktype = getAsString(KL_TYPE);
+					ktype = ktype == null ? KL_TYPE_NORMAL : ktype;
+					List<String> ktypes = Util.newList();
+					ktypes.add(KL_TYPE_NORMAL);
+					ktypes.add(KL_TYPE_ADVANCED);
+					Collections.sort(ktypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp,
+						"Please choose one KL type",
+						"Choosing KL type",
+						JOptionPane.INFORMATION_MESSAGE,
+						null,
+						ktypes.toArray(new String[] {}),
+						ktype);
 				}
 				else
 					return tempConfig.userEdit(comp, key, defaultValue);

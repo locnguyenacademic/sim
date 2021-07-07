@@ -16,7 +16,6 @@ import net.hudup.core.alg.cf.nb.NeighborCFItemBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.NextUpdate;
 
 /**
  * This class sets up an advanced version of item-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
@@ -25,7 +24,7 @@ import net.hudup.core.logistic.NextUpdate;
  * @version 1.0
  *
  */
-@NextUpdate
+@Deprecated
 public class NeighborCFExt2ItemBased extends NeighborCFExt2 implements DuplicatableAlg {
 
 	
@@ -119,6 +118,12 @@ public class NeighborCFExt2ItemBased extends NeighborCFExt2 implements Duplicata
 	}
 
 	
+	@Override
+	protected double prob(int columnId) {
+		return prob(columnId, true);
+	}
+
+
 	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);

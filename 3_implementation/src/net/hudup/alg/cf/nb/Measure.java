@@ -131,4 +131,16 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	public static final String SM = "sm";
 
 	
+	/**
+	 * Kullback–Leibler divergence measure (KL).
+	 */
+	public static final String KL = "kl";
+
+	
+	/**
+	 * Preference Mover Distance (PMD) measure.
+	 */
+	public static final String PMD = "pmd";
+
+	
 }

@@ -85,7 +85,7 @@ public class IndexedJxNHSM extends NeighborCFExtUserBased implements ForTest {
 			Profile profile2, Object... params) {
 		double urp = urp(vRating1, vRating2, profile1, profile2);
 		double amert = amer(vRating1, vRating2, profile1, profile2);
-		return indexedJaccard(vRating1, vRating2, profile1, profile2) * amert * urp;
+		return jaccardIndexed(vRating1, vRating2, profile1, profile2) * amert * urp;
 	}
 
 	

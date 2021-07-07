@@ -85,7 +85,7 @@ public class RatingJxNHSM extends NeighborCFExtUserBased implements ForTest {
 			Profile profile2, Object... params) {
 		double urp = urp(vRating1, vRating2, profile1, profile2);
 		double amert = amer(vRating1, vRating2, profile1, profile2);
-		return ratingJaccard(vRating1, vRating2, profile1, profile2) * amert * urp;
+		return jaccardRating(vRating1, vRating2, profile1, profile2) * amert * urp;
 	}
 
 	

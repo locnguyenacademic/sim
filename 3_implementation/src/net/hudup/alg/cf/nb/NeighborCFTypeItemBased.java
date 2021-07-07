@@ -127,6 +127,12 @@ public class NeighborCFTypeItemBased extends NeighborCFType implements Duplicata
 
 
 	@Override
+	protected double prob(int columnId) {
+		return prob(columnId, true);
+	}
+
+
+	@Override
 	public String getName() {
 		String name = getConfig().getAsString(DUPLICATED_ALG_NAME_FIELD);
 		if (name != null && !name.isEmpty())

@@ -16,7 +16,6 @@ import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.NextUpdate;
 
 /**
  * This class sets up an advanced version of user-based nearest neighbors collaborative filtering (Neighbor CF) algorithm with more similarity measures.
@@ -25,7 +24,7 @@ import net.hudup.core.logistic.NextUpdate;
  * @version 1.0
  *
  */
-@NextUpdate
+@Deprecated
 public class NeighborCFExt2UserBased extends NeighborCFExt2 implements DuplicatableAlg {
 
 	
@@ -115,6 +114,12 @@ public class NeighborCFExt2UserBased extends NeighborCFExt2 implements Duplicata
 	@Override
 	protected double calcColumnMean(RatingVector vRating) {
 		return calcItemMean(vRating);
+	}
+
+
+	@Override
+	protected double prob(int columnId) {
+		return prob(columnId, false);
 	}
 
 
