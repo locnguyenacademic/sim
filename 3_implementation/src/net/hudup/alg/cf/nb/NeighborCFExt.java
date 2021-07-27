@@ -54,11 +54,11 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * <br>
  * Yung-Shen Lin, Jung-Yi Jiang, Shie-Jue Lee contributed SMTP measure.<br>
  * <br>
- * Ali Amer contributed measures SMD, SMD2, and NNSM.<br>
+ * Ali Amer contributed measures SMD, HSMD, and NNSM.<br>
  * <br>
  * Loc Nguyen contributed TA (triangle area) measure.<br>
  * <br>
- * Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.<br>
+ * Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of HSMD measure and the ideology of TF and IDF.<br>
  * <br>
  * Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
  * <br>
@@ -263,21 +263,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * SMD type.
+	 * HSMD type.
 	 */
-	protected static final String SMD2_TYPE = "smd2_type";
+	protected static final String HSMD_TYPE = "hsmd_type";
 
 	
 	/**
-	 * Normal SMD.
+	 * Normal HSMD.
 	 */
-	protected static final String SMD2_TYPE_NORMAL = "smd2";
+	protected static final String HSMD_TYPE_NORMAL = "hsmd";
 
 	
 	/**
-	 * SMD2 + Jaccard measure.
+	 * HSMD + Jaccard measure.
 	 */
-	protected static final String SMD2_TYPE_JACCARD = "smd2j";
+	protected static final String HSMD_TYPE_JACCARD = "hsmdj";
 
 	
 	/**
@@ -329,19 +329,19 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * SMD type.
+	 * KL type.
 	 */
 	protected static final String KL_TYPE = "kl_type";
 
 	
 	/**
-	 * Normal SMD.
+	 * Normal KL.
 	 */
 	protected static final String KL_TYPE_NORMAL = "kl";
 
 	
 	/**
-	 * SMD2 + Jaccard measure.
+	 * KL + Jaccard measure.
 	 */
 	protected static final String KL_TYPE_ADVANCED = "kl_advanced";
 
@@ -411,7 +411,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.MU);
 		mSet.add(Measure.SMTP);
 		mSet.add(Measure.SMD);
-		mSet.add(Measure.SMD2);
+		mSet.add(Measure.HSMD);
 		mSet.add(Measure.QUASI_TFIDF);
 		mSet.add(Measure.TA);
 		mSet.add(Measure.COCO);
@@ -496,8 +496,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return amer(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.SMD))
 			return smd(vRating1, vRating2, profile1, profile2);
-		else if (measure.equals(Measure.SMD2))
-			return smd2(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.HSMD))
+			return hsmd(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.QUASI_TFIDF))
 			return quasiTfIdf(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.TA))
@@ -549,7 +549,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.addReadOnly(PIP_TYPE);
 		config.addReadOnly(MMD_TYPE);
 		config.addReadOnly(TA_TYPE);
-		config.addReadOnly(SMD2_TYPE);
+		config.addReadOnly(HSMD_TYPE);
 		config.addReadOnly(QUASI_TFIDF_TYPE);
 		config.addReadOnly(IPWR_ALPHA_FIELD);
 		config.addReadOnly(IPWR_BETA_FIELD);
@@ -587,8 +587,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		else if (measure.equals(Measure.SMD)) {
 		}
-		else if (measure.equals(Measure.SMD2)) {
-			config.removeReadOnly(SMD2_TYPE);
+		else if (measure.equals(Measure.HSMD)) {
+			config.removeReadOnly(HSMD_TYPE);
 		}
 		else if (measure.equals(Measure.QUASI_TFIDF)) {
 			config.removeReadOnly(QUASI_TFIDF_TYPE);
@@ -1374,8 +1374,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Calculating the general SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
-	 * SMD2 measure is only applied into positive ratings.
+	 * Calculating the general HSMD measure between two pairs. HSMD measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * HSMD measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * @param vRating1 first rating vector.
@@ -1383,23 +1383,23 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer.
-	 * @return General SMD2 measure between both two rating vectors and profiles.
+	 * @return General HSMD measure between both two rating vectors and profiles.
 	 */
-	protected double smd2(RatingVector vRating1, RatingVector vRating2,
+	protected double hsmd(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		String stype = config.getAsString(SMD2_TYPE);
-		if (stype.equals(SMD2_TYPE_NORMAL))
-			return smd2Normal(vRating1, vRating2, profile1, profile2);
+		String stype = config.getAsString(HSMD_TYPE);
+		if (stype.equals(HSMD_TYPE_NORMAL))
+			return hsmdNormal(vRating1, vRating2, profile1, profile2);
 		else if (stype.equals(PIP_TYPE_MPIP))
-			return smd2j(vRating1, vRating2, profile1, profile2);
+			return hsmdj(vRating1, vRating2, profile1, profile2);
 		else
-			return smd2Normal(vRating1, vRating2, profile1, profile2);
+			return hsmdNormal(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
 	/**
-	 * Calculating the SMD2 measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
-	 * SMD2 measure is only applied into positive ratings.
+	 * Calculating the HSMD measure between two pairs. HSMD measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * HSMD measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * @param vRating1 first rating vector.
@@ -1407,9 +1407,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer.
-	 * @return SMD2 measure between both two rating vectors and profiles.
+	 * @return HSMD measure between both two rating vectors and profiles.
 	 */
-	protected double smd2Normal(RatingVector vRating1, RatingVector vRating2,
+	protected double hsmdNormal(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
 		if (fieldIds.size() == 0) return Constants.UNUSED;
@@ -1438,8 +1438,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Calculating the SMD2 + Jaccard measure between two pairs. SMD2 measure is developed by Ali Amer, and implemented by Loc Nguyen.
-	 * SMD2 + Jaccard measure is only applied into positive ratings.
+	 * Calculating the HSMD + Jaccard measure between two pairs. HSMD measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * HSMD + Jaccard measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
 	 * 
@@ -1448,18 +1448,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
 	 * @author Ali Amer.
-	 * @return SMD2 + Jaccard measure between both two rating vectors and profiles.
+	 * @return HSMD + Jaccard measure between both two rating vectors and profiles.
 	 */
-	protected double smd2j(
+	protected double hsmdj(
 			RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		return smd2Normal(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
+		return hsmdNormal(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
 	/**
 	 * Calculating the quasi-TfIdf measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
-	 * Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf measure is an extension of Quasi-TfIdf measure and the ideology of TF and IDF.
 	 * Quasi-TfIdf measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
@@ -1485,7 +1485,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	/**
 	 * Calculating the quasi-TfIdf measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
-	 * Quasi-TfIdf measure is an extension of SMD2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf measure is an extension of Quasi-TfIdf measure and the ideology of TF and IDF.
 	 * Quasi-TfIdf measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
@@ -1533,7 +1533,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	/**
 	 * Calculating the quasi-TfIdf + Jaccard measure between two pairs. Quasi-TfIdf measure is developed by Ali Amer and Loc Nguyen.
-	 * Quasi-TfIdf + Jaccard measure is an extension of SMD2 measure and the ideology of TF and IDF.
+	 * Quasi-TfIdf + Jaccard measure is an extension of Quasi-TfIdf measure and the ideology of TF and IDF.
 	 * Quasi-TfIdf + Jaccard measure is only applied into positive ratings.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
@@ -2633,18 +2633,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 						ttypes.toArray(new String[] {}),
 						ttype);
 				}
-				else if (key.equals(SMD2_TYPE)) {
-					String stype = getAsString(SMD2_TYPE);
-					stype = stype == null ? SMD2_TYPE_NORMAL : stype;
+				else if (key.equals(HSMD_TYPE)) {
+					String stype = getAsString(HSMD_TYPE);
+					stype = stype == null ? HSMD_TYPE_NORMAL : stype;
 					List<String> stypes = Util.newList();
-					stypes.add(SMD2_TYPE_NORMAL);
-					stypes.add(SMD2_TYPE_JACCARD);
+					stypes.add(HSMD_TYPE_NORMAL);
+					stypes.add(HSMD_TYPE_JACCARD);
 					Collections.sort(stypes);
 					
 					return (Serializable) JOptionPane.showInputDialog(
 						comp,
-						"Please choose one SMD2 type",
-						"Choosing SMD2 type",
+						"Please choose one HSMD type",
+						"Choosing HSMD type",
 						JOptionPane.INFORMATION_MESSAGE,
 						null,
 						stypes.toArray(new String[] {}),

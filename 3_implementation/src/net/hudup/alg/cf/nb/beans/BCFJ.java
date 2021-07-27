@@ -93,7 +93,7 @@ public class BCFJ extends NeighborCFExtUserBased {
 		config.remove(PIP_TYPE);
 		config.remove(MMD_TYPE);
 		config.remove(TA_TYPE);
-		config.remove(SMD2_TYPE);
+		config.remove(HSMD_TYPE);
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);

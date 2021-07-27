@@ -38,7 +38,7 @@ public class SMD2J extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
@@ -55,7 +55,7 @@ public class SMD2J extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(SMD2_TYPE, SMD2_TYPE_JACCARD);
+		config.put(HSMD_TYPE, HSMD_TYPE_JACCARD);
 		return config;
 	}
 	

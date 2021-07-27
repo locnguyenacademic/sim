@@ -24,7 +24,7 @@ public class SMD2 extends NeighborCFExtItemBased implements ForTest {
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	

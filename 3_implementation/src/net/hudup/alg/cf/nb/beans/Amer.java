@@ -81,6 +81,8 @@ public class Amer extends NeighborCFExtUserBased {
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
 		config.remove(TA_NORMALIZED_FIELD);
+		config.remove(RATINGJ_THRESHOLD_FIELD);
+		config.remove(INDEXEDJ_INTERVALS_FIELD);
 		config.remove(ESIM_TYPE);
 		config.remove(JACCARD_TYPE);
 		config.remove(COSINE_TYPE);
@@ -91,7 +93,8 @@ public class Amer extends NeighborCFExtUserBased {
 		config.remove(BCF_TYPE);
 		config.remove(PIP_TYPE);
 		config.remove(MMD_TYPE);
-		config.remove(SMD2_TYPE);
+		config.remove(TA_TYPE);
+		config.remove(HSMD_TYPE);
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);

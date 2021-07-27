@@ -25,7 +25,7 @@ public class SMD2MSD extends NeighborCFTwosCombinedItemBased implements ForTest 
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
@@ -43,7 +43,7 @@ public class SMD2MSD extends NeighborCFTwosCombinedItemBased implements ForTest 
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, Measure.SMD2);
+		config.put(MEASURE, Measure.HSMD);
 		config.put(OTHER_MEASURE, Measure.MSD);
 		
 		return config;

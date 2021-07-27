@@ -98,7 +98,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 		config.addReadOnly(PIP_TYPE);
 		config.addReadOnly(MMD_TYPE);
 		config.addReadOnly(TA_TYPE);
-		config.addReadOnly(SMD2_TYPE);
+		config.addReadOnly(HSMD_TYPE);
 		config.addReadOnly(QUASI_TFIDF_TYPE);
 		config.addReadOnly(IPWR_ALPHA_FIELD);
 		config.addReadOnly(IPWR_BETA_FIELD);

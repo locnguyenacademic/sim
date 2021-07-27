@@ -25,14 +25,14 @@ public class SMD2 extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smd2(vRating1, vRating2, profile1, profile2);
+		return hsmd(vRating1, vRating2, profile1, profile2);
 	}
 
 

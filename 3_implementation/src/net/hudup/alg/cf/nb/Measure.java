@@ -84,9 +84,9 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 
 	
 	/**
-	 * SMD2 measure.
+	 * HSMD measure.
 	 */
-	public static final String SMD2 = "smd2";
+	public static final String HSMD = "hsmd";
 
 	
 	/**

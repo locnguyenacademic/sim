@@ -38,7 +38,7 @@ public class SMD2CPC extends NeighborCFTwosCombinedItemBased implements ForTest 
 
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
@@ -55,7 +55,7 @@ public class SMD2CPC extends NeighborCFTwosCombinedItemBased implements ForTest 
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, Measure.SMD2);
+		config.put(MEASURE, Measure.HSMD);
 		config.put(OTHER_MEASURE, Measure.PEARSON);
 		config.put(PEARSON_TYPE, PEARSON_TYPE_CPC);
 		

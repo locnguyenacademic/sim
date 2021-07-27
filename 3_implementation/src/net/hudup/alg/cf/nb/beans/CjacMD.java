@@ -69,6 +69,7 @@ public class CjacMD extends NeighborCFExtUserBased {
 		
 		config.remove(MEASURE);
 		config.remove(COSINE_NORMALIZED_FIELD);
+		config.remove(COSINE_WEIGHTED_FIELD);
 		config.remove(COSINE_RA_FIELD);
 		config.remove(PEARSON_RA_FIELD);
 		config.remove(PEARSON_WEIGHTED_FIELD);
@@ -92,7 +93,7 @@ public class CjacMD extends NeighborCFExtUserBased {
 		config.remove(PIP_TYPE);
 		config.remove(MMD_TYPE);
 		config.remove(TA_TYPE);
-		config.remove(SMD2_TYPE);
+		config.remove(HSMD_TYPE);
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);

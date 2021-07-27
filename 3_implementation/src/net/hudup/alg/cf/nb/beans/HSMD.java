@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * SRC measure.
+ * HSMD measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class SRC extends NeighborCFExtUserBased {
+public class HSMD extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class SRC extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public SRC() {
+	public HSMD() {
 
 	}
 
@@ -53,7 +53,7 @@ public class SRC extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.SRC;
+		return Measure.HSMD;
 	}
 
 
@@ -68,6 +68,7 @@ public class SRC extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
+		config.remove(VALUE_BINS_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(COSINE_WEIGHTED_FIELD);
 		config.remove(COSINE_RA_FIELD);
@@ -93,7 +94,6 @@ public class SRC extends NeighborCFExtUserBased {
 		config.remove(PIP_TYPE);
 		config.remove(MMD_TYPE);
 		config.remove(TA_TYPE);
-		config.remove(HSMD_TYPE);
 		config.remove(QUASI_TFIDF_TYPE);
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);
@@ -104,7 +104,7 @@ public class SRC extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return src(vRating1, vRating2, profile1, profile2);
+		return hsmd(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -114,7 +114,7 @@ public class SRC extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_src";
+			return "neighborcf_hsmd";
 	}
 
 

@@ -38,7 +38,7 @@ public class SMD2COJ extends NeighborCFTwosCombinedItemBased implements ForTest 
 
 	@Override
 	public String getDefaultMeasure() {
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
@@ -56,7 +56,7 @@ public class SMD2COJ extends NeighborCFTwosCombinedItemBased implements ForTest 
 	public DataConfig createDefaultConfig() {
 		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, Measure.SMD2);
+		config.put(MEASURE, Measure.HSMD);
 		config.put(OTHER_MEASURE, Measure.COSINE);
 		config.put(COSINE_TYPE, COSINE_TYPE_JACCARD_LIKE);
 		

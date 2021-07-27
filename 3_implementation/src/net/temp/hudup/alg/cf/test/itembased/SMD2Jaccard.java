@@ -25,7 +25,7 @@ public class SMD2Jaccard extends NeighborCFTwosCombinedItemBased implements ForT
 	@Override
 	public String getDefaultMeasure() {
 		// TODO Auto-generated method stub
-		return Measure.SMD2;
+		return Measure.HSMD;
 	}
 
 	
@@ -44,7 +44,7 @@ public class SMD2Jaccard extends NeighborCFTwosCombinedItemBased implements ForT
 	public DataConfig createDefaultConfig() {
 		// TODO Auto-generated method stub
 		DataConfig config = super.createDefaultConfig();
-		config.put(MEASURE, Measure.SMD2);
+		config.put(MEASURE, Measure.HSMD);
 		config.put(OTHER_MEASURE, Measure.JACCARD);
 		
 		return config;

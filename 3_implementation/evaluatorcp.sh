@@ -1,2 +1,2 @@
 . env.sh
-eval $JAVA_CMD net.hudup.server.ext.EvaluatorCP
+eval $JAVA_CMD net.hudup.server.ext.EvaluatorCPList

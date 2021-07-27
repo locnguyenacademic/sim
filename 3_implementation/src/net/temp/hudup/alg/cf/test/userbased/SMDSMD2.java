@@ -44,7 +44,7 @@ public class SMDSMD2 extends NeighborCFTwosCombinedUserBased implements ForTest 
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, Measure.SMD);
-		config.put(OTHER_MEASURE, Measure.SMD2);
+		config.put(OTHER_MEASURE, Measure.HSMD);
 		
 		return config;
 	}
