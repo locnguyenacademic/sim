@@ -1,0 +1,221 @@
+General evaluation
+
+  a08.01.23.01.smdxesim
+    Exact recall = 0.8880
+    Hudup recall = 0.8744
+    MAE.recommend = 0.6038
+    MSE.recommend = 0.6218
+    Precision.recommend = 0.1835
+    R.recommend = 0.1221
+    Recall.recommend = 0.7846
+    Setup time = 0.0003
+    Speed = 0.5117
+
+
+Dataset evaluation
+
+  Dataset "1"
+    a08.01.23.01.smdxesim
+      Exact recall = 0.8779
+      Hudup recall = 0.8636
+      MAE.recommend = 0.5992
+      MSE.recommend = 0.6169
+      Precision.recommend = 0.1892
+      R.recommend = 0.1398
+      Recall.recommend = 0.7807
+      Setup time = 0.0010
+      Speed = 0.5156
+
+  Dataset "2"
+    a08.01.23.01.smdxesim
+      Exact recall = 0.8953
+      Hudup recall = 0.8806
+      MAE.recommend = 0.6086
+      MSE.recommend = 0.6295
+      Precision.recommend = 0.1833
+      R.recommend = 0.1086
+      Recall.recommend = 0.7857
+      Setup time = 0.0000
+      Speed = 0.5755
+
+  Dataset "3"
+    a08.01.23.01.smdxesim
+      Exact recall = 0.8894
+      Hudup recall = 0.8767
+      MAE.recommend = 0.6042
+      MSE.recommend = 0.6193
+      Precision.recommend = 0.1821
+      R.recommend = 0.1148
+      Recall.recommend = 0.7816
+      Setup time = 0.0000
+      Speed = 0.4712
+
+  Dataset "4"
+    a08.01.23.01.smdxesim
+      Exact recall = 0.8894
+      Hudup recall = 0.8767
+      MAE.recommend = 0.6032
+      MSE.recommend = 0.6214
+      Precision.recommend = 0.1794
+      R.recommend = 0.1249
+      Recall.recommend = 0.7904
+      Setup time = 0.0000
+      Speed = 0.4846
+
+
+Exact recall evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.8779
+    Dataset "2" got 0.8953
+    Dataset "3" got 0.8894
+    Dataset "4" got 0.8894
+
+
+Hudup recall evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.8636
+    Dataset "2" got 0.8806
+    Dataset "3" got 0.8767
+    Dataset "4" got 0.8767
+
+
+MAE.recommend evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.5992
+    Dataset "2" got 0.6086
+    Dataset "3" got 0.6042
+    Dataset "4" got 0.6032
+
+
+MSE.recommend evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.6169
+    Dataset "2" got 0.6295
+    Dataset "3" got 0.6193
+    Dataset "4" got 0.6214
+
+
+Precision.recommend evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.1892
+    Dataset "2" got 0.1833
+    Dataset "3" got 0.1821
+    Dataset "4" got 0.1794
+
+
+R.recommend evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.1398
+    Dataset "2" got 0.1086
+    Dataset "3" got 0.1148
+    Dataset "4" got 0.1249
+
+
+Recall.recommend evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.7807
+    Dataset "2" got 0.7857
+    Dataset "3" got 0.7816
+    Dataset "4" got 0.7904
+
+
+Setup time evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.0010
+    Dataset "2" got 0.0000
+    Dataset "3" got 0.0000
+    Dataset "4" got 0.0000
+
+
+Speed evaluation
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got 0.5156
+    Dataset "2" got 0.5755
+    Dataset "3" got 0.4712
+    Dataset "4" got 0.4846
+
+
+Evaluation information
+  Total records: 88128
+  Evaluated records: 5876
+  Evaluation percentage: 6.6676%
+  Elapsed time: 0 hours 49 minutes 30 seconds
+  Started date: 2021-08-01 18-24-27
+
+
+Algorithm parameters
+
+  a08.01.23.01.smdxesim
+    minmax_rating_bound=true
+    msd_fraction=false
+    esim_type=esim
+    jaccard_indexedj_intervals=2, 4
+    minmax_rating_reconfigure=false
+    cosine_ra=false
+    ipwr_beta=0.5000
+    ta_type=ta
+    similarity_threshold=NaN
+    recommend_reversed=false
+    ipwr_alpha=0.5000
+    pearson_type=pearson
+    bcf_type=bcf
+    alg_support_cache=true
+    cosine_normalized=false
+    pss_type=pss
+    value_bins=1, 2, 3, 4, 5
+    triangle_type=triangle
+    cosine_type=cosine
+    smtp_lambda=0.5000
+    max_rating=4.0000
+    pip_type=pip
+    pearson_ra=false
+    delay_unsetup=false
+    mmd_type=mmd
+    knn=100.0000
+    jaccard_ratingj_threshold=0.1000
+    kl_type=kl
+    recommend_fast=true
+    hybrid=false
+    pearson_weighted=false
+    cosine_weighted=false
+    ta_normalized=false
+    min_rating=0.5000
+    mu_alpha=0.5000
+    msd_type=msd
+    measure_other=esim
+    entropy_support=false
+    bcf_median=true
+    jaccard_type=normal
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  a08.01.23.01.smdxesim
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.7-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.7-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.7-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/c:/GoogleDrive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.7-k5/hdp_rating4.test"
+
+  Java: Java(TM) SE Runtime Environment version 15.0.2+7-27, Java HotSpot(TM) 64-Bit Server VM version 15.0.2+7-27, Class version 59.0, Vendor "Oracle Corporation" at https://java.oracle.com/
+  OS: Windows Server 2012 R2, amd64, version 6.3
+  Network: Local address is 192.168.116.200
+  Memory (VM): Allocated memory = 960.00MB, Free memory = 722.28MB, Max memory = 25600.00MB
+  CPU: Intel64 Family 6 Model 62 Stepping 4, GenuineIntel, AMD64, the number of processors is 16
+  Directory: Current working directory is "c:\GoogleDrive\todeploy\working\projects\sim"
