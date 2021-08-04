@@ -189,7 +189,7 @@ public abstract class NeighborCFType extends NeighborCFExt {
 	/**
 	 * Converting user/item rating vector to type vector.
 	 * @param vRating user/item rating vector.
-	 * @return
+	 * @return converted type vector.
 	 */
 	protected abstract RatingVector convertToTypeVector(RatingVector vRating);
 	
