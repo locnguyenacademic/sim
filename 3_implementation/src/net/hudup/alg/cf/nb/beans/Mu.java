@@ -72,10 +72,7 @@ public class Mu extends NeighborCFExtUserBased {
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(COSINE_WEIGHTED_FIELD);
 		config.remove(COSINE_RA_FIELD);
-		config.remove(PEARSON_RA_FIELD);
-		config.remove(PEARSON_WEIGHTED_FIELD);
 		config.remove(MSD_FRACTION_FIELD);
-		config.remove(ENTROPY_SUPPORT_FIELD);
 		config.remove(BCF_MEDIAN_MODE_FIELD);
 		config.remove(SMTP_LAMBDA_FIELD);
 		config.remove(SMTP_GENERAL_VAR_FIELD);
@@ -83,9 +80,7 @@ public class Mu extends NeighborCFExtUserBased {
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
 		config.remove(ESIM_TYPE);
-		config.remove(JACCARD_TYPE);
 		config.remove(COSINE_TYPE);
-		config.remove(PEARSON_TYPE);
 		config.remove(MSD_TYPE);
 		config.remove(TRIANGLE_TYPE);
 		config.remove(PSS_TYPE);

@@ -7,12 +7,16 @@
  */
 package net.hudup.alg.cf.nb.beans;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.Constants;
+import net.hudup.core.alg.RecommendParam;
+import net.hudup.core.alg.cf.nb.NeighborCFUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
@@ -100,6 +104,12 @@ public class PC extends NeighborCFExtUserBased {
 		config.remove(IPWR_ALPHA_FIELD);
 		config.remove(IPWR_BETA_FIELD);
 		config.remove(KL_TYPE);
+	}
+
+
+	@Override
+	public RatingVector estimate(RecommendParam param, Set<Integer> queryIds) throws RemoteException {
+		return NeighborCFUserBased.estimateNormal(this, param, queryIds);
 	}
 
 
