@@ -7,7 +7,7 @@ General evaluation
     MSE.recommend = 0.9695
     R.recommend = 0.2496
     Setup time = 0.0000
-    Speed = 0.0113
+    Speed = 0.0099
 
   neighborcf_amer
     Exact recall = 0.9020
@@ -16,7 +16,7 @@ General evaluation
     MSE.recommend = 0.8285
     R.recommend = 0.2852
     Setup time = 0.0000
-    Speed = 0.0178
+    Speed = 0.0148
 
   neighborcf_bcf
     Exact recall = 0.9109
@@ -25,7 +25,7 @@ General evaluation
     MSE.recommend = 0.8831
     R.recommend = 0.2933
     Setup time = 0.0000
-    Speed = 1.4882
+    Speed = 1.3732
 
   neighborcf_bcfj
     Exact recall = 0.9110
@@ -34,7 +34,7 @@ General evaluation
     MSE.recommend = 0.8830
     R.recommend = 0.2934
     Setup time = 0.0000
-    Speed = 1.5031
+    Speed = 1.4279
 
   neighborcf_cjacmd
     Exact recall = 0.6754
@@ -43,7 +43,7 @@ General evaluation
     MSE.recommend = 1.0346
     R.recommend = 0.1779
     Setup time = 0.0000
-    Speed = 0.0376
+    Speed = 0.0313
 
   neighborcf_cosine
     Exact recall = 0.4912
@@ -52,7 +52,7 @@ General evaluation
     MSE.recommend = 1.1597
     R.recommend = 0.1684
     Setup time = 0.0000
-    Speed = 0.0143
+    Speed = 0.0114
 
   neighborcf_esim
     Exact recall = 0.9012
@@ -61,7 +61,7 @@ General evaluation
     MSE.recommend = 0.8315
     R.recommend = 0.2848
     Setup time = 0.0000
-    Speed = 0.0190
+    Speed = 0.0184
 
   neighborcf_feng
     Exact recall = 0.9128
@@ -69,14 +69,17 @@ General evaluation
     MAE.recommend = 0.6913
     MSE.recommend = 0.8224
     R.recommend = 0.3127
-    Setup time = 0.0002
-    Speed = 0.0450
+    Setup time = 0.0000
+    Speed = 0.0398
 
   neighborcf_hsmd
-    Exact recall = 0.0000
-    Hudup recall = 0.0000
+    Exact recall = 0.8494
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7169
+    MSE.recommend = 0.8852
+    R.recommend = 0.3212
     Setup time = 0.0000
-    Speed = 0.0013
+    Speed = 0.0164
 
   neighborcf_ipwr
     Exact recall = 0.8898
@@ -85,7 +88,7 @@ General evaluation
     MSE.recommend = 0.8586
     R.recommend = 0.2884
     Setup time = 0.0000
-    Speed = 0.0685
+    Speed = 0.0587
 
   neighborcf_jaccard
     Exact recall = 0.9026
@@ -94,7 +97,7 @@ General evaluation
     MSE.recommend = 0.8333
     R.recommend = 0.2799
     Setup time = 0.0000
-    Speed = 0.0150
+    Speed = 0.0120
 
   neighborcf_kl
     Exact recall = 0.8739
@@ -102,8 +105,8 @@ General evaluation
     MAE.recommend = 0.7120
     MSE.recommend = 0.8607
     R.recommend = 0.1272
-    Setup time = 0.0000
-    Speed = 1.9191
+    Setup time = 0.0002
+    Speed = 1.9477
 
   neighborcf_mmd
     Exact recall = 0.6483
@@ -112,7 +115,7 @@ General evaluation
     MSE.recommend = 1.0578
     R.recommend = 0.1337
     Setup time = 0.0000
-    Speed = 0.0162
+    Speed = 0.0153
 
   neighborcf_msd
     Exact recall = 0.6316
@@ -121,13 +124,16 @@ General evaluation
     MSE.recommend = 0.9934
     R.recommend = 0.2336
     Setup time = 0.0000
-    Speed = 0.0107
+    Speed = 0.0086
 
   neighborcf_mu
-    Exact recall = 0.0000
-    Hudup recall = 0.0000
-    Setup time = 0.0002
-    Speed = 0.0011
+    Exact recall = 0.5690
+    Hudup recall = 0.9980
+    MAE.recommend = 0.8036
+    MSE.recommend = 1.0910
+    R.recommend = 0.2147
+    Setup time = 0.0000
+    Speed = 0.0505
 
   neighborcf_nhsm
     Exact recall = 0.9118
@@ -135,8 +141,8 @@ General evaluation
     MAE.recommend = 0.6930
     MSE.recommend = 0.8247
     R.recommend = 0.3083
-    Setup time = 0.0000
-    Speed = 0.0345
+    Setup time = 0.0002
+    Speed = 0.0301
 
   neighborcf_nnsm
     Exact recall = 0.8982
@@ -145,7 +151,7 @@ General evaluation
     MSE.recommend = 0.8438
     R.recommend = 0.2697
     Setup time = 0.0000
-    Speed = 0.0167
+    Speed = 0.0155
 
   neighborcf_os
     Exact recall = 0.8342
@@ -154,13 +160,16 @@ General evaluation
     MSE.recommend = 0.8555
     R.recommend = 0.2763
     Setup time = 0.0000
-    Speed = 0.0187
+    Speed = 0.0150
 
   neighborcf_pc
-    Exact recall = 0.0000
-    Hudup recall = 0.0000
+    Exact recall = 0.8732
+    Hudup recall = 1.0000
+    MAE.recommend = 0.7909
+    MSE.recommend = 1.0402
+    R.recommend = 0.0538
     Setup time = 0.0000
-    Speed = 0.0001
+    Speed = 0.2360
 
   neighborcf_pearson
     Exact recall = 0.5802
@@ -169,7 +178,7 @@ General evaluation
     MSE.recommend = 1.0847
     R.recommend = 0.2084
     Setup time = 0.0000
-    Speed = 0.0168
+    Speed = 0.0153
 
   neighborcf_pip
     Exact recall = 0.9258
@@ -178,13 +187,7 @@ General evaluation
     MSE.recommend = 0.8306
     R.recommend = 0.3342
     Setup time = 0.0000
-    Speed = 0.0113
-
-  neighborcf_pmd
-    Exact recall = 0.0000
-    Hudup recall = 0.0000
-    Setup time = 0.0000
-    Speed = 0.0003
+    Speed = 0.0096
 
   neighborcf_pss
     Exact recall = 0.9274
@@ -193,7 +196,7 @@ General evaluation
     MSE.recommend = 0.8281
     R.recommend = 0.3339
     Setup time = 0.0000
-    Speed = 0.0103
+    Speed = 0.0090
 
   neighborcf_res
     Exact recall = 0.9274
@@ -201,8 +204,8 @@ General evaluation
     MAE.recommend = 0.6918
     MSE.recommend = 0.8256
     R.recommend = 0.3338
-    Setup time = 0.0000
-    Speed = 0.0296
+    Setup time = 0.0002
+    Speed = 0.0255
 
   neighborcf_rpb
     Exact recall = 0.8138
@@ -211,7 +214,7 @@ General evaluation
     MSE.recommend = 0.9341
     R.recommend = 0.2474
     Setup time = 0.0000
-    Speed = 0.0375
+    Speed = 0.0288
 
   neighborcf_sigweight
     Exact recall = 0.9284
@@ -220,7 +223,7 @@ General evaluation
     MSE.recommend = 0.8315
     R.recommend = 0.3318
     Setup time = 0.0000
-    Speed = 0.0237
+    Speed = 0.0170
 
   neighborcf_sm
     Exact recall = 0.8803
@@ -228,8 +231,8 @@ General evaluation
     MAE.recommend = 0.7042
     MSE.recommend = 0.8531
     R.recommend = 0.3195
-    Setup time = 0.0002
-    Speed = 0.0173
+    Setup time = 0.0000
+    Speed = 0.0115
 
   neighborcf_smcc
     Exact recall = 0.8988
@@ -238,7 +241,7 @@ General evaluation
     MSE.recommend = 0.8269
     R.recommend = 0.2859
     Setup time = 0.0002
-    Speed = 0.0130
+    Speed = 0.0090
 
   neighborcf_smd
     Exact recall = 0.9026
@@ -247,7 +250,7 @@ General evaluation
     MSE.recommend = 0.8332
     R.recommend = 0.2800
     Setup time = 0.0000
-    Speed = 0.0171
+    Speed = 0.0132
 
   neighborcf_smtp
     Exact recall = 0.6618
@@ -256,7 +259,7 @@ General evaluation
     MSE.recommend = 0.9868
     R.recommend = 0.2454
     Setup time = 0.0000
-    Speed = 0.0101
+    Speed = 0.0079
 
   neighborcf_src
     Exact recall = 0.0638
@@ -273,8 +276,8 @@ General evaluation
     MAE.recommend = 0.7364
     MSE.recommend = 0.9197
     R.recommend = 0.2713
-    Setup time = 0.0000
-    Speed = 0.0111
+    Setup time = 0.0002
+    Speed = 0.0099
 
   neighborcf_taj
     Exact recall = 0.9030
@@ -282,8 +285,8 @@ General evaluation
     MAE.recommend = 0.6958
     MSE.recommend = 0.8284
     R.recommend = 0.2855
-    Setup time = 0.0000
-    Speed = 0.0191
+    Setup time = 0.0002
+    Speed = 0.0152
 
   neighborcf_triangle
     Exact recall = 0.5273
@@ -292,7 +295,7 @@ General evaluation
     MSE.recommend = 1.1016
     R.recommend = 0.2149
     Setup time = 0.0000
-    Speed = 0.0182
+    Speed = 0.0152
 
   neighborcf_urp
     Exact recall = 0.8143
@@ -301,7 +304,7 @@ General evaluation
     MSE.recommend = 0.9308
     R.recommend = 0.2439
     Setup time = 0.0000
-    Speed = 0.0214
+    Speed = 0.0178
 
 
 Dataset evaluation
@@ -314,7 +317,7 @@ Dataset evaluation
       MSE.recommend = 0.9619
       R.recommend = 0.2476
       Setup time = 0.0000
-      Speed = 0.0104
+      Speed = 0.0114
     neighborcf_amer
       Exact recall = 0.9047
       Hudup recall = 1.0000
@@ -322,7 +325,7 @@ Dataset evaluation
       MSE.recommend = 0.8227
       R.recommend = 0.2903
       Setup time = 0.0000
-      Speed = 0.0174
+      Speed = 0.0152
     neighborcf_bcf
       Exact recall = 0.9139
       Hudup recall = 1.0000
@@ -330,7 +333,7 @@ Dataset evaluation
       MSE.recommend = 0.8820
       R.recommend = 0.2922
       Setup time = 0.0000
-      Speed = 1.4949
+      Speed = 1.3533
     neighborcf_bcfj
       Exact recall = 0.9139
       Hudup recall = 1.0000
@@ -338,7 +341,7 @@ Dataset evaluation
       MSE.recommend = 0.8819
       R.recommend = 0.2923
       Setup time = 0.0000
-      Speed = 1.4918
+      Speed = 1.4132
     neighborcf_cjacmd
       Exact recall = 0.6794
       Hudup recall = 1.0000
@@ -346,7 +349,7 @@ Dataset evaluation
       MSE.recommend = 1.0329
       R.recommend = 0.1843
       Setup time = 0.0000
-      Speed = 0.0353
+      Speed = 0.0325
     neighborcf_cosine
       Exact recall = 0.4969
       Hudup recall = 1.0000
@@ -354,7 +357,7 @@ Dataset evaluation
       MSE.recommend = 1.1414
       R.recommend = 0.1706
       Setup time = 0.0000
-      Speed = 0.0116
+      Speed = 0.0113
     neighborcf_esim
       Exact recall = 0.9039
       Hudup recall = 1.0000
@@ -362,7 +365,7 @@ Dataset evaluation
       MSE.recommend = 0.8245
       R.recommend = 0.2865
       Setup time = 0.0000
-      Speed = 0.0204
+      Speed = 0.0159
     neighborcf_feng
       Exact recall = 0.9154
       Hudup recall = 1.0000
@@ -370,12 +373,15 @@ Dataset evaluation
       MSE.recommend = 0.8130
       R.recommend = 0.3208
       Setup time = 0.0000
-      Speed = 0.0480
+      Speed = 0.0400
     neighborcf_hsmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8524
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7166
+      MSE.recommend = 0.8814
+      R.recommend = 0.3263
       Setup time = 0.0000
-      Speed = 0.0014
+      Speed = 0.0156
     neighborcf_ipwr
       Exact recall = 0.8924
       Hudup recall = 1.0000
@@ -383,7 +389,7 @@ Dataset evaluation
       MSE.recommend = 0.8596
       R.recommend = 0.2931
       Setup time = 0.0000
-      Speed = 0.0648
+      Speed = 0.0586
     neighborcf_jaccard
       Exact recall = 0.9052
       Hudup recall = 1.0000
@@ -391,7 +397,7 @@ Dataset evaluation
       MSE.recommend = 0.8272
       R.recommend = 0.2804
       Setup time = 0.0000
-      Speed = 0.0145
+      Speed = 0.0115
     neighborcf_kl
       Exact recall = 0.8789
       Hudup recall = 1.0000
@@ -399,7 +405,7 @@ Dataset evaluation
       MSE.recommend = 0.8549
       R.recommend = 0.1216
       Setup time = 0.0000
-      Speed = 1.9284
+      Speed = 1.8441
     neighborcf_mmd
       Exact recall = 0.6555
       Hudup recall = 1.0000
@@ -407,7 +413,7 @@ Dataset evaluation
       MSE.recommend = 1.0572
       R.recommend = 0.1272
       Setup time = 0.0000
-      Speed = 0.0158
+      Speed = 0.0154
     neighborcf_msd
       Exact recall = 0.6366
       Hudup recall = 1.0000
@@ -415,12 +421,15 @@ Dataset evaluation
       MSE.recommend = 0.9898
       R.recommend = 0.2210
       Setup time = 0.0000
-      Speed = 0.0098
+      Speed = 0.0085
     neighborcf_mu
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.5713
+      Hudup recall = 0.9984
+      MAE.recommend = 0.8072
+      MSE.recommend = 1.0978
+      R.recommend = 0.2040
       Setup time = 0.0000
-      Speed = 0.0011
+      Speed = 0.0493
     neighborcf_nhsm
       Exact recall = 0.9134
       Hudup recall = 1.0000
@@ -428,7 +437,7 @@ Dataset evaluation
       MSE.recommend = 0.8172
       R.recommend = 0.3108
       Setup time = 0.0000
-      Speed = 0.0332
+      Speed = 0.0306
     neighborcf_nnsm
       Exact recall = 0.9011
       Hudup recall = 1.0000
@@ -436,7 +445,7 @@ Dataset evaluation
       MSE.recommend = 0.8391
       R.recommend = 0.2700
       Setup time = 0.0000
-      Speed = 0.0168
+      Speed = 0.0152
     neighborcf_os
       Exact recall = 0.8363
       Hudup recall = 1.0000
@@ -444,12 +453,15 @@ Dataset evaluation
       MSE.recommend = 0.8520
       R.recommend = 0.2722
       Setup time = 0.0000
-      Speed = 0.0156
+      Speed = 0.0146
     neighborcf_pc
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8760
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7926
+      MSE.recommend = 1.0409
+      R.recommend = 0.0456
       Setup time = 0.0000
-      Speed = 0.0002
+      Speed = 0.2281
     neighborcf_pearson
       Exact recall = 0.5806
       Hudup recall = 0.9984
@@ -457,7 +469,7 @@ Dataset evaluation
       MSE.recommend = 1.0904
       R.recommend = 0.2000
       Setup time = 0.0000
-      Speed = 0.0154
+      Speed = 0.0141
     neighborcf_pip
       Exact recall = 0.9276
       Hudup recall = 1.0000
@@ -465,12 +477,7 @@ Dataset evaluation
       MSE.recommend = 0.8246
       R.recommend = 0.3403
       Setup time = 0.0000
-      Speed = 0.0099
-    neighborcf_pmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0000
-      Speed = 0.0003
+      Speed = 0.0086
     neighborcf_pss
       Exact recall = 0.9291
       Hudup recall = 1.0000
@@ -478,7 +485,7 @@ Dataset evaluation
       MSE.recommend = 0.8209
       R.recommend = 0.3402
       Setup time = 0.0000
-      Speed = 0.0097
+      Speed = 0.0087
     neighborcf_res
       Exact recall = 0.9291
       Hudup recall = 1.0000
@@ -486,7 +493,7 @@ Dataset evaluation
       MSE.recommend = 0.8192
       R.recommend = 0.3390
       Setup time = 0.0000
-      Speed = 0.0283
+      Speed = 0.0255
     neighborcf_rpb
       Exact recall = 0.8194
       Hudup recall = 1.0000
@@ -494,7 +501,7 @@ Dataset evaluation
       MSE.recommend = 0.9247
       R.recommend = 0.2587
       Setup time = 0.0000
-      Speed = 0.0293
+      Speed = 0.0289
     neighborcf_sigweight
       Exact recall = 0.9300
       Hudup recall = 1.0000
@@ -502,7 +509,7 @@ Dataset evaluation
       MSE.recommend = 0.8248
       R.recommend = 0.3371
       Setup time = 0.0000
-      Speed = 0.0232
+      Speed = 0.0154
     neighborcf_sm
       Exact recall = 0.8830
       Hudup recall = 1.0000
@@ -510,7 +517,7 @@ Dataset evaluation
       MSE.recommend = 0.8502
       R.recommend = 0.3188
       Setup time = 0.0000
-      Speed = 0.0180
+      Speed = 0.0120
     neighborcf_smcc
       Exact recall = 0.9014
       Hudup recall = 1.0000
@@ -518,7 +525,7 @@ Dataset evaluation
       MSE.recommend = 0.8212
       R.recommend = 0.2911
       Setup time = 0.0000
-      Speed = 0.0117
+      Speed = 0.0091
     neighborcf_smd
       Exact recall = 0.9052
       Hudup recall = 1.0000
@@ -526,7 +533,7 @@ Dataset evaluation
       MSE.recommend = 0.8271
       R.recommend = 0.2805
       Setup time = 0.0000
-      Speed = 0.0174
+      Speed = 0.0153
     neighborcf_smtp
       Exact recall = 0.6629
       Hudup recall = 1.0000
@@ -534,7 +541,7 @@ Dataset evaluation
       MSE.recommend = 0.9811
       R.recommend = 0.2383
       Setup time = 0.0000
-      Speed = 0.0083
+      Speed = 0.0075
     neighborcf_src
       Exact recall = 0.0682
       Hudup recall = 0.4672
@@ -542,7 +549,7 @@ Dataset evaluation
       MSE.recommend = 1.4134
       R.recommend = 0.0870
       Setup time = 0.0000
-      Speed = 0.0013
+      Speed = 0.0015
     neighborcf_ta
       Exact recall = 0.7632
       Hudup recall = 1.0000
@@ -550,7 +557,7 @@ Dataset evaluation
       MSE.recommend = 0.9155
       R.recommend = 0.2709
       Setup time = 0.0000
-      Speed = 0.0125
+      Speed = 0.0087
     neighborcf_taj
       Exact recall = 0.9057
       Hudup recall = 1.0000
@@ -558,7 +565,7 @@ Dataset evaluation
       MSE.recommend = 0.8238
       R.recommend = 0.2871
       Setup time = 0.0000
-      Speed = 0.0193
+      Speed = 0.0154
     neighborcf_triangle
       Exact recall = 0.5327
       Hudup recall = 1.0000
@@ -566,7 +573,7 @@ Dataset evaluation
       MSE.recommend = 1.0944
       R.recommend = 0.2075
       Setup time = 0.0000
-      Speed = 0.0191
+      Speed = 0.0152
     neighborcf_urp
       Exact recall = 0.8195
       Hudup recall = 1.0000
@@ -574,7 +581,7 @@ Dataset evaluation
       MSE.recommend = 0.9214
       R.recommend = 0.2498
       Setup time = 0.0000
-      Speed = 0.0208
+      Speed = 0.0177
 
   Dataset "2"
     neighborcf_adr
@@ -584,7 +591,7 @@ Dataset evaluation
       MSE.recommend = 0.9719
       R.recommend = 0.2458
       Setup time = 0.0000
-      Speed = 0.0117
+      Speed = 0.0096
     neighborcf_amer
       Exact recall = 0.9025
       Hudup recall = 1.0000
@@ -592,7 +599,7 @@ Dataset evaluation
       MSE.recommend = 0.8362
       R.recommend = 0.2763
       Setup time = 0.0000
-      Speed = 0.0182
+      Speed = 0.0135
     neighborcf_bcf
       Exact recall = 0.9144
       Hudup recall = 1.0000
@@ -600,7 +607,7 @@ Dataset evaluation
       MSE.recommend = 0.8890
       R.recommend = 0.2870
       Setup time = 0.0000
-      Speed = 1.4820
+      Speed = 1.3658
     neighborcf_bcfj
       Exact recall = 0.9144
       Hudup recall = 1.0000
@@ -608,7 +615,7 @@ Dataset evaluation
       MSE.recommend = 0.8888
       R.recommend = 0.2873
       Setup time = 0.0000
-      Speed = 1.5155
+      Speed = 1.4326
     neighborcf_cjacmd
       Exact recall = 0.6775
       Hudup recall = 1.0000
@@ -616,7 +623,7 @@ Dataset evaluation
       MSE.recommend = 1.0364
       R.recommend = 0.1854
       Setup time = 0.0000
-      Speed = 0.0345
+      Speed = 0.0313
     neighborcf_cosine
       Exact recall = 0.4931
       Hudup recall = 1.0000
@@ -624,7 +631,7 @@ Dataset evaluation
       MSE.recommend = 1.1686
       R.recommend = 0.1698
       Setup time = 0.0000
-      Speed = 0.0148
+      Speed = 0.0105
     neighborcf_esim
       Exact recall = 0.9016
       Hudup recall = 1.0000
@@ -632,20 +639,23 @@ Dataset evaluation
       MSE.recommend = 0.8387
       R.recommend = 0.2782
       Setup time = 0.0000
-      Speed = 0.0180
+      Speed = 0.0190
     neighborcf_feng
       Exact recall = 0.9148
       Hudup recall = 1.0000
       MAE.recommend = 0.6943
       MSE.recommend = 0.8307
       R.recommend = 0.3036
-      Setup time = 0.0010
-      Speed = 0.0489
-    neighborcf_hsmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
       Setup time = 0.0000
-      Speed = 0.0013
+      Speed = 0.0390
+    neighborcf_hsmd
+      Exact recall = 0.8483
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7210
+      MSE.recommend = 0.8997
+      R.recommend = 0.3208
+      Setup time = 0.0000
+      Speed = 0.0201
     neighborcf_ipwr
       Exact recall = 0.8924
       Hudup recall = 1.0000
@@ -653,7 +663,7 @@ Dataset evaluation
       MSE.recommend = 0.8636
       R.recommend = 0.2836
       Setup time = 0.0000
-      Speed = 0.0677
+      Speed = 0.0586
     neighborcf_jaccard
       Exact recall = 0.9031
       Hudup recall = 1.0000
@@ -661,15 +671,15 @@ Dataset evaluation
       MSE.recommend = 0.8399
       R.recommend = 0.2721
       Setup time = 0.0000
-      Speed = 0.0141
+      Speed = 0.0115
     neighborcf_kl
       Exact recall = 0.8757
       Hudup recall = 1.0000
       MAE.recommend = 0.7158
       MSE.recommend = 0.8724
       R.recommend = 0.1135
-      Setup time = 0.0000
-      Speed = 1.9838
+      Setup time = 0.0010
+      Speed = 1.8979
     neighborcf_mmd
       Exact recall = 0.6477
       Hudup recall = 1.0000
@@ -677,7 +687,7 @@ Dataset evaluation
       MSE.recommend = 1.0650
       R.recommend = 0.1278
       Setup time = 0.0000
-      Speed = 0.0164
+      Speed = 0.0152
     neighborcf_msd
       Exact recall = 0.6347
       Hudup recall = 1.0000
@@ -685,20 +695,23 @@ Dataset evaluation
       MSE.recommend = 0.9921
       R.recommend = 0.2388
       Setup time = 0.0000
-      Speed = 0.0102
+      Speed = 0.0088
     neighborcf_mu
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.5727
+      Hudup recall = 0.9984
+      MAE.recommend = 0.8036
+      MSE.recommend = 1.0891
+      R.recommend = 0.2186
       Setup time = 0.0000
-      Speed = 0.0010
+      Speed = 0.0512
     neighborcf_nhsm
       Exact recall = 0.9141
       Hudup recall = 1.0000
       MAE.recommend = 0.6961
       MSE.recommend = 0.8328
       R.recommend = 0.3022
-      Setup time = 0.0000
-      Speed = 0.0335
+      Setup time = 0.0010
+      Speed = 0.0302
     neighborcf_nnsm
       Exact recall = 0.8982
       Hudup recall = 1.0000
@@ -706,7 +719,7 @@ Dataset evaluation
       MSE.recommend = 0.8492
       R.recommend = 0.2643
       Setup time = 0.0000
-      Speed = 0.0167
+      Speed = 0.0151
     neighborcf_os
       Exact recall = 0.8381
       Hudup recall = 1.0000
@@ -714,12 +727,15 @@ Dataset evaluation
       MSE.recommend = 0.8620
       R.recommend = 0.2772
       Setup time = 0.0000
-      Speed = 0.0244
+      Speed = 0.0147
     neighborcf_pc
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8726
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7940
+      MSE.recommend = 1.0496
+      R.recommend = 0.0438
       Setup time = 0.0000
-      Speed = 0.0001
+      Speed = 0.2450
     neighborcf_pearson
       Exact recall = 0.5871
       Hudup recall = 0.9984
@@ -727,7 +743,7 @@ Dataset evaluation
       MSE.recommend = 1.0798
       R.recommend = 0.2099
       Setup time = 0.0000
-      Speed = 0.0201
+      Speed = 0.0165
     neighborcf_pip
       Exact recall = 0.9286
       Hudup recall = 1.0000
@@ -735,12 +751,7 @@ Dataset evaluation
       MSE.recommend = 0.8435
       R.recommend = 0.3272
       Setup time = 0.0000
-      Speed = 0.0110
-    neighborcf_pmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0000
-      Speed = 0.0003
+      Speed = 0.0092
     neighborcf_pss
       Exact recall = 0.9304
       Hudup recall = 1.0000
@@ -748,15 +759,15 @@ Dataset evaluation
       MSE.recommend = 0.8381
       R.recommend = 0.3314
       Setup time = 0.0000
-      Speed = 0.0103
+      Speed = 0.0089
     neighborcf_res
       Exact recall = 0.9301
       Hudup recall = 1.0000
       MAE.recommend = 0.6945
       MSE.recommend = 0.8341
       R.recommend = 0.3295
-      Setup time = 0.0000
-      Speed = 0.0327
+      Setup time = 0.0010
+      Speed = 0.0257
     neighborcf_rpb
       Exact recall = 0.8132
       Hudup recall = 1.0000
@@ -764,7 +775,7 @@ Dataset evaluation
       MSE.recommend = 0.9434
       R.recommend = 0.2423
       Setup time = 0.0000
-      Speed = 0.0312
+      Speed = 0.0316
     neighborcf_sigweight
       Exact recall = 0.9310
       Hudup recall = 1.0000
@@ -772,7 +783,7 @@ Dataset evaluation
       MSE.recommend = 0.8416
       R.recommend = 0.3288
       Setup time = 0.0000
-      Speed = 0.0273
+      Speed = 0.0161
     neighborcf_sm
       Exact recall = 0.8839
       Hudup recall = 1.0000
@@ -780,7 +791,7 @@ Dataset evaluation
       MSE.recommend = 0.8613
       R.recommend = 0.3157
       Setup time = 0.0000
-      Speed = 0.0167
+      Speed = 0.0115
     neighborcf_smcc
       Exact recall = 0.8992
       Hudup recall = 1.0000
@@ -788,7 +799,7 @@ Dataset evaluation
       MSE.recommend = 0.8366
       R.recommend = 0.2759
       Setup time = 0.0000
-      Speed = 0.0128
+      Speed = 0.0092
     neighborcf_smd
       Exact recall = 0.9031
       Hudup recall = 1.0000
@@ -796,7 +807,7 @@ Dataset evaluation
       MSE.recommend = 0.8397
       R.recommend = 0.2722
       Setup time = 0.0000
-      Speed = 0.0179
+      Speed = 0.0127
     neighborcf_smtp
       Exact recall = 0.6652
       Hudup recall = 1.0000
@@ -804,7 +815,7 @@ Dataset evaluation
       MSE.recommend = 0.9940
       R.recommend = 0.2459
       Setup time = 0.0000
-      Speed = 0.0112
+      Speed = 0.0086
     neighborcf_src
       Exact recall = 0.0669
       Hudup recall = 0.4951
@@ -812,7 +823,7 @@ Dataset evaluation
       MSE.recommend = 1.6430
       R.recommend = 0.0224
       Setup time = 0.0000
-      Speed = 0.0008
+      Speed = 0.0009
     neighborcf_ta
       Exact recall = 0.7616
       Hudup recall = 1.0000
@@ -820,7 +831,7 @@ Dataset evaluation
       MSE.recommend = 0.9307
       R.recommend = 0.2686
       Setup time = 0.0000
-      Speed = 0.0111
+      Speed = 0.0096
     neighborcf_taj
       Exact recall = 0.9032
       Hudup recall = 1.0000
@@ -828,7 +839,7 @@ Dataset evaluation
       MSE.recommend = 0.8361
       R.recommend = 0.2777
       Setup time = 0.0000
-      Speed = 0.0195
+      Speed = 0.0150
     neighborcf_triangle
       Exact recall = 0.5303
       Hudup recall = 1.0000
@@ -836,7 +847,7 @@ Dataset evaluation
       MSE.recommend = 1.0993
       R.recommend = 0.2242
       Setup time = 0.0000
-      Speed = 0.0184
+      Speed = 0.0149
     neighborcf_urp
       Exact recall = 0.8138
       Hudup recall = 1.0000
@@ -844,7 +855,7 @@ Dataset evaluation
       MSE.recommend = 0.9413
       R.recommend = 0.2470
       Setup time = 0.0000
-      Speed = 0.0220
+      Speed = 0.0179
 
   Dataset "3"
     neighborcf_adr
@@ -854,7 +865,7 @@ Dataset evaluation
       MSE.recommend = 0.9717
       R.recommend = 0.2553
       Setup time = 0.0000
-      Speed = 0.0117
+      Speed = 0.0090
     neighborcf_amer
       Exact recall = 0.9006
       Hudup recall = 1.0000
@@ -862,7 +873,7 @@ Dataset evaluation
       MSE.recommend = 0.8275
       R.recommend = 0.2819
       Setup time = 0.0000
-      Speed = 0.0170
+      Speed = 0.0144
     neighborcf_bcf
       Exact recall = 0.9073
       Hudup recall = 1.0000
@@ -870,7 +881,7 @@ Dataset evaluation
       MSE.recommend = 0.8804
       R.recommend = 0.3007
       Setup time = 0.0000
-      Speed = 1.5189
+      Speed = 1.3842
     neighborcf_bcfj
       Exact recall = 0.9073
       Hudup recall = 1.0000
@@ -878,7 +889,7 @@ Dataset evaluation
       MSE.recommend = 0.8804
       R.recommend = 0.3009
       Setup time = 0.0000
-      Speed = 1.5252
+      Speed = 1.4245
     neighborcf_cjacmd
       Exact recall = 0.6741
       Hudup recall = 1.0000
@@ -886,7 +897,7 @@ Dataset evaluation
       MSE.recommend = 1.0445
       R.recommend = 0.1752
       Setup time = 0.0000
-      Speed = 0.0368
+      Speed = 0.0302
     neighborcf_cosine
       Exact recall = 0.4898
       Hudup recall = 1.0000
@@ -894,7 +905,7 @@ Dataset evaluation
       MSE.recommend = 1.1806
       R.recommend = 0.1595
       Setup time = 0.0000
-      Speed = 0.0168
+      Speed = 0.0100
     neighborcf_esim
       Exact recall = 0.9002
       Hudup recall = 1.0000
@@ -902,7 +913,7 @@ Dataset evaluation
       MSE.recommend = 0.8322
       R.recommend = 0.2841
       Setup time = 0.0000
-      Speed = 0.0183
+      Speed = 0.0181
     neighborcf_feng
       Exact recall = 0.9106
       Hudup recall = 1.0000
@@ -910,12 +921,15 @@ Dataset evaluation
       MSE.recommend = 0.8212
       R.recommend = 0.3176
       Setup time = 0.0000
-      Speed = 0.0434
+      Speed = 0.0374
     neighborcf_hsmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8511
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7164
+      MSE.recommend = 0.8813
+      R.recommend = 0.3208
       Setup time = 0.0000
-      Speed = 0.0014
+      Speed = 0.0159
     neighborcf_ipwr
       Exact recall = 0.8843
       Hudup recall = 1.0000
@@ -923,7 +937,7 @@ Dataset evaluation
       MSE.recommend = 0.8558
       R.recommend = 0.2888
       Setup time = 0.0000
-      Speed = 0.0644
+      Speed = 0.0563
     neighborcf_jaccard
       Exact recall = 0.9011
       Hudup recall = 1.0000
@@ -931,7 +945,7 @@ Dataset evaluation
       MSE.recommend = 0.8331
       R.recommend = 0.2772
       Setup time = 0.0000
-      Speed = 0.0183
+      Speed = 0.0103
     neighborcf_kl
       Exact recall = 0.8695
       Hudup recall = 1.0000
@@ -939,7 +953,7 @@ Dataset evaluation
       MSE.recommend = 0.8606
       R.recommend = 0.1261
       Setup time = 0.0000
-      Speed = 1.9314
+      Speed = 1.8433
     neighborcf_mmd
       Exact recall = 0.6466
       Hudup recall = 1.0000
@@ -947,7 +961,7 @@ Dataset evaluation
       MSE.recommend = 1.0623
       R.recommend = 0.1542
       Setup time = 0.0000
-      Speed = 0.0170
+      Speed = 0.0148
     neighborcf_msd
       Exact recall = 0.6325
       Hudup recall = 1.0000
@@ -955,12 +969,15 @@ Dataset evaluation
       MSE.recommend = 0.9947
       R.recommend = 0.2314
       Setup time = 0.0000
-      Speed = 0.0107
+      Speed = 0.0081
     neighborcf_mu
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.5744
+      Hudup recall = 0.9967
+      MAE.recommend = 0.8046
+      MSE.recommend = 1.0885
+      R.recommend = 0.2223
       Setup time = 0.0000
-      Speed = 0.0012
+      Speed = 0.0493
     neighborcf_nhsm
       Exact recall = 0.9097
       Hudup recall = 1.0000
@@ -968,7 +985,7 @@ Dataset evaluation
       MSE.recommend = 0.8227
       R.recommend = 0.3165
       Setup time = 0.0000
-      Speed = 0.0342
+      Speed = 0.0291
     neighborcf_nnsm
       Exact recall = 0.8968
       Hudup recall = 1.0000
@@ -976,7 +993,7 @@ Dataset evaluation
       MSE.recommend = 0.8443
       R.recommend = 0.2703
       Setup time = 0.0000
-      Speed = 0.0168
+      Speed = 0.0150
     neighborcf_os
       Exact recall = 0.8312
       Hudup recall = 1.0000
@@ -984,12 +1001,15 @@ Dataset evaluation
       MSE.recommend = 0.8563
       R.recommend = 0.2795
       Setup time = 0.0000
-      Speed = 0.0218
+      Speed = 0.0143
     neighborcf_pc
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8728
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7930
+      MSE.recommend = 1.0446
+      R.recommend = 0.0534
       Setup time = 0.0000
-      Speed = 0.0001
+      Speed = 0.2260
     neighborcf_pearson
       Exact recall = 0.5813
       Hudup recall = 0.9967
@@ -997,7 +1017,7 @@ Dataset evaluation
       MSE.recommend = 1.0906
       R.recommend = 0.2169
       Setup time = 0.0000
-      Speed = 0.0162
+      Speed = 0.0132
     neighborcf_pip
       Exact recall = 0.9229
       Hudup recall = 1.0000
@@ -1005,12 +1025,7 @@ Dataset evaluation
       MSE.recommend = 0.8272
       R.recommend = 0.3320
       Setup time = 0.0000
-      Speed = 0.0111
-    neighborcf_pmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0000
-      Speed = 0.0003
+      Speed = 0.0123
     neighborcf_pss
       Exact recall = 0.9246
       Hudup recall = 1.0000
@@ -1018,7 +1033,7 @@ Dataset evaluation
       MSE.recommend = 0.8247
       R.recommend = 0.3368
       Setup time = 0.0000
-      Speed = 0.0109
+      Speed = 0.0084
     neighborcf_res
       Exact recall = 0.9247
       Hudup recall = 1.0000
@@ -1026,7 +1041,7 @@ Dataset evaluation
       MSE.recommend = 0.8232
       R.recommend = 0.3352
       Setup time = 0.0000
-      Speed = 0.0288
+      Speed = 0.0250
     neighborcf_rpb
       Exact recall = 0.8121
       Hudup recall = 1.0000
@@ -1034,7 +1049,7 @@ Dataset evaluation
       MSE.recommend = 0.9416
       R.recommend = 0.2407
       Setup time = 0.0000
-      Speed = 0.0369
+      Speed = 0.0269
     neighborcf_sigweight
       Exact recall = 0.9258
       Hudup recall = 1.0000
@@ -1042,7 +1057,7 @@ Dataset evaluation
       MSE.recommend = 0.8279
       R.recommend = 0.3359
       Setup time = 0.0000
-      Speed = 0.0244
+      Speed = 0.0181
     neighborcf_sm
       Exact recall = 0.8769
       Hudup recall = 1.0000
@@ -1050,15 +1065,15 @@ Dataset evaluation
       MSE.recommend = 0.8506
       R.recommend = 0.3280
       Setup time = 0.0000
-      Speed = 0.0166
+      Speed = 0.0107
     neighborcf_smcc
       Exact recall = 0.8981
       Hudup recall = 1.0000
       MAE.recommend = 0.6959
       MSE.recommend = 0.8251
       R.recommend = 0.2834
-      Setup time = 0.0000
-      Speed = 0.0159
+      Setup time = 0.0010
+      Speed = 0.0084
     neighborcf_smd
       Exact recall = 0.9011
       Hudup recall = 1.0000
@@ -1066,7 +1081,7 @@ Dataset evaluation
       MSE.recommend = 0.8329
       R.recommend = 0.2773
       Setup time = 0.0000
-      Speed = 0.0186
+      Speed = 0.0120
     neighborcf_smtp
       Exact recall = 0.6622
       Hudup recall = 1.0000
@@ -1074,7 +1089,7 @@ Dataset evaluation
       MSE.recommend = 0.9880
       R.recommend = 0.2427
       Setup time = 0.0000
-      Speed = 0.0113
+      Speed = 0.0069
     neighborcf_src
       Exact recall = 0.0678
       Hudup recall = 0.4885
@@ -1090,7 +1105,7 @@ Dataset evaluation
       MSE.recommend = 0.9274
       R.recommend = 0.2691
       Setup time = 0.0000
-      Speed = 0.0110
+      Speed = 0.0082
     neighborcf_taj
       Exact recall = 0.9018
       Hudup recall = 1.0000
@@ -1098,7 +1113,7 @@ Dataset evaluation
       MSE.recommend = 0.8256
       R.recommend = 0.2856
       Setup time = 0.0000
-      Speed = 0.0188
+      Speed = 0.0145
     neighborcf_triangle
       Exact recall = 0.5278
       Hudup recall = 1.0000
@@ -1106,7 +1121,7 @@ Dataset evaluation
       MSE.recommend = 1.1213
       R.recommend = 0.2093
       Setup time = 0.0000
-      Speed = 0.0181
+      Speed = 0.0144
     neighborcf_urp
       Exact recall = 0.8132
       Hudup recall = 1.0000
@@ -1114,7 +1129,7 @@ Dataset evaluation
       MSE.recommend = 0.9357
       R.recommend = 0.2414
       Setup time = 0.0000
-      Speed = 0.0230
+      Speed = 0.0171
 
   Dataset "4"
     neighborcf_adr
@@ -1124,7 +1139,7 @@ Dataset evaluation
       MSE.recommend = 0.9644
       R.recommend = 0.2425
       Setup time = 0.0000
-      Speed = 0.0115
+      Speed = 0.0096
     neighborcf_amer
       Exact recall = 0.9008
       Hudup recall = 1.0000
@@ -1132,7 +1147,7 @@ Dataset evaluation
       MSE.recommend = 0.8224
       R.recommend = 0.2902
       Setup time = 0.0000
-      Speed = 0.0175
+      Speed = 0.0152
     neighborcf_bcf
       Exact recall = 0.9097
       Hudup recall = 1.0000
@@ -1140,7 +1155,7 @@ Dataset evaluation
       MSE.recommend = 0.8791
       R.recommend = 0.2897
       Setup time = 0.0000
-      Speed = 1.4788
+      Speed = 1.3718
     neighborcf_bcfj
       Exact recall = 0.9097
       Hudup recall = 1.0000
@@ -1148,7 +1163,7 @@ Dataset evaluation
       MSE.recommend = 0.8793
       R.recommend = 0.2894
       Setup time = 0.0000
-      Speed = 1.5051
+      Speed = 1.4437
     neighborcf_cjacmd
       Exact recall = 0.6641
       Hudup recall = 1.0000
@@ -1156,7 +1171,7 @@ Dataset evaluation
       MSE.recommend = 1.0129
       R.recommend = 0.1723
       Setup time = 0.0000
-      Speed = 0.0473
+      Speed = 0.0308
     neighborcf_cosine
       Exact recall = 0.4865
       Hudup recall = 1.0000
@@ -1164,7 +1179,7 @@ Dataset evaluation
       MSE.recommend = 1.1406
       R.recommend = 0.1766
       Setup time = 0.0000
-      Speed = 0.0131
+      Speed = 0.0121
     neighborcf_esim
       Exact recall = 0.8998
       Hudup recall = 1.0000
@@ -1172,7 +1187,7 @@ Dataset evaluation
       MSE.recommend = 0.8256
       R.recommend = 0.2897
       Setup time = 0.0000
-      Speed = 0.0211
+      Speed = 0.0217
     neighborcf_feng
       Exact recall = 0.9129
       Hudup recall = 1.0000
@@ -1180,12 +1195,15 @@ Dataset evaluation
       MSE.recommend = 0.8195
       R.recommend = 0.3098
       Setup time = 0.0000
-      Speed = 0.0446
+      Speed = 0.0419
     neighborcf_hsmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8430
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7140
+      MSE.recommend = 0.8791
+      R.recommend = 0.3174
       Setup time = 0.0000
-      Speed = 0.0014
+      Speed = 0.0153
     neighborcf_ipwr
       Exact recall = 0.8914
       Hudup recall = 1.0000
@@ -1193,7 +1211,7 @@ Dataset evaluation
       MSE.recommend = 0.8525
       R.recommend = 0.2821
       Setup time = 0.0000
-      Speed = 0.0640
+      Speed = 0.0619
     neighborcf_jaccard
       Exact recall = 0.9017
       Hudup recall = 1.0000
@@ -1201,7 +1219,7 @@ Dataset evaluation
       MSE.recommend = 0.8287
       R.recommend = 0.2852
       Setup time = 0.0000
-      Speed = 0.0148
+      Speed = 0.0135
     neighborcf_kl
       Exact recall = 0.8706
       Hudup recall = 1.0000
@@ -1209,7 +1227,7 @@ Dataset evaluation
       MSE.recommend = 0.8507
       R.recommend = 0.1299
       Setup time = 0.0000
-      Speed = 1.9180
+      Speed = 1.8482
     neighborcf_mmd
       Exact recall = 0.6361
       Hudup recall = 1.0000
@@ -1217,7 +1235,7 @@ Dataset evaluation
       MSE.recommend = 1.0328
       R.recommend = 0.1284
       Setup time = 0.0000
-      Speed = 0.0163
+      Speed = 0.0158
     neighborcf_msd
       Exact recall = 0.6302
       Hudup recall = 1.0000
@@ -1225,12 +1243,15 @@ Dataset evaluation
       MSE.recommend = 0.9896
       R.recommend = 0.2307
       Setup time = 0.0000
-      Speed = 0.0097
+      Speed = 0.0091
     neighborcf_mu
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0010
-      Speed = 0.0011
+      Exact recall = 0.5624
+      Hudup recall = 0.9984
+      MAE.recommend = 0.7972
+      MSE.recommend = 1.0799
+      R.recommend = 0.2108
+      Setup time = 0.0000
+      Speed = 0.0517
     neighborcf_nhsm
       Exact recall = 0.9114
       Hudup recall = 1.0000
@@ -1238,7 +1259,7 @@ Dataset evaluation
       MSE.recommend = 0.8222
       R.recommend = 0.3054
       Setup time = 0.0000
-      Speed = 0.0382
+      Speed = 0.0303
     neighborcf_nnsm
       Exact recall = 0.8971
       Hudup recall = 1.0000
@@ -1246,7 +1267,7 @@ Dataset evaluation
       MSE.recommend = 0.8400
       R.recommend = 0.2723
       Setup time = 0.0000
-      Speed = 0.0170
+      Speed = 0.0155
     neighborcf_os
       Exact recall = 0.8336
       Hudup recall = 1.0000
@@ -1254,12 +1275,15 @@ Dataset evaluation
       MSE.recommend = 0.8528
       R.recommend = 0.2740
       Setup time = 0.0000
-      Speed = 0.0164
+      Speed = 0.0156
     neighborcf_pc
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8728
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7853
+      MSE.recommend = 1.0262
+      R.recommend = 0.0643
       Setup time = 0.0000
-      Speed = 0.0001
+      Speed = 0.2397
     neighborcf_pearson
       Exact recall = 0.5719
       Hudup recall = 0.9984
@@ -1267,7 +1291,7 @@ Dataset evaluation
       MSE.recommend = 1.0744
       R.recommend = 0.2073
       Setup time = 0.0000
-      Speed = 0.0155
+      Speed = 0.0181
     neighborcf_pip
       Exact recall = 0.9250
       Hudup recall = 1.0000
@@ -1275,12 +1299,7 @@ Dataset evaluation
       MSE.recommend = 0.8236
       R.recommend = 0.3325
       Setup time = 0.0000
-      Speed = 0.0147
-    neighborcf_pmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0000
-      Speed = 0.0002
+      Speed = 0.0090
     neighborcf_pss
       Exact recall = 0.9268
       Hudup recall = 1.0000
@@ -1288,7 +1307,7 @@ Dataset evaluation
       MSE.recommend = 0.8250
       R.recommend = 0.3278
       Setup time = 0.0000
-      Speed = 0.0105
+      Speed = 0.0094
     neighborcf_res
       Exact recall = 0.9270
       Hudup recall = 1.0000
@@ -1296,7 +1315,7 @@ Dataset evaluation
       MSE.recommend = 0.8213
       R.recommend = 0.3314
       Setup time = 0.0000
-      Speed = 0.0279
+      Speed = 0.0250
     neighborcf_rpb
       Exact recall = 0.8129
       Hudup recall = 1.0000
@@ -1304,7 +1323,7 @@ Dataset evaluation
       MSE.recommend = 0.9278
       R.recommend = 0.2417
       Setup time = 0.0000
-      Speed = 0.0476
+      Speed = 0.0284
     neighborcf_sigweight
       Exact recall = 0.9280
       Hudup recall = 1.0000
@@ -1312,15 +1331,15 @@ Dataset evaluation
       MSE.recommend = 0.8277
       R.recommend = 0.3263
       Setup time = 0.0000
-      Speed = 0.0210
+      Speed = 0.0164
     neighborcf_sm
       Exact recall = 0.8773
       Hudup recall = 1.0000
       MAE.recommend = 0.7051
       MSE.recommend = 0.8536
       R.recommend = 0.3180
-      Setup time = 0.0010
-      Speed = 0.0184
+      Setup time = 0.0000
+      Speed = 0.0117
     neighborcf_smcc
       Exact recall = 0.8973
       Hudup recall = 1.0000
@@ -1328,7 +1347,7 @@ Dataset evaluation
       MSE.recommend = 0.8196
       R.recommend = 0.2945
       Setup time = 0.0000
-      Speed = 0.0121
+      Speed = 0.0091
     neighborcf_smd
       Exact recall = 0.9017
       Hudup recall = 1.0000
@@ -1336,7 +1355,7 @@ Dataset evaluation
       MSE.recommend = 0.8285
       R.recommend = 0.2852
       Setup time = 0.0000
-      Speed = 0.0167
+      Speed = 0.0132
     neighborcf_smtp
       Exact recall = 0.6595
       Hudup recall = 1.0000
@@ -1344,7 +1363,7 @@ Dataset evaluation
       MSE.recommend = 0.9799
       R.recommend = 0.2467
       Setup time = 0.0000
-      Speed = 0.0106
+      Speed = 0.0076
     neighborcf_src
       Exact recall = 0.0552
       Hudup recall = 0.4738
@@ -1360,15 +1379,15 @@ Dataset evaluation
       MSE.recommend = 0.9112
       R.recommend = 0.2642
       Setup time = 0.0000
-      Speed = 0.0105
+      Speed = 0.0095
     neighborcf_taj
       Exact recall = 0.9014
       Hudup recall = 1.0000
       MAE.recommend = 0.6933
       MSE.recommend = 0.8238
       R.recommend = 0.2889
-      Setup time = 0.0000
-      Speed = 0.0176
+      Setup time = 0.0010
+      Speed = 0.0156
     neighborcf_triangle
       Exact recall = 0.5222
       Hudup recall = 1.0000
@@ -1376,7 +1395,7 @@ Dataset evaluation
       MSE.recommend = 1.0907
       R.recommend = 0.2131
       Setup time = 0.0000
-      Speed = 0.0183
+      Speed = 0.0155
     neighborcf_urp
       Exact recall = 0.8133
       Hudup recall = 1.0000
@@ -1384,7 +1403,7 @@ Dataset evaluation
       MSE.recommend = 0.9237
       R.recommend = 0.2401
       Setup time = 0.0000
-      Speed = 0.0201
+      Speed = 0.0181
 
   Dataset "5"
     neighborcf_adr
@@ -1394,7 +1413,7 @@ Dataset evaluation
       MSE.recommend = 0.9778
       R.recommend = 0.2567
       Setup time = 0.0000
-      Speed = 0.0111
+      Speed = 0.0100
     neighborcf_amer
       Exact recall = 0.9014
       Hudup recall = 1.0000
@@ -1402,7 +1421,7 @@ Dataset evaluation
       MSE.recommend = 0.8339
       R.recommend = 0.2874
       Setup time = 0.0000
-      Speed = 0.0190
+      Speed = 0.0159
     neighborcf_bcf
       Exact recall = 0.9094
       Hudup recall = 1.0000
@@ -1410,7 +1429,7 @@ Dataset evaluation
       MSE.recommend = 0.8849
       R.recommend = 0.2970
       Setup time = 0.0000
-      Speed = 1.4665
+      Speed = 1.3911
     neighborcf_bcfj
       Exact recall = 0.9094
       Hudup recall = 1.0000
@@ -1418,7 +1437,7 @@ Dataset evaluation
       MSE.recommend = 0.8849
       R.recommend = 0.2971
       Setup time = 0.0000
-      Speed = 1.4777
+      Speed = 1.4254
     neighborcf_cjacmd
       Exact recall = 0.6818
       Hudup recall = 1.0000
@@ -1426,7 +1445,7 @@ Dataset evaluation
       MSE.recommend = 1.0460
       R.recommend = 0.1725
       Setup time = 0.0000
-      Speed = 0.0340
+      Speed = 0.0317
     neighborcf_cosine
       Exact recall = 0.4895
       Hudup recall = 1.0000
@@ -1434,7 +1453,7 @@ Dataset evaluation
       MSE.recommend = 1.1673
       R.recommend = 0.1655
       Setup time = 0.0000
-      Speed = 0.0150
+      Speed = 0.0131
     neighborcf_esim
       Exact recall = 0.9006
       Hudup recall = 1.0000
@@ -1450,12 +1469,15 @@ Dataset evaluation
       MSE.recommend = 0.8275
       R.recommend = 0.3116
       Setup time = 0.0000
-      Speed = 0.0403
+      Speed = 0.0407
     neighborcf_hsmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8522
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7166
+      MSE.recommend = 0.8848
+      R.recommend = 0.3207
       Setup time = 0.0000
-      Speed = 0.0012
+      Speed = 0.0152
     neighborcf_ipwr
       Exact recall = 0.8883
       Hudup recall = 1.0000
@@ -1463,7 +1485,7 @@ Dataset evaluation
       MSE.recommend = 0.8614
       R.recommend = 0.2946
       Setup time = 0.0000
-      Speed = 0.0814
+      Speed = 0.0582
     neighborcf_jaccard
       Exact recall = 0.9021
       Hudup recall = 1.0000
@@ -1471,7 +1493,7 @@ Dataset evaluation
       MSE.recommend = 0.8376
       R.recommend = 0.2846
       Setup time = 0.0000
-      Speed = 0.0133
+      Speed = 0.0130
     neighborcf_kl
       Exact recall = 0.8749
       Hudup recall = 1.0000
@@ -1479,7 +1501,7 @@ Dataset evaluation
       MSE.recommend = 0.8648
       R.recommend = 0.1451
       Setup time = 0.0000
-      Speed = 1.8338
+      Speed = 2.3050
     neighborcf_mmd
       Exact recall = 0.6556
       Hudup recall = 0.9984
@@ -1487,7 +1509,7 @@ Dataset evaluation
       MSE.recommend = 1.0716
       R.recommend = 0.1310
       Setup time = 0.0000
-      Speed = 0.0157
+      Speed = 0.0154
     neighborcf_msd
       Exact recall = 0.6242
       Hudup recall = 1.0000
@@ -1495,12 +1517,15 @@ Dataset evaluation
       MSE.recommend = 1.0009
       R.recommend = 0.2460
       Setup time = 0.0000
-      Speed = 0.0130
+      Speed = 0.0087
     neighborcf_mu
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.5639
+      Hudup recall = 0.9984
+      MAE.recommend = 0.8056
+      MSE.recommend = 1.0995
+      R.recommend = 0.2179
       Setup time = 0.0000
-      Speed = 0.0012
+      Speed = 0.0509
     neighborcf_nhsm
       Exact recall = 0.9106
       Hudup recall = 1.0000
@@ -1508,7 +1533,7 @@ Dataset evaluation
       MSE.recommend = 0.8286
       R.recommend = 0.3068
       Setup time = 0.0000
-      Speed = 0.0334
+      Speed = 0.0302
     neighborcf_nnsm
       Exact recall = 0.8977
       Hudup recall = 1.0000
@@ -1516,7 +1541,7 @@ Dataset evaluation
       MSE.recommend = 0.8465
       R.recommend = 0.2718
       Setup time = 0.0000
-      Speed = 0.0161
+      Speed = 0.0164
     neighborcf_os
       Exact recall = 0.8317
       Hudup recall = 1.0000
@@ -1524,12 +1549,15 @@ Dataset evaluation
       MSE.recommend = 0.8545
       R.recommend = 0.2785
       Setup time = 0.0000
-      Speed = 0.0155
+      Speed = 0.0157
     neighborcf_pc
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
+      Exact recall = 0.8716
+      Hudup recall = 1.0000
+      MAE.recommend = 0.7896
+      MSE.recommend = 1.0398
+      R.recommend = 0.0620
       Setup time = 0.0000
-      Speed = 0.0001
+      Speed = 0.2413
     neighborcf_pearson
       Exact recall = 0.5801
       Hudup recall = 0.9984
@@ -1537,7 +1565,7 @@ Dataset evaluation
       MSE.recommend = 1.0885
       R.recommend = 0.2077
       Setup time = 0.0000
-      Speed = 0.0166
+      Speed = 0.0146
     neighborcf_pip
       Exact recall = 0.9246
       Hudup recall = 1.0000
@@ -1545,12 +1573,7 @@ Dataset evaluation
       MSE.recommend = 0.8340
       R.recommend = 0.3390
       Setup time = 0.0000
-      Speed = 0.0096
-    neighborcf_pmd
-      Exact recall = 0.0000
-      Hudup recall = 0.0000
-      Setup time = 0.0000
-      Speed = 0.0003
+      Speed = 0.0089
     neighborcf_pss
       Exact recall = 0.9263
       Hudup recall = 1.0000
@@ -1558,7 +1581,7 @@ Dataset evaluation
       MSE.recommend = 0.8321
       R.recommend = 0.3331
       Setup time = 0.0000
-      Speed = 0.0099
+      Speed = 0.0096
     neighborcf_res
       Exact recall = 0.9264
       Hudup recall = 1.0000
@@ -1566,7 +1589,7 @@ Dataset evaluation
       MSE.recommend = 0.8302
       R.recommend = 0.3337
       Setup time = 0.0000
-      Speed = 0.0301
+      Speed = 0.0263
     neighborcf_rpb
       Exact recall = 0.8111
       Hudup recall = 1.0000
@@ -1574,7 +1597,7 @@ Dataset evaluation
       MSE.recommend = 0.9331
       R.recommend = 0.2532
       Setup time = 0.0000
-      Speed = 0.0424
+      Speed = 0.0279
     neighborcf_sigweight
       Exact recall = 0.9273
       Hudup recall = 1.0000
@@ -1582,7 +1605,7 @@ Dataset evaluation
       MSE.recommend = 0.8355
       R.recommend = 0.3310
       Setup time = 0.0000
-      Speed = 0.0224
+      Speed = 0.0189
     neighborcf_sm
       Exact recall = 0.8807
       Hudup recall = 1.0000
@@ -1590,15 +1613,15 @@ Dataset evaluation
       MSE.recommend = 0.8496
       R.recommend = 0.3168
       Setup time = 0.0000
-      Speed = 0.0167
+      Speed = 0.0115
     neighborcf_smcc
       Exact recall = 0.8980
       Hudup recall = 1.0000
       MAE.recommend = 0.6956
       MSE.recommend = 0.8321
       R.recommend = 0.2848
-      Setup time = 0.0010
-      Speed = 0.0123
+      Setup time = 0.0000
+      Speed = 0.0092
     neighborcf_smd
       Exact recall = 0.9021
       Hudup recall = 1.0000
@@ -1606,7 +1629,7 @@ Dataset evaluation
       MSE.recommend = 0.8375
       R.recommend = 0.2848
       Setup time = 0.0000
-      Speed = 0.0149
+      Speed = 0.0129
     neighborcf_smtp
       Exact recall = 0.6593
       Hudup recall = 1.0000
@@ -1614,7 +1637,7 @@ Dataset evaluation
       MSE.recommend = 0.9909
       R.recommend = 0.2534
       Setup time = 0.0000
-      Speed = 0.0093
+      Speed = 0.0089
     neighborcf_src
       Exact recall = 0.0609
       Hudup recall = 0.4770
@@ -1629,8 +1652,8 @@ Dataset evaluation
       MAE.recommend = 0.7318
       MSE.recommend = 0.9137
       R.recommend = 0.2837
-      Setup time = 0.0000
-      Speed = 0.0102
+      Setup time = 0.0010
+      Speed = 0.0132
     neighborcf_taj
       Exact recall = 0.9027
       Hudup recall = 1.0000
@@ -1638,7 +1661,7 @@ Dataset evaluation
       MSE.recommend = 0.8328
       R.recommend = 0.2883
       Setup time = 0.0000
-      Speed = 0.0202
+      Speed = 0.0156
     neighborcf_triangle
       Exact recall = 0.5233
       Hudup recall = 1.0000
@@ -1646,7 +1669,7 @@ Dataset evaluation
       MSE.recommend = 1.1022
       R.recommend = 0.2206
       Setup time = 0.0000
-      Speed = 0.0171
+      Speed = 0.0159
     neighborcf_urp
       Exact recall = 0.8116
       Hudup recall = 1.0000
@@ -1654,7 +1677,7 @@ Dataset evaluation
       MSE.recommend = 0.9317
       R.recommend = 0.2411
       Setup time = 0.0000
-      Speed = 0.0209
+      Speed = 0.0181
 
 
 Exact recall evaluation
@@ -1716,11 +1739,11 @@ Exact recall evaluation
     Dataset "5" got 0.9105
 
   neighborcf_hsmd
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 0.8524
+    Dataset "2" got 0.8483
+    Dataset "3" got 0.8511
+    Dataset "4" got 0.8430
+    Dataset "5" got 0.8522
 
   neighborcf_ipwr
     Dataset "1" got 0.8924
@@ -1758,11 +1781,11 @@ Exact recall evaluation
     Dataset "5" got 0.6242
 
   neighborcf_mu
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 0.5713
+    Dataset "2" got 0.5727
+    Dataset "3" got 0.5744
+    Dataset "4" got 0.5624
+    Dataset "5" got 0.5639
 
   neighborcf_nhsm
     Dataset "1" got 0.9134
@@ -1786,11 +1809,11 @@ Exact recall evaluation
     Dataset "5" got 0.8317
 
   neighborcf_pc
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 0.8760
+    Dataset "2" got 0.8726
+    Dataset "3" got 0.8728
+    Dataset "4" got 0.8728
+    Dataset "5" got 0.8716
 
   neighborcf_pearson
     Dataset "1" got 0.5806
@@ -1805,13 +1828,6 @@ Exact recall evaluation
     Dataset "3" got 0.9229
     Dataset "4" got 0.9250
     Dataset "5" got 0.9246
-
-  neighborcf_pmd
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
 
   neighborcf_pss
     Dataset "1" got 0.9291
@@ -1964,11 +1980,11 @@ Hudup recall evaluation
     Dataset "5" got 1.0000
 
   neighborcf_hsmd
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
 
   neighborcf_ipwr
     Dataset "1" got 1.0000
@@ -2006,11 +2022,11 @@ Hudup recall evaluation
     Dataset "5" got 1.0000
 
   neighborcf_mu
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 0.9984
+    Dataset "2" got 0.9984
+    Dataset "3" got 0.9967
+    Dataset "4" got 0.9984
+    Dataset "5" got 0.9984
 
   neighborcf_nhsm
     Dataset "1" got 1.0000
@@ -2034,11 +2050,11 @@ Hudup recall evaluation
     Dataset "5" got 1.0000
 
   neighborcf_pc
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "1" got 1.0000
+    Dataset "2" got 1.0000
+    Dataset "3" got 1.0000
+    Dataset "4" got 1.0000
+    Dataset "5" got 1.0000
 
   neighborcf_pearson
     Dataset "1" got 0.9984
@@ -2053,13 +2069,6 @@ Hudup recall evaluation
     Dataset "3" got 1.0000
     Dataset "4" got 1.0000
     Dataset "5" got 1.0000
-
-  neighborcf_pmd
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
 
   neighborcf_pss
     Dataset "1" got 1.0000
@@ -2212,6 +2221,11 @@ MAE.recommend evaluation
     Dataset "5" got 0.6919
 
   neighborcf_hsmd
+    Dataset "1" got 0.7166
+    Dataset "2" got 0.7210
+    Dataset "3" got 0.7164
+    Dataset "4" got 0.7140
+    Dataset "5" got 0.7166
 
   neighborcf_ipwr
     Dataset "1" got 0.7110
@@ -2249,6 +2263,11 @@ MAE.recommend evaluation
     Dataset "5" got 0.7676
 
   neighborcf_mu
+    Dataset "1" got 0.8072
+    Dataset "2" got 0.8036
+    Dataset "3" got 0.8046
+    Dataset "4" got 0.7972
+    Dataset "5" got 0.8056
 
   neighborcf_nhsm
     Dataset "1" got 0.6913
@@ -2272,6 +2291,11 @@ MAE.recommend evaluation
     Dataset "5" got 0.7055
 
   neighborcf_pc
+    Dataset "1" got 0.7926
+    Dataset "2" got 0.7940
+    Dataset "3" got 0.7930
+    Dataset "4" got 0.7853
+    Dataset "5" got 0.7896
 
   neighborcf_pearson
     Dataset "1" got 0.8027
@@ -2286,8 +2310,6 @@ MAE.recommend evaluation
     Dataset "3" got 0.6922
     Dataset "4" got 0.6902
     Dataset "5" got 0.6926
-
-  neighborcf_pmd
 
   neighborcf_pss
     Dataset "1" got 0.6906
@@ -2440,6 +2462,11 @@ MSE.recommend evaluation
     Dataset "5" got 0.8275
 
   neighborcf_hsmd
+    Dataset "1" got 0.8814
+    Dataset "2" got 0.8997
+    Dataset "3" got 0.8813
+    Dataset "4" got 0.8791
+    Dataset "5" got 0.8848
 
   neighborcf_ipwr
     Dataset "1" got 0.8596
@@ -2477,6 +2504,11 @@ MSE.recommend evaluation
     Dataset "5" got 1.0009
 
   neighborcf_mu
+    Dataset "1" got 1.0978
+    Dataset "2" got 1.0891
+    Dataset "3" got 1.0885
+    Dataset "4" got 1.0799
+    Dataset "5" got 1.0995
 
   neighborcf_nhsm
     Dataset "1" got 0.8172
@@ -2500,6 +2532,11 @@ MSE.recommend evaluation
     Dataset "5" got 0.8545
 
   neighborcf_pc
+    Dataset "1" got 1.0409
+    Dataset "2" got 1.0496
+    Dataset "3" got 1.0446
+    Dataset "4" got 1.0262
+    Dataset "5" got 1.0398
 
   neighborcf_pearson
     Dataset "1" got 1.0904
@@ -2514,8 +2551,6 @@ MSE.recommend evaluation
     Dataset "3" got 0.8272
     Dataset "4" got 0.8236
     Dataset "5" got 0.8340
-
-  neighborcf_pmd
 
   neighborcf_pss
     Dataset "1" got 0.8209
@@ -2668,6 +2703,11 @@ R.recommend evaluation
     Dataset "5" got 0.3116
 
   neighborcf_hsmd
+    Dataset "1" got 0.3263
+    Dataset "2" got 0.3208
+    Dataset "3" got 0.3208
+    Dataset "4" got 0.3174
+    Dataset "5" got 0.3207
 
   neighborcf_ipwr
     Dataset "1" got 0.2931
@@ -2705,6 +2745,11 @@ R.recommend evaluation
     Dataset "5" got 0.2460
 
   neighborcf_mu
+    Dataset "1" got 0.2040
+    Dataset "2" got 0.2186
+    Dataset "3" got 0.2223
+    Dataset "4" got 0.2108
+    Dataset "5" got 0.2179
 
   neighborcf_nhsm
     Dataset "1" got 0.3108
@@ -2728,6 +2773,11 @@ R.recommend evaluation
     Dataset "5" got 0.2785
 
   neighborcf_pc
+    Dataset "1" got 0.0456
+    Dataset "2" got 0.0438
+    Dataset "3" got 0.0534
+    Dataset "4" got 0.0643
+    Dataset "5" got 0.0620
 
   neighborcf_pearson
     Dataset "1" got 0.2000
@@ -2742,8 +2792,6 @@ R.recommend evaluation
     Dataset "3" got 0.3320
     Dataset "4" got 0.3325
     Dataset "5" got 0.3390
-
-  neighborcf_pmd
 
   neighborcf_pss
     Dataset "1" got 0.3402
@@ -2890,7 +2938,7 @@ Setup time evaluation
 
   neighborcf_feng
     Dataset "1" got 0.0000
-    Dataset "2" got 0.0010
+    Dataset "2" got 0.0000
     Dataset "3" got 0.0000
     Dataset "4" got 0.0000
     Dataset "5" got 0.0000
@@ -2918,7 +2966,7 @@ Setup time evaluation
 
   neighborcf_kl
     Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
+    Dataset "2" got 0.0010
     Dataset "3" got 0.0000
     Dataset "4" got 0.0000
     Dataset "5" got 0.0000
@@ -2941,12 +2989,12 @@ Setup time evaluation
     Dataset "1" got 0.0000
     Dataset "2" got 0.0000
     Dataset "3" got 0.0000
-    Dataset "4" got 0.0010
+    Dataset "4" got 0.0000
     Dataset "5" got 0.0000
 
   neighborcf_nhsm
     Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
+    Dataset "2" got 0.0010
     Dataset "3" got 0.0000
     Dataset "4" got 0.0000
     Dataset "5" got 0.0000
@@ -2986,13 +3034,6 @@ Setup time evaluation
     Dataset "4" got 0.0000
     Dataset "5" got 0.0000
 
-  neighborcf_pmd
-    Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
-
   neighborcf_pss
     Dataset "1" got 0.0000
     Dataset "2" got 0.0000
@@ -3002,7 +3043,7 @@ Setup time evaluation
 
   neighborcf_res
     Dataset "1" got 0.0000
-    Dataset "2" got 0.0000
+    Dataset "2" got 0.0010
     Dataset "3" got 0.0000
     Dataset "4" got 0.0000
     Dataset "5" got 0.0000
@@ -3025,15 +3066,15 @@ Setup time evaluation
     Dataset "1" got 0.0000
     Dataset "2" got 0.0000
     Dataset "3" got 0.0000
-    Dataset "4" got 0.0010
+    Dataset "4" got 0.0000
     Dataset "5" got 0.0000
 
   neighborcf_smcc
     Dataset "1" got 0.0000
     Dataset "2" got 0.0000
-    Dataset "3" got 0.0000
+    Dataset "3" got 0.0010
     Dataset "4" got 0.0000
-    Dataset "5" got 0.0010
+    Dataset "5" got 0.0000
 
   neighborcf_smd
     Dataset "1" got 0.0000
@@ -3061,13 +3102,13 @@ Setup time evaluation
     Dataset "2" got 0.0000
     Dataset "3" got 0.0000
     Dataset "4" got 0.0000
-    Dataset "5" got 0.0000
+    Dataset "5" got 0.0010
 
   neighborcf_taj
     Dataset "1" got 0.0000
     Dataset "2" got 0.0000
     Dataset "3" got 0.0000
-    Dataset "4" got 0.0000
+    Dataset "4" got 0.0010
     Dataset "5" got 0.0000
 
   neighborcf_triangle
@@ -3088,258 +3129,251 @@ Setup time evaluation
 Speed evaluation
 
   neighborcf_adr
-    Dataset "1" got 0.0104
-    Dataset "2" got 0.0117
-    Dataset "3" got 0.0117
-    Dataset "4" got 0.0115
-    Dataset "5" got 0.0111
+    Dataset "1" got 0.0114
+    Dataset "2" got 0.0096
+    Dataset "3" got 0.0090
+    Dataset "4" got 0.0096
+    Dataset "5" got 0.0100
 
   neighborcf_amer
-    Dataset "1" got 0.0174
-    Dataset "2" got 0.0182
-    Dataset "3" got 0.0170
-    Dataset "4" got 0.0175
-    Dataset "5" got 0.0190
+    Dataset "1" got 0.0152
+    Dataset "2" got 0.0135
+    Dataset "3" got 0.0144
+    Dataset "4" got 0.0152
+    Dataset "5" got 0.0159
 
   neighborcf_bcf
-    Dataset "1" got 1.4949
-    Dataset "2" got 1.4820
-    Dataset "3" got 1.5189
-    Dataset "4" got 1.4788
-    Dataset "5" got 1.4665
+    Dataset "1" got 1.3533
+    Dataset "2" got 1.3658
+    Dataset "3" got 1.3842
+    Dataset "4" got 1.3718
+    Dataset "5" got 1.3911
 
   neighborcf_bcfj
-    Dataset "1" got 1.4918
-    Dataset "2" got 1.5155
-    Dataset "3" got 1.5252
-    Dataset "4" got 1.5051
-    Dataset "5" got 1.4777
+    Dataset "1" got 1.4132
+    Dataset "2" got 1.4326
+    Dataset "3" got 1.4245
+    Dataset "4" got 1.4437
+    Dataset "5" got 1.4254
 
   neighborcf_cjacmd
-    Dataset "1" got 0.0353
-    Dataset "2" got 0.0345
-    Dataset "3" got 0.0368
-    Dataset "4" got 0.0473
-    Dataset "5" got 0.0340
+    Dataset "1" got 0.0325
+    Dataset "2" got 0.0313
+    Dataset "3" got 0.0302
+    Dataset "4" got 0.0308
+    Dataset "5" got 0.0317
 
   neighborcf_cosine
-    Dataset "1" got 0.0116
-    Dataset "2" got 0.0148
-    Dataset "3" got 0.0168
-    Dataset "4" got 0.0131
-    Dataset "5" got 0.0150
+    Dataset "1" got 0.0113
+    Dataset "2" got 0.0105
+    Dataset "3" got 0.0100
+    Dataset "4" got 0.0121
+    Dataset "5" got 0.0131
 
   neighborcf_esim
-    Dataset "1" got 0.0204
-    Dataset "2" got 0.0180
-    Dataset "3" got 0.0183
-    Dataset "4" got 0.0211
+    Dataset "1" got 0.0159
+    Dataset "2" got 0.0190
+    Dataset "3" got 0.0181
+    Dataset "4" got 0.0217
     Dataset "5" got 0.0172
 
   neighborcf_feng
-    Dataset "1" got 0.0480
-    Dataset "2" got 0.0489
-    Dataset "3" got 0.0434
-    Dataset "4" got 0.0446
-    Dataset "5" got 0.0403
+    Dataset "1" got 0.0400
+    Dataset "2" got 0.0390
+    Dataset "3" got 0.0374
+    Dataset "4" got 0.0419
+    Dataset "5" got 0.0407
 
   neighborcf_hsmd
-    Dataset "1" got 0.0014
-    Dataset "2" got 0.0013
-    Dataset "3" got 0.0014
-    Dataset "4" got 0.0014
-    Dataset "5" got 0.0012
+    Dataset "1" got 0.0156
+    Dataset "2" got 0.0201
+    Dataset "3" got 0.0159
+    Dataset "4" got 0.0153
+    Dataset "5" got 0.0152
 
   neighborcf_ipwr
-    Dataset "1" got 0.0648
-    Dataset "2" got 0.0677
-    Dataset "3" got 0.0644
-    Dataset "4" got 0.0640
-    Dataset "5" got 0.0814
+    Dataset "1" got 0.0586
+    Dataset "2" got 0.0586
+    Dataset "3" got 0.0563
+    Dataset "4" got 0.0619
+    Dataset "5" got 0.0582
 
   neighborcf_jaccard
-    Dataset "1" got 0.0145
-    Dataset "2" got 0.0141
-    Dataset "3" got 0.0183
-    Dataset "4" got 0.0148
-    Dataset "5" got 0.0133
-
-  neighborcf_kl
-    Dataset "1" got 1.9284
-    Dataset "2" got 1.9838
-    Dataset "3" got 1.9314
-    Dataset "4" got 1.9180
-    Dataset "5" got 1.8338
-
-  neighborcf_mmd
-    Dataset "1" got 0.0158
-    Dataset "2" got 0.0164
-    Dataset "3" got 0.0170
-    Dataset "4" got 0.0163
-    Dataset "5" got 0.0157
-
-  neighborcf_msd
-    Dataset "1" got 0.0098
-    Dataset "2" got 0.0102
-    Dataset "3" got 0.0107
-    Dataset "4" got 0.0097
+    Dataset "1" got 0.0115
+    Dataset "2" got 0.0115
+    Dataset "3" got 0.0103
+    Dataset "4" got 0.0135
     Dataset "5" got 0.0130
 
+  neighborcf_kl
+    Dataset "1" got 1.8441
+    Dataset "2" got 1.8979
+    Dataset "3" got 1.8433
+    Dataset "4" got 1.8482
+    Dataset "5" got 2.3050
+
+  neighborcf_mmd
+    Dataset "1" got 0.0154
+    Dataset "2" got 0.0152
+    Dataset "3" got 0.0148
+    Dataset "4" got 0.0158
+    Dataset "5" got 0.0154
+
+  neighborcf_msd
+    Dataset "1" got 0.0085
+    Dataset "2" got 0.0088
+    Dataset "3" got 0.0081
+    Dataset "4" got 0.0091
+    Dataset "5" got 0.0087
+
   neighborcf_mu
-    Dataset "1" got 0.0011
-    Dataset "2" got 0.0010
-    Dataset "3" got 0.0012
-    Dataset "4" got 0.0011
-    Dataset "5" got 0.0012
+    Dataset "1" got 0.0493
+    Dataset "2" got 0.0512
+    Dataset "3" got 0.0493
+    Dataset "4" got 0.0517
+    Dataset "5" got 0.0509
 
   neighborcf_nhsm
-    Dataset "1" got 0.0332
-    Dataset "2" got 0.0335
-    Dataset "3" got 0.0342
-    Dataset "4" got 0.0382
-    Dataset "5" got 0.0334
+    Dataset "1" got 0.0306
+    Dataset "2" got 0.0302
+    Dataset "3" got 0.0291
+    Dataset "4" got 0.0303
+    Dataset "5" got 0.0302
 
   neighborcf_nnsm
-    Dataset "1" got 0.0168
-    Dataset "2" got 0.0167
-    Dataset "3" got 0.0168
-    Dataset "4" got 0.0170
-    Dataset "5" got 0.0161
+    Dataset "1" got 0.0152
+    Dataset "2" got 0.0151
+    Dataset "3" got 0.0150
+    Dataset "4" got 0.0155
+    Dataset "5" got 0.0164
 
   neighborcf_os
-    Dataset "1" got 0.0156
-    Dataset "2" got 0.0244
-    Dataset "3" got 0.0218
-    Dataset "4" got 0.0164
-    Dataset "5" got 0.0155
+    Dataset "1" got 0.0146
+    Dataset "2" got 0.0147
+    Dataset "3" got 0.0143
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0157
 
   neighborcf_pc
-    Dataset "1" got 0.0002
-    Dataset "2" got 0.0001
-    Dataset "3" got 0.0001
-    Dataset "4" got 0.0001
-    Dataset "5" got 0.0001
+    Dataset "1" got 0.2281
+    Dataset "2" got 0.2450
+    Dataset "3" got 0.2260
+    Dataset "4" got 0.2397
+    Dataset "5" got 0.2413
 
   neighborcf_pearson
-    Dataset "1" got 0.0154
-    Dataset "2" got 0.0201
-    Dataset "3" got 0.0162
-    Dataset "4" got 0.0155
-    Dataset "5" got 0.0166
+    Dataset "1" got 0.0141
+    Dataset "2" got 0.0165
+    Dataset "3" got 0.0132
+    Dataset "4" got 0.0181
+    Dataset "5" got 0.0146
 
   neighborcf_pip
-    Dataset "1" got 0.0099
-    Dataset "2" got 0.0110
-    Dataset "3" got 0.0111
-    Dataset "4" got 0.0147
-    Dataset "5" got 0.0096
-
-  neighborcf_pmd
-    Dataset "1" got 0.0003
-    Dataset "2" got 0.0003
-    Dataset "3" got 0.0003
-    Dataset "4" got 0.0002
-    Dataset "5" got 0.0003
+    Dataset "1" got 0.0086
+    Dataset "2" got 0.0092
+    Dataset "3" got 0.0123
+    Dataset "4" got 0.0090
+    Dataset "5" got 0.0089
 
   neighborcf_pss
-    Dataset "1" got 0.0097
-    Dataset "2" got 0.0103
-    Dataset "3" got 0.0109
-    Dataset "4" got 0.0105
-    Dataset "5" got 0.0099
+    Dataset "1" got 0.0087
+    Dataset "2" got 0.0089
+    Dataset "3" got 0.0084
+    Dataset "4" got 0.0094
+    Dataset "5" got 0.0096
 
   neighborcf_res
-    Dataset "1" got 0.0283
-    Dataset "2" got 0.0327
-    Dataset "3" got 0.0288
-    Dataset "4" got 0.0279
-    Dataset "5" got 0.0301
+    Dataset "1" got 0.0255
+    Dataset "2" got 0.0257
+    Dataset "3" got 0.0250
+    Dataset "4" got 0.0250
+    Dataset "5" got 0.0263
 
   neighborcf_rpb
-    Dataset "1" got 0.0293
-    Dataset "2" got 0.0312
-    Dataset "3" got 0.0369
-    Dataset "4" got 0.0476
-    Dataset "5" got 0.0424
+    Dataset "1" got 0.0289
+    Dataset "2" got 0.0316
+    Dataset "3" got 0.0269
+    Dataset "4" got 0.0284
+    Dataset "5" got 0.0279
 
   neighborcf_sigweight
-    Dataset "1" got 0.0232
-    Dataset "2" got 0.0273
-    Dataset "3" got 0.0244
-    Dataset "4" got 0.0210
-    Dataset "5" got 0.0224
+    Dataset "1" got 0.0154
+    Dataset "2" got 0.0161
+    Dataset "3" got 0.0181
+    Dataset "4" got 0.0164
+    Dataset "5" got 0.0189
 
   neighborcf_sm
-    Dataset "1" got 0.0180
-    Dataset "2" got 0.0167
-    Dataset "3" got 0.0166
-    Dataset "4" got 0.0184
-    Dataset "5" got 0.0167
+    Dataset "1" got 0.0120
+    Dataset "2" got 0.0115
+    Dataset "3" got 0.0107
+    Dataset "4" got 0.0117
+    Dataset "5" got 0.0115
 
   neighborcf_smcc
-    Dataset "1" got 0.0117
-    Dataset "2" got 0.0128
-    Dataset "3" got 0.0159
-    Dataset "4" got 0.0121
-    Dataset "5" got 0.0123
+    Dataset "1" got 0.0091
+    Dataset "2" got 0.0092
+    Dataset "3" got 0.0084
+    Dataset "4" got 0.0091
+    Dataset "5" got 0.0092
 
   neighborcf_smd
-    Dataset "1" got 0.0174
-    Dataset "2" got 0.0179
-    Dataset "3" got 0.0186
-    Dataset "4" got 0.0167
-    Dataset "5" got 0.0149
+    Dataset "1" got 0.0153
+    Dataset "2" got 0.0127
+    Dataset "3" got 0.0120
+    Dataset "4" got 0.0132
+    Dataset "5" got 0.0129
 
   neighborcf_smtp
-    Dataset "1" got 0.0083
-    Dataset "2" got 0.0112
-    Dataset "3" got 0.0113
-    Dataset "4" got 0.0106
-    Dataset "5" got 0.0093
+    Dataset "1" got 0.0075
+    Dataset "2" got 0.0086
+    Dataset "3" got 0.0069
+    Dataset "4" got 0.0076
+    Dataset "5" got 0.0089
 
   neighborcf_src
-    Dataset "1" got 0.0013
-    Dataset "2" got 0.0008
+    Dataset "1" got 0.0015
+    Dataset "2" got 0.0009
     Dataset "3" got 0.0002
     Dataset "4" got 0.0002
     Dataset "5" got 0.0002
 
   neighborcf_ta
-    Dataset "1" got 0.0125
-    Dataset "2" got 0.0111
-    Dataset "3" got 0.0110
-    Dataset "4" got 0.0105
-    Dataset "5" got 0.0102
+    Dataset "1" got 0.0087
+    Dataset "2" got 0.0096
+    Dataset "3" got 0.0082
+    Dataset "4" got 0.0095
+    Dataset "5" got 0.0132
 
   neighborcf_taj
-    Dataset "1" got 0.0193
-    Dataset "2" got 0.0195
-    Dataset "3" got 0.0188
-    Dataset "4" got 0.0176
-    Dataset "5" got 0.0202
+    Dataset "1" got 0.0154
+    Dataset "2" got 0.0150
+    Dataset "3" got 0.0145
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0156
 
   neighborcf_triangle
-    Dataset "1" got 0.0191
-    Dataset "2" got 0.0184
-    Dataset "3" got 0.0181
-    Dataset "4" got 0.0183
-    Dataset "5" got 0.0171
+    Dataset "1" got 0.0152
+    Dataset "2" got 0.0149
+    Dataset "3" got 0.0144
+    Dataset "4" got 0.0155
+    Dataset "5" got 0.0159
 
   neighborcf_urp
-    Dataset "1" got 0.0208
-    Dataset "2" got 0.0220
-    Dataset "3" got 0.0230
-    Dataset "4" got 0.0201
-    Dataset "5" got 0.0209
+    Dataset "1" got 0.0177
+    Dataset "2" got 0.0179
+    Dataset "3" got 0.0171
+    Dataset "4" got 0.0181
+    Dataset "5" got 0.0181
 
 
 Evaluation information
-  Total records: 106750
-  Evaluated records: 106750
+  Total records: 103700
+  Evaluated records: 103700
   Evaluation percentage: 100.0%
-  Elapsed time: 4 hours 51 minutes 33 seconds
-  Started date: 2021-08-07 00-46-06
-  Ended date: 2021-08-07 05-37-39
+  Elapsed time: 4 hours 53 minutes 53 seconds
+  Started date: 2021-08-12 01-54-41
+  Ended date: 2021-08-12 06-48-33
 
 
 Algorithm parameters
@@ -3451,6 +3485,7 @@ Algorithm parameters
     recommend_reversed=false
     alg_support_cache=true
     delay_unsetup=false
+    hsmd_type=hsmd
     knn=100.0000
     recommend_fast=true
     hybrid=false
@@ -3527,12 +3562,17 @@ Algorithm parameters
     minmax_rating_reconfigure=false
     similarity_threshold=NaN
     recommend_reversed=false
+    pearson_type=pearson
     alg_support_cache=true
+    pearson_ra=false
     delay_unsetup=false
     knn=100.0000
     recommend_fast=true
     hybrid=false
+    pearson_weighted=false
     mu_alpha=0.5000
+    entropy_support=false
+    jaccard_type=normal
 
   neighborcf_nhsm
     minmax_rating_bound=true
@@ -3605,17 +3645,6 @@ Algorithm parameters
     recommend_fast=true
     hybrid=false
 
-  neighborcf_pmd
-    minmax_rating_bound=true
-    minmax_rating_reconfigure=false
-    similarity_threshold=NaN
-    recommend_reversed=false
-    alg_support_cache=true
-    delay_unsetup=false
-    knn=100.0000
-    recommend_fast=true
-    hybrid=false
-
   neighborcf_pss
     minmax_rating_bound=true
     minmax_rating_reconfigure=false
@@ -3675,6 +3704,7 @@ Algorithm parameters
     pip_type=pip
     pearson_ra=false
     delay_unsetup=false
+    hsmd_type=hsmd
     mmd_type=mmd
     knn=100.0000
     jaccard_ratingj_threshold=0.1000
@@ -3949,13 +3979,6 @@ Algorithm descriptions
     Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
     Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
 
-  neighborcf_pmd
-    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
-    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
-    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
-    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
-    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
-
   neighborcf_pss
     Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
     Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
@@ -4058,6 +4081,6 @@ Note
   Java: Java(TM) SE Runtime Environment version 15.0.2+7-27, Java HotSpot(TM) 64-Bit Server VM version 15.0.2+7-27, Class version 59.0, Vendor "Oracle Corporation" at https://java.oracle.com/
   OS: Windows Server 2012 R2, amd64, version 6.3
   Network: Local address is 192.168.116.200
-  Memory (VM): Allocated memory = 7792.00MB, Free memory = 5165.45MB, Max memory = 25600.00MB
+  Memory (VM): Allocated memory = 10080.00MB, Free memory = 6844.01MB, Max memory = 25600.00MB
   CPU: Intel64 Family 6 Model 62 Stepping 4, GenuineIntel, AMD64, the number of processors is 16
   Directory: Current working directory is "c:\GoogleDrive\todeploy\working\projects\sim"
