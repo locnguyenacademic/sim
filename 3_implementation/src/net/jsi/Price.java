@@ -39,22 +39,42 @@ public class Price implements Serializable, Cloneable {
 	}
 	
 	
-	public double low() {
+	public void set(double price) {
+		this.price = price;
+	}
+	
+	
+	public double getLow() {
 		return lowPrice;
 	}
 	
 	
-	public double high() {
+	public void setLow(double lowPrice) {
+		this.lowPrice = lowPrice;
+	}
+	
+	
+	public double getHigh() {
 		return highPrice;
 	}
 	
 	
-	public long time() {
+	public void setHigh(double highPrice) {
+		this.highPrice = highPrice;
+	}
+	
+	
+	public long getTime() {
 		return time;
 	}
 	
 	
-	public Date date() {
+	public void setTime(long time) {
+		this.time = time;
+	}
+	
+	
+	public Date getDate() {
 		return new Date(time);
 	}
 

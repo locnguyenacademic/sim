@@ -1,6 +1,5 @@
 package net.jsi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.hudup.core.Util;
@@ -23,10 +22,10 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public static double UNIT_BIAS = LEVERAGE*100/2;
 	
 	
-	public static long TIME_TAKEN_INTERVAL = 1000*3600*24;
+	public static long TIME_UPDATE_PRICE_INTERVAL = 1000*3600*24;
 	
 	
-	public static long TIME_VIEWED_INTERVAL = TIME_TAKEN_INTERVAL*7;
+	public static long TIME_VIEW_INTERVAL = TIME_UPDATE_PRICE_INTERVAL*10;
 
 	
 	public int maxPriceCount = MAX_PRICE_COUNT;
@@ -44,13 +43,10 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public double commission = 0;
 	
 	
-	public long timeTakenInterval = TIME_TAKEN_INTERVAL;
+	//public long timeUpdatePriceInterval = TIME_UPDATE_PRICE_INTERVAL;
 	
 	
-	public long timeViewedInterval = TIME_VIEWED_INTERVAL;
-
-	
-	protected List<Price> prices = new ArrayList<>();
+	protected List<Price> prices = Util.newList();
 	
 	
 	public double leverage = LEVERAGE;
@@ -84,12 +80,12 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 			return prices.add(price);
 		}
 		else {
-			Price lastPrice = prices.get(prices.size() -  1);
-			if (price.time() - lastPrice.time() < timeTakenInterval) return false;
+			//Price lastPrice = prices.get(prices.size() -  1);
+			//if (price.time() - lastPrice.time() < timeUpdatePriceInterval) return false;
 			boolean added = false;
 			for (int i = 0; i < prices.size(); i++) {
 				Price p = prices.get(i);
-				if (p.time() > price.time()) {
+				if (p.getTime() > price.getTime()) {
 					try {
 						prices.add(i, price);
 						added = true;
@@ -124,7 +120,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	@Override
 	public Price getPrice(long timePoint) {
 		for (Price price : prices) {
-			if (price.time() == timePoint) return price;
+			if (price.getTime() == timePoint) return price;
 		}
 		return null;
 	}
@@ -138,7 +134,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		Price lastPrice = getPrice();
 		if (lastPrice == null) return priceList;
 		for (Price price : prices) {
-			if (lastPrice.time() - price.time() <= timeInterval)
+			if (lastPrice.getTime() - price.getTime() <= timeInterval)
 				priceList.add(price);
 		}
 		
@@ -212,6 +208,21 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	@Override
+	public double getLeverage() {
+		return leverage;
+	}
+
+
+	@Override
+	public double setLeverage(double leverage) {
+		if (leverage <= 0) return 0;
+		double oldLeverage = this.leverage;
+		this.leverage = leverage;
+		return oldLeverage;
+	}
+	
+	
+	@Override
 	public void copyProperties(Stock stock) {
 		if (!(stock instanceof StockAbstract)) return;
 		StockAbstract sa = (StockAbstract)stock;
@@ -221,8 +232,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		this.swap = sa.swap;
 		this.spread = sa.spread;
 		this.commission = sa.commission;
-		this.timeTakenInterval = sa.timeTakenInterval;
-		this.timeViewedInterval = sa.timeViewedInterval;
+		//this.timeUpdatePriceInterval = sa.timeUpdatePriceInterval;
 		this.prices = sa.prices;
 		this.leverage = sa.leverage;
 		this.dividend = sa.dividend;

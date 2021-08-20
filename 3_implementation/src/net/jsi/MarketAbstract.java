@@ -12,6 +12,9 @@ public abstract class MarketAbstract implements Market {
 	protected String name = NONAME;
 	
 	
+	protected long timeViewInterval = StockAbstract.TIME_VIEW_INTERVAL;
+
+	
 	public MarketAbstract() {
 
 	}
@@ -23,16 +26,9 @@ public abstract class MarketAbstract implements Market {
 	
 	
 	@Override
-	public double getFreeMargin() {
-		return getBalance() + getProfit() - getMargin();
-	}
-	
-	
-	@Override
-	public double getROI() {
-		double freeMargin = getFreeMargin();
-		double balance = getBalance();
-		return (freeMargin - balance) / balance;
+	public double getROI(long timeInterval) {
+		double takenValue = getTakenValue(timeInterval);
+		return takenValue > 0 ? getProfit(timeInterval) / takenValue : 0;
 	}
 
 
@@ -41,5 +37,39 @@ public abstract class MarketAbstract implements Market {
 		return name;
 	}
 
+
+	@Override
+	public long getTimeViewInterval() {
+		return timeViewInterval;
+	}
+	
+	
+	@Override
+	public StockImpl c(Stock stock) {
+		if (stock instanceof StockImpl)
+			return (StockImpl)stock;
+		else
+			return null;
+	}
+
+
+	@Override
+	public Market getSuperMarket() {
+		return null;
+	}
+
+
+	@Override
+	public Universe getNearestUniverse() {
+		Market superMarket = this;
+		if (superMarket instanceof Universe) return (Universe)superMarket;
+
+		while ((superMarket = superMarket.getSuperMarket()) != null) {
+			if (superMarket instanceof Universe) return (Universe)superMarket;
+		}
+		
+		return null;
+	}
+	
 	
 }

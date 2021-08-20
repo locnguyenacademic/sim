@@ -1,6 +1,5 @@
 package net.jsi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StockGroup extends StockAbstract implements Market {
@@ -9,8 +8,11 @@ public class StockGroup extends StockAbstract implements Market {
 	private static final long serialVersionUID = 1L;
 
 	
-	protected List<Stock> stocks = new ArrayList<>();
+	protected List<Stock> stocks = Util.newList(0);
+
 	
+	protected long timeViewInterval = TIME_VIEW_INTERVAL;
+			
 	
 	public StockGroup(String code, boolean buy, double leverage, double unitBias, Price price) {
 		super(buy, null);
@@ -39,6 +41,21 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
+	public double getAverageTakenPrice(long timeInterval) {
+		double value = 0;
+		int n = 0;
+		for (Stock stock : stocks) {
+			if (!stock.isCommitted()) {
+				value += stock.getTakenValue(timeInterval);
+				n++;
+			}
+		}
+		
+		return n > 0 ? value/n : 0;
+	}
+
+
+	@Override
 	public double getMargin(long timeInterval) {
 		double margin = 0;
 		for (Stock stock : stocks) {
@@ -49,14 +66,8 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	@Override
-	public double getMargin() {
-		return getMargin(0);
-	}
-
-
-	@Override
-	public double getFreeMargin() {
-		return getBalance() + getProfit() - getMargin();
+	public double getFreeMargin(long timeInterval) {
+		return getBalance() + getProfit(timeInterval) - getMargin(timeInterval);
 	}
 
 
@@ -81,12 +92,6 @@ public class StockGroup extends StockAbstract implements Market {
 
 	
 	@Override
-	public double getProfit() {
-		return getProfit(0);
-	}
-
-
-	@Override
 	public double getROI(long timeInterval) {
 		double profit = 0;
 		double takenPrice = 0;
@@ -95,12 +100,6 @@ public class StockGroup extends StockAbstract implements Market {
 			takenPrice += stock.getTakenValue(timeInterval);
 		}
 		return profit / takenPrice;
-	}
-
-
-	@Override
-	public double getROI() {
-		return getROI(0);
 	}
 
 
@@ -139,6 +138,18 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
+	public double getVolume(long timeInterval, boolean ignoreCommitted) {
+		double volume = 0;
+		for (Stock stock : stocks) {
+			if (!ignoreCommitted || !isCommitted())
+				volume += stock.getVolume(timeInterval, ignoreCommitted);
+		}
+		
+		return volume;
+	}
+	
+	
+	@Override
 	public double estimateUnitBias(long timeInterval) {
 		if (stocks.size() == 0) return unitBias;
 		double bias = 0;
@@ -160,39 +171,25 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
-	public Stock addStock(double volume) {
-		if (prices.size() == 0) return null;
-		StockImpl stock = (StockImpl)newStock();
-		stock.volume = volume;
-		stock.taken(getPrice());
-		if (stock.isValid()) stocks.add(stock);
-		
-		return stock;
+	public Stock get(int index) {
+		return stocks.get(index);
 	}
 	
 	
-	public Stock newStock() {
-		StockImpl stock = new StockImpl();
-		stock.copyProperties(this);
-		stock.prices.clear();
-		return stock;
-	}
-	
-	
-	public Stock lookupStock(long timePoint) {
-		for (Stock stock : stocks) {
+	public int lookup(long timePoint) {
+		for (int i = 0; i < stocks.size(); i++) {
+			Stock stock = stocks.get(i);
 			if (stock instanceof StockImpl) {
-				Price takenPrice = ((StockImpl)stock).getTakenPrice(0);
-				if (takenPrice != null && takenPrice.time() == timePoint) return stock;
+				if (((StockImpl)stock).getTimePoint() == timePoint) return i;
 			}
 		}
 		
-		return null;
+		return -1;
 	}
 	
 	
 	public List<Stock> getStocks(long timeInterval) {
-		List<Stock> list = new ArrayList<>();
+		List<Stock> list = Util.newList(0);
 		for (Stock stock : stocks) {
 			if (stock instanceof StockImpl) {
 				Price takenPrice = ((StockImpl)stock).getTakenPrice(timeInterval);
@@ -203,7 +200,44 @@ public class StockGroup extends StockAbstract implements Market {
 		return list;
 	}
 
-
+	
+	public Stock add(double volume) {
+		if (prices.size() == 0) return null;
+		StockImpl stock = (StockImpl) newStock(volume, getPrice());
+		if (stock.isValid(timeViewInterval)) stocks.add(stock);
+		
+		return stock;
+	}
+	
+	
+	public Stock remove(int index) {
+		return stocks.remove(index);
+	}
+	
+	
+	public Stock set(int index, Stock stock) {
+		return stocks.set(index, stock);
+	}
+	
+	
+	protected Stock newStock(double volume, Price price) {
+		StockImpl stock = new StockImpl();
+		stock.copyProperties(this);
+		stock.reset(volume, price);
+		
+		return stock;
+	}
+	
+	
+	@Override
+	public StockImpl c(Stock stock) {
+		if (stock instanceof StockImpl)
+			return (StockImpl)stock;
+		else
+			return null;
+	}
+	
+	
 	@Override
 	public boolean isBuy() {
 		return buy;
@@ -220,7 +254,7 @@ public class StockGroup extends StockAbstract implements Market {
 		return true;
 	}
 
-
+	
 	@Override
 	public void setCommitted(boolean committed) {
 		for (Stock stock : stocks) stock.setCommitted(committed);
@@ -230,6 +264,42 @@ public class StockGroup extends StockAbstract implements Market {
 	@Override
 	public String name() {
 		return code();
+	}
+
+
+	@Override
+	public long getTimeViewInterval() {
+		return timeViewInterval;
+	}
+
+
+	@Override
+	public Market getSuperMarket() {
+		return null;
+	}
+
+
+	@Override
+	public double setLeverage(double leverage) {
+		if (leverage <= 0 || leverage == this.leverage) return leverage <= 0 ? 0 : leverage;
+		
+		double oldLeverage = this.leverage;
+		this.leverage = leverage;
+		for (Stock stock : stocks) stock.setLeverage(leverage);
+		return oldLeverage;
+	}
+	
+	
+	@Override
+	public Universe getNearestUniverse() {
+		Market superMarket = this;
+		if (superMarket instanceof Universe) return (Universe)superMarket;
+
+		while ((superMarket = superMarket.getSuperMarket()) != null) {
+			if (superMarket instanceof Universe) return (Universe)superMarket;
+		}
+		
+		return null;
 	}
 	
 	

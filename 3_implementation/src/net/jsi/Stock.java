@@ -36,6 +36,15 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	void setCommitted(boolean committed);
 
 		
+	double getVolume(long timeInterval, boolean ignoreCommitted);
+	
+	
+	double getLeverage();
+
+	
+	double setLeverage(double leverage);
+
+		
 	String code();
 	
 	

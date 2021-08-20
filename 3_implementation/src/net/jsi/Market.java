@@ -1,6 +1,7 @@
 package net.jsi;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface Market extends Serializable, Cloneable {
 
@@ -8,19 +9,37 @@ public interface Market extends Serializable, Cloneable {
 	double getBalance();
 	
 	
-	double getMargin();
+	double getFreeMargin(long timeInterval);
+
+
+	double getMargin(long timeInterval);
 	
 	
-	double getFreeMargin();
+	double getProfit(long timeInterval);
 
 
-	double getProfit();
+	double getTakenValue(long timeInterval);
 
-
-	double getROI();
+	
+	double getROI(long timeInterval);
 
 
 	String name();
+	
+	
+	long getTimeViewInterval();
+	
+	
+	List<Stock> getStocks(long timeInterval);
+	
+	
+	Market getSuperMarket();
+	
+	
+	Universe getNearestUniverse();
+	
+	
+	StockImpl c(Stock stock);
 	
 	
 }

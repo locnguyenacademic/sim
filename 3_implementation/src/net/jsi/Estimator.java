@@ -8,6 +8,9 @@ public interface Estimator extends Serializable, Cloneable {
 	Price getPrice();
 	
 	
+	double getAverageTakenPrice(long timeInterval);
+	
+	
 	double getLowPrice(long timeInterval);
 	
 	
@@ -34,9 +37,6 @@ public interface Estimator extends Serializable, Cloneable {
 	
 	double estimateHighPrice(long timeInterval);
 
-	
-	double estimateStopLoss(long timeInterval, double refMaxUnitBias);
-	
 	
 	double estimateStopLoss(long timeInterval);
 
