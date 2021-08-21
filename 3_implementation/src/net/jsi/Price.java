@@ -3,86 +3,37 @@ package net.jsi;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Price implements Serializable, Cloneable {
-
-	
-	private static final long serialVersionUID = 1L;
+public interface Price extends Serializable, Cloneable {
 
 
-	protected double price = 0;
+	double get();
 	
 	
-	protected double lowPrice = 0;
+	void set(double price);
 	
 	
-	protected double highPrice = 0;
+	double getLow();
 	
 	
-	protected long time = System.currentTimeMillis();
+	void setLow(double lowPrice);
 	
 	
-	public Price() {
-		
-	}
+	double getHigh();
 	
 	
-	public Price(double price, double lowPrice, double highPrice, long time) {
-		this.price = price;
-		this.lowPrice = lowPrice;
-		this.highPrice = highPrice;
-		this.time = time;
-	}
+	void setHigh(double highPrice);
 	
 	
-	public double get() {
-		return price;
-	}
+	long getTime();
 	
 	
-	public void set(double price) {
-		this.price = price;
-	}
+	void setTime(long time);
 	
 	
-	public double getLow() {
-		return lowPrice;
-	}
-	
-	
-	public void setLow(double lowPrice) {
-		this.lowPrice = lowPrice;
-	}
-	
-	
-	public double getHigh() {
-		return highPrice;
-	}
-	
-	
-	public void setHigh(double highPrice) {
-		this.highPrice = highPrice;
-	}
-	
-	
-	public long getTime() {
-		return time;
-	}
-	
-	
-	public void setTime(long time) {
-		this.time = time;
-	}
-	
-	
-	public Date getDate() {
-		return new Date(time);
-	}
+	Date getDate();
 
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
+	boolean isValid();
 	
 	
 }

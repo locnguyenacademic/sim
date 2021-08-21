@@ -19,7 +19,7 @@ public class StockGroup extends StockAbstract implements Market {
 		this.code = code;
 		this.leverage = leverage;
 		this.unitBias = unitBias;
-		if (price == null) price = new Price();
+		if (price == null) price = new PriceImpl();
 		setPrice(price);
 	}
 
@@ -176,11 +176,11 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
-	public int lookup(long timePoint) {
+	public int lookup(long timeInterval, long takenTimePoint) {
 		for (int i = 0; i < stocks.size(); i++) {
 			Stock stock = stocks.get(i);
 			if (stock instanceof StockImpl) {
-				if (((StockImpl)stock).getTimePoint() == timePoint) return i;
+				if (((StockImpl)stock).getTakenTimePoint(timeInterval) == takenTimePoint) return i;
 			}
 		}
 		
@@ -203,8 +203,18 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	public Stock add(double volume) {
 		if (prices.size() == 0) return null;
-		StockImpl stock = (StockImpl) newStock(volume, getPrice());
+		StockImpl stock = (StockImpl) newStock(volume);
 		if (stock.isValid(timeViewInterval)) stocks.add(stock);
+		
+		return stock;
+	}
+	
+	
+	protected Stock newStock(double volume) {
+		StockImpl stock = new StockImpl();
+		stock.copyProperties(this);
+		stock.volume = volume;
+		stock.take();
 		
 		return stock;
 	}
@@ -217,15 +227,6 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	public Stock set(int index, Stock stock) {
 		return stocks.set(index, stock);
-	}
-	
-	
-	protected Stock newStock(double volume, Price price) {
-		StockImpl stock = new StockImpl();
-		stock.copyProperties(this);
-		stock.reset(volume, price);
-		
-		return stock;
 	}
 	
 	

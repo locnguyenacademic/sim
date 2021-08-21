@@ -251,10 +251,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	public Stock lookupStock(String code, long timePoint) {
+	public Stock lookupStock(String code, long timeInterval, long timePoint) {
 		for (StockGroup group : groups) {
 			if (!group.code().equals(code)) continue;
-			int index = group.lookup(timePoint);
+			int index = group.lookup(timeInterval, timePoint);
 			if (index >= 0) return group.get(index);
 		}
 		
@@ -297,12 +297,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public Stock removeStock(String code, long timePoint) {
+	public Stock removeStock(String code, long timeInterval, long takenTimePoint) {
 		int found = lookup(code);
 		if (found < 0) return null;
 		
 		StockGroup group = get(found);
-		int index = group.lookup(timePoint);
+		int index = group.lookup(timeInterval, takenTimePoint);
 		if (index >= 0)
 			return group.remove(index);
 		else

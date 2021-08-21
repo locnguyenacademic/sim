@@ -1,30 +1,25 @@
 package net.jsi.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import net.hudup.core.logistic.ui.UIUtil;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Price;
@@ -46,6 +41,8 @@ public class MarketTable extends JTable {
 
 		setAutoCreateRowSorter(true);
 		setAutoResizeMode(AUTO_RESIZE_OFF);
+		
+		MarketTable thisTable = this;
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -54,41 +51,73 @@ public class MarketTable extends JTable {
 					if(contextMenu != null)
 						contextMenu.show((Component)e.getSource(), e.getX(), e.getY());
 				}
+				else if (e.getClickCount() >= 2) {
+					if (!getModel2().isForStock()) return;
+					Stock stock = getSelectedStock(); if (stock == null) return;
+					StockTaker taker = new StockTaker(getMarket(), stock, true, thisTable);
+					taker.setVisible(true); if (taker.getOutput() != null) update();
+				}
 			}
 		});
+		
+		this.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (!getModel2().isForStock()) return;
+					Stock stock = getSelectedStock(); if (stock == null) return;
+					StockTaker taker = new StockTaker(getMarket(), stock, true, thisTable);
+					taker.setVisible(true); if (taker.getOutput() != null) update();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_F5) {
+					update();
+				}
+			}
+		});
+
 		
 		update();
 	}
 
 	
 	protected JPopupMenu createContextMenu() {
-		if (!getModel2().isForStock()) return null;
-
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
 		MarketTable tblMarket = this;
-		
-		JMenuItem miTake = new JMenuItem("Take new");
+
+		if (!getModel2().isForStock()) {
+			JMenuItem miRefresh = new JMenuItem("Refresh");
+			miRefresh.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						update();
+					}
+				});
+			ctxMenu.add(miRefresh);
+
+			return ctxMenu;
+		}
+
+		JMenuItem miTake = new JMenuItem("Add new");
 		miTake.addActionListener( 
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					StockTaker taker = new StockTaker(getMarket(), stock, false, tblMarket);
-					taker.setVisible(true);
-					if (taker.getOutput() != null) update();
+					taker.setVisible(true); if (taker.getOutput() != null) update();
 				}
 			});
 		ctxMenu.add(miTake);
 		
 		if (stock != null) {
-			JMenuItem miModify = new JMenuItem("Modify");
+			JMenuItem miModify = new JMenuItem("Update");
 			miModify.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						StockTaker taker = new StockTaker(getMarket(), stock, true, tblMarket);
-						taker.setVisible(true);
-						if (taker.getOutput() != null) update();
+						taker.setVisible(true); if (taker.getOutput() != null) update();
 					}
 				});
 			ctxMenu.add(miModify);
@@ -101,9 +130,8 @@ public class MarketTable extends JTable {
 						Universe universe = getMarket().getNearestUniverse();
 						if (universe == null) return;
 						MarketImpl mi = ((Universe)universe).c(getMarket());
-						
-						mi.removeStock(stock.code(), mi.c(stock).getTimePoint());
-						update();
+						Stock removedStock = mi.removeStock(stock.code(), mi.getTimeViewInterval(), mi.c(stock).getTakenTimePoint(mi.getTimeViewInterval()));
+						if (removedStock != null) update();
 					}
 				});
 			ctxMenu.add(miDelete);
@@ -116,37 +144,22 @@ public class MarketTable extends JTable {
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JDialog dlgGroup = new JDialog(UIUtil.getFrameForComponent(tblMarket), "Stock summary", true);
-					
-					dlgGroup.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-					dlgGroup.setSize(600, 400);
-					dlgGroup.setLocationRelativeTo(Util.getFrameForComponent(tblMarket));
-					dlgGroup.setLayout(new BorderLayout());
-					
-					JPanel body = new JPanel(new BorderLayout());
-					dlgGroup.add(body, BorderLayout.CENTER);
-					
-					MarketTable tblGroup = new MarketTable(getMarket(), false);
-					body.add(new JScrollPane(tblGroup), BorderLayout.CENTER);
-					
-					JPanel footer = new JPanel();
-					dlgGroup.add(footer, BorderLayout.SOUTH);
-					
-					JButton ok = new JButton("OK");
-					ok.addActionListener(new ActionListener() {
-						
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							dlgGroup.dispose();
-						}
-					});
-					footer.add(ok);
-					
-					dlgGroup.setVisible(true);
+					new MarketSummary(getMarket(), tblMarket).setVisible(true);
 				}
 			});
 		ctxMenu.add(miSummary);
 
+		JMenuItem miRefresh = new JMenuItem("Refresh");
+		miRefresh.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					update();
+				}
+			});
+		ctxMenu.add(miRefresh);
+
+		
 		return ctxMenu;
 	}
 

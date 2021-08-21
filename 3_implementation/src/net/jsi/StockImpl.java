@@ -11,7 +11,7 @@ public class StockImpl extends StockAbstract {
 	protected double volume = 0;
 	
 	
-	private Price takenPrice = null;
+	private TakenPrice takenPrice = null;
 	
 	
 	protected boolean committed = false;
@@ -25,7 +25,7 @@ public class StockImpl extends StockAbstract {
 	public StockImpl(double volume, boolean buy, Price price) {
 		super(buy, price);
 		this.volume = volume;
-		taken(price);
+		take(price);
 	}
 	
 	
@@ -34,34 +34,45 @@ public class StockImpl extends StockAbstract {
 		this.takenPrice = null;
 		this.committed = false;
 		this.volume = volume;
-		taken(price);
+		take(price);
 		
 		return true;
 	}
 
 	
-	public boolean taken(Price price) {
-		if (price == null || takenPrice != null || committed) return false;
+	public boolean take(Price price) {
+		if (takenPrice != null || committed) return false;
+		boolean notNullPrice = price != null;
+		if (notNullPrice && !checkPrice(price)) return false;
 		
-		try {
-			takenPrice = (Price)price.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return false;
+		if (notNullPrice)
+			takenPrice = new TakenPrice(price);
+		else {
+			Price lastPrice = getPrice();
+			if (lastPrice == null)
+				return false;
+			else {
+				takenPrice = new TakenPrice(lastPrice);
+				price = lastPrice;
+			}
 		}
 		
 		if (buy)
-			takenPrice.price = price.get() + spread;
-		else
-			takenPrice.price = price.get();
+			takenPrice.setExtra(getSpread());
 		
-		if (setPrice(price))
+		if (!notNullPrice)
+			return true;
+		else if (setPrice(price))
 			return true;
 		else {
 			takenPrice = null;
 			return false;
 		}
+	}
+	
+	
+	public boolean take() {
+		return take(null);
 	}
 	
 	
@@ -146,7 +157,7 @@ public class StockImpl extends StockAbstract {
 		if (buy)
 			return volume * last.get();
 		else
-			return volume * (last.get() + spread);
+			return volume * (last.get() + getSpread());
 	}
 	
 	
@@ -228,18 +239,12 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
-	public long getTimePoint() {
-		Price takenPrice = getTakenPrice(0);
+	public long getTakenTimePoint(long timeInterval) {
+		Price takenPrice = getTakenPrice(timeInterval);
 		if (takenPrice != null)
 			return takenPrice.getTime();
 		else
 			return 0;
-	}
-	
-	
-	public void setTimePoint(long timePoint) {
-		Price takenPrice = getTakenPrice(0);
-		if (takenPrice != null) takenPrice.setTime(timePoint);
 	}
 	
 	

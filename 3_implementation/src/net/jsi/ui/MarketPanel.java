@@ -21,11 +21,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 import javax.swing.text.NumberFormatter;
 
+import net.hudup.core.logistic.ui.UIUtil;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Price;
+import net.jsi.PriceImpl;
 import net.jsi.Stock;
 import net.jsi.StockAbstract;
 import net.jsi.StockGroup;
@@ -60,16 +63,15 @@ public class MarketPanel extends JPanel {
 		});
 		header.add(take);
 		
-		JButton modify = new JButton("Modify");
-		modify.addActionListener(new ActionListener() {
+		JButton summary = new JButton("Summary");
+		summary.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Stock stock = tblMarket.getSelectedStock();
-				take(stock, true);
+				new MarketSummary(getMarket(), tblMarket).setVisible(true);
 			}
 		});
-		header.add(modify);
+		header.add(summary);
 
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -89,7 +91,6 @@ public class MarketPanel extends JPanel {
 	
 	private void take(Stock input, boolean modify) {
 		if (modify && input == null) return;
-		
 		StockTaker taker = new StockTaker(getMarket(), input, modify, this);
 		taker.setVisible(true);
 		if (taker.getOutput() != null) tblMarket.update();
@@ -112,12 +113,6 @@ class StockTaker extends JDialog {
 	protected JCheckBox chkBuy;
 	
 	
-	protected JFormattedTextField txtDate;
-
-	
-	protected JCheckBox chkDate;
-
-	
 	protected JFormattedTextField txtLeverage;
 
 	
@@ -138,6 +133,12 @@ class StockTaker extends JDialog {
 	
 	protected JFormattedTextField txtHighPrice;
 	
+	
+	protected JFormattedTextField txtLastDate;
+
+	
+	protected JCheckBox chkLastDate;
+
 	
 	protected JCheckBox chkCommitted;
 
@@ -173,13 +174,13 @@ class StockTaker extends JDialog {
 		
 		left.add(new JLabel("Code:"));
 		left.add(new JLabel("Buy:"));
-		if (modify) left.add(new JLabel("Date:"));
 		left.add(new JLabel("Leverage:"));
 		left.add(new JLabel("Volume:"));
 		if (modify) left.add(new JLabel("Taken price:"));
 		left.add(new JLabel("Price:"));
 		left.add(new JLabel("Low price:"));
 		left.add(new JLabel("High price:"));
+		if (modify) left.add(new JLabel("Last date:"));
 		left.add(new JLabel("Committed:"));
 		
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -228,22 +229,6 @@ class StockTaker extends JDialog {
 		chkBuy.setEnabled(!modify);
 		right.add(chkBuy);
 		
-		JPanel paneDate = new JPanel(new BorderLayout());
-		if (modify) right.add(paneDate);
-		txtDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
-		txtDate.setValue(new Date());
-		txtDate.setEnabled(false);
-		paneDate.add(txtDate, BorderLayout.CENTER);
-		chkDate = new JCheckBox();
-		chkDate.setSelected(false);
-		chkDate.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				txtDate.setEnabled(chkDate.isSelected());
-			}
-		});
-		paneDate.add(chkDate, BorderLayout.EAST);
-
 		JPanel paneLeverage = new JPanel(new BorderLayout());
 		right.add(paneLeverage);
 		txtLeverage = new JFormattedTextField(new NumberFormatter());
@@ -280,6 +265,22 @@ class StockTaker extends JDialog {
 		txtHighPrice.setValue(modify ? input.getPrice().getHigh() : 1);
 		right.add(txtHighPrice);
 		
+		JPanel paneDate = new JPanel(new BorderLayout());
+		if (modify) right.add(paneDate);
+		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+		txtLastDate.setValue(new Date());
+		txtLastDate.setEnabled(false);
+		paneDate.add(txtLastDate, BorderLayout.CENTER);
+		chkLastDate = new JCheckBox();
+		chkLastDate.setSelected(false);
+		chkLastDate.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				txtLastDate.setEnabled(chkLastDate.isSelected());
+			}
+		});
+		paneDate.add(chkLastDate, BorderLayout.EAST);
+
 		chkCommitted = new JCheckBox();
 		chkCommitted.setSelected(modify ? input.isCommitted() : false);
 		right.add(chkCommitted);
@@ -288,7 +289,7 @@ class StockTaker extends JDialog {
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton(modify ? "Modify" : "Take");
+		JButton ok = new JButton(modify ? "Update" : "Add new");
 		ok.addActionListener(new ActionListener() {
 			
 			@Override
@@ -310,7 +311,7 @@ class StockTaker extends JDialog {
 		
 		StockImpl si = mi.c(input);
 		if (modify) {
-			if (si != null) txtDate.setValue(new Date(si.getTimePoint()));
+			if (si != null) txtLastDate.setValue(new Date(si.getPriceTimePoint()));
 			txtLeverage.setValue(input.getLeverage());
 		}
 		else {
@@ -352,7 +353,14 @@ class StockTaker extends JDialog {
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 		if (highPrice <= 0) return false;
 		
-		if (price < lowPrice || price > highPrice) return false;
+		if (chkLastDate.isSelected()) {
+			Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
+			Universe universe = market.getNearestUniverse();
+			if (lastDate == null || input == null || universe == null) return false;
+			StockImpl stock = universe.c(input);
+			if (stock == null || !stock.checkPriceTimePointPrevious(lastDate.getTime()))
+				return false;
+		}
 		
 		return true;
 	}
@@ -377,7 +385,7 @@ class StockTaker extends JDialog {
 		if (mi == null) return;
 		
 		String code = cmbCode.getSelectedItem().toString();
-		Price price = new Price(
+		Price price = new PriceImpl(
 				((Number)txtPrice.getValue()).doubleValue(), 
 				((Number) txtLowPrice.getValue()).doubleValue(),
 				((Number) txtHighPrice.getValue()).doubleValue(),
@@ -395,7 +403,7 @@ class StockTaker extends JDialog {
 		if (si == null) return;
 		
 		if (modify) {
-			if (chkDate.isSelected()) si.setTimePoint(((Date)txtDate.getValue()).getTime());
+			if (chkLastDate.isSelected()) si.setPriceTimePoint(((Date)txtLastDate.getValue()).getTime());
 			
 			if (chkLeverage.isSelected()) {
 				StockGroup group = mi.get(si.code());
@@ -426,3 +434,42 @@ class StockTaker extends JDialog {
 
 
 
+class MarketSummary extends JDialog {
+
+	
+	private static final long serialVersionUID = 1L;
+
+	
+	protected Market market = null;
+	
+	
+	public MarketSummary(Market market, Component component) {
+		super(UIUtil.getFrameForComponent(component), "Stock summary", true);
+		this.market = market;
+		
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(600, 400);
+		setLocationRelativeTo(Util.getFrameForComponent(component));
+		setLayout(new BorderLayout());
+		
+		JPanel body = new JPanel(new BorderLayout());
+		add(body, BorderLayout.CENTER);
+		
+		MarketTable tblGroup = new MarketTable(market, false);
+		body.add(new JScrollPane(tblGroup), BorderLayout.CENTER);
+		
+		JPanel footer = new JPanel();
+		add(footer, BorderLayout.SOUTH);
+		
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		footer.add(ok);
+	}
+	
+	
+}

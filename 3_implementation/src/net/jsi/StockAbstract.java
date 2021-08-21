@@ -22,10 +22,10 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public static double UNIT_BIAS = LEVERAGE*100/2;
 	
 	
-	public static long TIME_UPDATE_PRICE_INTERVAL = 1000*3600*24;
+	public static long TIME_UPDATE_PRICE_INTERVAL = 0;
 	
 	
-	public static long TIME_VIEW_INTERVAL = TIME_UPDATE_PRICE_INTERVAL*10;
+	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;
 
 	
 	public int maxPriceCount = MAX_PRICE_COUNT;
@@ -43,7 +43,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public double commission = 0;
 	
 	
-	//public long timeUpdatePriceInterval = TIME_UPDATE_PRICE_INTERVAL;
+	public long timeUpdatePriceInterval = 0;
 	
 	
 	protected List<Price> prices = Util.newList();
@@ -74,14 +74,11 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public boolean setPrice(Price price) {
-		if (price == null)
+		if (!checkPrice(price))
 			return false;
-		else if (prices.size() == 0) {
+		else if (prices.size() == 0)
 			return prices.add(price);
-		}
 		else {
-			//Price lastPrice = prices.get(prices.size() -  1);
-			//if (price.time() - lastPrice.time() < timeUpdatePriceInterval) return false;
 			boolean added = false;
 			for (int i = 0; i < prices.size(); i++) {
 				Price p = prices.get(i);
@@ -105,6 +102,16 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 			}
 			return added;
 		}
+	}
+	
+	
+	public boolean checkPrice(Price price) {
+		if (price == null || !price.isValid())
+			return false;
+		else if (prices.size() == 0)
+			return true;
+		else
+			return checkPriceTimePoint(price.getTime());
 	}
 	
 	
@@ -141,6 +148,41 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		return priceList;
 	}
 	
+	
+	public long getPriceTimePoint() {
+		Price price = getPrice();
+		if (price != null)
+			return price.getTime();
+		else
+			return 0;
+	}
+	
+	
+	public void setPriceTimePoint(long priceTimePoint) {
+		if (!checkPriceTimePointPrevious(priceTimePoint)) return;
+		getPrice().setTime(priceTimePoint);
+	}
+	
+	
+	public boolean checkPriceTimePoint(long priceTimePoint) {
+		if (priceTimePoint < 0)
+			return false;
+		else if (prices.size() == 0)
+			return true;
+		else
+			return (priceTimePoint - getPrice().getTime() >= timeUpdatePriceInterval);
+	}
+	
+	
+	public boolean checkPriceTimePointPrevious(long priceTimePoint) {
+		if (priceTimePoint < 0)
+			return false;
+		else if (prices.size() <= 1)
+			return true;
+		else
+			return (priceTimePoint - prices.get(prices.size() - 2).getTime() >= timeUpdatePriceInterval);
+	}
+
 	
 	@Override
 	public double getLowPrice(long timeInterval) {
@@ -222,6 +264,11 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
+	public double getSpread() {
+		return spread;
+	}
+	
+	
 	@Override
 	public void copyProperties(Stock stock) {
 		if (!(stock instanceof StockAbstract)) return;
@@ -232,7 +279,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		this.swap = sa.swap;
 		this.spread = sa.spread;
 		this.commission = sa.commission;
-		//this.timeUpdatePriceInterval = sa.timeUpdatePriceInterval;
+		this.timeUpdatePriceInterval = sa.timeUpdatePriceInterval;
 		this.prices = sa.prices;
 		this.leverage = sa.leverage;
 		this.dividend = sa.dividend;
