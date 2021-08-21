@@ -91,6 +91,18 @@ public class PriceImpl implements Price {
 	public boolean isValid() {
 		return price >= lowPrice && price <= highPrice && time >= 0;
 	}
+
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+	
 	
 	
 }

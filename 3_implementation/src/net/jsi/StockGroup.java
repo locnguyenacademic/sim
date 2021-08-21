@@ -92,29 +92,6 @@ public class StockGroup extends StockAbstract implements Market {
 
 	
 	@Override
-	public double getROI(long timeInterval) {
-		double profit = 0;
-		double takenPrice = 0;
-		for (Stock stock : stocks) {
-			profit += stock.getProfit(timeInterval);
-			takenPrice += stock.getTakenValue(timeInterval);
-		}
-		return profit / takenPrice;
-	}
-
-
-	public double getROIByLeverage(long timeInterval) {
-		double profit = 0;
-		double takenPrice = 0;
-		for (Stock stock : stocks) {
-			profit += stock.getProfit(timeInterval);
-			takenPrice += stock.getMargin(timeInterval);
-		}
-		return profit / takenPrice;
-	}
-
-	
-	@Override
 	public double getPositiveROISum(long timeInterval) {
 		double sum = 0;
 		for (Stock stock : stocks) {
@@ -127,6 +104,8 @@ public class StockGroup extends StockAbstract implements Market {
 
 	@Override
 	public boolean setUnitBias(double unitBias) {
+		if (unitBias == getUnitBias()) return false;
+		
 		boolean ret = super.setUnitBias(unitBias);
 		if (!ret) return false;
 		for (Stock stock : stocks) {
@@ -150,13 +129,19 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	@Override
-	public double estimateUnitBias(long timeInterval) {
+	public double estimateBiasAveragePerUnit(long timeInterval) {
 		if (stocks.size() == 0) return unitBias;
 		double bias = 0;
 		for (Stock stock : stocks) {
-			bias += stock.estimateUnitBias(timeInterval);
+			bias += stock.estimateBiasAveragePerUnit(timeInterval);
 		}
-		return Math.max(bias/stocks.size(), unitBias);
+		return Math.max(stocks.size() > 0 ? bias/stocks.size() : 0, unitBias);
+	}
+
+
+	@Override
+	public double estimateInvestAmount(long timeInterval) {
+		return getFreeMargin(timeInterval) - estimateBiasAveragePerUnit(timeInterval)*getVolume(timeInterval, false);
 	}
 
 
@@ -171,6 +156,11 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
+	public int size() {
+		return stocks.size();
+	}
+	
+	
 	public Stock get(int index) {
 		return stocks.get(index);
 	}
@@ -185,6 +175,11 @@ public class StockGroup extends StockAbstract implements Market {
 		}
 		
 		return -1;
+	}
+	
+	
+	public int lookup(long takenTimePoint) {
+		return lookup(0, takenTimePoint);
 	}
 	
 	
@@ -204,9 +199,10 @@ public class StockGroup extends StockAbstract implements Market {
 	public Stock add(double volume) {
 		if (prices.size() == 0) return null;
 		StockImpl stock = (StockImpl) newStock(volume);
-		if (stock.isValid(timeViewInterval)) stocks.add(stock);
-		
-		return stock;
+		if (stock.isValid(timeViewInterval) && stocks.add(stock))
+			return stock;
+		else
+			return null;
 	}
 	
 	
@@ -281,13 +277,10 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public double setLeverage(double leverage) {
-		if (leverage <= 0 || leverage == this.leverage) return leverage <= 0 ? 0 : leverage;
-		
-		double oldLeverage = this.leverage;
+	public void setLeverage(double leverage) {
+		if (leverage < 0 || leverage == this.leverage) return;
 		this.leverage = leverage;
 		for (Stock stock : stocks) stock.setLeverage(leverage);
-		return oldLeverage;
 	}
 	
 	

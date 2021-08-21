@@ -100,13 +100,19 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private double queryInvestAmount(long timeInterval) {
+	private double estimateInvestAmount0(long timeInterval) {
 		double biasSum = 0;
 		for (StockGroup group : groups) {
-			biasSum += group.estimateUnitBias(0) * group.getVolume(0, true);
+			biasSum += group.estimateBiasAveragePerUnit(timeInterval)*group.getVolume(timeInterval, false);
 		}
 		
 		return getFreeMargin(timeInterval) - biasSum;
+	}
+
+	
+	@Override
+	public double estimateInvestAmount(long timeInterval) {
+		return estimateInvestAmount0(timeInterval);
 	}
 	
 	
@@ -157,12 +163,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 		@Override
 		public double getInvestAmount(long timeInterval) {
-			return queryInvestAmount(timeInterval);
+			return estimateInvestAmount0(timeInterval);
 		}
 
 		@Override
-		public double estimateUnitBias(long timeInterval) {
-			return stock.estimateUnitBias(timeInterval);
+		public double estimateBiasAveragePerUnit(long timeInterval) {
+			return stock.estimateBiasAveragePerUnit(timeInterval);
 		}
 
 		@Override
@@ -174,8 +180,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	@Override
-	public Estimator getEstimator(String code) {
-		int index = lookup(code);
+	public Estimator getEstimator(String code, boolean buy) {
+		int index = lookup(code, buy);
 		if (index < 0) return null;
 		StockGroup group = get(index);
 		return group != null ? new Estimator0(group) : null;
@@ -192,8 +198,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public StockGroup get(String code) {
-		int index = lookup(code);
+	public StockGroup get(String code, boolean buy) {
+		int index = lookup(code, buy);
 		if (index >= 0)
 			return get(index);
 		else
@@ -201,10 +207,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public int lookup(String code) {
+	public int lookup(String code, boolean buy) {
 		for (int i = 0; i < groups.size(); i++) {
 			StockGroup group = groups.get(i);
-			if (group.code().equals(code)) return i;
+			if (group.code().equals(code) && group.isBuy() == buy) return i;
 		}
 		
 		return -1;
@@ -212,7 +218,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	public boolean add(StockGroup group) {
-		if (group == null || lookup(group.code()) >= 0)
+		if (group == null || lookup(group.code(), group.isBuy()) >= 0)
 			return false;
 		else
 			return groups.add(group);
@@ -224,8 +230,17 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	public StockGroup remove(String code, boolean buy) {
+		int index = lookup(code, buy);
+		if (index >= 0)
+			return remove(index);
+		else
+			return null;
+	}
+	
+	
 	public StockGroup set(int index, StockGroup group) {
-		if (group == null || lookup(group.code()) >= 0)
+		if (group == null || lookup(group.code(), group.isBuy()) >= 0)
 			return null;
 		else {
 			return groups.set(index, group);
@@ -274,31 +289,36 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	public Stock addStock(String code, boolean buy, double refLeverage, double volume, Price price) {
-		int found = lookup(code);
-		StockGroup group = null;
-		if (found < 0) {
-			group = newGroup(code, buy, refLeverage <= 0 ? this.refLeverage : refLeverage, price);
+		StockGroup group = get(code, buy);
+		if (group == null) {
+			group = newGroup(code, buy, Double.isNaN(refLeverage) ? this.refLeverage : refLeverage, price);
 			if (group == null || !add(group))
 				return null;
+			else {
+				Stock stock = group.add(volume);
+				if (stock == null) remove(code, buy);
+				
+				return stock;
+			}
 		}
 		else {
-			group = get(found);
 			if (!group.setPrice(price)) return null;
-			if (refLeverage > 0 && refLeverage != group.getLeverage())
+			if (!Double.isNaN(refLeverage) && refLeverage != group.getLeverage())
 				group.setLeverage(refLeverage);
+			
+			return group.add(volume);
 		}
 		
-		return group.add(volume);
 	}
 	
 	
 	public Stock addStock(String code, boolean buy, double volume, Price price) {
-		return addStock(code, buy, 0, volume, price);
+		return addStock(code, buy, Double.NaN, volume, price);
 	}
 	
 	
-	public Stock removeStock(String code, long timeInterval, long takenTimePoint) {
-		int found = lookup(code);
+	public Stock removeStock(String code, boolean buy, long timeInterval, long takenTimePoint) {
+		int found = lookup(code, buy);
 		if (found < 0) return null;
 		
 		StockGroup group = get(found);
@@ -312,7 +332,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	public boolean setCommitted(Stock stock, boolean committed) {
 		if (stock.isCommitted() == committed) return false;
-		if (lookup(stock.code()) < 0) return false;
+		if (lookup(stock.code(), stock.isBuy()) < 0) return false;
 		
 		stock.setCommitted(committed);
 		if (stock.isCommitted() == committed) {
@@ -334,7 +354,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	public void updateEstimatedUnitBias(StockGroup group, long timeInterval) {
-		double unitBias = group.estimateUnitBias(timeInterval);
+		double unitBias = group.estimateBiasAveragePerUnit(timeInterval);
 		unitBias = Math.max(unitBias, StockAbstract.calcMaxUnitBias(this.unitBias, group.getLeverage(), this.refLeverage));
 		group.setUnitBias(unitBias);
 	}

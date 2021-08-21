@@ -69,6 +69,17 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	
 	@Override
+	public double estimateInvestAmount(long timeInterval) {
+		double invest = 0;
+		for (Market market : markets) {
+			invest += market.estimateInvestAmount(timeInterval);
+		}
+		
+		return invest;
+	}
+
+	
+	@Override
 	public int size() {
 		return markets.size();
 	}

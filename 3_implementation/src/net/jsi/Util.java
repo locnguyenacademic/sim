@@ -20,8 +20,11 @@ import java.util.Vector;
 public final class Util {
 
 	
-	public final static String DATE_FORMAT = "yyyy-MM-dd HH-mm-ss";
+	public static String DATE_FORMAT = "yyyy-MM-dd HH-mm-ss";
 			
+	
+	public static int DECIMAL_PRECISION = 2;
+
 	
 	/**
 	 * Creating a new list with initial capacity.
@@ -94,6 +97,16 @@ public final class Util {
 	public static String format(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
 		return df.format(date);
+	}
+
+
+	/**
+	 * Converting the specified number into a string.
+	 * @param number specified number.
+	 * @return text format of number of the specified number.
+	 */
+	public static String format(double number) {
+		return String.format("%." + DECIMAL_PRECISION + "f", number);
 	}
 
 

@@ -24,6 +24,12 @@ public interface Market extends Serializable, Cloneable {
 	double getROI(long timeInterval);
 
 
+	double getROIByLeverage(long timeInterval);
+
+	
+	double estimateInvestAmount(long timeInterval);
+
+		
 	String name();
 	
 	

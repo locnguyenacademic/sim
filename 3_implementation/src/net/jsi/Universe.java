@@ -15,6 +15,9 @@ public interface Universe extends Market, Serializable, Cloneable {
 	Market get(int index);
 	
 	
+	double estimateInvestAmount(long timeInterval);
+
+		
 	QueryEstimator query(int index);
 
 	

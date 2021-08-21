@@ -29,7 +29,7 @@ public interface Estimator extends Serializable, Cloneable {
 	double getInvestAmount(long timeInterval);
 
 	
-	double estimateUnitBias(long timeInterval);
+	double estimateBiasAveragePerUnit(long timeInterval);
 	
 	
 	double estimateLowPrice(long timeInterval);

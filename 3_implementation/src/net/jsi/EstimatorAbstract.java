@@ -10,7 +10,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	public double estimateLowPrice(long timeInterval) {
 		double minLowPrice = getLowPrice(timeInterval);
 		double lowPrice = minLowPrice;
-		double unitBias = estimateUnitBias(timeInterval);
+		double unitBias = estimateBiasAveragePerUnit(timeInterval);
 		if (unitBias > 0) {
 			double roi = getROI(timeInterval);
 			double price = getPrice().get();
@@ -25,7 +25,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	public double estimateHighPrice(long timeInterval) {
 		double maxHighPrice = getHighPrice(timeInterval);
 		double highPrice = maxHighPrice;
-		double unitBias = estimateUnitBias(timeInterval);
+		double unitBias = estimateBiasAveragePerUnit(timeInterval);
 		if (unitBias > 0) {
 			double roi = getROI(timeInterval);
 			double price = getPrice().get();
@@ -46,7 +46,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		double price = p.get();
 		double stopLoss = price;
 		double roi = getROI(timeInterval);
-		double unitBias = estimateUnitBias(timeInterval);
+		double unitBias = estimateBiasAveragePerUnit(timeInterval);
 		if (buy) {
 			double lowPrice = estimateLowPrice(timeInterval);
 			stopLoss += price <= lowPrice ? 0 : price*roi;
@@ -74,7 +74,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		double price = p.get();
 		double takeProfit = price;
 		double roi = getROI(timeInterval);
-		double unitBias = estimateUnitBias(timeInterval);
+		double unitBias = estimateBiasAveragePerUnit(timeInterval);
 		if (buy) {
 			double highPrice = estimateHighPrice(timeInterval);
 			takeProfit += price >= highPrice ? 0 : price*roi;
@@ -119,7 +119,7 @@ public abstract class EstimatorAbstract implements Estimator {
 			bias = estimateHighPrice(timeInterval) - price;
 		}
 
-		double unitBias = estimateUnitBias(timeInterval);
+		double unitBias = estimateBiasAveragePerUnit(timeInterval);
 		bias = Math.max(bias, unitBias);
 		
 		int found = 0;

@@ -213,6 +213,22 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	@Override
+	public double getROI(long timeInterval) {
+		double takenValue = getTakenValue(timeInterval);
+		if (takenValue == 0) return 0;
+		return getProfit(timeInterval) / takenValue;
+	}
+	
+	
+	@Override
+	public double getROIByLeverage(long timeInterval) {
+		double margin = getMargin(timeInterval);
+		if (margin == 0) return 0;
+		return getProfit(timeInterval) / margin;
+	}
+	
+	
+	@Override
 	public double getUnitBias() {
 		return unitBias;
 	}
@@ -226,7 +242,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	public static double calcMaxUnitBias(double unitBias, double leverage, double refBaseLeverage) {
-		return Math.max(unitBias, unitBias*refBaseLeverage/leverage);
+		//Referred leverage (base leverage) is often larger than the specified leverage.
+		if (leverage == 0 && refBaseLeverage == 0)
+			return unitBias;
+		else if (leverage == 0 && refBaseLeverage != 0)
+			return unitBias / refBaseLeverage;
+		else
+			return Math.max(unitBias, unitBias*refBaseLeverage/leverage);
 	}
 	
 	
@@ -256,11 +278,8 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 
 
 	@Override
-	public double setLeverage(double leverage) {
-		if (leverage <= 0) return 0;
-		double oldLeverage = this.leverage;
-		this.leverage = leverage;
-		return oldLeverage;
+	public void setLeverage(double leverage) {
+		if (leverage >= 0) this.leverage = leverage;
 	}
 	
 	

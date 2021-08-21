@@ -28,7 +28,14 @@ public abstract class MarketAbstract implements Market {
 	@Override
 	public double getROI(long timeInterval) {
 		double takenValue = getTakenValue(timeInterval);
-		return takenValue > 0 ? getProfit(timeInterval) / takenValue : 0;
+		return takenValue != 0 ? getProfit(timeInterval) / takenValue : 0;
+	}
+
+
+	@Override
+	public double getROIByLeverage(long timeInterval) {
+		double margin = getMargin(timeInterval);
+		return margin != 0 ? getProfit(timeInterval) / margin : 0;
 	}
 
 

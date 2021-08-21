@@ -17,6 +17,12 @@ public class StockImpl extends StockAbstract {
 	protected boolean committed = false;
 	
 	
+	protected double stopLoss = 0;
+	
+	
+	protected double takeProfit = 0;
+
+	
 	public StockImpl() {
 		
 	}
@@ -188,21 +194,6 @@ public class StockImpl extends StockAbstract {
 	
 	
 	@Override
-	public double getROI(long timeInterval) {
-		Price takenPrice = getTakenPrice(timeInterval);
-		if (takenPrice == null) return 0;
-		return getProfit(timeInterval) / getTakenValue(timeInterval);
-	}
-	
-	
-	public double getROIByLeverage(long timeInterval) {
-		double margin = getMargin(timeInterval);
-		if (margin == 0) return 0;
-		return getProfit(timeInterval) / margin;
-	}
-	
-	
-	@Override
 	public double getVolume(long timeInterval, boolean ignoreCommitted) {
 		Price takenPrice = getTakenPrice(timeInterval);
 		if (takenPrice == null)
@@ -215,7 +206,7 @@ public class StockImpl extends StockAbstract {
 
 
 	@Override
-	public double estimateUnitBias(long timeInterval) {
+	public double estimateBiasAveragePerUnit(long timeInterval) {
 		List<Price> prices = getPrices(timeInterval);
 		if (prices.size() == 0) return unitBias;
 		double bias = 0;
@@ -245,6 +236,31 @@ public class StockImpl extends StockAbstract {
 			return takenPrice.getTime();
 		else
 			return 0;
+	}
+	
+	
+	public double getStopLoss() {
+		return stopLoss;
+	}
+	
+	
+	public void setStopLoss(double stopLoss) {
+		this.stopLoss = stopLoss;
+	}
+	
+	
+	public double getTakeProfit() {
+		return takeProfit;
+	}
+	
+	
+	public void setTakeProfit(double takeProfit) {
+		this.takeProfit = takeProfit;
+	}
+	
+	
+	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
+		return new PriceImpl(price, lowPrice, highPrice, time);
 	}
 	
 	
