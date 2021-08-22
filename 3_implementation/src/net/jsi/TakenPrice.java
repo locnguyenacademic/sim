@@ -5,7 +5,6 @@ import java.util.Date;
 public class TakenPrice implements Price {
 
 	
-	
 	private static final long serialVersionUID = 1L;
 
 
@@ -96,4 +95,15 @@ public class TakenPrice implements Price {
 	}
 
 	
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+
 }

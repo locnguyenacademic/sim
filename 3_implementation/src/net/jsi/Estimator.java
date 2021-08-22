@@ -1,6 +1,7 @@
 package net.jsi;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface Estimator extends Serializable, Cloneable {
 
@@ -8,14 +9,11 @@ public interface Estimator extends Serializable, Cloneable {
 	Price getPrice();
 	
 	
+	List<Price> getPrices(long timeInterval);
+
+	
 	double getAverageTakenPrice(long timeInterval);
 	
-	
-	double getLowPrice(long timeInterval);
-	
-	
-	double getHighPrice(long timeInterval);
-
 	
 	double getUnitBias();
 	
@@ -29,13 +27,16 @@ public interface Estimator extends Serializable, Cloneable {
 	double getInvestAmount(long timeInterval);
 
 	
-	double estimateBiasAveragePerUnit(long timeInterval);
+	double estimateUnitBias(long timeInterval);
 	
 	
 	double estimateLowPrice(long timeInterval);
 	
 	
 	double estimateHighPrice(long timeInterval);
+
+	
+	double estimatePrice(long timeInterval);
 
 	
 	double estimateStopLoss(long timeInterval);

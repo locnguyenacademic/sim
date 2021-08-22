@@ -1,5 +1,7 @@
 package net.jsi;
 
+import java.util.List;
+
 public abstract class EstimatorAbstract implements Estimator {
 
 	
@@ -7,87 +9,176 @@ public abstract class EstimatorAbstract implements Estimator {
 
 	
 	@Override
-	public double estimateLowPrice(long timeInterval) {
-		double minLowPrice = getLowPrice(timeInterval);
-		double lowPrice = minLowPrice;
-		double unitBias = estimateBiasAveragePerUnit(timeInterval);
-		if (unitBias > 0) {
-			double roi = getROI(timeInterval);
-			double price = getPrice().get();
-			lowPrice = price - Math.max(unitBias, price * (roi > 0 ? 0 : -roi));
+	public double estimateUnitBias(long timeInterval) {
+		List<Price> prices = getPrices(timeInterval);
+		if (prices.size() == 0) return getUnitBias();
+		
+		double mean1 = 0;
+		double mean2 = 0;
+		for (Price price : prices) {
+			mean1 += price.get();
+			mean2 += (price.getHigh() - price.getLow())/2.0;
+		}
+		mean1 = mean1 / prices.size();
+		mean2 = mean2 / prices.size();
+		
+		double bias1 = 0;
+		double bias2 = 0;
+		for (Price price : prices) {
+			double d1 = price.get() - mean1;
+			double d2 = (price.getHigh() - price.getLow())/2.0 - mean2;
+			bias1 += d1*d1;
+			bias2 += d2*d2;
 		}
 		
-		return Math.max(minLowPrice, lowPrice);
+		bias1 = Math.sqrt(bias1 / prices.size());
+		bias2 = Math.sqrt(bias2 / prices.size());
+		
+		return Math.max((bias1 + bias2) / 2, getUnitBias());
+	}
+
+	
+	private double getLowestPrice(long timeInterval) {
+		Price price = getExtremePrice(true, timeInterval);
+		return price != null ? price.get() : 0;
+	}
+	
+	
+	private double getLowPriceMean(long timeInterval) {
+		return getExtremePriceMean(true, timeInterval);
+	}
+
+	
+	private double getHighestPrice(long timeInterval) {
+		Price price = getExtremePrice(false, timeInterval);
+		return price != null ? price.get() : 0;
+	}
+	
+	
+	private double getHighPriceMean(long timeInterval) {
+		return getExtremePriceMean(false, timeInterval);
+	}
+
+	
+	private Price getExtremePrice(boolean low, long timeInterval) {
+		Price found = null;
+		List<Price> priceList = getPrices(timeInterval);
+		for (Price price : priceList) {
+			if (found == null)
+				found = price;
+			else
+				found = (low ? price.get()<found.get() : price.get()>found.get()) ? price : found;
+		}
+		
+		return found;
+	}
+	
+	
+	private double getExtremePriceMean(boolean low, long timeInterval) {
+		List<Price> priceList = getPrices(timeInterval);
+		if (priceList.size() == 0) return 0;
+		double mean = 0;
+		for (Price price : priceList) mean += low ? price.getLow() : price.getHigh();
+		
+		return mean / priceList.size();
+	}
+
+	
+	@Override
+	public double estimateLowPrice(long timeInterval) {
+		double price = getPrice().get();;
+		double lowPrice = price;
+		double roi = getROI(timeInterval);
+		lowPrice -= Math.max(estimateUnitBias(timeInterval), roi < 0 ? -price*roi : 0);
+		
+		return Math.max(Math.min(lowPrice, getLowPriceMean(timeInterval)), getLowestPrice(timeInterval));
 	}
 	
 	
 	@Override
 	public double estimateHighPrice(long timeInterval) {
-		double maxHighPrice = getHighPrice(timeInterval);
-		double highPrice = maxHighPrice;
-		double unitBias = estimateBiasAveragePerUnit(timeInterval);
-		if (unitBias > 0) {
-			double roi = getROI(timeInterval);
-			double price = getPrice().get();
-			highPrice = price + Math.max(unitBias, price * (roi < 0 ? 0 : roi));
-		}
+		double price = getPrice().get();
+		double highPrice = price;
+		double roi = getROI(timeInterval);
+		highPrice += Math.max(estimateUnitBias(timeInterval), roi > 0 ? price*roi : 0);
 		
-		return Math.min(maxHighPrice, highPrice);
+		return Math.min(Math.max(highPrice, getHighPriceMean(timeInterval)), getHighestPrice(timeInterval));
 	}
 
 	
-	@Override
-	public double estimateStopLoss(long timeInterval) {
+	private double estimateBiasAtCurrentPrice(long timeInterval) {
 		Price p = getPrice();
-		double takenPrice = getAverageTakenPrice(0);
-		boolean buy = isBuy();
-		if (p == null || takenPrice <= 0) return buy ? estimateLowPrice(timeInterval) : estimateHighPrice(timeInterval);
-		
+		if (p == null) return 0;
+
 		double price = p.get();
-		double stopLoss = price;
 		double roi = getROI(timeInterval);
-		double unitBias = estimateBiasAveragePerUnit(timeInterval);
-		if (buy) {
-			double lowPrice = estimateLowPrice(timeInterval);
-			stopLoss += price <= lowPrice ? 0 : price*roi;
-			stopLoss -= unitBias;
-			stopLoss = Math.min(stopLoss, lowPrice);
-			return Math.max(stopLoss, takenPrice);
+		double unitBias = estimateUnitBias(timeInterval);
+		double lowPrice = estimateLowPrice(timeInterval);
+		double highPrice = estimateHighPrice(timeInterval);
+		double bias = unitBias;
+		if (price <= lowPrice) {
+			if (roi > 0)
+				bias = Math.min(price*roi, unitBias);
+			else
+				bias = Math.max(-price*roi, unitBias);
+		}
+		else if (price >= highPrice) {
+			if (roi > 0)
+				bias = Math.max(price*roi, unitBias);
+			else 
+				bias = -price*roi + unitBias;
 		}
 		else {
-			double highPrice = estimateHighPrice(timeInterval);
-			stopLoss -= price >= highPrice ? 0 : price*roi;
-			stopLoss += unitBias;
-			stopLoss = Math.max(stopLoss, highPrice);
-			return Math.min(stopLoss, takenPrice);
+			if (roi > 0)
+				bias = unitBias;
+			else
+				bias = Math.max(-price*roi, unitBias);
+		}
+		
+		return Math.max(Math.min(bias, unitBias), getUnitBias());
+	}
+	
+	
+	@Override
+	public double estimatePrice(long timeInterval) {
+		Price p = getPrice();
+		if (p == null) return 0;
+
+		double price = p.get();
+		double bias = estimateBiasAtCurrentPrice(timeInterval);
+		double roi = getROI(timeInterval);
+		double newPrice = roi > 0 ? price + Math.min(bias, price*roi) : price - Math.min(bias, -price*roi); 
+
+		return Math.max(Math.min(newPrice, estimateHighPrice(timeInterval)), estimateLowPrice(timeInterval));
+	}
+
+
+	@Override
+	public double estimateStopLoss(long timeInterval) {
+		double takenPrice = getAverageTakenPrice(timeInterval);
+		if (takenPrice <= 0) 
+			return 0;
+		else {
+			double bias = estimateBiasAtCurrentPrice(timeInterval);
+			if (isBuy())
+				return Math.max(takenPrice - bias, takenPrice);
+			else
+				return Math.min(takenPrice + bias, takenPrice + estimateUnitBias(timeInterval));
 		}
 	}
 	
 	
 	@Override
 	public double estimateTakeProfit(long timeInterval) {
-		Price p = getPrice();
-		double takenPrice = getAverageTakenPrice(0);
-		boolean buy = isBuy();
-		if (p == null || takenPrice <= 0) return buy ? estimateHighPrice(timeInterval) : estimateLowPrice(timeInterval);
-		
-		double price = p.get();
-		double takeProfit = price;
-		double roi = getROI(timeInterval);
-		double unitBias = estimateBiasAveragePerUnit(timeInterval);
-		if (buy) {
-			double highPrice = estimateHighPrice(timeInterval);
-			takeProfit += price >= highPrice ? 0 : price*roi;
-			takeProfit += unitBias;
-			takeProfit = Math.max(takeProfit, highPrice);
-			return Math.max(takeProfit, takenPrice);
-		}
+		double takenPrice = getAverageTakenPrice(timeInterval);
+		if (takenPrice <= 0) 
+			return 0;
 		else {
-			double lowPrice = estimateLowPrice(timeInterval);
-			takeProfit -= price <= lowPrice ? 0 : price*roi;
-			takeProfit -= unitBias;
-			takeProfit = Math.min(takeProfit, lowPrice);
-			return Math.min(takeProfit, takenPrice);
+			double bias = estimateBiasAtCurrentPrice(timeInterval);
+			if (isBuy())
+				return Math.min(takenPrice + bias, takenPrice + estimateUnitBias(timeInterval));
+			else
+				return Math.max(takenPrice - bias, takenPrice);
 		}
 	}
 
@@ -106,22 +197,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		double takenVolume = takenAmount / price;
 		if (takenVolume == 0) return 0;
 		
-		double bias = 0;
-		boolean buy = isBuy();
-		if (buy) {
-			double highPrice = estimateHighPrice(timeInterval);
-			if (price >= highPrice) return 0;
-			bias = price - estimateLowPrice(timeInterval);
-		}
-		else {
-			double lowPrice = estimateLowPrice(timeInterval);
-			if (price <= lowPrice) return 0;
-			bias = estimateHighPrice(timeInterval) - price;
-		}
-
-		double unitBias = estimateBiasAveragePerUnit(timeInterval);
-		bias = Math.max(bias, unitBias);
-		
+		double bias = estimateBiasAtCurrentPrice(timeInterval);
 		int found = 0;
 		for (int i = 1; i <= takenVolume; i++) {
 			if (i*(price+bias) > takenAmount) found = i - 1;

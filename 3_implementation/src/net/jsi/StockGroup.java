@@ -11,9 +11,6 @@ public class StockGroup extends StockAbstract implements Market {
 	protected List<Stock> stocks = Util.newList(0);
 
 	
-	protected long timeViewInterval = TIME_VIEW_INTERVAL;
-			
-	
 	public StockGroup(String code, boolean buy, double leverage, double unitBias, Price price) {
 		super(buy, null);
 		this.code = code;
@@ -25,8 +22,16 @@ public class StockGroup extends StockAbstract implements Market {
 
 	
 	@Override
-	public double getBalance() {
-		return 0;
+	public double getBalance(long timeInterval) {
+		double profit = 0;
+		for (Stock stock : stocks) {
+			if (stock.isCommitted())
+				profit += stock.getProfit(timeInterval) + stock.getValue(timeInterval);
+			else
+				profit -= stock.getProfit(timeInterval) + stock.getValue(timeInterval);
+		}
+		
+		return profit;
 	}
 
 
@@ -67,7 +72,7 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	@Override
 	public double getFreeMargin(long timeInterval) {
-		return getBalance() + getProfit(timeInterval) - getMargin(timeInterval);
+		return getBalance(timeInterval) + getProfit(timeInterval) - getMargin(timeInterval);
 	}
 
 
@@ -95,7 +100,7 @@ public class StockGroup extends StockAbstract implements Market {
 	public double getPositiveROISum(long timeInterval) {
 		double sum = 0;
 		for (Stock stock : stocks) {
-			double roi = stock.getROI(timeInterval);
+			double roi = !stock.isCommitted() ? stock.getROI(timeInterval) : 0;
 			if (roi > 0) sum += roi;
 		}
 		return sum;
@@ -117,11 +122,11 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public double getVolume(long timeInterval, boolean ignoreCommitted) {
+	public double getVolume(long timeInterval, boolean countCommitted) {
 		double volume = 0;
 		for (Stock stock : stocks) {
-			if (!ignoreCommitted || !isCommitted())
-				volume += stock.getVolume(timeInterval, ignoreCommitted);
+			if (countCommitted || !isCommitted())
+				volume += stock.getVolume(timeInterval, countCommitted);
 		}
 		
 		return volume;
@@ -129,19 +134,28 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	@Override
-	public double estimateBiasAveragePerUnit(long timeInterval) {
-		if (stocks.size() == 0) return unitBias;
+	public double estimateUnitBias(long timeInterval) {
 		double bias = 0;
+		int n = 0;
 		for (Stock stock : stocks) {
-			bias += stock.estimateBiasAveragePerUnit(timeInterval);
+			if (!isCommitted()) {
+				bias += stock.estimateUnitBias(timeInterval);
+				n++;
+			}
 		}
-		return Math.max(stocks.size() > 0 ? bias/stocks.size() : 0, unitBias);
+		return Math.max(n > 0 ? bias/n : 0, unitBias);
 	}
 
 
 	@Override
-	public double estimateInvestAmount(long timeInterval) {
-		return getFreeMargin(timeInterval) - estimateBiasAveragePerUnit(timeInterval)*getVolume(timeInterval, false);
+	public double calcTotalBias(long timeInterval) {
+		return estimateUnitBias(timeInterval) * getVolume(timeInterval, false);
+	}
+
+
+	@Override
+	public double calcInvestAmount(long timeInterval) {
+		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
 	}
 
 
@@ -196,10 +210,10 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 	
-	public Stock add(double volume) {
+	public Stock add(long timeInterval, double volume) {
 		if (prices.size() == 0) return null;
 		StockImpl stock = (StockImpl) newStock(volume);
-		if (stock.isValid(timeViewInterval) && stocks.add(stock))
+		if (stock.isValid(timeInterval) && stocks.add(stock))
 			return stock;
 		else
 			return null;
@@ -208,7 +222,7 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	protected Stock newStock(double volume) {
 		StockImpl stock = new StockImpl();
-		stock.copyProperties(this);
+		stock.setBasicInfo(this);
 		stock.volume = volume;
 		stock.take();
 		
@@ -266,7 +280,11 @@ public class StockGroup extends StockAbstract implements Market {
 
 	@Override
 	public long getTimeViewInterval() {
-		return timeViewInterval;
+		Market market = getSuperMarket();
+		if (market == null)
+			return 0;
+		else
+			return market.getTimeViewInterval();
 	}
 
 

@@ -6,7 +6,7 @@ import java.util.List;
 public interface Market extends Serializable, Cloneable {
 
 	
-	double getBalance();
+	double getBalance(long timeInterval);
 	
 	
 	double getFreeMargin(long timeInterval);
@@ -27,7 +27,10 @@ public interface Market extends Serializable, Cloneable {
 	double getROIByLeverage(long timeInterval);
 
 	
-	double estimateInvestAmount(long timeInterval);
+	double calcTotalBias(long timeInterval);
+
+	
+	double calcInvestAmount(long timeInterval);
 
 		
 	String name();

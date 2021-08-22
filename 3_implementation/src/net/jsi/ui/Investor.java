@@ -20,7 +20,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import net.jsi.Market;
-import net.jsi.StockAbstract;
+import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.Util;
@@ -38,6 +38,9 @@ public class Investor extends JFrame implements MarketListener {
 
 	
 	protected JLabel lblTotalROI;
+
+	
+	protected JLabel lblTotalBias;
 
 	
 	public Investor(Universe universe) {
@@ -79,6 +82,8 @@ public class Investor extends JFrame implements MarketListener {
 		footerRow.add(lblTotalProfit = new JLabel());
 		footerRow.add(new JLabel(" "));
 		footerRow.add(lblTotalROI = new JLabel());
+		footerRow.add(new JLabel(" "));
+		footerRow.add(lblTotalBias = new JLabel());
 
 		update();
 		
@@ -90,9 +95,11 @@ public class Investor extends JFrame implements MarketListener {
 		long timeViewInterval = universe.getTimeViewInterval();
 		double profit = universe.getProfit(timeViewInterval);
 		double roi = universe.getROIByLeverage(timeViewInterval);
+		double totalBias = universe.calcTotalBias(timeViewInterval);
 		
-		lblTotalProfit.setText("TOTAL PROFIT: " + Util.format(profit));
-		lblTotalROI.setText("TOTAL ROI: " + Util.format(roi*100) + "%");
+		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
+		lblTotalROI.setText("ROI: " + Util.format(roi*100) + "%");
+		lblTotalBias.setText("BIAS: " + Util.format(totalBias));
 	}
 
 	
@@ -158,7 +165,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	public static void main(String[] args) {
 		Universe universe = new UniverseImpl();
-		Market market = universe.newMarket("Market 1", StockAbstract.LEVERAGE, StockAbstract.UNIT_BIAS);
+		Market market = universe.newMarket("Market 1", StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
 		universe.add(market);
 		
 		new Investor(universe);

@@ -19,10 +19,10 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	
 	
 	@Override
-	public double getBalance() {
+	public double getBalance(long timeInterval) {
 		double balance = 0;
 		for (Market market : markets) {
-			balance += market.getBalance();
+			balance += market.getBalance(timeInterval);
 		}
 		return balance;
 	}
@@ -38,16 +38,6 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 	
 	
-	@Override
-	public double getFreeMargin(long timeInterval) {
-		double freeMargin = 0;
-		for (Market market : markets) {
-			freeMargin += market.getFreeMargin(timeInterval);
-		}
-		return freeMargin;
-	}
-
-
 	@Override
 	public double getProfit(long timeInterval) {
 		double profit = 0;
@@ -69,16 +59,16 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	
 	@Override
-	public double estimateInvestAmount(long timeInterval) {
-		double invest = 0;
+	public double calcTotalBias(long timeInterval) {
+		double biasSum = 0;
 		for (Market market : markets) {
-			invest += market.estimateInvestAmount(timeInterval);
+			biasSum += market.calcTotalBias(timeInterval);
 		}
 		
-		return invest;
+		return biasSum;
 	}
 
-	
+
 	@Override
 	public int size() {
 		return markets.size();

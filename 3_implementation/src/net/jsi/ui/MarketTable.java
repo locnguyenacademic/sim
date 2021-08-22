@@ -32,7 +32,7 @@ import net.jsi.StockImpl;
 import net.jsi.Universe;
 import net.jsi.Util;
 
-public class MarketTable extends JTable {
+public class MarketTable extends JTable implements MarketListener {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -75,10 +75,7 @@ public class MarketTable extends JTable {
 	}
 
 	
-	private void updateStock(boolean update) {
-		Stock stock = getSelectedStock();
-		if (stock == null) return;
-
+	private void updateStock(Stock stock, boolean update) {
 		StockTaker taker = new StockTaker(getMarket(), stock, update, this);
 		taker.setVisible(true);
 		if (taker.getOutput() != null) update();
@@ -100,24 +97,22 @@ public class MarketTable extends JTable {
 	}
 	
 	
-	private void delete() {
-		Stock stock = getSelectedStock();
-		if (stock == null) return;
+	private void delete(Stock stock) {
+		Universe universe = getMarket().getNearestUniverse();
+		if (universe == null) return;
+		MarketImpl m = ((Universe)universe).c(getMarket());
+		if (m == null) return;
 		
 		if (getModel2().isForStock()) {
-			Universe universe = getMarket().getNearestUniverse();
-			if (universe == null) return;
-			MarketImpl mi = ((Universe)universe).c(getMarket());
+			Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), m.c(stock).getTakenTimePoint(m.getTimeViewInterval()));
+			if (removedStock == null) return;
 			
-			Stock removedStock = mi.removeStock(stock.code(), stock.isBuy(), mi.getTimeViewInterval(), mi.c(stock).getTakenTimePoint(mi.getTimeViewInterval()));
-			if (removedStock != null) {
-				StockGroup group = mi.get(stock.code(), stock.isBuy());
-				if (group != null && group.size() == 0) mi.remove(stock.code(), stock.isBuy());
-				update();
-			}
+			StockGroup group = m.get(stock.code(), stock.isBuy());
+			if (group != null && group.size() == 0) m.remove(stock.code(), stock.isBuy());
+			update();
 		}
 		else {
-
+			if (m.remove(stock.code(), stock.isBuy()) != null) update();
 		}
 	}
 	
@@ -125,6 +120,7 @@ public class MarketTable extends JTable {
 	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
+		MarketTable tblMarket = this;
 
 		if (!getModel2().isForStock()) {
 			JMenuItem miView = new JMenuItem("View");
@@ -137,6 +133,20 @@ public class MarketTable extends JTable {
 				});
 			ctxMenu.add(miView);
 
+			if (stock != null) {
+				JMenuItem miDelete = new JMenuItem("Delete");
+				miDelete.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							delete(stock);
+						}
+					});
+				ctxMenu.add(miDelete);
+			}
+
+			ctxMenu.addSeparator();
+			
 			JMenuItem miRefresh = new JMenuItem("Refresh");
 			miRefresh.addActionListener( 
 				new ActionListener() {
@@ -150,33 +160,57 @@ public class MarketTable extends JTable {
 			return ctxMenu;
 		}
 
+		
 		JMenuItem miTake = new JMenuItem("Add new");
 		miTake.addActionListener( 
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					updateStock(false);
+					updateStock(stock, false);
 				}
 			});
 		ctxMenu.add(miTake);
 		
 		if (stock != null) {
+			JMenuItem miAddPrice = new JMenuItem("Add price");
+			miAddPrice.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AddPrice addPrice = new AddPrice(getMarket(), stock, tblMarket);
+						addPrice.setVisible(true);
+						if (addPrice.getOutput() != null) update();
+					}
+				});
+			ctxMenu.add(miAddPrice);
+
 			JMenuItem miModify = new JMenuItem("Update");
 			miModify.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						updateStock(true);
+						updateStock(stock, true);
 					}
 				});
 			ctxMenu.add(miModify);
 			
+			JMenuItem miCommit = new JMenuItem(stock.isCommitted() ? "Uncommit" : "Commit");
+			miCommit.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						stock.setCommitted(!stock.isCommitted());
+						update();
+					}
+				});
+			ctxMenu.add(miCommit);
+
 			JMenuItem miDelete = new JMenuItem("Delete");
 			miDelete.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						delete();
+						delete(stock);
 					}
 				});
 			ctxMenu.add(miDelete);
@@ -184,26 +218,29 @@ public class MarketTable extends JTable {
 
 		ctxMenu.addSeparator();
 		
-		MarketTable tblMarket = this;
 		JMenuItem miSummary = new JMenuItem("Summary");
 		miSummary.addActionListener( 
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new MarketSummary(getMarket(), tblMarket).setVisible(true);
+					MarketSummary ms = new MarketSummary(getMarket(), tblMarket);
+					ms.getMarketTable().getModel2().addMarketListener(tblMarket);
+					ms.setVisible(true);
 				}
 			});
 		ctxMenu.add(miSummary);
 
-		JMenuItem miDetailedSummary = new JMenuItem("Detailed summary");
-		miDetailedSummary.addActionListener( 
-			new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					new MarketGroupSummary(getMarket(), stock.code(), stock.isBuy(), tblMarket).setVisible(true);
-				}
-			});
-		ctxMenu.add(miDetailedSummary);
+		if (stock != null) {
+			JMenuItem miDetailedSummary = new JMenuItem("Detailed summary");
+			miDetailedSummary.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						new MarketGroupSummary(getMarket(), stock.code(), stock.isBuy(), tblMarket).setVisible(true);
+					}
+				});
+			ctxMenu.add(miDetailedSummary);
+		}
 
 		JMenuItem miRefresh = new JMenuItem("Refresh");
 		miRefresh.addActionListener( 
@@ -242,6 +279,12 @@ public class MarketTable extends JTable {
 	}
 	
 	
+	@Override
+	public void notify(MarketEvent evt) {
+		update();
+	}
+
+
 	@Override
 	public TableCellRenderer getCellRenderer(int row, int column) {
 		Object value = getValueAt(row, column);
@@ -369,9 +412,9 @@ class MarketTableModel extends DefaultTableModel implements TableModelListener {
 			row.add(price.getLow());
 			row.add(price.getHigh());
 			
-			row.add(s.isCommitted());
 			row.add(s.getMargin(timeViewInterval));
 			row.add(s.getProfit(timeViewInterval));
+			row.add(s.isCommitted());
 		}
 		else {
 			StockGroup group = (StockGroup)stock;
@@ -430,9 +473,9 @@ class MarketTableModel extends DefaultTableModel implements TableModelListener {
 			columns.add("Price");
 			columns.add("Low price");
 			columns.add("High price");
-			columns.add("Committed");
 			columns.add("Margin");
 			columns.add("Profit");
+			columns.add("Committed");
 		}
 		else {
 			columns.add("Code");
@@ -483,6 +526,7 @@ class MarketTableModel extends DefaultTableModel implements TableModelListener {
 		}
 
     }
+
 
 
 }

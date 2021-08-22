@@ -36,4 +36,7 @@ public interface Price extends Serializable, Cloneable {
 	boolean isValid();
 	
 	
+	Object clone();
+	
+	
 }

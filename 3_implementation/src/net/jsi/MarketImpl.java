@@ -11,16 +11,19 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public final static String NONAME = "noname";
 
 	
-	protected double refLeverage = StockAbstract.LEVERAGE;
+	protected double refLeverage = StockProperty.LEVERAGE;
 	
 	
-	protected double balance = 0;
+	private double balance = 0;
 	
 	
-	protected double marginBias = 0;
+	private double balanceBias = 0;
+
+	
+	private double marginBias = 0;
 	
 	
-	protected double unitBias = StockAbstract.UNIT_BIAS;
+	protected double unitBias = StockProperty.UNIT_BIAS;
 	
 	
 	protected List<StockGroup> groups = Util.newList(0);
@@ -33,29 +36,63 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	@Override
-	public double getBalance() {
-		return balance;
+	private double getBalance0(long timeInterval) {
+		double profit = 0;
+		for (StockGroup group : groups) {
+			List<Stock> stocks = group.getStocks(timeInterval);
+			for (Stock stock : stocks) {
+				if (stock.isCommitted())
+					profit += stock.getProfit(timeInterval) + stock.getValue(timeInterval);
+			}
+		}
+		
+		return balance + profit;
 	}
 
 	
-	public void setBalance(double balance) {
-		this.balance = balance;
+	@Override
+	public double getBalance(long timeInterval) {
+		return getBalance0(timeInterval) + balanceBias;
+	}
+
+	
+	public void setBaseBalance(double baseBalance) {
+		this.balance = baseBalance;
 	}
 	
 	
-	@Override
-	public double getMargin(long timeInterval) {
+	public void adjustBalance(double givenBalance, long timeInterval) {
+		balanceBias = givenBalance - getBalance0(timeInterval);
+	}
+	
+	
+	public void adjustBalance() {
+		balanceBias = 0;
+	}
+
+	
+	public double getBalanceBias() {
+		return marginBias;
+	}
+
+	
+	private double getMargin0(long timeInterval) {
 		double margin = 0;
 		for (StockGroup group : groups) {
 			margin += group.getMargin(timeInterval);
 		}
 		return margin;
 	}
+
+	
+	@Override
+	public double getMargin(long timeInterval) {
+		return getMargin0(timeInterval) + marginBias;
+	}
 	
 	
-	public void adjustMargin(double givenMargin) {
-		marginBias = givenMargin > 0 ? givenMargin - getMargin(0) : 0;
+	public void adjustMargin(double givenMargin, long timeInterval) {
+		marginBias = givenMargin - getMargin0(timeInterval);
 	}
 	
 	
@@ -64,11 +101,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	@Override
-	public double getFreeMargin(long timeInterval) {
-		return getBalance() + getProfit(timeInterval) - (getMargin(timeInterval) + (timeInterval > 0 ? 0 : marginBias));
+	public double getMarginBias() {
+		return marginBias;
 	}
-	
+
 	
 	@Override
 	public double getTakenValue(long timeInterval) {
@@ -100,19 +136,19 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private double estimateInvestAmount0(long timeInterval) {
+	@Override
+	public double calcTotalBias(long timeInterval) {
 		double biasSum = 0;
 		for (StockGroup group : groups) {
-			biasSum += group.estimateBiasAveragePerUnit(timeInterval)*group.getVolume(timeInterval, false);
+			biasSum += group.estimateUnitBias(timeInterval) * group.getVolume(timeInterval, false);
 		}
 		
-		return getFreeMargin(timeInterval) - biasSum;
+		return biasSum;
 	}
 
-	
-	@Override
-	public double estimateInvestAmount(long timeInterval) {
-		return estimateInvestAmount0(timeInterval);
+
+	private double estimateInvestAmount0(long timeInterval) {
+		return calcInvestAmount(timeInterval);
 	}
 	
 	
@@ -132,18 +168,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		}
 
 		@Override
+		public List<Price> getPrices(long timeInterval) {
+			return stock.getPrices(timeInterval);
+		}
+
+		@Override
 		public double getAverageTakenPrice(long timeInterval) {
 			return stock.getAverageTakenPrice(timeInterval);
-		}
-
-		@Override
-		public double getLowPrice(long timeInterval) {
-			return stock.getLowPrice(timeInterval);
-		}
-
-		@Override
-		public double getHighPrice(long timeInterval) {
-			return stock.getHighPrice(timeInterval);
 		}
 
 		@Override
@@ -164,11 +195,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		@Override
 		public double getInvestAmount(long timeInterval) {
 			return estimateInvestAmount0(timeInterval);
-		}
-
-		@Override
-		public double estimateBiasAveragePerUnit(long timeInterval) {
-			return stock.estimateBiasAveragePerUnit(timeInterval);
 		}
 
 		@Override
@@ -261,7 +287,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			}
 			
 		};
-		group.timeViewInterval = this.timeViewInterval;
 		return group;
 	}
 
@@ -295,7 +320,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			if (group == null || !add(group))
 				return null;
 			else {
-				Stock stock = group.add(volume);
+				Stock stock = group.add(this.timeViewInterval, volume);
 				if (stock == null) remove(code, buy);
 				
 				return stock;
@@ -306,7 +331,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			if (!Double.isNaN(refLeverage) && refLeverage != group.getLeverage())
 				group.setLeverage(refLeverage);
 			
-			return group.add(volume);
+			return group.add(this.timeViewInterval, volume);
 		}
 		
 	}
@@ -330,31 +355,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public boolean setCommitted(Stock stock, boolean committed) {
-		if (stock.isCommitted() == committed) return false;
-		if (lookup(stock.code(), stock.isBuy()) < 0) return false;
-		
-		stock.setCommitted(committed);
-		if (stock.isCommitted() == committed) {
-			if (stock.isCommitted())
-				this.balance += stock.getProfit(0) + stock.getValue(0);
-			else
-				this.balance -= stock.getProfit(0) + stock.getValue(0);
-			
-			return true;
-		}
-		else
-			return false;
-	}
-	
-	
-	public void setCommitted(StockGroup group, boolean committed) {
-		for (Stock stock : group.stocks) setCommitted(stock, committed);
-	}
-	
-	
 	public void updateEstimatedUnitBias(StockGroup group, long timeInterval) {
-		double unitBias = group.estimateBiasAveragePerUnit(timeInterval);
+		double unitBias = group.estimateUnitBias(timeInterval);
 		unitBias = Math.max(unitBias, StockAbstract.calcMaxUnitBias(this.unitBias, group.getLeverage(), this.refLeverage));
 		group.setUnitBias(unitBias);
 	}
@@ -381,6 +383,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	public double getRefLeverage() {
 		return refLeverage;
+	}
+	
+	
+	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
+		return new PriceImpl(price, lowPrice, highPrice, time);
 	}
 	
 	

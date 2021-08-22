@@ -6,13 +6,10 @@ public abstract class MarketAbstract implements Market {
 	private static final long serialVersionUID = 1L;
 
 	
-	public final static String NONAME = "noname";
+	protected String name = StockProperty.NONAME;
 	
 	
-	protected String name = NONAME;
-	
-	
-	protected long timeViewInterval = StockAbstract.TIME_VIEW_INTERVAL;
+	protected long timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
 
 	
 	public MarketAbstract() {
@@ -25,6 +22,12 @@ public abstract class MarketAbstract implements Market {
 	}
 	
 	
+	@Override
+	public double getFreeMargin(long timeInterval) {
+		return getBalance(timeInterval) + getProfit(timeInterval) - getMargin(timeInterval);
+	}
+
+
 	@Override
 	public double getROI(long timeInterval) {
 		double takenValue = getTakenValue(timeInterval);
@@ -39,6 +42,12 @@ public abstract class MarketAbstract implements Market {
 	}
 
 
+	@Override
+	public double calcInvestAmount(long timeInterval) {
+		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
+	}
+
+	
 	@Override
 	public String name() {
 		return name;

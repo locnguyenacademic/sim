@@ -10,55 +10,22 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	private static final long serialVersionUID = 1L;
 
 
-	public final static String NONAME = "noname";
-	
-	
-	public static int MAX_PRICE_COUNT = 1000;
-	
-	
-	public static double LEVERAGE = 0.05;
-	
-	
-	public static double UNIT_BIAS = LEVERAGE*100/2;
-	
-	
-	public static long TIME_UPDATE_PRICE_INTERVAL = 0;
-	
-	
-	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;
-
-	
-	public int maxPriceCount = MAX_PRICE_COUNT;
-	
-	
-	protected boolean buy = true;
-	
-	
-	protected double swap = 0;
-	
-	
-	protected double spread = 0;
-	
-	
-	public double commission = 0;
-	
-	
-	public long timeUpdatePriceInterval = 0;
+	public StockProperty property = new StockProperty();
 	
 	
 	protected List<Price> prices = Util.newList();
 	
 	
-	public double leverage = LEVERAGE;
+	protected double leverage = StockProperty.LEVERAGE;
 	
 	
-	protected double dividend = 0;
+	protected boolean buy = true;
 	
 	
-	protected double unitBias = UNIT_BIAS;
+	protected double unitBias = StockProperty.UNIT_BIAS;
 	
 	
-	protected String code = NONAME;
+	protected String code = StockProperty.NONAME;
 	
 	
 	public StockAbstract() {
@@ -94,7 +61,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 			if (!added) added = prices.add(price);
 			if (!added) return false;
 
-			int index = prices.size() - maxPriceCount;
+			int index = prices.size() - property.maxPriceCount;
 			if (index > 0) {
 				List<Price> subList = prices.subList(index, prices.size());
 				prices.clear();
@@ -170,7 +137,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		else if (prices.size() == 0)
 			return true;
 		else
-			return (priceTimePoint - getPrice().getTime() >= timeUpdatePriceInterval);
+			return (priceTimePoint - getPrice().getTime() >= property.timeUpdatePriceInterval);
 	}
 	
 	
@@ -180,37 +147,9 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		else if (prices.size() <= 1)
 			return true;
 		else
-			return (priceTimePoint - prices.get(prices.size() - 2).getTime() >= timeUpdatePriceInterval);
+			return (priceTimePoint - prices.get(prices.size() - 2).getTime() >= property.timeUpdatePriceInterval);
 	}
 
-	
-	@Override
-	public double getLowPrice(long timeInterval) {
-		Price price = getExtremePrice(true, timeInterval);
-		return price != null ? price.get() : 0;
-	}
-	
-	
-	@Override
-	public double getHighPrice(long timeInterval) {
-		Price price = getExtremePrice(false, timeInterval);
-		return price != null ? price.get() : 0;
-	}
-	
-	
-	protected Price getExtremePrice(boolean low, long timeInterval) {
-		Price found = null;
-		List<Price> priceList = getPrices(timeInterval);
-		for (Price price : priceList) {
-			if (found == null)
-				found = price;
-			else
-				found = (low ? price.get()<found.get() : price.get()>found.get()) ? price : found;
-		}
-		
-		return found;
-	}
-	
 	
 	@Override
 	public double getROI(long timeInterval) {
@@ -272,6 +211,12 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	@Override
+	public boolean isBuy() {
+		return buy;
+	}
+	
+	
+	@Override
 	public double getLeverage() {
 		return leverage;
 	}
@@ -283,27 +228,29 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public double getSpread() {
-		return spread;
-	}
-	
-	
 	@Override
-	public void copyProperties(Stock stock) {
+	public void setBasicInfo(Stock stock) {
 		if (!(stock instanceof StockAbstract)) return;
 		StockAbstract sa = (StockAbstract)stock;
 		
-		this.maxPriceCount = sa.maxPriceCount;
+		this.property = sa.property;
 		this.buy = sa.buy;
-		this.swap = sa.swap;
-		this.spread = sa.spread;
-		this.commission = sa.commission;
-		this.timeUpdatePriceInterval = sa.timeUpdatePriceInterval;
 		this.prices = sa.prices;
 		this.leverage = sa.leverage;
-		this.dividend = sa.dividend;
 		this.unitBias = sa.unitBias;
 		this.code = sa.code;
+	}
+
+
+	@Override
+	public StockProperty getProperty() {
+		return property;
+	}
+
+
+	@Override
+	public void setProperty(StockProperty property) {
+		this.property = property;
 	}
 
 
@@ -311,6 +258,60 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public String toString() {
 		return code;
 	}
+	
+	
+	public static Stock empty() {
+		return new StockAbstract() {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public double getAverageTakenPrice(long timeInterval) {
+				return 0;
+			}
+			
+			@Override
+			public double estimateUnitBias(long timeInterval) {
+				return 0;
+			}
+			
+			@Override
+			public void setCommitted(boolean committed) {
+				
+			}
+			
+			@Override
+			public boolean isCommitted() {
+				return false;
+			}
+			
+			@Override
+			public double getVolume(long timeInterval, boolean countCommitted) {
+				return 0;
+			}
+			
+			@Override
+			public double getValue(long timeInterval) {
+				return 0;
+			}
+			
+			@Override
+			public double getTakenValue(long timeInterval) {
+				return 0;
+			}
+			
+			@Override
+			public double getProfit(long timeInterval) {
+				return 0;
+			}
+			
+			@Override
+			public double getMargin(long timeInterval) {
+				return 0;
+			}
+		};
+	}
+	
 	
 	
 }

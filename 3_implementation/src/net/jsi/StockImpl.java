@@ -64,7 +64,7 @@ public class StockImpl extends StockAbstract {
 		}
 		
 		if (buy)
-			takenPrice.setExtra(getSpread());
+			takenPrice.setExtra(property.spread); 
 		
 		if (!notNullPrice)
 			return true;
@@ -163,7 +163,7 @@ public class StockImpl extends StockAbstract {
 		if (buy)
 			return volume * last.get();
 		else
-			return volume * (last.get() + getSpread());
+			return volume * (last.get() + property.spread);
 	}
 	
 	
@@ -178,7 +178,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public double getFee(long timeInterval) {
-		return getTotalSwap(timeInterval) + (timeInterval == 0 ? commission : 0);
+		return getTotalSwap(timeInterval) + (timeInterval == 0 ? property.commission : 0);
 	}
 	
 	
@@ -188,43 +188,23 @@ public class StockImpl extends StockAbstract {
 			return 0;
 		else {
 			int days = (int) ((prices.get(prices.size()-1).getTime() - prices.get(0).getTime()) / (1000*3600*24) + 0.5);
-			return days*swap*volume;
+			return days*property.swap*volume;
 		}
 	}
 	
 	
 	@Override
-	public double getVolume(long timeInterval, boolean ignoreCommitted) {
+	public double getVolume(long timeInterval, boolean countCommitted) {
 		Price takenPrice = getTakenPrice(timeInterval);
 		if (takenPrice == null)
 			return 0;
-		else if (!ignoreCommitted || !isCommitted())
+		else if (countCommitted || !isCommitted())
 			return volume;
 		else
 			return 0;
 	}
 
 
-	@Override
-	public double estimateBiasAveragePerUnit(long timeInterval) {
-		List<Price> prices = getPrices(timeInterval);
-		if (prices.size() == 0) return unitBias;
-		double bias = 0;
-		for (Price price : prices) {
-			bias += (price.getHigh() - price.getLow()) / 2.0;
-			bias = Math.max(bias, 0);
-		}
-		
-		return Math.max(bias/prices.size(), unitBias);
-	}
-
-
-	@Override
-	public boolean isBuy() {
-		return buy;
-	}
-	
-	
 	public void setVolume(double volume) {
 		this.volume = volume;
 	}
@@ -256,11 +236,6 @@ public class StockImpl extends StockAbstract {
 	
 	public void setTakeProfit(double takeProfit) {
 		this.takeProfit = takeProfit;
-	}
-	
-	
-	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
-		return new PriceImpl(price, lowPrice, highPrice, time);
 	}
 	
 	
