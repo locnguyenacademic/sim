@@ -106,4 +106,9 @@ public class TakenPrice implements Price {
 	}
 
 
+	public Price getPrice() {
+		return price;
+	}
+	
+	
 }

@@ -89,7 +89,8 @@ public abstract class EstimatorAbstract implements Estimator {
 		double price = getPrice().get();;
 		double lowPrice = price;
 		double roi = getROI(timeInterval);
-		lowPrice -= Math.max(estimateUnitBias(timeInterval), roi < 0 ? -price*roi : 0);
+		double unitBias = estimateUnitBias(timeInterval);
+		lowPrice -= Math.max(unitBias, roi < 0 ? -price*roi : 0);
 		
 		return Math.max(Math.min(lowPrice, getLowPriceMean(timeInterval)), getLowestPrice(timeInterval));
 	}
@@ -100,7 +101,8 @@ public abstract class EstimatorAbstract implements Estimator {
 		double price = getPrice().get();
 		double highPrice = price;
 		double roi = getROI(timeInterval);
-		highPrice += Math.max(estimateUnitBias(timeInterval), roi > 0 ? price*roi : 0);
+		double unitBias = estimateUnitBias(timeInterval);
+		highPrice += Math.max(unitBias, roi > 0 ? price*roi : 0);
 		
 		return Math.min(Math.max(highPrice, getHighPriceMean(timeInterval)), getHighestPrice(timeInterval));
 	}
@@ -129,10 +131,7 @@ public abstract class EstimatorAbstract implements Estimator {
 				bias = -price*roi + unitBias;
 		}
 		else {
-			if (roi > 0)
-				bias = unitBias;
-			else
-				bias = Math.max(-price*roi, unitBias);
+			bias = ((roi > 0 ? price*roi : -price*roi) + unitBias) / 2;
 		}
 		
 		return Math.max(Math.min(bias, unitBias), getUnitBias());
@@ -184,7 +183,7 @@ public abstract class EstimatorAbstract implements Estimator {
 
 
 	@Override
-	public double estimateTakenAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
+	public double estimateInvestAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
 		Price p = getPrice();
 		if (p == null) return 0;
 		
@@ -207,24 +206,24 @@ public abstract class EstimatorAbstract implements Estimator {
 	
 	
 	@Override
-	public double estimateTakenAmount(long timeInterval) {
-		return estimateTakenAmount(timeInterval, getPositiveROISum(timeInterval), getInvestAmount(timeInterval));
+	public double estimateInvestAmount(long timeInterval) {
+		return estimateInvestAmount(timeInterval, getPositiveROISum(timeInterval), getInvestAmount(timeInterval));
 	}
 
 
 	@Override
-	public double estimateTakenVolume(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
+	public double estimateInvestVolume(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
 		Price p = getPrice();
 		if (p == null)
 			return 0;
 		else
-			return estimateTakenAmount(timeInterval, refGlobalPositiveROISum, refGlobalInvestAmount) / p.get();
+			return estimateInvestAmount(timeInterval, refGlobalPositiveROISum, refGlobalInvestAmount) / p.get();
 	}
 
 
 	@Override
-	public double estimateTakenVolume(long timeInterval) {
-		return estimateTakenVolume(timeInterval, getPositiveROISum(timeInterval), getInvestAmount(timeInterval));
+	public double estimateInvestVolume(long timeInterval) {
+		return estimateInvestVolume(timeInterval, getPositiveROISum(timeInterval), getInvestAmount(timeInterval));
 	}
 	
 	

@@ -60,6 +60,11 @@ public abstract class MarketAbstract implements Market {
 	}
 	
 	
+	public void setTimeViewInterval(long timeViewInterval) {
+		this.timeViewInterval = timeViewInterval;
+	}
+	
+	
 	@Override
 	public StockImpl c(Stock stock) {
 		if (stock instanceof StockImpl)

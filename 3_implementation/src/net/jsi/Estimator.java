@@ -45,16 +45,16 @@ public interface Estimator extends Serializable, Cloneable {
 	double estimateTakeProfit(long timeInterval);
 
 
-	double estimateTakenAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestedAmount);
+	double estimateInvestAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount);
 
 		
-	double estimateTakenAmount(long timeInterval);
+	double estimateInvestAmount(long timeInterval);
 	
 	
-	double estimateTakenVolume(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestedAmount);
+	double estimateInvestVolume(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount);
 
 	
-	double estimateTakenVolume(long timeInterval);
+	double estimateInvestVolume(long timeInterval);
 	
 	
 	boolean isBuy();

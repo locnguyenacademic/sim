@@ -46,8 +46,31 @@ public class StockImpl extends StockAbstract {
 	}
 
 	
+	private void setExtraForTakenPrice(TakenPrice takenPrice) {
+		if (buy) {
+			takenPrice.setExtra(property.spread);
+		}
+		else {
+			
+		}
+	}
+	
+	
+	public boolean take(long timeInterval, long takenTimePoint) {
+		if (committed) return false;
+		Price price = getPrice(timeInterval, takenTimePoint);
+		if (price == null)
+			return false;
+		takenPrice = new TakenPrice(price);
+		
+		setExtraForTakenPrice(takenPrice);
+
+		return true;
+	}
+	
+	
 	public boolean take(Price price) {
-		if (takenPrice != null || committed) return false;
+		if (committed) return false;
 		boolean notNullPrice = price != null;
 		if (notNullPrice && !checkPrice(price)) return false;
 		
@@ -63,8 +86,7 @@ public class StockImpl extends StockAbstract {
 			}
 		}
 		
-		if (buy)
-			takenPrice.setExtra(property.spread); 
+		setExtraForTakenPrice(takenPrice);
 		
 		if (!notNullPrice)
 			return true;

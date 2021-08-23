@@ -20,7 +20,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public static double UNIT_BIAS = LEVERAGE*100;
 
 
-	public static long TIME_UPDATE_PRICE_INTERVAL = 0;
+	public static long TIME_UPDATE_PRICE_INTERVAL = 1;
 
 
 	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;

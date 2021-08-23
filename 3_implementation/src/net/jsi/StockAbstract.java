@@ -93,9 +93,23 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public Price getPrice(long timePoint) {
+		return getPrice(0, timePoint);
+	}
+	
+	
+	public Price getPrice(long timeInterval, long timePoint) {
+		Price lastPrice = getPrice();
+		if (lastPrice == null) return null;
+		
 		for (Price price : prices) {
-			if (price.getTime() == timePoint) return price;
+			if (price.getTime() == timePoint) {
+				if (timeInterval <= 0)
+					return price;
+				else if (lastPrice.getTime() - timePoint <= timeInterval)
+					return price;
+			}
 		}
+		
 		return null;
 	}
 	

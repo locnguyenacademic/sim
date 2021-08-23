@@ -164,7 +164,13 @@ public class StockGroup extends StockAbstract implements Market {
 		boolean ret = super.setPrice(price);
 		if (!ret) return false;
 		for (Stock stock : stocks) {
-			if (!stock.isCommitted()) stock.setPrice(price);
+			if (stock.isCommitted()) continue;
+			
+			StockImpl s = c(stock);
+			if (s != null && s.prices == this.prices)
+				continue;
+			else
+				stock.setPrice(price);
 		}
 		return ret;
 	}
@@ -180,6 +186,20 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
+	public Stock get(long timeInterval, long takenTimePoint) {
+		int index = lookup(timeInterval, takenTimePoint);
+		if (index >= 0)
+			return get(index);
+		else
+			return null;
+	}
+	
+	
+	public Stock get(long takenTimePoint) {
+		return get(0, takenTimePoint);
+	}
+
+		
 	public int lookup(long timeInterval, long takenTimePoint) {
 		for (int i = 0; i < stocks.size(); i++) {
 			Stock stock = stocks.get(i);
@@ -210,9 +230,9 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 	
-	public Stock add(long timeInterval, double volume) {
+	public Stock add(long timeInterval, long takenTimePoint, double volume) {
 		if (prices.size() == 0) return null;
-		StockImpl stock = (StockImpl) newStock(volume);
+		StockImpl stock = (StockImpl) newStock(timeInterval, takenTimePoint, volume);
 		if (stock.isValid(timeInterval) && stocks.add(stock))
 			return stock;
 		else
@@ -220,13 +240,15 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
-	protected Stock newStock(double volume) {
+	public Stock newStock(long timeInterval, long takenTimePoint, double volume) {
 		StockImpl stock = new StockImpl();
 		stock.setBasicInfo(this);
 		stock.volume = volume;
-		stock.take();
 		
-		return stock;
+		if (takenTimePoint <= 0)
+			return stock.take() ? stock : null;
+		else
+			return stock.take(timeInterval, takenTimePoint) ? stock : null;
 	}
 	
 	
@@ -244,8 +266,10 @@ public class StockGroup extends StockAbstract implements Market {
 	public StockImpl c(Stock stock) {
 		if (stock instanceof StockImpl)
 			return (StockImpl)stock;
-		else
-			return null;
+		else {
+			MarketImpl m = m();
+			return m != null ? m.c(stock) : null;
+		}
 	}
 	
 	
@@ -312,6 +336,24 @@ public class StockGroup extends StockAbstract implements Market {
 		}
 		
 		return null;
+	}
+	
+	
+	private MarketImpl m() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.c(getSuperMarket()) : null;
+	}
+	
+	
+	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
+		Universe u = getNearestUniverse();
+		if (u == null) return new PriceImpl(price, lowPrice, highPrice, time);
+		
+		MarketImpl m = u.c(getSuperMarket());
+		if (m != null) 
+			return m.newPrice(price, lowPrice, highPrice, time);
+		else
+			return new PriceImpl(price, lowPrice, highPrice, time);
 	}
 	
 	
