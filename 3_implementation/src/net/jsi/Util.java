@@ -1,9 +1,18 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.awt.Component;
 import java.awt.Frame;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +33,18 @@ public final class Util {
 			
 	
 	public static int DECIMAL_PRECISION = 2;
+
+	
+	/**
+	 * Default Java regular expression for splitting a sentence into many words (tokens), including space.
+	 */
+	public final static String DEFAULT_SEP         = "[[\\s][::][\\|][,][;]]";
+
+	
+	/**
+	 * Default Java regular expression for splitting a sentence into many words (tokens), not including white space.
+	 */
+	public final static String NOSPACE_DEFAULT_SEP = "[[::][\\|][,][;]]";
 
 	
 	/**
@@ -74,6 +95,21 @@ public final class Util {
 	}
 
 
+	/**
+	 * Sorting the specified collection.
+	 * @param <T> type of elements.
+	 * @param data specified collection.
+	 * @return sorted list.
+	 */
+	public static <T extends Comparable<T>> List<T> sort(Collection<T> data) {
+		List<T> codeList = Util.newList(data.size());
+		codeList.addAll(data);
+		Collections.sort(codeList);
+		
+		return codeList;
+	}
+	
+	
 	/**
 	 * Getting the parent frame of the specified component.
 	 * @param comp specified component.

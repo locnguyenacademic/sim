@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.util.Date;
@@ -88,6 +95,17 @@ public class PriceImpl implements Price {
 
 
 	@Override
+	public boolean copy(Price price) {
+		if (price == null) return false;
+		this.set(price.get());
+		this.setLow(price.getLow());
+		this.setHigh(price.getHigh());
+		this.setTime(price.getTime());
+		return true;
+	}
+
+
+	@Override
 	public boolean isValid() {
 		return price >= lowPrice && price <= highPrice && time >= 0;
 	}
@@ -101,6 +119,16 @@ public class PriceImpl implements Price {
 		catch (CloneNotSupportedException e) {
 			return null;
 		}
+	}
+
+
+	public boolean checkRefEquals(Price price) {
+		if (price == null)
+			return false;
+		else if (price instanceof TakenPrice)
+			return this == ((TakenPrice)price).getPrice();
+		else
+			return this == price;
 	}
 
 

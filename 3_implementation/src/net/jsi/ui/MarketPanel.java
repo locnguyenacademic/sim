@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi.ui;
 
 import java.awt.BorderLayout;
@@ -13,7 +20,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -156,6 +162,11 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
+	protected File getWorkingDirectory() {
+		return null;
+	}
+	
+	
 	private void take(Stock input, boolean modify) {
 		if (modify && input == null) return;
 		StockTaker taker = new StockTaker(getMarket(), input, modify, this);
@@ -164,7 +175,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	private void update() {
+	protected void update() {
 		Market m = getMarket();
 
 		long timeViewInterval = m.getTimeViewInterval();
@@ -198,51 +209,61 @@ public class MarketPanel extends JPanel implements MarketListener {
 
 	protected void onOpen() {
 		JFileChooser fc = createFileChooser();
-		if (file != null) fc.setCurrentDirectory(file.getParentFile());
         if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
-        file = fc.getSelectedFile();
+        File file = fc.getSelectedFile();
+        boolean ret = open(file);
+        
+        if (ret)
+            JOptionPane.showMessageDialog(this, "Success to open market \"" + getMarket().getName() + "\"", "Open market", JOptionPane.INFORMATION_MESSAGE);
+		else
+			JOptionPane.showMessageDialog(this, "Fail to open market \"" + getMarket().getName() + "\"", "Save market", JOptionPane.ERROR_MESSAGE);
+	}
 
+	
+	protected boolean open(File file) {
+		if (file == null || !file.exists() || file.isDirectory()) return false;
         try {
         	FileReader reader = new FileReader(file);
         	boolean ret = getMarketTable().open(reader);
-        	
-            if (ret)
-                JOptionPane.showMessageDialog(this, "Success to open market \"" + getMarket().name() + "\"", "Open market", JOptionPane.INFORMATION_MESSAGE);
-    		else
-    			JOptionPane.showMessageDialog(this, "Fail to open market \"" + getMarket().name() + "\"", "Save market", JOptionPane.ERROR_MESSAGE);
+            if (ret) this.file = file;
 
             reader.close();
+            return ret;
         }
         catch (Exception e) {
         	e.printStackTrace();
         }
+        
+        return false;
 	}
-
+	
 	
 	protected void onSave() {
 		JFileChooser fc = createFileChooser();
         if (fc.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
-        file = fc.getSelectedFile();
+        
+        File file = fc.getSelectedFile();
         FileFilter filter = fc.getFileFilter();
-        if (filter.getDescription().compareToIgnoreCase("CSV files") == 0) {
+        if (filter.getDescription().compareToIgnoreCase(StockProperty.JSI_DESC) == 0) {
         	int index = file.getName().indexOf(".");
         	if (index < 0)
-        		file = new File(file.getAbsolutePath().concat(".csv"));
+        		file = new File(file.getAbsolutePath().concat("." + StockProperty.JSI_DESC));
         }
 
-        boolean ret = save();
+        boolean ret = save(file);
 		if (ret)
-            JOptionPane.showMessageDialog(this, "Success to save market \"" + getMarket().name() + "\"", "Save market", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Success to save market \"" + getMarket().getName() + "\"", "Save market", JOptionPane.INFORMATION_MESSAGE);
 		else
-			JOptionPane.showMessageDialog(this, "Fail to save market \"" + getMarket().name() + "\"", "Save market", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Fail to save market \"" + getMarket().getName() + "\"", "Save market", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	
-	protected boolean save() {
+	protected boolean save(File file) {
 		if (file == null) return false;
         try {
         	FileWriter writer = new FileWriter(file);
         	boolean ret = tblMarket.save(writer);
+        	if (ret) this.file = file;
         	
         	writer.close();
             return ret;
@@ -252,17 +273,24 @@ public class MarketPanel extends JPanel implements MarketListener {
         }
         
         return false;
-		
 	}
+	
 	
 	
 	protected void dispose() {
 		if (file != null) {
-			save();
+			save(file);
 			return;
 		}
+		else {
+			File workingDir = getWorkingDirectory();
+			if (workingDir != null && workingDir.exists() && workingDir.isDirectory()) {
+				File file = new File(workingDir, getMarket().getName() + "." + StockProperty.JSI_EXT);
+				if (save(file)) return;
+			}
+		}
 		
-		int ret = JOptionPane.showConfirmDialog(this, "Would you like to save market \"" + getMarket().name(), "Save market", JOptionPane.YES_NO_OPTION);
+		int ret = JOptionPane.showConfirmDialog(this, "Would you like to save market \"" + getMarket().getName() + "\"", "Save market", JOptionPane.YES_NO_OPTION);
 		if (ret == JOptionPane.YES_OPTION) onSave();
 	}
 	
@@ -273,7 +301,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 		fc.addChoosableFileFilter(csv = new FileFilter() {
 			@Override
 			public String getDescription() {
-				return "CSV files";
+				return StockProperty.JSI_DESC;
 			}
 			
 			@Override
@@ -283,7 +311,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 					int index = name.lastIndexOf('.');
 					if (index < 0) return false;
 					String ext = name.substring(index + 1);
-					return ext != null && ext.compareToIgnoreCase("csv") == 0;
+					return ext != null && ext.compareToIgnoreCase(StockProperty.JSI_EXT) == 0;
 				}
 				catch (Exception e) {}
 				
@@ -294,6 +322,19 @@ public class MarketPanel extends JPanel implements MarketListener {
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setFileFilter(csv);
 		
+		if (this.file != null) {
+			fc.setCurrentDirectory(this.file.getParentFile());
+			fc.setSelectedFile(this.file);
+		}
+		else {
+			File curDir = new File(".");
+			File workingDir = getWorkingDirectory();
+			if (workingDir != null && workingDir.exists() && workingDir.isDirectory()) curDir = workingDir;
+
+			fc.setCurrentDirectory(curDir);
+			fc.setSelectedFile(new File(curDir, getMarket().getName() + "." + StockProperty.JSI_EXT));
+		}
+
 		return fc;
 	}
 
@@ -402,6 +443,9 @@ class StockTaker extends JDialog {
 
 	
 	protected JCheckBox chkAddPrice;
+	
+	
+	Component parent = null;
 
 	
 	protected Market market = null;
@@ -421,6 +465,7 @@ class StockTaker extends JDialog {
 		this.market = market;
 		this.input = input;
 		this.update = update;
+		this.parent = parent;
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(500, 500);
@@ -453,10 +498,7 @@ class StockTaker extends JDialog {
 		JPanel right = new JPanel(new GridLayout(0, 1));
 		header.add(right, BorderLayout.CENTER);
 		
-		List<String> codes = Util.newList(0);
-		Universe universe = market.getNearestUniverse();
-		if (universe != null) codes.addAll(universe.getSupportStockCodes());
-		cmbCode = new JComboBox<String>(codes.toArray(new String[] {}));
+		cmbCode = new JComboBox<String>(market.getSupportStockCodes().toArray(new String[] {}));
 		if (update) {
 			cmbCode.setSelectedItem(input.code());
 			cmbCode.setEnabled(false);
@@ -481,7 +523,7 @@ class StockTaker extends JDialog {
 		right.add(paneLeverage);
 		txtLeverage = new JFormattedTextField(new NumberFormatter());
 		txtLeverage.setValue(0);
-		txtLeverage.setEnabled(false);
+		txtLeverage.setEditable(false);
 		txtLeverage.setToolTipText("Value 0 specified infinity leverage");
 		paneLeverage.add(txtLeverage, BorderLayout.CENTER);
 		//
@@ -490,7 +532,7 @@ class StockTaker extends JDialog {
 		chkLeverage.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				txtLeverage.setEnabled(chkLeverage.isSelected());
+				txtLeverage.setEditable(chkLeverage.isSelected());
 			}
 		});
 		paneLeverage.add(chkLeverage, BorderLayout.WEST);
@@ -503,7 +545,7 @@ class StockTaker extends JDialog {
 		if (update) right.add(paneTakenPrice);
 		txtTakenPrice = new JFormattedTextField(new NumberFormatter());
 		txtTakenPrice.setValue(update ? input.getAverageTakenPrice(0) : 1);
-		txtTakenPrice.setEnabled(false);
+		txtTakenPrice.setEditable(false);
 		paneTakenPrice.add(txtTakenPrice, BorderLayout.CENTER);
 		//
 		btnTakenPrice = new JButton("Set");
@@ -520,7 +562,7 @@ class StockTaker extends JDialog {
 		if (update) right.add(paneTakenDate);
 		txtTakenDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
 		txtTakenDate.setValue(new Date(0));
-		txtTakenDate.setEnabled(false);
+		txtTakenDate.setEditable(false);
 		paneTakenDate.add(txtTakenDate, BorderLayout.CENTER);
 		//
 		btnTakenDate = new JButton("Set");
@@ -585,7 +627,7 @@ class StockTaker extends JDialog {
 		right.add(paneLastDate);
 		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
 		txtLastDate.setValue(new Date());
-		txtLastDate.setEnabled(false);
+		txtLastDate.setEditable(false);
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
 		//
 		chkLastDate = new JCheckBox();
@@ -594,7 +636,7 @@ class StockTaker extends JDialog {
 		chkLastDate.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				txtLastDate.setEnabled(chkLastDate.isSelected());
+				txtLastDate.setEditable(chkLastDate.isSelected());
 				btnLastDateNow.setEnabled(chkLastDate.isSelected());
 			}
 		});
@@ -612,11 +654,11 @@ class StockTaker extends JDialog {
 		btnLastDateNow.setEnabled(false);
 		paneLastDate2.add(btnLastDateNow);
 		//
-		btnLastDateList = new JButton("List");
+		btnLastDateList = new JButton("Price list");
 		btnLastDateList.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				listPrices();
+				modifyPriceList();
 			}
 		});
 		btnLastDateList.setEnabled(true);
@@ -637,7 +679,7 @@ class StockTaker extends JDialog {
 		//
 		txtUnitBias = new JFormattedTextField(new NumberFormatter());
 		txtUnitBias.setValue(0);
-		txtUnitBias.setEnabled(false);
+		txtUnitBias.setEditable(false);
 		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
 		//
 		chkUnitBias = new JCheckBox();
@@ -645,7 +687,7 @@ class StockTaker extends JDialog {
 		chkUnitBias.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				txtUnitBias.setEnabled(chkUnitBias.isSelected());
+				txtUnitBias.setEditable(chkUnitBias.isSelected());
 				btnUnitBias.setEnabled(getStockGroup() != null && chkUnitBias.isSelected());
 			}
 		});
@@ -700,7 +742,7 @@ class StockTaker extends JDialog {
 		//
 		txtProperty = new StockPropertyTextField();
 		if (input != null) txtProperty.setStockProperty(input.getProperty());
-		txtProperty.setEnabled(false);
+		txtProperty.setEditable(false);
 		paneProperty.add(txtProperty, BorderLayout.CENTER);
 		//
 		chkProperty = new JCheckBox();
@@ -709,7 +751,7 @@ class StockTaker extends JDialog {
 		chkProperty.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				txtProperty.setEnabled(chkProperty.isSelected() && input != null);
+				txtProperty.setEditable(chkProperty.isSelected() && input != null);
 				btnProperty.setEnabled(chkProperty.isSelected() && input != null);
 			}
 		});
@@ -853,14 +895,18 @@ class StockTaker extends JDialog {
 	}
 	
 	
-	private void listPrices() {
-		new PriceList(market, input, market.getTimeViewInterval(), true, false, this).setVisible(true);
-		if (!update) return;
+	private void modifyPriceList() {
+		PriceList pl = new PriceList(market, input, market.getTimeViewInterval(), update, false, this);
+		pl.setVisible(true);
+		if (!update || !pl.isPressOK()) return;
 		
-		Price price = input.getPrice(market.getTimeViewInterval());
+		Price price = input.getPrice();
 		if (price == null) return;
 
-		txtLastDate.setValue(price.getTime());
+		txtPrice.setValue(price.get());
+		txtLowPrice.setValue(price.getLow());
+		txtHighPrice.setValue(price.getHigh());
+		txtLastDate.setValue(new Date(price.getTime()));
 
 		StockImpl s = m().c(input);
 		if (s == null) return;
@@ -870,6 +916,13 @@ class StockTaker extends JDialog {
 			txtTakenDate.setValue(new Date(takenPrice.getTime()));
 		}
 		
+		Component parent = getParent0();
+		if (parent == null)
+			return;
+		else if (parent instanceof MarketPanel)
+			((MarketPanel)parent).getMarketTable().update();
+		else if (parent instanceof MarketTable)
+			((MarketTable)parent).update();
 	}
 	
 	
@@ -1008,9 +1061,7 @@ class StockTaker extends JDialog {
 			}
 		}
 		else if (!chkAddPrice.isSelected()) {
-			if (group.size() == 1 && txtProperty.getStockProperty() != null) {
-				s.getProperty().set(txtProperty.getStockProperty());
-			}
+
 		}
 		
 		
@@ -1022,6 +1073,10 @@ class StockTaker extends JDialog {
 			s.setStopLoss(((Number)txtStopLoss.getValue()).doubleValue());
 			s.setTakeProfit(((Number)txtTakeProfit.getValue()).doubleValue());
 			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue());
+			
+			if (chkProperty.isSelected() && txtProperty.getStockProperty() != null) {
+				s.getProperty().set(txtProperty.getStockProperty());
+			}
 		}
 	
 		
@@ -1036,6 +1091,11 @@ class StockTaker extends JDialog {
 	}
 
 
+	private Component getParent0() {
+		return parent;
+	}
+	
+	
 }
 
 

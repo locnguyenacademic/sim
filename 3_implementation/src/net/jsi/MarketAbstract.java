@@ -1,4 +1,13 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
+
+import java.util.List;
 
 public abstract class MarketAbstract implements Market {
 
@@ -49,8 +58,13 @@ public abstract class MarketAbstract implements Market {
 
 	
 	@Override
-	public String name() {
+	public String getName() {
 		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 
@@ -91,6 +105,38 @@ public abstract class MarketAbstract implements Market {
 		
 		return null;
 	}
+
+
+	@Override
+	public List<String> getSupportStockCodes() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.getSupportStockCodes() : Util.newList(0);
+	}
+
+
+	@Override
+	public List<String> getDefaultStockCodes() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.getDefaultStockCodes() : Util.newList(0);
+	}
 	
 	
+	protected void reset() {
+		this.timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
+	}
+	
+	
+	public static String toCodesText(List<String> codes) {
+		if (codes == null || codes.size() == 0) return "";
+		
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < codes.size(); i++) {
+			if ( i > 0) buffer.append(", ");
+			buffer.append(codes.get(i));
+		}
+		
+		return buffer.toString();
+	}
+
+
 }

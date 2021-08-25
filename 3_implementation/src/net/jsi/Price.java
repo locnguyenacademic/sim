@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
@@ -36,7 +43,10 @@ public interface Price extends Serializable, Cloneable {
 	boolean isValid();
 	
 	
-	Object clone();
+	boolean copy(Price price);
+	
+	
+	boolean checkRefEquals(Price price);
 	
 	
 }

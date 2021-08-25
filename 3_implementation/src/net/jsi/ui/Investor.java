@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi.ui;
 
 import java.awt.BorderLayout;
@@ -11,23 +18,33 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.text.NumberFormatter;
 
 import net.jsi.Market;
+import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
@@ -55,8 +72,10 @@ public class Investor extends JFrame implements MarketListener {
 	protected JLabel lblTotalBias;
 
 	
+	protected File curDir = null;
+	
 	public Investor(Universe universe) {
-		super("Stock investor");
+		super("JSI - Stock/forex investment manager");
 		this.universe = universe;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -83,15 +102,16 @@ public class Investor extends JFrame implements MarketListener {
 		
 		setLayout(new BorderLayout());
 
-		add(createToolbar(), BorderLayout.NORTH);
+		JToolBar toolbar = createToolbar();
+		if (toolbar != null) add(toolbar, BorderLayout.NORTH);
 
-		body = new JTabbedPane();
+		body = new DraggableTabbedPane();
 		add(body, BorderLayout.CENTER);
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);
 			MarketPanel mp = new MarketPanel(market);
 			mp.getMarketTable().getModel2().addMarketListener(this);
-			body.add(market.name(), mp);
+			body.add(market.getName(), mp);
 		}
 		
 		JPanel footer = new JPanel(new BorderLayout());
@@ -107,8 +127,6 @@ public class Investor extends JFrame implements MarketListener {
 		footerRow.add(lblTotalBias = new JLabel());
 
 		update();
-		
-		setVisible(true);
 	}
 	
 	
@@ -122,9 +140,21 @@ public class Investor extends JFrame implements MarketListener {
 		lblTotalROI.setText("ROI: " + Util.format(roi*100) + "%");
 		lblTotalBias.setText("BIAS: " + Util.format(totalBias));
 	}
-
 	
-	protected JMenuBar createMenuBar() {
+	
+//	private void updateAll(Object source) {
+//		boolean mtm = (source != null) && (source instanceof MarketTableModel);
+//		MarketPanel[] mps = getMarketPanels();
+//		for (MarketPanel mp : mps) {
+//			if (mtm && mp.getMarketTable().getModel2() != source)
+//				mp.update();
+//		}
+//		
+//		if (!mtm) update();
+//	}
+	
+	
+	private JMenuBar createMenuBar() {
 		JMenuBar mnBar = new JMenuBar();
 		
 		JMenu mnFile = new JMenu("File");
@@ -157,42 +187,252 @@ public class Investor extends JFrame implements MarketListener {
 		mniSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniSave);
 
+		mnFile.addSeparator();
+		
+		JMenuItem mniAddMarket = new JMenuItem(
+			new AbstractAction("Add market") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					addMarket();
+				}
+			});
+		mniAddMarket.setMnemonic('a');
+		mnFile.add(mniAddMarket);
+		
+		JMenuItem mniRemoveMarket = new JMenuItem(
+			new AbstractAction("Remove current market") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					removeSelectedMarket();
+				}
+			});
+		mniRemoveMarket.setMnemonic('r');
+		mnFile.add(mniRemoveMarket);
+
 		JMenu mnTool = new JMenu("Tool");
-		mnFile.setMnemonic('t');
+		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
 
-		JMenuItem mnOption = new JMenuItem(
+		JMenuItem mniOption = new JMenuItem(
 			new AbstractAction("Option") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new Option().setVisible(true);
+					if (getSelectedMarket() != null) new Option().setVisible(true);
 				}
 			});
-		mnOption.setMnemonic('p');
-		mnTool.add(mnOption);
+		mniOption.setMnemonic('p');
+		mnTool.add(mniOption);
+
+		JMenu mnHelp = new JMenu("Help");
+		mnHelp.setMnemonic('h');
+		mnBar.add(mnHelp);
+
+		JMenuItem mniAbout = new JMenuItem(
+			new AbstractAction("About") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JDialog dlgAbout = new JDialog(getInvestor(), "About", true);
+					dlgAbout.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+					dlgAbout.setSize(400, 200);
+					dlgAbout.setLocationRelativeTo(getInvestor());
+					dlgAbout.setLayout(new BorderLayout());
+					
+					JPanel body = new JPanel(new BorderLayout());
+					dlgAbout.add(body, BorderLayout.CENTER);
+					
+					JTextArea txtContent = new JTextArea();
+					txtContent.setLineWrap(true);
+					txtContent.setEditable(false);
+					txtContent.setText("JSI is the stock/forex investment manager.\nCopyright @ by Loc Nguyen - Loc Nguyen's Academic Network");
+					dlgAbout.add(new JScrollPane(txtContent), BorderLayout.CENTER);
+					
+					JPanel footer = new JPanel();
+					dlgAbout.add(footer, BorderLayout.SOUTH);
+					
+					JButton ok = new JButton("OK");
+					ok.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							dlgAbout.dispose();
+						}
+					});
+					footer.add(ok);
+					
+					dlgAbout.setVisible(true);
+				}
+			});
+		mniAbout.setMnemonic('a');
+		mnHelp.add(mniAbout);
+		
+		JMenuItem mniHelpContent = new JMenuItem(
+			new AbstractAction("Help content") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JDialog dlgHelpContent = new JDialog(getInvestor(), "Help content", true);
+					dlgHelpContent.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+					dlgHelpContent.setSize(400, 300);
+					dlgHelpContent.setLocationRelativeTo(getInvestor());
+					dlgHelpContent.setLayout(new BorderLayout());
+					
+					JPanel body = new JPanel(new BorderLayout());
+					dlgHelpContent.add(body, BorderLayout.CENTER);
+					
+					JTextArea txtContent = new JTextArea();
+					txtContent.setLineWrap(true);
+					txtContent.setEditable(false);
+					txtContent.setText("The JSI product is the place to acknowledge individuals and organizations who gave me software libraries used in JSI.\n"
+							+ "Some libraries are no longer used in current version of JSI.\n"
+							+ "\n"
+							+ "Tom Martin and Ky Leggiero developed draggable tabed panel available at https://stackoverflow.com/questions/60269/how-to-implement-draggable-tab-using-java-swing\n");
+					dlgHelpContent.add(new JScrollPane(txtContent), BorderLayout.CENTER);
+					
+					JPanel footer = new JPanel();
+					dlgHelpContent.add(footer, BorderLayout.SOUTH);
+					
+					JButton ok = new JButton("OK");
+					ok.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							dlgHelpContent.dispose();
+						}
+					});
+					footer.add(ok);
+					
+					dlgHelpContent.setVisible(true);
+				}
+			});
+		mniHelpContent.setMnemonic('c');
+		mnHelp.add(mniHelpContent);
 
 		return mnBar;
 	}
 	
 	
-	protected JToolBar createToolbar() {
-		JToolBar toolbar = new JToolBar();
-
-		return toolbar;
+	private JToolBar createToolbar() {
+		//JToolBar toolbar = new JToolBar();
+		//return toolbar;
+		return null;
 	}
 
 
 	private void onOpen() {
-		MarketPanel mp = getMarketPanel();
-		if (mp != null) mp.onOpen();
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp != null) {
+			mp.onOpen();
+		}
 	}
 	
 	
 	private void onSave() {
-		MarketPanel mp = getMarketPanel();
+		MarketPanel mp = getSelectedMarketPanel();
 		if (mp != null) mp.onSave();
+	}
+	
+	
+	protected void addMarket() {
+		MarketPanel[] mps = getMarketPanels();
+		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
+		if (marketName == null || marketName.isEmpty())
+			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
+		else if (getMarketPanel(marketName) != null)
+			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
+		else {
+			MarketPanel mp = addMarket(marketName);
+			if (mp == null)
+				JOptionPane.showMessageDialog(this, "Impossible to add market", "Impossible to add market", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	
+	protected MarketPanel addMarket(String marketName) {
+		if (marketName == null || marketName.isEmpty()) return null;
+		if (getMarketPanel(marketName) != null) return null;
+		
+		MarketPanel mp = newMarket(marketName, StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
+		if (mp == null) return null;
+		mp.getMarketTable().getModel2().addMarketListener(this);
+		body.add(mp.getMarket().getName(), mp);
+		
+		update();
+		
+		return mp;
+	}
+	
+	
+	protected MarketPanel addMarket(File file) {
+		if (file == null || !file.exists()) return null;
+		String fileName = file.getName();
+		if (fileName == null || fileName.isEmpty()) return null;
+		
+		String marketName = null;
+		int index = fileName.lastIndexOf(".");
+		if (index < 0)
+			marketName = fileName;
+		else
+			marketName = fileName.substring(0, index);
+		if (marketName == null | marketName.isEmpty()) return null;
+		
+		MarketPanel mp = newMarket(marketName, StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
+		if (mp == null) return null;
+		boolean ret = mp.open(file);
+		if (!ret) return null;
+		
+		marketName = mp.getMarket().getName();
+		if (getMarketPanel(marketName) != null) return null;
+		mp.getMarketTable().getModel2().addMarketListener(this);
+		body.add(marketName, mp);
+		
+		update();
+		
+		return mp;
+	}
+
+		
+	protected MarketPanel newMarket(String name, double leverage, double unitBias) {
+		Market market = universe.newMarket(name, leverage, unitBias);
+		if (!universe.add(market)) return null;
+		
+		return new MarketPanel(market) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected File getWorkingDirectory() {
+				return curDir;
+			}
+			
+		};
+	}
+	
+	
+	private void removeSelectedMarket() {
+		MarketPanel[] mps = getMarketPanels();
+		if (mps.length == 0) return;
+		if (mps.length < 2) {
+			JOptionPane.showMessageDialog(this, "Universe has 1 market at least", "Imposible to remove market", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp == null) return;
+		int index = universe.lookup(mp.getMarket().getName());
+		if (index < 0) return;
+		
+		if (universe.remove(index) != null) {
+			int idx = getSelectedMarketPanelIndex();
+			if (idx >= 0) body.removeTabAt(idx);
+			update();
+		}
 	}
 	
 	
@@ -202,23 +442,67 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
-	protected MarketPanel getMarketPanel() {
+	private MarketPanel getSelectedMarketPanel() {
 		Component comp = body.getSelectedComponent();
-		if (comp instanceof MarketPanel)
+		if ((comp != null) && (comp instanceof MarketPanel))
 			return (MarketPanel)comp;
 		return
 			null;
 	}
 	
 	
-	protected MarketImpl getMarket() {
-		MarketPanel mp = getMarketPanel();
-		if (mp == null) return null;
+	private MarketPanel[] getMarketPanels() {
+		int n = body.getTabCount();
 		
-		Universe u = mp.getMarket().getNearestUniverse();
-		return u != null ? u.c(mp.getMarket()) : null;
+		MarketPanel[] mps = new MarketPanel[n];
+		for (int i = 0; i < n; i++) {
+			mps[i] = (MarketPanel) body.getComponentAt(i);
+		}
+		
+		return mps;
+	}
+	
+	
+	private int getSelectedMarketPanelIndex() {
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp == null) return -1;
+		
+		MarketPanel[] mps = getMarketPanels();
+		for (int i = 0; i < mps.length; i++) {
+			if (mps[i] == mp) return i;
+		}
+		
+		return -1;
+	}
+	
+	
+	private MarketPanel getMarketPanel(String marketName) {
+		MarketPanel[] mps = getMarketPanels();
+		for (MarketPanel mp : mps) {
+			if (mp.getMarket().getName().equals(marketName)) return mp;
+		}
+		
+		return null;
+	}
+	
+	
+	private MarketImpl getSelectedMarket() {
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp == null)
+			return null;
+		else
+			return universe.c(mp.getMarket());
 	}
 
+	
+	protected MarketImpl[] getMarkets() {
+		MarketPanel[] mps = getMarketPanels();
+		MarketImpl[] ms = new MarketImpl[mps.length];
+		for (int i = 0; i < mps.length; i++) ms[i] = universe.c(mps[i].getMarket());
+		
+		return ms;
+	}
+	
 	
 	private Investor getInvestor() {
 		return this;
@@ -229,23 +513,35 @@ public class Investor extends JFrame implements MarketListener {
 
 		private static final long serialVersionUID = 1L;
 
-		protected JFormattedTextField txtBalance;
+		protected JFormattedTextField txtBalanceBase;
 		
 		protected JFormattedTextField txtBalanceBias;
 		
+		protected JButton btnBalanceBias;
+		
 		protected JFormattedTextField txtMarginFee;
+		
+		protected JButton btnMarginFee;
 		
 		protected JFormattedTextField txtTimeViewInterval;
 		
 		protected JFormattedTextField txtRefLeverage;
 		
+		protected JTextArea txtDefaultStockCodes;
+		
+		protected JTextField txtCurDir;
+		
+		protected JButton btnCurDir;
+		
 		public Option() {
 			super(getInvestor(), "Option", true);
-			MarketImpl m = getMarket();
+			MarketImpl m = getSelectedMarket();
+			Option thisOption = this;
+			setTitle("Option for market \"" + m.getName() + "\"");
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setSize(350, 250);
-			setLocationRelativeTo(Util.getFrameForComponent(getInvestor()));
+			setSize(400, 300);
+			setLocationRelativeTo(getInvestor());
 			setLayout(new BorderLayout());
 			
 			
@@ -255,36 +551,68 @@ public class Investor extends JFrame implements MarketListener {
 			JPanel left = new JPanel(new GridLayout(0, 1));
 			header.add(left, BorderLayout.WEST);
 			
-			left.add(new JLabel("Balance: "));
+			left.add(new JLabel("Balance (basic): "));
 			left.add(new JLabel("Balance bias: "));
 			left.add(new JLabel("Margin fee: "));
 			left.add(new JLabel("Day interval (days): "));
 			left.add(new JLabel("Referred leverage: "));
+			left.add(new JLabel("Current directory: "));
 
 			JPanel right = new JPanel(new GridLayout(0, 1));
 			header.add(right, BorderLayout.CENTER);
 			
 			JPanel paneBalance = new JPanel(new BorderLayout());
 			right.add(paneBalance);
-			txtBalance = new JFormattedTextField(new NumberFormatter());
-			txtBalance.setValue(m.getBalanceBase());
-			paneBalance.add(txtBalance, BorderLayout.CENTER);
+			txtBalanceBase = new JFormattedTextField(new NumberFormatter());
+			txtBalanceBase.setValue(m.getBalanceBase());
+			paneBalance.add(txtBalanceBase, BorderLayout.CENTER);
 			
 			JPanel paneBalanceBias = new JPanel(new BorderLayout());
 			right.add(paneBalanceBias);
 			txtBalanceBias = new JFormattedTextField(new NumberFormatter());
 			txtBalanceBias.setValue(m.getBalanceBias());
 			paneBalanceBias.add(txtBalanceBias, BorderLayout.CENTER);
+			//
+			btnBalanceBias = new JButton("Calc");
+			btnBalanceBias.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String txtProvidedBalance = JOptionPane.showInputDialog(thisOption, "Enter provided balance (basic)", getBalanceBase0());
+					double providedBalance = 0;
+					try {
+						providedBalance = Double.parseDouble(txtProvidedBalance);
+					}
+					catch (Exception ex) {return;}
+					txtBalanceBias.setValue(getSelectedMarket().calcBalanceBias(providedBalance, getTimeViewInterval0()));
+				}
+			});
+			paneBalanceBias.add(btnBalanceBias, BorderLayout.EAST);
 			
 			JPanel paneMarginFee = new JPanel(new BorderLayout());
 			right.add(paneMarginFee);
 			txtMarginFee = new JFormattedTextField(new NumberFormatter());
 			txtMarginFee.setValue(m.getMarginFee());
 			paneMarginFee.add(txtMarginFee, BorderLayout.CENTER);
+			//
+			btnMarginFee = new JButton("Calc");
+			btnMarginFee.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String txtNewMargin = JOptionPane.showInputDialog(thisOption, "Enter new margin", getMargin0());
+					double newMargin = 0;
+					try {
+						newMargin = Double.parseDouble(txtNewMargin);
+					}
+					catch (Exception ex) {return;}
+					txtMarginFee.setValue(getSelectedMarket().calcMarginBias(newMargin, getTimeViewInterval0()));
+				}
+			});
+			paneMarginFee.add(btnMarginFee, BorderLayout.EAST);
 			
 			JPanel paneTimeViewInterval = new JPanel(new BorderLayout());
 			right.add(paneTimeViewInterval);
 			txtTimeViewInterval = new JFormattedTextField(new NumberFormatter());
+			txtTimeViewInterval.setToolTipText("Value 0 specifies viewing al time points");
 			txtTimeViewInterval.setValue(m.getTimeViewInterval() / (1000*3600*24));
 			paneTimeViewInterval.add(txtTimeViewInterval, BorderLayout.CENTER);
 			
@@ -294,6 +622,46 @@ public class Investor extends JFrame implements MarketListener {
 			txtRefLeverage.setToolTipText("Value 0 specifies infinity leverage");
 			txtRefLeverage.setValue(m.getRefLeverage() == 0 ? 0 : 1/m.getRefLeverage());
 			paneRefLeverage.add(txtRefLeverage, BorderLayout.CENTER);
+			
+			JPanel paneCurDir = new JPanel(new BorderLayout());
+			right.add(paneCurDir);
+			txtCurDir = new JTextField();
+			File curDir = getInvestor().curDir;
+			if (curDir != null && curDir.exists()) {
+				txtCurDir.setText(curDir.getAbsolutePath());
+			}
+			txtCurDir.setEditable(false);
+			paneCurDir.add(txtCurDir, BorderLayout.CENTER);
+			//
+			btnCurDir = new JButton("Browse");
+			btnCurDir.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String curDirPath = txtCurDir.getText();
+					File curDir = new File(curDirPath);
+					JFileChooser fc = new JFileChooser(curDir.exists() ? curDir : new File("."));
+					
+					fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			        if (fc.showOpenDialog(getInvestor()) != JFileChooser.APPROVE_OPTION) return;
+			        curDir = fc.getSelectedFile();
+			        if (curDir != null && curDir.exists()) txtCurDir.setText(curDir.getAbsolutePath());
+				}
+			});
+			paneCurDir.add(btnCurDir, BorderLayout.EAST);
+
+			
+			JPanel body = new JPanel(new BorderLayout());
+			add(body, BorderLayout.CENTER);
+			JPanel paneDefaultStockCodes = new JPanel(new BorderLayout());
+			body.add(paneDefaultStockCodes, BorderLayout.CENTER);
+			//
+			paneDefaultStockCodes.add(new JLabel("Default stock codes (,): "), BorderLayout.WEST);
+			//
+			txtDefaultStockCodes = new JTextArea();
+			txtDefaultStockCodes.setLineWrap(true);
+			txtDefaultStockCodes.setToolTipText("Stock codes are separated by a comma");
+			txtDefaultStockCodes.setText(MarketAbstract.toCodesText(getSelectedMarket().getDefaultStockCodes()));
+			paneDefaultStockCodes.add(new JScrollPane(txtDefaultStockCodes), BorderLayout.CENTER);
 
 			
 			JPanel footer = new JPanel();
@@ -320,33 +688,89 @@ public class Investor extends JFrame implements MarketListener {
 		}
 		
 		private void ok() {
-			double balanceBase = txtBalance.getValue() instanceof Number ? ((Number)txtBalance.getValue()).doubleValue() : 0;
+			MarketImpl m = getSelectedMarket(); if (m == null) return;
+			double balanceBase = txtBalanceBase.getValue() instanceof Number ? ((Number)txtBalanceBase.getValue()).doubleValue() : 0;
 			double balanceBias = txtBalanceBias.getValue() instanceof Number ? ((Number)txtBalanceBias.getValue()).doubleValue() : 0;
 			double marginFee = txtMarginFee.getValue() instanceof Number ? ((Number)txtMarginFee.getValue()).doubleValue() : 0;
 			long dayViewInterval = txtTimeViewInterval.getValue() instanceof Number ? ((Number)txtTimeViewInterval.getValue()).longValue() : 0;
 			double refLeverage = txtRefLeverage.getValue() instanceof Number ? ((Number)txtRefLeverage.getValue()).doubleValue() : 0;
+			String codesText = txtDefaultStockCodes.getText();
+			File curDir = new File(txtCurDir.getText());
+			List<String> codes = codesText != null ? Arrays.asList(codesText.split(Util.DEFAULT_SEP)) : Util.newList(0);
 			
-			MarketImpl m = getMarket();
 			m.setBalanceBase(balanceBase);
 			m.setBalanceBias(balanceBias);
 			m.setMarginFee(marginFee);
 			m.setTimeViewInterval(dayViewInterval*1000*3600*24);
 			m.setRefLeverage(refLeverage);
+			if (curDir != null && curDir.exists()) getInvestor().curDir = curDir; 
 			
-			getMarketPanel().getMarketTable().update();
+			Universe u = u();
+			if (u != null) u.addDefaultStockCodes(codes);
+			
+			getSelectedMarketPanel().getMarketTable().update();
+			//getInvestor().update();
 			
 			dispose();
 		}
 		
+		private long getTimeViewInterval0() {
+			if (txtTimeViewInterval != null)
+				return txtTimeViewInterval.getValue() instanceof Number ? ((Number)txtTimeViewInterval.getValue()).longValue() : 0;
+			else
+				return getSelectedMarket().getTimeViewInterval();
+		}
+		
+		private double getBalanceBase0() {
+			if (txtBalanceBase != null)
+				return txtBalanceBase.getValue() instanceof Number ? ((Number)txtBalanceBase.getValue()).doubleValue() : 0;
+			else
+				return getSelectedMarket().getBalanceBase();
+		}
+		
+		private double getMargin0() {
+			return getSelectedMarket().getMargin(getTimeViewInterval0());
+		}
+
+		
+		private Universe u() {
+			return getSelectedMarket().getNearestUniverse();
+		}
 	}
 
 	
 	public static void main(String[] args) {
-		Universe universe = new UniverseImpl();
-		Market market = universe.newMarket("Market 1", StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
-		universe.add(market);
+		Investor investor = new Investor(new UniverseImpl());
+		File workingJSIDir = new File(StockProperty.WORKING_DIRECTORY);
+		if (workingJSIDir.exists() && workingJSIDir.isFile()) {
+			investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");
+			investor.setVisible(true);
+			return;
+		}
+		else if (!workingJSIDir.exists() && !workingJSIDir.mkdir()) {
+			investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");
+			investor.setVisible(true);
+			return;
+		}
 		
-		new Investor(universe);
+		String[] fileNames = workingJSIDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name == null || name.isEmpty()) return false;
+				int index = name.lastIndexOf(".");
+				if (index < 0) return false;
+				String ext = name.substring(index + 1);
+				return ext != null && !ext.isEmpty() && ext.compareToIgnoreCase(StockProperty.JSI_EXT) == 0;
+			}
+		});
+		
+		investor.curDir = workingJSIDir;
+		for (String fileName : fileNames) {
+			investor.addMarket(new File(workingJSIDir, fileName));
+		}
+		
+		if (investor.getMarketPanels().length == 0) investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");
+		investor.setVisible(true);
 	}
 	
 	

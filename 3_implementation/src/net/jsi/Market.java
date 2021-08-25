@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
@@ -33,7 +40,7 @@ public interface Market extends Serializable, Cloneable {
 	double calcInvestAmount(long timeInterval);
 
 		
-	String name();
+	String getName();
 	
 	
 	long getTimeViewInterval();
@@ -47,6 +54,12 @@ public interface Market extends Serializable, Cloneable {
 	
 	Universe getNearestUniverse();
 	
+	
+	List<String> getSupportStockCodes();
+
+	
+	List<String> getDefaultStockCodes();
+
 	
 	StockImpl c(Stock stock);
 	

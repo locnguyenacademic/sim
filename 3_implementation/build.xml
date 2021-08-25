@@ -561,6 +561,108 @@
 	</target>
 
 
+	<target name="jar-jsi" depends="compile" description="Create stock/forex management package">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-jsi.jar">
+	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
+				<!--
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.home}" includes="${commons-math3.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+				-->
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.jsi.ui.Investor"/>
+				</manifest>
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-jsi.jar">
+	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
+	    		
+				<manifest>
+					<attribute name="Main-Class" value="net.jsi.ui.Investor"/>
+				</manifest>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, jsi*.*, *.script"/>
+		</copy>
+
+		<zip destfile="${archive.home}/${product}-${version}-jsi.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-jsi.zip"/>
+		</delete>
+	</target>
+
+
+	<target name="jar-jsi-src" depends="compile" description="Packaging stock/forex management source">
+		<mkdir dir="${archive.home}"/>
+		<antcall target="clean-archive" />
+
+		<if>
+		<equals arg1="${include-runtime-lib}" arg2="embed" />
+		<then>
+			<jar destfile="${archive.home}/${product}-jsi-src.jar">
+	    		<fileset dir="${src.home}" includes="net/jsi/**"/>
+				<!--
+	    		<restrict>
+	     			<name name="**"/>
+					<archives>
+						<zips>
+							<fileset dir="${lib.src}" includes="${commons-math3-src.jar}"/>
+						</zips>
+					</archives>
+	    		</restrict>
+				-->
+			</jar>
+		</then>
+		<else>
+			<if>
+			<equals arg1="${include-runtime-lib-src}" arg2="normal" />
+			<then>
+				<antcall target="jar-runtime-lib-src" />
+			</then>
+			</if>
+
+			<jar destfile="${archive.home}/${product}-jsi-src.jar">
+	    		<fileset dir="${src.home}" includes="net/jsi/**"/>
+			</jar>
+		</else>
+		</if>
+
+		<copy todir="${archive.home}">
+			<fileset dir="." includes="${doctype}, env*.*, jsi*.*, *.xml, *.script"/>
+		</copy>
+
+		<zip destfile="${archive.home}/${product}-${version}-jsi-src.zip" basedir="${archive.home}"/>
+		
+		<delete quiet="true" includeEmptyDirs="true">
+			<fileset dir="${archive.home}" includes="**" excludes="${product}-${version}-jsi-src.zip"/>
+		</delete>
+	</target>
+
+
 	<target name="jar-all" depends="compile" description="Create all packages">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />

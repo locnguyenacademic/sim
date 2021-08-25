@@ -1,3 +1,10 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
@@ -11,6 +18,27 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String NONAME = "noname";
 
 
+	/**
+	 * Working directory name.
+	 */
+	public final static String WORKING_DIRECTORY = "working/jsi";
+
+	
+	public final static String MARKET_NAME_PREFIX = "Market ";
+
+	
+	public final static String NOTCODE1 = "1";
+
+	
+	public final static String NOTCODE2 = "-1";
+
+	
+	public final static String JSI_EXT = "jsi";
+
+	
+	public final static String JSI_DESC = "JSI files";
+
+	
 	public static int MAX_PRICE_COUNT = 1000;
 
 

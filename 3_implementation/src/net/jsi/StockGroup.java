@@ -1,6 +1,14 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.util.List;
+import java.util.Set;
 
 public class StockGroup extends StockAbstract implements Market {
 
@@ -297,7 +305,7 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public String name() {
+	public String getName() {
 		return code();
 	}
 
@@ -338,6 +346,27 @@ public class StockGroup extends StockAbstract implements Market {
 		return null;
 	}
 	
+	
+	@Override
+	public List<String> getSupportStockCodes() {
+		Universe u = getNearestUniverse();
+		if (u != null)
+			return u.getSupportStockCodes();
+		else {
+			Set<String> codes = Util.newSet(0);
+			for (Stock stock : stocks) codes.add(stock.code());
+			
+			return Util.sort(codes);
+		}
+	}
+
+
+	@Override
+	public List<String> getDefaultStockCodes() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.getDefaultStockCodes() : Util.newList(0);
+	}
+
 	
 	private MarketImpl m() {
 		Universe u = getNearestUniverse();

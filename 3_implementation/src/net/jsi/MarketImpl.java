@@ -1,10 +1,19 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
@@ -53,7 +62,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	@Override
 	public double getBalance(long timeInterval) {
-		return getBalance0(timeInterval) + balanceBias;
+		return getBalance0(timeInterval) - balanceBias;
 	}
 
 	
@@ -67,13 +76,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public double calcBalanceBias(double givenBalance, long timeInterval) {
-		return givenBalance - getBalance0(timeInterval);
+	public double calcBalanceBias(double providedBalance, long timeInterval) {
+		return getBalance0(timeInterval) - providedBalance;
 	}
 	
 	
 	public double getBalanceBias() {
-		return marginFee;
+		return balanceBias;
 	}
 
 	
@@ -97,8 +106,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public double calcMargin(double givenMargin, long timeInterval) {
-		return givenMargin - getMargin0(timeInterval);
+	public double calcMarginBias(double newMargin, long timeInterval) {
+		return getMargin0(timeInterval) - newMargin;
 	}
 	
 	
@@ -242,7 +251,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public int lookup(String code, boolean buy) {
 		for (int i = 0; i < groups.size(); i++) {
 			StockGroup group = groups.get(i);
-			if (group.code().equals(code) && group.isBuy() == buy) return i;
+			if (group.code().equals(code) && group.isBuy() == buy)
+				return i;
 		}
 		
 		return -1;
@@ -407,6 +417,21 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	@Override
+	public List<String> getSupportStockCodes() {
+		Universe u = getNearestUniverse();
+		if (u != null)
+			return u.getSupportStockCodes();
+		else {
+			List<Stock> stocks = getAllStocks();
+			Set<String> codes = Util.newSet(0);
+			for (Stock stock : stocks) codes.add(stock.code());
+			
+			return Util.sort(codes);
+		}
+	}
+
+
 	private List<Stock> getAllStocks() {
 		List<Stock> stocks = Util.newList(0);
 		for (StockGroup group : groups) {
@@ -417,7 +442,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private void reset() {
+	@Override
+	protected void reset() {
+		super.reset();
 		refLeverage = StockProperty.LEVERAGE;
 		balanceBase = 0;
 		balanceBias = 0;
@@ -435,12 +462,14 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			String line = null;
 			boolean readHeader = false;
 			boolean readInfo = false;
+			boolean readDefaultCodes = false;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.isEmpty()) continue;
 				
-				String[] fields = line.split(",");
-				if (fields == null || fields.length < 14) continue;
+				String[] fields = line.split(Util.NOSPACE_DEFAULT_SEP);
+				if (fields == null || fields.length < 1) continue;
+				for (int i = 0; i < fields.length; i++) fields[i] = fields[i].trim();
 				
 				if (!readHeader) {
 					readHeader = true;
@@ -448,35 +477,51 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				}
 				
 				if (!readInfo) {
-					if (!readHeader) continue;
-					
-					this.refLeverage = Double.parseDouble(fields[2].trim());
-					this.refUnitBias = Double.parseDouble(fields[3].trim());
-					this.balanceBase = Double.parseDouble(fields[4].trim());
-					this.timeViewInterval = Long.parseLong(fields[5].trim());
+					if (!readHeader || !fields[0].equals(StockProperty.NOTCODE1)) continue;
+
+					this.balanceBase = Double.parseDouble(fields[1]);
+					this.balanceBias = Double.parseDouble(fields[2]);
+					this.marginFee = Double.parseDouble(fields[3]);
+					this.timeViewInterval = Long.parseLong(fields[4]);
+					this.refLeverage = Double.parseDouble(fields[5]);
+					this.setName(fields[6]);
 
 					readInfo = true;
 					continue;
 				}
 				
-				String code = fields[0];
-				boolean buy = Boolean.parseBoolean(fields[1].trim());
-				double leverage = Double.parseDouble(fields[2].trim());
-				double volume = Double.parseDouble(fields[3].trim());
-				double taken_price = Double.parseDouble(fields[4].trim());
-				long taken_date = Long.parseLong(fields[5].trim());
-				double price = Double.parseDouble(fields[6].trim());
-				double low_price = Double.parseDouble(fields[7].trim());
-				double high_price = Double.parseDouble(fields[8].trim());
-				long price_date = Long.parseLong(fields[9].trim());
-				double unit_bias = Double.parseDouble(fields[10].trim());
-				double stop_loss = Double.parseDouble(fields[11].trim());
-				double take_profit = Double.parseDouble(fields[12].trim());
-				boolean committed = Boolean.parseBoolean(fields[13].trim());
-				
-				if (taken_date > 0) {
-					if (price_date != taken_date || taken_price != price) continue;
+				if (!readDefaultCodes) {
+					if (!readInfo || !fields[0].equals(StockProperty.NOTCODE2)) continue;
+					Universe u = getNearestUniverse();
+					if (u != null) u.addDefaultStockCodes(Arrays.asList(fields).subList(1, fields.length));
 					
+					readDefaultCodes = true;
+					continue;
+				}
+				
+				String code = fields[0];
+				boolean buy = Boolean.parseBoolean(fields[1]);
+				double leverage = Double.parseDouble(fields[2]);
+				double volume = Double.parseDouble(fields[3]);
+				double taken_price = Double.parseDouble(fields[4]);
+				long taken_date = Long.parseLong(fields[5]);
+				double price = Double.parseDouble(fields[6]);
+				double low_price = Double.parseDouble(fields[7]);
+				double high_price = Double.parseDouble(fields[8]);
+				long price_date = Long.parseLong(fields[9]);
+				double unit_bias = Double.parseDouble(fields[10]);
+				double stop_loss = Double.parseDouble(fields[11]);
+				double take_profit = Double.parseDouble(fields[12]);
+				boolean committed = Boolean.parseBoolean(fields[13]);
+				
+				if (price_date == 0) {
+					StockGroup group = get(code, buy);
+					if (group != null) {
+						Price p = newPrice(price, low_price, high_price, price_date);
+						group.setPrice(p);
+					}
+				}
+				else if (price_date == taken_date && taken_price == price) {
 					Price p = newPrice(price, low_price, high_price, price_date);
 					StockImpl stock = c(addStock(code, buy, leverage, volume, taken_date, p));
 					if (stock == null) continue;
@@ -485,13 +530,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					stock.setStopLoss(stop_loss);
 					stock.setTakeProfit(take_profit);
 					stock.setCommitted(committed);
-				}
-				else if (price_date != 0) {
-					StockGroup group = get(code, buy);
-					if (group != null) {
-						Price p = newPrice(price, low_price, high_price, price_date);
-						group.setPrice(p);
-					}
 				}
 			}
 				
@@ -510,41 +548,61 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			String header = "code, buy, leverage, volume, taken_price, taken_date, price, low_price, high_price, price_date, unit_bias, stop_loss, take_profit, committed\n";
 			writer.write(header);
 			
-			String info = "-1, true, " + "%." + Util.DECIMAL_PRECISION + "f, %." + Util.DECIMAL_PRECISION + "f, %." + Util.DECIMAL_PRECISION + "f, " + timeViewInterval + ", 0, 0, 0, 0, 0, 0, 0, false\n";
-			info = String.format(info, refLeverage, refUnitBias, balanceBase);
+			String fm1 = "%." + Util.DECIMAL_PRECISION + "f";
+			String fm2 = "%d";
+			String info = StockProperty.NOTCODE1 + ", " + fm1 + ", " + fm1 + ", " + fm1 + ", " + fm2 + ", " + fm1 + ", " + getName() + "\n";
+			info = String.format(info, balanceBase, balanceBias, marginFee, timeViewInterval, refLeverage);
 			writer.write(info);
 			
-			List<Stock> stocks = getAllStocks();
-			for (Stock stock : stocks) {
-				StockImpl s = c(stock);
-				StringBuffer buffer = new StringBuffer();
-				List<Price> prices = stock.getPrices(0);
-				
-				Price takenPrice = s.getTakenPrice(0);
+			writer.write(StockProperty.NOTCODE2 + ", " + toCodesText(getDefaultStockCodes()) + "\n");
+
+			for (StockGroup group : groups) {
+				List<Price> prices = group.getPrices(0);
 				for (Price price : prices) {
-					boolean flag = takenPrice instanceof TakenPrice ? ((TakenPrice)takenPrice).getPrice() == price : takenPrice == price;
-					
-					buffer.append(s.code() + ", ");
-					buffer.append(s.isBuy() + ", ");
-					buffer.append((flag ? Util.format(s.getLeverage()) : 0) + ", ");
-					buffer.append((flag ? Util.format(s.getVolume(0, true)) : 0) + ", ");
-					buffer.append((flag ? Util.format(s.getAverageTakenPrice(0)) : 0) + ", ");
-					buffer.append((flag ? s.getTakenTimePoint(0) : 0) + ", ");
+					StringBuffer buffer = new StringBuffer();
+					buffer.append(group.code() + ", ");
+					buffer.append(group.isBuy() + ", ");
+					buffer.append("0, ");
+					buffer.append("0, ");
+					buffer.append("0, ");
+					buffer.append("0, ");
 					buffer.append(Util.format(price.get()) + ", ");
 					buffer.append(Util.format(price.getLow()) + ", ");
 					buffer.append(Util.format(price.getHigh()) + ", ");
 					buffer.append(price.getTime() + ", ");
-					buffer.append((flag ? Util.format(s.getUnitBias()) : 0) + ", ");
-					buffer.append((flag ? Util.format(s.getStopLoss()) : 0) + ", ");
-					buffer.append((flag ? Util.format(s.getTakeProfit()) : 0) + ", ");
-					buffer.append((flag ? s.isCommitted() : false) + "\n");
+					buffer.append("0, ");
+					buffer.append("0, ");
+					buffer.append("0, ");
+					buffer.append("false\n");
+					writer.write(buffer.toString());
 				}
 				
-				writer.write(buffer.toString());
+				for (Stock stock : group.stocks) {
+					StockImpl s = c(stock);
+					if (s == null) continue;
+					Price takenPrice = s.getTakenPrice(0);
+					if (takenPrice == null) continue;
+					
+					StringBuffer buffer = new StringBuffer();
+					buffer.append(s.code() + ", ");
+					buffer.append(s.isBuy() + ", ");
+					buffer.append(Util.format(s.getLeverage()) + ", ");
+					buffer.append(Util.format(s.getVolume(0, true)) + ", ");
+					buffer.append(Util.format(takenPrice.get()) + ", ");
+					buffer.append(takenPrice.getTime() + ", ");
+					buffer.append(Util.format(takenPrice.get()) + ", ");
+					buffer.append(Util.format(takenPrice.getLow()) + ", ");
+					buffer.append(Util.format(takenPrice.getHigh()) + ", ");
+					buffer.append(takenPrice.getTime() + ", ");
+					buffer.append(Util.format(s.getUnitBias()) + ", ");
+					buffer.append(Util.format(s.getStopLoss()) + ", ");
+					buffer.append(Util.format(s.getTakeProfit()) + ", ");
+					buffer.append(s.isCommitted() + "\n");
+					writer.write(buffer.toString());
+				}
 			}
 			
 			writer.flush();
-			
 			return true;
 		}
 		catch (Exception e) { e.printStackTrace();}

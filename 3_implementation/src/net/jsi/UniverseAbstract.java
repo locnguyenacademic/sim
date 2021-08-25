@@ -1,6 +1,13 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +20,11 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected List<Market> markets = Util.newList(0);
 	
 	
+	protected Set<String> defaultStockCodes = Util.newSet(0);
+	
+	
 	public UniverseAbstract() {
-		
+		addDefaultStockCodes(Util.newSet(0));
 	}
 	
 	
@@ -79,7 +89,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	public List<String> names() {
 		List<String> nameList = Util.newList(size());
 		for (Market market : markets) {
-			nameList.add(market.name());
+			nameList.add(market.getName());
 		}
 		return nameList;
 	}
@@ -105,7 +115,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public int lookup(String name) {
 		for (int i = 0; i < markets.size(); i++) {
-			if (markets.get(i).name().equals(name)) return i;
+			if (markets.get(i).getName().equals(name)) return i;
 		}
 		return -1;
 	}
@@ -113,7 +123,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	@Override
 	public boolean add(Market market) {
-		if (market == null || lookup(market.name()) >= 0)
+		if (market == null || lookup(market.getName()) >= 0)
 			return false;
 		else
 			return markets.add(market);
@@ -128,7 +138,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	
 	@Override
 	public Market set(int index, Market market) {
-		if (market == null || lookup(market.name()) >= 0)
+		if (market == null || lookup(market.getName()) >= 0)
 			return null;
 		else
 			return markets.set(index, market);
@@ -178,26 +188,54 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public List<String> getSupportStockCodes() {
 		Set<String> codes = Util.newSet(0);
-		codes.add("AAPL");
-		codes.add("ABBV");
-		codes.add("BTCUSD");
-		codes.add("ETHUSD");
-		codes.add("KO");
-		codes.add("MSFT");
-		codes.add("MRK");
-		codes.add("INTC");
-		codes.add("PFE");
-		codes.add("XAUUSD");
 		
-		List<Stock> stocks = getStocks(0);
-		for (Stock stock : stocks) codes.add(stock.code());
+		Universe u = getNearestUniverse();
+		if (u != null && u != this)
+			codes.addAll(u.getSupportStockCodes());
+		else {
+			List<Stock> stocks = getStocks(0);
+			for (Stock stock : stocks) codes.add(stock.code());
+		}
 		
-		List<String> codeList = Util.newList(codes.size());
-		codeList.addAll(codes);
-		Collections.sort(codeList);
-		return codeList;
+		codes.addAll(defaultStockCodes);
+		return Util.sort(codes);
 	}
 
 
-	
+	@Override
+	public List<String> getDefaultStockCodes() {
+		return Util.sort(defaultStockCodes);
+	}
+
+
+	@Override
+	public void addDefaultStockCodes(Collection<String> defaultStockCodes) {
+		this.defaultStockCodes.clear();
+		
+		this.defaultStockCodes.add("AAPL");
+		this.defaultStockCodes.add("ABBV");
+		this.defaultStockCodes.add("BTCUSD");
+		this.defaultStockCodes.add("ETHUSD");
+		this.defaultStockCodes.add("KO");
+		this.defaultStockCodes.add("MSFT");
+		this.defaultStockCodes.add("MRK");
+		this.defaultStockCodes.add("INTC");
+		this.defaultStockCodes.add("PFE");
+		this.defaultStockCodes.add("XAUUSD");
+		
+		for (String code : defaultStockCodes) {
+			if (code != null && !code.isEmpty() && !code.equals(StockProperty.NOTCODE1) && !code.equals(StockProperty.NOTCODE1))
+				this.defaultStockCodes.add(code);
+		}
+	}
+
+
+	@Override
+	protected void reset() {
+		super.reset();
+		this.markets.clear();
+		this.defaultStockCodes.clear();
+	}
+
+
 }

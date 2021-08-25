@@ -1,6 +1,14 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 public interface Universe extends Market, Serializable, Cloneable {
@@ -33,12 +41,12 @@ public interface Universe extends Market, Serializable, Cloneable {
 	Market set(int index, Market market);
 	
 	
+	void addDefaultStockCodes(Collection<String> defaultStockCodes);
+
+	
 	Market newMarket(String name, double leverage, double unitBias);
 
 
-	List<String> getSupportStockCodes();
-
-		
 	MarketImpl c(Market market);
 	
 	
