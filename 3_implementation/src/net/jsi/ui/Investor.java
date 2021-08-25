@@ -747,7 +747,17 @@ public class Investor extends JFrame implements MarketListener {
 			investor.setVisible(true);
 			return;
 		}
-		else if (!workingJSIDir.exists() && !workingJSIDir.mkdir()) {
+		
+		try {
+			if (!workingJSIDir.exists()) {
+				File parent = workingJSIDir.getParentFile();
+				if (parent != null && !parent.exists()) parent.mkdir();
+				workingJSIDir.mkdir();
+			}
+		}
+		catch (Exception e) { }
+		
+		if (!workingJSIDir.exists()) {
 			investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");
 			investor.setVisible(true);
 			return;

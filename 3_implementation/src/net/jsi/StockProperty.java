@@ -19,7 +19,7 @@ public class StockProperty implements Serializable, Cloneable {
 
 
 	/**
-	 * Working directory name.
+	 * Working directory.
 	 */
 	public final static String WORKING_DIRECTORY = "working/jsi";
 
