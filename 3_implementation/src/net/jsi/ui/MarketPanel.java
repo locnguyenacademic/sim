@@ -259,13 +259,22 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	protected boolean save(File file) {
+		if (save0(file)) {
+			this.file = file;
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	
+	private boolean save0(File file) {
 		if (file == null) return false;
         try {
         	FileWriter writer = new FileWriter(file);
         	boolean ret = tblMarket.save(writer);
-        	if (ret) this.file = file;
-        	
         	writer.close();
+
             return ret;
         }
         catch (Exception e) {
@@ -278,15 +287,30 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	protected void dispose() {
-		if (file != null) {
-			save(file);
-			return;
+		if (this.file != null) {
+			if (save(this.file)) {
+				try {
+					File backupFile = new File(file.getAbsolutePath() + "." + System.currentTimeMillis());
+					save(backupFile);
+				}
+				catch (Exception e) {}
+				
+				return;
+			}
 		}
 		else {
 			File workingDir = getWorkingDirectory();
 			if (workingDir != null && workingDir.exists() && workingDir.isDirectory()) {
 				File file = new File(workingDir, getMarket().getName() + "." + StockProperty.JSI_EXT);
-				if (save(file)) return;
+				if (save(file)) {
+					try {
+						File backupFile = new File(file.getAbsolutePath() + "." + System.currentTimeMillis());
+						save(backupFile);
+					}
+					catch (Throwable e) {}
+					
+					return;
+				}
 			}
 		}
 		
