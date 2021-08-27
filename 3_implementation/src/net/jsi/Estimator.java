@@ -13,6 +13,43 @@ import java.util.List;
 public interface Estimator extends Serializable, Cloneable {
 
 
+	class Invest implements Serializable, Cloneable {
+
+		private static final long serialVersionUID = 1L;
+		
+		public boolean buy = true;
+		
+		public double volume = 0;
+		
+		public double price = 0;
+		
+		public double margin = 0;
+
+		public double stopLoss = 0;
+		
+		public double takeProfit = 0;
+		
+		public double largeTakeProfit = 0;
+
+		public Invest() {
+			
+		}
+		
+		public Invest(boolean buy, double volume, double price, double stopLoss, double takeProfit, double largeTakeProfit) {
+			this.buy = buy;
+			this.volume = volume;
+			this.price = price;
+			this.stopLoss = stopLoss;
+			this.takeProfit = takeProfit;
+			this.largeTakeProfit = largeTakeProfit;
+		}
+		
+	}
+
+	
+	double getLeverage();
+	
+	
 	Price getPrice();
 	
 	
@@ -51,6 +88,9 @@ public interface Estimator extends Serializable, Cloneable {
 	
 	double estimateTakeProfit(long timeInterval);
 
+	
+	List<EstimateStock> estimateStopLossTakeProfit(List<Stock> stocks, long timeInterval);
+	
 
 	double estimateInvestAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount);
 
@@ -63,6 +103,12 @@ public interface Estimator extends Serializable, Cloneable {
 	
 	double estimateInvestVolume(long timeInterval);
 	
+	
+	Invest[] estimateDualInvest(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount);
+	
+	
+	Invest[] estimateDualInvest(long timeInterval);
+
 	
 	boolean isBuy();
 	

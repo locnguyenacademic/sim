@@ -46,6 +46,9 @@ public interface Market extends Serializable, Cloneable {
 	long getTimeViewInterval();
 	
 	
+	long getTimeValidInterval();
+	
+	
 	List<Stock> getStocks(long timeInterval);
 	
 	

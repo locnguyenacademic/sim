@@ -21,6 +21,9 @@ public abstract class MarketAbstract implements Market {
 	protected long timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
 
 	
+	protected long timeValidInterval = StockProperty.TIME_VALID_INTERVAL;
+
+	
 	public MarketAbstract() {
 
 	}
@@ -76,6 +79,17 @@ public abstract class MarketAbstract implements Market {
 	
 	public void setTimeViewInterval(long timeViewInterval) {
 		this.timeViewInterval = timeViewInterval;
+	}
+	
+	
+	@Override
+	public long getTimeValidInterval() {
+		return timeValidInterval;
+	}
+
+
+	public void setTimeValidInterval(long timeValidInterval) {
+		this.timeValidInterval = timeValidInterval;
 	}
 	
 	

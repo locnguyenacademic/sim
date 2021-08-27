@@ -170,7 +170,6 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
-	@Override
 	public double getAverageTakenPrice(long timeInterval) {
 		Price takenPrice = getTakenPrice(timeInterval);
 		return takenPrice != null ? takenPrice.get() : 0;
@@ -248,6 +247,7 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
+	@Override
 	public double getStopLoss() {
 		return stopLoss;
 	}
@@ -258,6 +258,7 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
+	@Override
 	public double getTakeProfit() {
 		return takeProfit;
 	}
@@ -266,6 +267,6 @@ public class StockImpl extends StockAbstract {
 	public void setTakeProfit(double takeProfit) {
 		this.takeProfit = takeProfit;
 	}
-	
-	
+
+
 }

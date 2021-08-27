@@ -321,6 +321,16 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
+	public long getTimeValidInterval() {
+		Market market = getSuperMarket();
+		if (market == null)
+			return 0;
+		else
+			return market.getTimeValidInterval();
+	}
+
+
+	@Override
 	public Market getSuperMarket() {
 		return null;
 	}
@@ -368,6 +378,35 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 	
+	@Override
+	public double getStopLoss() {
+		double stopLoss = 0;
+		boolean visited = false;
+		for (Stock stock : stocks) {
+			if (stock.isCommitted()) continue;
+			if (!visited) {
+				stopLoss = stock.getStopLoss();
+				visited = true;
+			}
+			else {
+				stopLoss = Math.min(stopLoss, stock.getStopLoss());
+			}
+		}
+		
+		return stopLoss != Double.MAX_VALUE ? stopLoss : 0;
+	}
+
+
+	@Override
+	public double getTakeProfit() {
+		double takeProfit = 0;
+		for (Stock stock : stocks) {
+			if (!stock.isCommitted()) takeProfit = Math.max(takeProfit, stock.getTakeProfit());
+		}
+		return takeProfit;
+	}
+
+
 	private MarketImpl m() {
 		Universe u = getNearestUniverse();
 		return u != null ? u.c(getSuperMarket()) : null;

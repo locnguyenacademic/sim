@@ -54,6 +54,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;
 
 
+	public static long TIME_VALID_INTERVAL = TIME_VIEW_INTERVAL*10;
+
+
 	public int maxPriceCount = StockProperty.MAX_PRICE_COUNT;
 	
 	

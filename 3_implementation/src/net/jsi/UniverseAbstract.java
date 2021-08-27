@@ -159,6 +159,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			
 		};
 		market.timeViewInterval = this.timeViewInterval;
+		market.timeValidInterval = this.timeValidInterval;
 		return market;
 	}
 

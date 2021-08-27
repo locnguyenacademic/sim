@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -95,6 +97,23 @@ public final class Util {
 	}
 
 
+	/**
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
+	 */
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+		try {
+		    return net.jsi.adapter.Util.newMap(initialCapacity);
+		}
+		catch (Throwable e) {}
+
+	    return new HashMap<K, V>(initialCapacity);
+	}
+
+	
 	/**
 	 * Sorting the specified collection.
 	 * @param <T> type of elements.

@@ -8,6 +8,7 @@
 package net.jsi.adapter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -51,6 +52,18 @@ public final class Util {
 	 */
 	public static <T> Vector<T> newVector(int initialCapacity) {
 	    return net.hudup.core.Util.newVector(initialCapacity);
+	}
+
+
+	/**
+	 * Creating a new map.
+	 * @param <K> type of key.
+	 * @param <V> type of value.
+	 * @param initialCapacity initial capacity of this list.
+	 * @return new map.
+	 */
+	public static <K, V> Map<K, V> newMap(int initialCapacity) {
+	    return net.hudup.core.Util.newMap(initialCapacity);
 	}
 
 

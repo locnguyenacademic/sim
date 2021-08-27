@@ -562,13 +562,22 @@ class StockTaker extends JDialog {
 		paneLeverage.add(chkLeverage, BorderLayout.WEST);
 	
 		txtVolume = new JFormattedTextField(new NumberFormatter());
-		txtVolume.setValue(update ? input.getVolume(0, false) : 1);
+		txtVolume.setValue(update ? input.getVolume(0, false) : 1.0);
 		right.add(txtVolume);
 
 		JPanel paneTakenPrice = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenPrice);
 		txtTakenPrice = new JFormattedTextField(new NumberFormatter());
-		txtTakenPrice.setValue(update ? input.getAverageTakenPrice(0) : 1);
+		txtTakenPrice.setValue(1.0);
+		if (update && m() != null) {
+			try {
+				StockImpl s = m().c(input);
+				if (s != null) txtTakenPrice.setValue(s.getAverageTakenPrice(0));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		txtTakenPrice.setEditable(false);
 		paneTakenPrice.add(txtTakenPrice, BorderLayout.CENTER);
 		//
@@ -602,7 +611,7 @@ class StockTaker extends JDialog {
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
 		txtPrice = new JFormattedTextField(new NumberFormatter());
-		txtPrice.setValue(update ? input.getPrice().get() : 1);
+		txtPrice.setValue(update ? input.getPrice().get() : 1.0);
 		panePrice.add(txtPrice, BorderLayout.CENTER);
 		//
 		btnPrice = new JButton("Estimate");
@@ -618,7 +627,7 @@ class StockTaker extends JDialog {
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
 		txtLowPrice = new JFormattedTextField(new NumberFormatter());
-		txtLowPrice.setValue(update ? input.getPrice().getLow() : 1);
+		txtLowPrice.setValue(update ? input.getPrice().getLow() : 1.0);
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		//
 		btnLowPrice = new JButton("Estimate");
@@ -634,7 +643,7 @@ class StockTaker extends JDialog {
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
 		txtHighPrice = new JFormattedTextField(new NumberFormatter());
-		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 1);
+		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 1.0);
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		//
 		btnHighPrice = new JButton("Estimate");
@@ -908,9 +917,9 @@ class StockTaker extends JDialog {
 			
 			txtUnitBias.setValue(unitBias);
 			
-			txtPrice.setValue(group != null ? group.getPrice().get() : 1);
-			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1);
-			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1);
+			txtPrice.setValue(group != null ? group.getPrice().get() : 1.0);
+			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1.0);
+			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1.0);
 			
 			txtStopLoss.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getStopLoss() : 0);
 			txtTakeProfit.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getTakeProfit() : 0);

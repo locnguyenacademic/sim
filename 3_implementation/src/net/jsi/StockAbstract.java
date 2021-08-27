@@ -330,9 +330,20 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 			public double getMargin(long timeInterval) {
 				return 0;
 			}
+
+			@Override
+			public double getStopLoss() {
+				Price price = getPrice();
+				return price != null ? price.get() : 0;
+			}
+
+			@Override
+			public double getTakeProfit() {
+				return getStopLoss();
+			}
+			
 		};
 	}
-	
 	
 	
 }

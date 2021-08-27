@@ -523,8 +523,10 @@ public class Investor extends JFrame implements MarketListener {
 		
 		protected JButton btnMarginFee;
 		
-		protected JFormattedTextField txtTimeViewInterval;
+		protected JFormattedTextField txtDayViewInterval;
 		
+		protected JFormattedTextField txtDayValidInterval;
+
 		protected JFormattedTextField txtRefLeverage;
 		
 		protected JTextArea txtDefaultStockCodes;
@@ -540,7 +542,7 @@ public class Investor extends JFrame implements MarketListener {
 			setTitle("Option for market \"" + m.getName() + "\"");
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setSize(400, 300);
+			setSize(400, 350);
 			setLocationRelativeTo(getInvestor());
 			setLayout(new BorderLayout());
 			
@@ -555,6 +557,7 @@ public class Investor extends JFrame implements MarketListener {
 			left.add(new JLabel("Balance bias: "));
 			left.add(new JLabel("Margin fee: "));
 			left.add(new JLabel("Day interval (days): "));
+			left.add(new JLabel("Day interval for long (days): "));
 			left.add(new JLabel("Referred leverage: "));
 			left.add(new JLabel("Current directory: "));
 
@@ -609,12 +612,19 @@ public class Investor extends JFrame implements MarketListener {
 			});
 			paneMarginFee.add(btnMarginFee, BorderLayout.EAST);
 			
-			JPanel paneTimeViewInterval = new JPanel(new BorderLayout());
-			right.add(paneTimeViewInterval);
-			txtTimeViewInterval = new JFormattedTextField(new NumberFormatter());
-			txtTimeViewInterval.setToolTipText("Value 0 specifies viewing al time points");
-			txtTimeViewInterval.setValue(m.getTimeViewInterval() / (1000*3600*24));
-			paneTimeViewInterval.add(txtTimeViewInterval, BorderLayout.CENTER);
+			JPanel paneDayViewInterval = new JPanel(new BorderLayout());
+			right.add(paneDayViewInterval);
+			txtDayViewInterval = new JFormattedTextField(new NumberFormatter());
+			txtDayViewInterval.setToolTipText("Value 0 specifies viewing al time points");
+			txtDayViewInterval.setValue(m.getTimeViewInterval() / (1000*3600*24));
+			paneDayViewInterval.add(txtDayViewInterval, BorderLayout.CENTER);
+			
+			JPanel paneDayValidInterval = new JPanel(new BorderLayout());
+			right.add(paneDayValidInterval);
+			txtDayValidInterval = new JFormattedTextField(new NumberFormatter());
+			txtDayValidInterval.setToolTipText("Value 0 specifies viewing al time points");
+			txtDayValidInterval.setValue(m.getTimeValidInterval() / (1000*3600*24));
+			paneDayValidInterval.add(txtDayValidInterval, BorderLayout.CENTER);
 			
 			JPanel paneRefLeverage = new JPanel(new BorderLayout());
 			right.add(paneRefLeverage);
@@ -659,7 +669,7 @@ public class Investor extends JFrame implements MarketListener {
 			//
 			txtDefaultStockCodes = new JTextArea();
 			txtDefaultStockCodes.setLineWrap(true);
-			txtDefaultStockCodes.setToolTipText("Stock codes are separated by a comma");
+			txtDefaultStockCodes.setToolTipText("Stock codes are separated by a comma or a new line character");
 			txtDefaultStockCodes.setText(MarketAbstract.toCodesText(getSelectedMarket().getDefaultStockCodes()));
 			paneDefaultStockCodes.add(new JScrollPane(txtDefaultStockCodes), BorderLayout.CENTER);
 
@@ -692,16 +702,24 @@ public class Investor extends JFrame implements MarketListener {
 			double balanceBase = txtBalanceBase.getValue() instanceof Number ? ((Number)txtBalanceBase.getValue()).doubleValue() : 0;
 			double balanceBias = txtBalanceBias.getValue() instanceof Number ? ((Number)txtBalanceBias.getValue()).doubleValue() : 0;
 			double marginFee = txtMarginFee.getValue() instanceof Number ? ((Number)txtMarginFee.getValue()).doubleValue() : 0;
-			long dayViewInterval = txtTimeViewInterval.getValue() instanceof Number ? ((Number)txtTimeViewInterval.getValue()).longValue() : 0;
+			long dayViewInterval = txtDayViewInterval.getValue() instanceof Number ? ((Number)txtDayViewInterval.getValue()).longValue() : 0;
+			long dayValidInterval = txtDayValidInterval.getValue() instanceof Number ? ((Number)txtDayValidInterval.getValue()).longValue() : 0;
 			double refLeverage = txtRefLeverage.getValue() instanceof Number ? ((Number)txtRefLeverage.getValue()).doubleValue() : 0;
 			String codesText = txtDefaultStockCodes.getText();
 			File curDir = new File(txtCurDir.getText());
 			List<String> codes = codesText != null ? Arrays.asList(codesText.split(Util.DEFAULT_SEP)) : Util.newList(0);
 			
+			if (dayViewInterval < 0 || dayValidInterval < 0 || (dayViewInterval == 0 && dayValidInterval != 0) || dayViewInterval > dayValidInterval) {
+				JOptionPane.showMessageDialog(this, "Invalidate day interval", "Invalidate day interval", JOptionPane.ERROR_MESSAGE);
+				dispose();
+				return;
+			}
+			
 			m.setBalanceBase(balanceBase);
 			m.setBalanceBias(balanceBias);
 			m.setMarginFee(marginFee);
 			m.setTimeViewInterval(dayViewInterval*1000*3600*24);
+			m.setTimeValidInterval(dayValidInterval*1000*3600*24);
 			m.setRefLeverage(refLeverage);
 			if (curDir != null && curDir.exists()) getInvestor().curDir = curDir; 
 			
@@ -715,8 +733,8 @@ public class Investor extends JFrame implements MarketListener {
 		}
 		
 		private long getTimeViewInterval0() {
-			if (txtTimeViewInterval != null)
-				return txtTimeViewInterval.getValue() instanceof Number ? ((Number)txtTimeViewInterval.getValue()).longValue() : 0;
+			if (txtDayViewInterval != null)
+				return txtDayViewInterval.getValue() instanceof Number ? ((Number)txtDayViewInterval.getValue()).longValue() : 0;
 			else
 				return getSelectedMarket().getTimeViewInterval();
 		}
