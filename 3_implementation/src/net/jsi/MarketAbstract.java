@@ -154,4 +154,10 @@ public abstract class MarketAbstract implements Market {
 	}
 
 
+	@Override
+	public Market getDualMarket() {
+		return null;
+	}
+
+
 }

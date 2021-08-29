@@ -111,9 +111,9 @@ public class StockImpl extends StockAbstract {
 	
 	
 	@Override
-	public boolean setUnitBias(double unitBias) {
+	public boolean setUnitBias(double unitBias, boolean cascade) {
 		if (!committed)
-			return super.setUnitBias(unitBias);
+			return super.setUnitBias(unitBias, cascade);
 		else
 			return false;
 	}
@@ -181,7 +181,7 @@ public class StockImpl extends StockAbstract {
 
 	@Override
 	public double getMargin(long timeInterval) {
-		return getTakenValue(timeInterval) * leverage;
+		return getTakenValue(timeInterval) * getLeverage();
 	}
 	
 	

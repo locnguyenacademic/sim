@@ -1226,7 +1226,7 @@ class StockTaker extends JDialog {
 					s.setPriceTimePoint(lastTime);
 				}
 				
-				if (!Double.isNaN(leverage)) group.setLeverage(leverage);
+				if (!Double.isNaN(leverage)) group.setLeverage(leverage, true);
 				s.setCommitted(chkCommitted.isSelected());
 				
 			}
@@ -1246,7 +1246,7 @@ class StockTaker extends JDialog {
 			s.getPrice().setHigh(price.getHigh());
 			s.setStopLoss(((Number)txtStopLoss.getValue()).doubleValue());
 			s.setTakeProfit(((Number)txtTakeProfit.getValue()).doubleValue());
-			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue());
+			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue(), true);
 			
 			if (chkProperty.isSelected() && txtProperty.getStockProperty() != null) {
 				s.getProperty().set(txtProperty.getStockProperty());

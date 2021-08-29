@@ -73,4 +73,7 @@ public interface Market extends Serializable, Cloneable {
 	StockImpl c(Stock stock);
 	
 	
+	Market getDualMarket();
+	
+	
 }

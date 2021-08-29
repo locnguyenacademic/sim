@@ -366,7 +366,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				if (group.getPrice(price.getTime()) ==  null) return null;
 			}
 			if (!Double.isNaN(refLeverage) && refLeverage != group.getLeverage())
-				group.setLeverage(refLeverage);
+				group.setLeverage(refLeverage, true);
 			
 			return group.add(this.getTimeViewInterval(), takenTimePoint, volume);
 		}
@@ -406,7 +406,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void updateEstimatedUnitBias(StockGroup group, long timeInterval) {
 		double unitBias = group.estimateUnitBias(timeInterval);
 		unitBias = Math.max(unitBias, StockAbstract.calcMaxUnitBias(this.refUnitBias, group.getLeverage(), this.refLeverage));
-		group.setUnitBias(unitBias);
+		group.setUnitBias(unitBias, true);
 	}
 
 
@@ -639,15 +639,15 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					p.setTag(null);
 					if (stock == null) continue;
 					
-					stock.setUnitBias(unit_bias);
+					stock.setUnitBias(unit_bias, true);
 					stock.setStopLoss(stop_loss);
 					stock.setTakeProfit(take_profit);
 					stock.setCommitted(committed);
 					
 					StockGroup group = stock.getGroup();
 					if (group != null) {
-						group.setLeverage(leverage);
-						group.setUnitBias(unit_bias);
+						group.setLeverage(leverage, true);
+						group.setUnitBias(unit_bias, true);
 						p.setPriceRatio(group.getProperty().priceRatio);
 					}
 				}

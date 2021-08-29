@@ -286,8 +286,8 @@ public class MarketTable extends JTable implements MarketListener {
 				double unitBias = txtUnitBias.getValue() instanceof Number ? ((Number)txtUnitBias.getValue()).doubleValue() : StockProperty.UNIT_BIAS;
 				double priceRatio = txtPriceRatio.getValue() instanceof Number ? ((Number)txtPriceRatio.getValue()).doubleValue() : StockProperty.PRICE_RATIO;
 				
-				group.setLeverage(leverage != 0 ? 1/leverage : leverage);
-				group.setUnitBias(unitBias);
+				group.setLeverage(leverage != 0 ? 1/leverage : leverage, true);
+				group.setUnitBias(unitBias, true);
 				group.getProperty().priceRatio = priceRatio;
 				
 				update();

@@ -57,7 +57,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		if (tag != null && tag instanceof Boolean) cascade = ((Boolean)tag).booleanValue();
 		if (set && cascade) {
 			try {
-				StockGroup otherGroup = getOtherGroup();
+				StockGroup otherGroup = getDualGroup();
 				if (otherGroup != null) {
 					price.setTag(false);
 					otherGroup.setPrice(price);
@@ -220,7 +220,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	@Override
-	public boolean setUnitBias(double unitBias) {
+	public boolean setUnitBias(double unitBias, boolean cascade) {
 		this.unitBias = unitBias > 0 ? unitBias : 0;
 		return true;
 	}
@@ -269,7 +269,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 
 
 	@Override
-	public void setLeverage(double leverage) {
+	public void setLeverage(double leverage, boolean cascade) {
 		if (leverage >= 0) this.leverage = leverage;
 	}
 	
@@ -305,9 +305,9 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	protected StockGroup getOtherGroup() {
+	protected StockGroup getDualGroup() {
 		StockGroup group = getGroup();
-		return group != null ? group.getOtherGroup() : null;
+		return group != null ? group.getDualGroup() : null;
 	}
 	
 	

@@ -50,7 +50,7 @@ import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
-import net.jsi.UniverseImpl;
+import net.jsi.UniverseExt;
 import net.jsi.Util;
 import net.jsi.ui.MarketPanel.MarketDialog;
 
@@ -836,7 +836,7 @@ public class Investor extends JFrame implements MarketListener {
 
 	
 	public static void main(String[] args) {
-		Investor investor = new Investor(new UniverseImpl());
+		Investor investor = new Investor(new UniverseExt());
 		File workingJSIDir = new File(StockProperty.WORKING_DIRECTORY);
 		if (workingJSIDir.exists() && workingJSIDir.isFile()) {
 			investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");

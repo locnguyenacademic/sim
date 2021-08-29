@@ -116,18 +116,20 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public boolean setUnitBias(double unitBias) {
+	public boolean setUnitBias(double unitBias, boolean cascade) {
 		if (unitBias == getUnitBias()) return false;
 		
-		boolean ret = super.setUnitBias(unitBias);
+		boolean ret = super.setUnitBias(unitBias, cascade);
 		if (!ret) return false;
 		for (Stock stock : stocks) {
-			ret = ret && stock.setUnitBias(unitBias);
+			ret = ret && stock.setUnitBias(unitBias, cascade);
 		}
 		
-		StockGroup other = getOtherGroup();
-		if (other != null) other.setUnitBias(unitBias);
-
+		if (cascade) {
+			StockGroup other = getDualGroup();
+			if (other != null) other.setUnitBias(unitBias, false);
+		}
+		
 		return ret;
 	}
 
@@ -154,7 +156,7 @@ public class StockGroup extends StockAbstract implements Market {
 				n++;
 			}
 		}
-		return Math.max(n > 0 ? bias/n : 0, unitBias);
+		return Math.max(n > 0 ? bias/n : 0, getUnitBias());
 	}
 
 
@@ -259,10 +261,10 @@ public class StockGroup extends StockAbstract implements Market {
 		if (stock == null) return null;
 		
 		if (stock.isValid(timeInterval) && stocks.add(stock)) {
-			StockGroup other = getOtherGroup();
+			StockGroup other = getDualGroup();
 			if (other != null) {
-				other.setLeverage(this.getLeverage());
-				other.setUnitBias(this.getUnitBias());
+				other.setLeverage(this.getLeverage(), false);
+				other.setUnitBias(this.getUnitBias(), false);
 			}
 			
 			return stock;
@@ -375,46 +377,51 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public void setLeverage(double leverage) {
+	public void setLeverage(double leverage, boolean cascade) {
 		if (leverage < 0 || leverage == this.leverage) return;
 		this.leverage = leverage;
-		for (Stock stock : stocks) stock.setLeverage(leverage);
+		for (Stock stock : stocks) stock.setLeverage(leverage, cascade);
 		
-		StockGroup other = getOtherGroup();
-		if (other != null) other.setLeverage(leverage);
-	}
-	
-	
-	protected StockGroup getOtherGroup() {
-		Market market = getOtherMarket();
-		if (market == null)
-			return null;
-		else {
-			Universe universe = getNearestUniverse();
-			MarketImpl m = universe.c(market);
-			StockGroup other = m.get(code(), isBuy());
-			return other != null && other != this ? other : null;
+		if (cascade) {
+			StockGroup other = getDualGroup();
+			if (other != null) other.setLeverage(leverage, false);
 		}
 	}
 	
 	
-	private Market getOtherMarket() {
+	@Override
+	protected StockGroup getDualGroup() {
 		Market thisMarket = getSuperMarket();
 		if (thisMarket == null) return null;
 		
-		Universe universe = getNearestUniverse();
-		if (universe == null) return null;
+		Market dualMarket = thisMarket.getDualMarket();
+		if (dualMarket == null) {
+			Universe u = getNearestUniverse();
+			if (u == null) return null;
+			
+			Market market = u.get(thisMarket.getName());
+			if (market == null) return null;
+			
+			Market placedMarket = u.getPlacedMarket(thisMarket.getName());
+			if (placedMarket == null || placedMarket == market) return null;
+			
+			dualMarket = thisMarket == market ? placedMarket : (thisMarket == placedMarket ? market : null);
+		}
+		if (dualMarket == null) return null;
 		
-		Market market = universe.get(thisMarket.getName());
-		if (market == null) return null;
-		
-		Market placedMarket = universe.getPlacedMarket(thisMarket.getName());
-		if (placedMarket == null || placedMarket == market) return null;
-		
-		return thisMarket == market ? placedMarket : (thisMarket == placedMarket ? market : null);
+		Universe u = dualMarket.getNearestUniverse();
+		MarketImpl m = u != null ? u.c(dualMarket) : null;
+		StockGroup other = m != null ? m.get(code(), isBuy()) : null;
+		return other != null && other != this ? other : null;
 	}
 	
 	
+	@Override
+	public Market getDualMarket() {
+		return getDualGroup();
+	}
+
+
 	@Override
 	public Universe getNearestUniverse() {
 		Market superMarket = this;

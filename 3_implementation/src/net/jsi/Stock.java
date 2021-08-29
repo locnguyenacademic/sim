@@ -25,7 +25,7 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getROIByLeverage(long timeInterval);
 
 	
-	boolean setUnitBias(double unitBias);
+	boolean setUnitBias(double unitBias, boolean cascade);
 	
 	
 	double getTakenValue(long timeInterval);
@@ -52,7 +52,7 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getLeverage();
 
 	
-	void setLeverage(double leverage);
+	void setLeverage(double leverage, boolean cascade);
 
 		
 	String code();
