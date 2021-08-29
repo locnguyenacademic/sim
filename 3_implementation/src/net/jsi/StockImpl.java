@@ -66,8 +66,7 @@ public class StockImpl extends StockAbstract {
 	public boolean take(long timeInterval, long takenTimePoint) {
 		if (committed) return false;
 		Price price = getPrice(timeInterval, takenTimePoint);
-		if (price == null)
-			return false;
+		if (price == null) return false;
 		takenPrice = new TakenPrice(price);
 		
 		setExtraForTakenPrice(takenPrice);
@@ -135,10 +134,14 @@ public class StockImpl extends StockAbstract {
 	public boolean isValid(long timeInterval) {
 		if (takenPrice == null || prices.size() == 0 || volume <= 0)
 			return false;
-		else if (timeInterval <= 0)
-			return true;
-		else
-			return (System.currentTimeMillis() - takenPrice.getTime() < timeInterval);
+		else {
+			long priceTime = getPrice().getTime();
+			long takenTime = takenPrice.getTime();
+			if (timeInterval <= 0)
+				return priceTime >= takenTime;
+			else
+				return (priceTime >= takenTime) && (priceTime - takenTime <= timeInterval);
+		}
 	}
 	
 	
@@ -206,7 +209,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public double getFee(long timeInterval) {
-		return getTotalSwap(timeInterval) + (timeInterval == 0 ? property.commission : 0);
+		return getTotalSwap(timeInterval) + property.commission; // + (timeInterval == 0 ? property.commission : 0);
 	}
 	
 	

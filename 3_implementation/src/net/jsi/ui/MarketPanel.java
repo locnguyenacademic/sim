@@ -15,10 +15,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -27,10 +32,17 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.NumberFormatter;
 
@@ -52,6 +64,9 @@ public class MarketPanel extends JPanel implements MarketListener {
 	private static final long serialVersionUID = 1L;
 
 	
+	protected JLabel lblStartTime;
+			
+			
 	protected JLabel lblBalance;
 	
 	
@@ -76,7 +91,10 @@ public class MarketPanel extends JPanel implements MarketListener {
 	protected JLabel lblBias;
 
 	
-	protected JLabel lblInvest;
+	protected JLabel lblEstInvest;
+
+	
+	//protected JLabel lblRecInvest;
 
 	
 	protected MarketTable tblMarket = null;
@@ -90,8 +108,20 @@ public class MarketPanel extends JPanel implements MarketListener {
 		tblMarket.getModel2().addMarketListener(this);
 		setLayout(new BorderLayout());
 		
-		JPanel header = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		MarketPanel thisPanel = this;
+		MarketImpl m = tblMarket.m();
+
+		JPanel header = new JPanel(new BorderLayout());
 		add(header, BorderLayout.NORTH);
+
+		JPanel toolbar1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		header.add(toolbar1, BorderLayout.WEST);
+		
+		lblStartTime = new JLabel(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()));
+		toolbar1.add(lblStartTime);
+
+		JPanel toolbar2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		header.add(toolbar2, BorderLayout.EAST);
 		
 		JButton take = new JButton("Take new");
 		take.addActionListener(new ActionListener() {
@@ -102,9 +132,8 @@ public class MarketPanel extends JPanel implements MarketListener {
 				take(stock, false);
 			}
 		});
-		header.add(take);
+		toolbar2.add(take);
 		
-		MarketPanel thisPanel = this;
 		JButton summary = new JButton("Summary");
 		summary.addActionListener(new ActionListener() {
 			
@@ -113,7 +142,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				new MarketSummary(getMarket(), tblMarket, thisPanel).setVisible(true);
 			}
 		});
-		header.add(summary);
+		toolbar2.add(summary);
 
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -146,10 +175,54 @@ public class MarketPanel extends JPanel implements MarketListener {
 		footerRow2.add(new JLabel(" "));
 		footerRow2.add(lblBias = new JLabel());
 		footerRow2.add(new JLabel(" "));
-		footerRow2.add(lblInvest = new JLabel());
+		footerRow2.add(lblEstInvest = new JLabel());
+		//footerRow2.add(new JLabel(" "));
+		//footerRow2.add(lblRecInvest = new JLabel());
+		
+		
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(SwingUtilities.isRightMouseButton(e) ) {
+					JPopupMenu contextMenu = createContextMenu();
+					if(contextMenu != null) contextMenu.show((Component)e.getSource(), e.getX(), e.getY());
+				}
+				else if (e.getClickCount() >= 2) {
+					placedStocks();
+				}
+			}
+		});
+
 		
 		update();
 	}
+	
+	
+	private JPopupMenu createContextMenu() {
+		JPopupMenu ctxMenu = new JPopupMenu();
+		
+		JMenuItem placedStocks = new JMenuItem("Placed stocks");
+		placedStocks.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					placedStocks();
+				}
+			});
+		ctxMenu.add(placedStocks);
+
+		return ctxMenu;
+	}
+	
+	
+	private void placedStocks() {
+		MarketDialog dlgMarket = new MarketDialog(tblMarket.getPlacedMarket(), tblMarket, this);
+		dlgMarket.setTitle("Placed stocks for market " + tblMarket.getMarket().getName());
+		dlgMarket.setVisible(true);
+		
+		tblMarket.applyPlaced();
+	}
+	
 	
 	
 	public Market getMarket() {
@@ -176,18 +249,22 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	protected void update() {
-		Market m = getMarket();
+		Market market = getMarket();
+		MarketImpl m = tblMarket.m();
 
-		long timeViewInterval = m.getTimeViewInterval();
-		double balance = m.getBalance(timeViewInterval);
-		double margin = m.getMargin(timeViewInterval);
-		double freeMargin = m.getFreeMargin(timeViewInterval);
+		long timeViewInterval = market.getTimeViewInterval();
+		double balance = market.getBalance(timeViewInterval);
+		double margin = market.getMargin(timeViewInterval);
+		double freeMargin = market.getFreeMargin(timeViewInterval);
 		double equity = margin + freeMargin;
-		double profit = m.getProfit(timeViewInterval);
-		double roi = m.getROIByLeverage(timeViewInterval);
+		double profit = market.getProfit(timeViewInterval);
+		double roi = market.getROIByLeverage(timeViewInterval);
 		double bias = getMarket().calcTotalBias(timeViewInterval);
-		double invest = m.calcInvestAmount(timeViewInterval);
+		double estInvest = market.calcInvestAmount(timeViewInterval);
 		
+		if (m != null)
+			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()));
+
 		lblBalance.setText("Balance: " + Util.format(balance));
 		lblEquity.setText("Equity: " + Util.format(equity));
 		lblMargin.setText("Margin: " + Util.format(margin));
@@ -197,7 +274,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 		lblProfit.setText("Profit: " + Util.format(profit));
 		lblROI.setText("ROI: " + Util.format(roi*100) + "%");
 		lblBias.setText("Bias: " + Util.format(bias));
-		lblInvest.setText("Rec invest: " + Util.format(invest));
+		lblEstInvest.setText("Est. invest: " + Util.format(estInvest));
 	}
 
 
@@ -287,10 +364,17 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	protected void dispose() {
+		Universe u = getMarket().getNearestUniverse();
+		if (u != null) {
+			MarketImpl m = u.c(getMarket());
+			if (m != null) m.applyPlaced();
+		}
+		
+		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		if (this.file != null) {
 			if (save(this.file)) {
 				try {
-					File backupFile = new File(file.getAbsolutePath() + "." + System.currentTimeMillis());
+					File backupFile = new File(file.getAbsolutePath() + "." + backupExt);
 					save(backupFile);
 				}
 				catch (Exception e) {}
@@ -304,7 +388,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				File file = new File(workingDir, getMarket().getName() + "." + StockProperty.JSI_EXT);
 				if (save(file)) {
 					try {
-						File backupFile = new File(file.getAbsolutePath() + "." + System.currentTimeMillis());
+						File backupFile = new File(file.getAbsolutePath() + "." + backupExt);
 						save(backupFile);
 					}
 					catch (Throwable e) {}
@@ -363,6 +447,59 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 
 
+	
+	public static class MarketDialog extends JDialog {
+
+		private static final long serialVersionUID = 1L;
+		
+		public MarketDialog(Market market, MarketListener listener, Component parent) {
+			super(Util.getFrameForComponent(parent), "Market " + market.getName(), true);
+			
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					super.windowClosing(e);
+				}
+			});
+			
+			addMouseListener(new MouseAdapter() { });
+			
+			setSize(600, 400);
+			setLocationRelativeTo(null);
+//			setJMenuBar(createMenuBar());
+			
+			setLayout(new BorderLayout());
+
+			
+//			JToolBar toolbar = createToolbar();
+//			if (toolbar != null) add(toolbar, BorderLayout.NORTH);
+
+			
+			JPanel body = new JPanel(new BorderLayout());
+			add(body, BorderLayout.CENTER);
+			MarketPanel mp = new MarketPanel(market);
+			if (mp.getMarketTable() != null && listener != null)
+				mp.getMarketTable().getModel2().addMarketListener(listener);
+			body.add(mp, BorderLayout.CENTER);
+			
+			JPanel footer = new JPanel();
+			add(footer, BorderLayout.SOUTH);
+			
+			JButton ok = new JButton("OK");
+			ok.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+			footer.add(ok);
+		}
+		
+	}
+	
+	
 }
 
 
@@ -593,7 +730,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenDate);
-		txtTakenDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+		txtTakenDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
 		txtTakenDate.setValue(new Date(0));
 		txtTakenDate.setEditable(false);
 		paneTakenDate.add(txtTakenDate, BorderLayout.CENTER);
@@ -658,7 +795,7 @@ class StockTaker extends JDialog {
 		
 		paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
 		txtLastDate.setValue(new Date());
 		txtLastDate.setEditable(false);
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
@@ -704,7 +841,7 @@ class StockTaker extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Estimator estimator = getEstimator();
-				if (estimator != null)  txtUnitBias.setValue(estimator.estimateUnitBias(market.getTimeViewInterval()));
+				if (estimator != null)  txtUnitBias.setValue(estimator.estimateUnitBiasFromData(market.getTimeViewInterval()));
 			}
 		});
 		btnUnitBias.setEnabled(false);
@@ -767,7 +904,9 @@ class StockTaker extends JDialog {
 		btnProperty.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				txtProperty.modify();
+				if (input == null) return;
+				StockProperty output = txtProperty.modify();
+				if (output != null) txtProperty.setStockProperty(output);
 			}
 		});
 		btnProperty.setEnabled(false);
@@ -906,7 +1045,7 @@ class StockTaker extends JDialog {
 				unitBias = group.getUnitBias();
 			}
 			else if (m() != null) {
-				leverage = m().getRefLeverage();
+				leverage = m().getLeverage();
 				unitBias = StockAbstract.calcMaxUnitBias(StockProperty.UNIT_BIAS, StockProperty.LEVERAGE, leverage);
 			}
 			txtLeverage.setValue(leverage == 0 ? 0 : 1.0 / leverage);
@@ -1060,7 +1199,9 @@ class StockTaker extends JDialog {
 		if (update)
 			output = input;
 		else {
+			price.setTag(false);
 			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), price);
+			price.setTag(null);
 			if (output == null) return;
 		}
 		
@@ -1133,3 +1274,211 @@ class StockTaker extends JDialog {
 
 
 
+class StockPropertySetting extends JDialog {
+	
+	
+	private static final long serialVersionUID = 1L;
+	
+	
+	protected StockProperty output = null;
+	
+	
+	public StockPropertySetting(StockProperty property, Component comp) {
+		super(Util.getFrameForComponent(comp), "Settings stock property (this function not completed for permanant storing yet)", true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(300, 250);
+		setLocationRelativeTo(Util.getFrameForComponent(this));
+		setLayout(new BorderLayout());
+		
+		
+		JPanel header = new JPanel(new BorderLayout());
+		add(header, BorderLayout.NORTH);
+		
+		JPanel left = new JPanel(new GridLayout(0, 1));
+		header.add(left, BorderLayout.WEST);
+		
+		left.add(new JLabel("Maxium price count: "));
+		left.add(new JLabel("Swap: "));
+		left.add(new JLabel("Spread: "));
+		left.add(new JLabel("Commission: "));
+		left.add(new JLabel("Price ratio: "));
+		left.add(new JLabel("Price update interval (days): "));
+		
+		JPanel right = new JPanel(new GridLayout(0, 1));
+		header.add(right, BorderLayout.CENTER);
+		
+		JPanel paneMaxPriceCount = new JPanel(new BorderLayout());
+		right.add(paneMaxPriceCount);
+		JFormattedTextField txtMaxPriceCount = new JFormattedTextField(new NumberFormatter());
+		txtMaxPriceCount.setValue(property.maxPriceCount);
+		paneMaxPriceCount.add(txtMaxPriceCount, BorderLayout.CENTER);
+		
+		JPanel paneSwap = new JPanel(new BorderLayout());
+		right.add(paneSwap);
+		JFormattedTextField txtSwap = new JFormattedTextField(new NumberFormatter());
+		txtSwap.setValue(property.swap);
+		paneSwap.add(txtSwap, BorderLayout.CENTER);
+		
+		JPanel paneSpread = new JPanel(new BorderLayout());
+		right.add(paneSpread);
+		JFormattedTextField txtSpread = new JFormattedTextField(new NumberFormatter());
+		txtSpread.setValue(property.spread);
+		paneSpread.add(txtSpread, BorderLayout.CENTER);
+
+		JPanel paneCommission = new JPanel(new BorderLayout());
+		right.add(paneCommission);
+		JFormattedTextField txtCommission = new JFormattedTextField(new NumberFormatter());
+		txtCommission.setValue(property.commission);
+		paneCommission.add(txtCommission, BorderLayout.CENTER);
+		
+		JPanel panePriceRatio = new JPanel(new BorderLayout());
+		right.add(panePriceRatio);
+		JFormattedTextField txtPriceRatio = new JFormattedTextField(new NumberFormatter());
+		txtPriceRatio.setValue(property.priceRatio);
+		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);
+		
+		JPanel panePriceUpdateInterval = new JPanel(new BorderLayout());
+		right.add(panePriceUpdateInterval);
+		JFormattedTextField txtTimePriceUpdateInterval = new JFormattedTextField(new NumberFormatter());
+		txtTimePriceUpdateInterval.setValue(property.timeUpdatePriceInterval / (1000*3600*24));
+		panePriceUpdateInterval.add(txtTimePriceUpdateInterval, BorderLayout.CENTER);
+		
+		
+		JPanel body = new JPanel(new BorderLayout());
+		add(body, BorderLayout.CENTER);
+		JPanel paneMoreProperties = new JPanel(new BorderLayout());
+		body.add(paneMoreProperties, BorderLayout.CENTER);
+		//
+		paneMoreProperties.add(new JLabel("More properties (,): "), BorderLayout.WEST);
+		//
+		JTextArea txtMoreProperties = new JTextArea();
+		txtMoreProperties.setLineWrap(true);
+		txtMoreProperties.setToolTipText("Pairs \"key=value\" are separated by a comma or a new line character");
+		txtMoreProperties.setText(property.getMorePropertyText());
+		paneMoreProperties.add(new JScrollPane(txtMoreProperties), BorderLayout.CENTER);
+
+		
+		JPanel footer = new JPanel();
+		add(footer, BorderLayout.SOUTH);
+		
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int maxPriceCount = txtMaxPriceCount.getValue() instanceof Number ? ((Number)txtMaxPriceCount.getValue()).intValue() : StockProperty.MAX_PRICE_COUNT;
+				double swap = txtSwap.getValue() instanceof Number ? ((Number)txtSwap.getValue()).doubleValue() : 0;
+				double spread = txtSpread.getValue() instanceof Number ? ((Number)txtSpread.getValue()).doubleValue() : 0;
+				double commission = txtCommission.getValue() instanceof Number ? ((Number)txtCommission.getValue()).doubleValue() : 0;
+				double priceRatio = txtPriceRatio.getValue() instanceof Number ? ((Number)txtPriceRatio.getValue()).doubleValue() : 0;
+				long timePriceUpdateInterval = txtTimePriceUpdateInterval.getValue() instanceof Number ? ((Number)txtTimePriceUpdateInterval.getValue()).longValue() : 0;
+				timePriceUpdateInterval = timePriceUpdateInterval*1000*3600*24;
+				timePriceUpdateInterval = timePriceUpdateInterval <= 0 ? StockProperty.TIME_UPDATE_PRICE_INTERVAL : timePriceUpdateInterval;
+				
+				output = new StockProperty();
+				output.maxPriceCount = Math.max(maxPriceCount, StockProperty.MAX_PRICE_COUNT);
+				output.swap = swap;
+				output.spread = spread;
+				output.commission = commission;
+				output.priceRatio = priceRatio;
+				output.timeUpdatePriceInterval = timePriceUpdateInterval;
+				output.setMorePropertyText(txtMoreProperties.getText());
+				
+				dispose();
+			}
+		});
+		footer.add(ok);
+		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		footer.add(cancel);
+		
+	}
+	
+	
+	public StockProperty getOutput() {
+		return output;
+	}
+	
+	
+}
+
+
+/**
+ * Text field contains stock property.
+ * 
+ * @author Loc Nguyen
+ * @version 10.0
+ *
+ */
+class StockPropertyTextField extends JTextField {
+
+	
+	/**
+	 * Serial version UID for serializable class. 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+	/**
+	 * Internal stock property.
+	 */
+	protected StockProperty property = null;
+	
+	
+	/**
+	 * Default constructor.
+	 */
+	public StockPropertyTextField() {
+		super();
+		setEditable(false);
+	}
+	
+	
+	/**
+	 * Constructor with specified stock property.
+	 * @param property specified stock property.
+	 */
+	public StockPropertyTextField(StockProperty property) {
+		this();
+		setStockProperty(property);
+	}
+
+	
+	/**
+	 * Getting stock property.
+	 * @return internal stock property.
+	 */
+	public StockProperty getStockProperty() {
+		return property;
+	}
+	
+	
+	/**
+	 * Setting stock property.
+	 * @param property specified stock property.
+	 */
+	public void setStockProperty(StockProperty property) {
+		this.property = property;
+		if (property == null)
+			setText("");
+		else
+			setText("(stock property)");
+	}
+	
+	
+	public StockProperty modify() {
+		if (property == null) return null;
+		StockPropertySetting setting = new StockPropertySetting(property, this);
+		setting.setVisible(true);
+		
+		return setting.getOutput();
+	}
+	
+	
+}

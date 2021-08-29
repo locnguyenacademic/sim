@@ -31,7 +31,10 @@ import java.util.Vector;
 public final class Util {
 
 	
-	public static String DATE_FORMAT = "yyyy-MM-dd HH-mm-ss";
+	public static String DATE_FORMAT = "yyyy-MM-dd";
+
+	
+	public static String DATETIME_FORMAT = DATE_FORMAT + " HH-mm-ss";
 			
 	
 	public static int DECIMAL_PRECISION = 2;
@@ -150,11 +153,22 @@ public final class Util {
 	 * @return formatted text.
 	 */
 	public static String format(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		SimpleDateFormat df = new SimpleDateFormat(DATETIME_FORMAT);
 		return df.format(date);
 	}
 
 
+	/**
+	 * Formatting specified date as simple text.
+	 * @param date specified date.
+	 * @return simple formatted text.
+	 */
+	public static String formatSimple(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		return df.format(date);
+	}
+
+	
 	/**
 	 * Converting the specified number into a string.
 	 * @param number specified number.

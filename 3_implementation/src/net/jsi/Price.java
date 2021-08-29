@@ -43,6 +43,18 @@ public interface Price extends Serializable, Cloneable {
 	boolean isValid();
 	
 	
+	double getPriceRatio();
+	
+	
+	void setPriceRatio(double priceRatio);
+
+	
+	Serializable getTag();
+	
+	
+	void setTag(Serializable tag);
+	
+	
 	boolean copy(Price price);
 	
 	

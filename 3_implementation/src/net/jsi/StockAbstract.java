@@ -7,9 +7,10 @@
  */
 package net.jsi;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
-import net.hudup.core.Util;
 
 public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 
@@ -20,7 +21,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public StockProperty property = new StockProperty();
 	
 	
-	protected List<Price> prices = Util.newList();
+	protected List<Price> prices = Util.newList(0);
 	
 	
 	protected double leverage = StockProperty.LEVERAGE;
@@ -48,6 +49,29 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public boolean setPrice(Price price) {
+		boolean set = setPrice0(price);
+		if (!set) return set;
+		
+		boolean cascade = true;
+		Serializable tag = price.getTag();
+		if (tag != null && tag instanceof Boolean) cascade = ((Boolean)tag).booleanValue();
+		if (set && cascade) {
+			try {
+				StockGroup otherGroup = getOtherGroup();
+				if (otherGroup != null) {
+					price.setTag(false);
+					otherGroup.setPrice(price);
+					price.setTag(null);
+				}
+			}
+			catch (Exception e) {e.printStackTrace();}
+		}
+		
+		return set;
+	}
+	
+	
+	private boolean setPrice0(Price price) {
 		if (!checkPrice(price))
 			return false;
 		else if (prices.size() == 0)
@@ -74,10 +98,11 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 				prices.clear();
 				prices.addAll(subList);
 			}
+			
 			return added;
 		}
 	}
-	
+
 	
 	public boolean checkPrice(Price price) {
 		if (price == null || !price.isValid())
@@ -125,7 +150,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public List<Price> getPrices(long timeInterval) {
 		if (timeInterval <= 0) return prices;
 		
-		List<Price> priceList = Util.newList();
+		List<Price> priceList = Util.newList(0);
 		Price lastPrice = getPrice();
 		if (lastPrice == null) return priceList;
 		for (Price price : prices) {
@@ -275,6 +300,36 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 
 
+	protected StockGroup getGroup() {
+		return null;
+	}
+	
+	
+	protected StockGroup getOtherGroup() {
+		StockGroup group = getGroup();
+		return group != null ? group.getOtherGroup() : null;
+	}
+	
+	
+	public void resortPrices() {
+		Collections.sort(prices, new Comparator<Price>() {
+
+			@Override
+			public int compare(Price o1, Price o2) {
+				long tp1 = o1.getTime();
+				long tp2 = o2.getTime();
+				if (tp1 < tp2)
+					return -1;
+				else if (tp1 == tp2)
+					return 0;
+				else
+					return 1;
+			}
+			
+		});
+	}
+	
+	
 	@Override
 	public String toString() {
 		return code;

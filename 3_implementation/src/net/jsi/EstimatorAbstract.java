@@ -24,6 +24,12 @@ public abstract class EstimatorAbstract implements Estimator {
 
 	@Override
 	public double estimateUnitBias(long timeInterval) {
+		return Math.max(estimateUnitBiasFromData(timeInterval), getUnitBias());
+	}
+
+	
+	@Override
+	public double estimateUnitBiasFromData(long timeInterval) {
 		List<Price> prices = getPrices(timeInterval);
 		if (prices.size() == 0) return getUnitBias();
 		
@@ -48,10 +54,10 @@ public abstract class EstimatorAbstract implements Estimator {
 		bias1 = Math.sqrt(bias1 / prices.size());
 		bias2 = Math.sqrt(bias2 / prices.size());
 		
-		return Math.max((bias1 + bias2) / 2, getUnitBias());
+		return (bias1 + bias2) / 2;
 	}
 
-	
+
 	private double getLowestPrice(long timeInterval) {
 		Price price = getExtremePrice(true, timeInterval);
 		return price != null ? price.get() : 0;
@@ -308,7 +314,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	@Override
 	public double estimateInvestAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
 		Price p = getPrice();
-		if (p == null) return 0;
+		if (p == null || getLeverage() == 0) return 0;
 		
 		double price = p.get();
 		double roi = getROI(timeInterval);
@@ -316,7 +322,7 @@ public abstract class EstimatorAbstract implements Estimator {
 			return 0;
 		
 		double takenAmount = roi / refGlobalPositiveROISum * refGlobalInvestAmount;
-		double takenVolume = takenAmount / price;
+		double takenVolume = takenAmount / (price*getLeverage());
 		if (takenVolume == 0) return 0;
 		
 		double bias = estimateBiasAtCurrentPrice(timeInterval);
@@ -337,10 +343,10 @@ public abstract class EstimatorAbstract implements Estimator {
 	@Override
 	public double estimateInvestVolume(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount) {
 		Price p = getPrice();
-		if (p == null)
+		if (p == null || getLeverage() == 0)
 			return 0;
 		else
-			return estimateInvestAmount(timeInterval, refGlobalPositiveROISum, refGlobalInvestAmount) / p.get();
+			return estimateInvestAmount(timeInterval, refGlobalPositiveROISum, refGlobalInvestAmount) / (p.get()*getLeverage());
 	}
 
 

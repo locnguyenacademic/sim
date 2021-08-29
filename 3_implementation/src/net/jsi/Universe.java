@@ -23,10 +23,13 @@ public interface Universe extends Market, Serializable, Cloneable {
 	Market get(int index);
 	
 	
+	Market get(String name);
+
+		
 	double calcInvestAmount(long timeInterval);
 
 		
-	QueryEstimator query(int index);
+	QueryEstimator query(String name, Market refMarket);
 
 	
 	int lookup(String name);
@@ -50,4 +53,6 @@ public interface Universe extends Market, Serializable, Cloneable {
 	MarketImpl c(Market market);
 	
 	
+	Market getPlacedMarket(String name);
+
 }

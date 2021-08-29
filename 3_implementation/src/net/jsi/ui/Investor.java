@@ -20,7 +20,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -50,6 +52,7 @@ import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.Util;
+import net.jsi.ui.MarketPanel.MarketDialog;
 
 public class Investor extends JFrame implements MarketListener {
 
@@ -188,6 +191,30 @@ public class Investor extends JFrame implements MarketListener {
 		mnFile.add(mniSave);
 
 		mnFile.addSeparator();
+
+		Investor thisInvestor = this;
+		JMenuItem mniShowPlacedMarket = new JMenuItem(
+		new AbstractAction("Placed stocks") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Market selectedMarket = getSelectedPlacedMarket();
+				if (selectedMarket != null) {
+					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+					MarketDialog dlgMarket = new MarketDialog(selectedMarket, tblMarket, thisInvestor);
+					dlgMarket.setTitle("Placed stocks for market " + tblMarket.getMarket().getName());
+					dlgMarket.setVisible(true);
+					
+					tblMarket.applyPlaced();
+				}
+			}
+		});
+		mniShowPlacedMarket.setMnemonic('p');
+		mnFile.add(mniShowPlacedMarket);
+
+		mnFile.addSeparator();
 		
 		JMenuItem mniAddMarket = new JMenuItem(
 			new AbstractAction("Add market") {
@@ -212,6 +239,8 @@ public class Investor extends JFrame implements MarketListener {
 			});
 		mniRemoveMarket.setMnemonic('r');
 		mnFile.add(mniRemoveMarket);
+
+		mnFile.addSeparator();
 
 		JMenu mnTool = new JMenu("Tool");
 		mnTool.setMnemonic('t');
@@ -342,7 +371,10 @@ public class Investor extends JFrame implements MarketListener {
 	protected void addMarket() {
 		MarketPanel[] mps = getMarketPanels();
 		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
-		if (marketName == null || marketName.isEmpty())
+		if (marketName == null) return;
+		
+		marketName = marketName.trim();
+		if (marketName.isEmpty())
 			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
 		else if (getMarketPanel(marketName) != null)
 			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
@@ -428,9 +460,12 @@ public class Investor extends JFrame implements MarketListener {
 		int index = universe.lookup(mp.getMarket().getName());
 		if (index < 0) return;
 		
-		if (universe.remove(index) != null) {
+		mp.dispose();
+		Market removedMarket = universe.remove(index);
+		if (removedMarket != null) {
 			int idx = getSelectedMarketPanelIndex();
 			if (idx >= 0) body.removeTabAt(idx);
+			
 			update();
 		}
 	}
@@ -495,6 +530,15 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
+	private Market getSelectedPlacedMarket() {
+		Market selectedMarket = getSelectedMarket();
+		if (selectedMarket == null)
+			return null;
+		else
+			return universe.getPlacedMarket(selectedMarket.getName());
+	}
+	
+	
 	protected MarketImpl[] getMarkets() {
 		MarketPanel[] mps = getMarketPanels();
 		MarketImpl[] ms = new MarketImpl[mps.length];
@@ -526,8 +570,14 @@ public class Investor extends JFrame implements MarketListener {
 		protected JFormattedTextField txtDayViewInterval;
 		
 		protected JFormattedTextField txtDayValidInterval;
+		
+		protected JFormattedTextField txtTimeStartPoint;
+
+		protected JButton btnTimeStartPoint;
 
 		protected JFormattedTextField txtRefLeverage;
+		
+		protected JFormattedTextField txtRefUnitBias;
 		
 		protected JTextArea txtDefaultStockCodes;
 		
@@ -542,7 +592,7 @@ public class Investor extends JFrame implements MarketListener {
 			setTitle("Option for market \"" + m.getName() + "\"");
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setSize(400, 350);
+			setSize(400, 380);
 			setLocationRelativeTo(getInvestor());
 			setLayout(new BorderLayout());
 			
@@ -558,7 +608,9 @@ public class Investor extends JFrame implements MarketListener {
 			left.add(new JLabel("Margin fee: "));
 			left.add(new JLabel("Day interval (days): "));
 			left.add(new JLabel("Day interval for long (days): "));
+			left.add(new JLabel("Start date: "));
 			left.add(new JLabel("Referred leverage: "));
+			left.add(new JLabel("Referred unit bias: "));
 			left.add(new JLabel("Current directory: "));
 
 			JPanel right = new JPanel(new GridLayout(0, 1));
@@ -626,12 +678,33 @@ public class Investor extends JFrame implements MarketListener {
 			txtDayValidInterval.setValue(m.getTimeValidInterval() / (1000*3600*24));
 			paneDayValidInterval.add(txtDayValidInterval, BorderLayout.CENTER);
 			
+			JPanel paneTimeStartPoint = new JPanel(new BorderLayout());
+			right.add(paneTimeStartPoint);
+			txtTimeStartPoint = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+			txtTimeStartPoint.setValue(new Date(m.getTimeStartPoint()));
+			paneTimeStartPoint.add(txtTimeStartPoint, BorderLayout.CENTER);
+			//
+			btnTimeStartPoint = new JButton("Now");
+			btnTimeStartPoint.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					txtTimeStartPoint.setValue(new Date());
+				}
+			});
+			paneTimeStartPoint.add(btnTimeStartPoint, BorderLayout.EAST);
+			
 			JPanel paneRefLeverage = new JPanel(new BorderLayout());
 			right.add(paneRefLeverage);
 			txtRefLeverage = new JFormattedTextField(new NumberFormatter());
 			txtRefLeverage.setToolTipText("Value 0 specifies infinity leverage");
-			txtRefLeverage.setValue(m.getRefLeverage() == 0 ? 0 : 1/m.getRefLeverage());
+			txtRefLeverage.setValue(m.getLeverage() == 0 ? 0 : 1/m.getLeverage());
 			paneRefLeverage.add(txtRefLeverage, BorderLayout.CENTER);
+			
+			JPanel paneRefUnitBias = new JPanel(new BorderLayout());
+			right.add(paneRefUnitBias);
+			txtRefUnitBias = new JFormattedTextField(new NumberFormatter());
+			txtRefUnitBias.setValue(m.getUnitBias());
+			paneRefUnitBias.add(txtRefUnitBias, BorderLayout.CENTER);
 			
 			JPanel paneCurDir = new JPanel(new BorderLayout());
 			right.add(paneCurDir);
@@ -641,6 +714,7 @@ public class Investor extends JFrame implements MarketListener {
 				txtCurDir.setText(curDir.getAbsolutePath());
 			}
 			txtCurDir.setEditable(false);
+			txtCurDir.setCaretPosition(0);
 			paneCurDir.add(txtCurDir, BorderLayout.CENTER);
 			//
 			btnCurDir = new JButton("Browse");
@@ -704,7 +778,9 @@ public class Investor extends JFrame implements MarketListener {
 			double marginFee = txtMarginFee.getValue() instanceof Number ? ((Number)txtMarginFee.getValue()).doubleValue() : 0;
 			long dayViewInterval = txtDayViewInterval.getValue() instanceof Number ? ((Number)txtDayViewInterval.getValue()).longValue() : 0;
 			long dayValidInterval = txtDayValidInterval.getValue() instanceof Number ? ((Number)txtDayValidInterval.getValue()).longValue() : 0;
+			Date timeStartPoint = txtTimeStartPoint.getValue() instanceof Date ? (Date)txtTimeStartPoint.getValue() : new Date();
 			double refLeverage = txtRefLeverage.getValue() instanceof Number ? ((Number)txtRefLeverage.getValue()).doubleValue() : 0;
+			double refUnitBias = txtRefUnitBias.getValue() instanceof Number ? ((Number)txtRefUnitBias.getValue()).doubleValue() : 0;
 			String codesText = txtDefaultStockCodes.getText();
 			File curDir = new File(txtCurDir.getText());
 			List<String> codes = codesText != null ? Arrays.asList(codesText.split(Util.DEFAULT_SEP)) : Util.newList(0);
@@ -720,7 +796,9 @@ public class Investor extends JFrame implements MarketListener {
 			m.setMarginFee(marginFee);
 			m.setTimeViewInterval(dayViewInterval*1000*3600*24);
 			m.setTimeValidInterval(dayValidInterval*1000*3600*24);
-			m.setRefLeverage(refLeverage);
+			m.setTimeStartPoint(timeStartPoint.getTime());
+			m.setLeverage(refLeverage != 0 ? 1/refLeverage : 0);
+			m.setUnitBias(refUnitBias);
 			if (curDir != null && curDir.exists()) getInvestor().curDir = curDir; 
 			
 			Universe u = u();

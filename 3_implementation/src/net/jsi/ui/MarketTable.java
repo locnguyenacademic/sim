@@ -38,7 +38,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
@@ -50,7 +49,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.NumberFormatter;
 
-import net.hudup.core.logistic.ui.UIUtil;
 import net.jsi.EstimateStock;
 import net.jsi.Estimator;
 import net.jsi.Market;
@@ -217,6 +215,100 @@ public class MarketTable extends JTable implements MarketListener {
 		if (pl.isPressOK()) update();
 	}
 	
+	private void settings(Stock stock) {
+		if (getModel2().isForStock()) return;
+		stock = stock != null ? stock : getSelectedStock();
+		if (stock == null) return;
+		StockGroup group = stock instanceof StockGroup ? (StockGroup)stock : null;
+		if (group == null) return;
+
+		JDialog dlgSettings = new JDialog(Util.getFrameForComponent(this), "Settings for stock group", true);
+		dlgSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		dlgSettings.setSize(300, 200);
+		dlgSettings.setLocationRelativeTo(Util.getFrameForComponent(this));
+		dlgSettings.setLayout(new BorderLayout());
+		
+		
+		JPanel header = new JPanel(new BorderLayout());
+		dlgSettings.add(header, BorderLayout.NORTH);
+		
+		JPanel left = new JPanel(new GridLayout(0, 1));
+		header.add(left, BorderLayout.WEST);
+		
+		left.add(new JLabel("Leverage: "));
+		left.add(new JLabel("Unit bias: "));
+		left.add(new JLabel("Price ratio: "));
+		
+		JPanel right = new JPanel(new GridLayout(0, 1));
+		header.add(right, BorderLayout.CENTER);
+		
+		double leverage = group.getLeverage();
+		JPanel paneLeverage = new JPanel(new BorderLayout());
+		right.add(paneLeverage);
+		JFormattedTextField txtLeverage = new JFormattedTextField(new NumberFormatter());
+		txtLeverage.setValue(leverage != 0 ? 1.0/leverage : 0);
+		paneLeverage.add(txtLeverage, BorderLayout.CENTER);
+		
+		JPanel paneUnitBias = new JPanel(new BorderLayout());
+		right.add(paneUnitBias);
+		JFormattedTextField txtUnitBias = new JFormattedTextField(new NumberFormatter());
+		txtUnitBias.setValue(group.getUnitBias());
+		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
+		//
+		JButton btnUnitBias = new JButton("Estimate");
+		btnUnitBias.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MarketImpl m = m();
+				Estimator estimator = m.getEstimator(group.code(), group.isBuy());
+				if (estimator != null)  txtUnitBias.setValue(estimator.estimateUnitBiasFromData(m.getTimeViewInterval()));
+			}
+		});
+		paneUnitBias.add(btnUnitBias, BorderLayout.EAST);
+		
+		double priceRatio = group.getProperty().priceRatio;
+		JPanel panePriceRatio = new JPanel(new BorderLayout());
+		right.add(panePriceRatio);
+		JFormattedTextField txtPriceRatio = new JFormattedTextField(new NumberFormatter());
+		txtPriceRatio.setValue(priceRatio);
+		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);
+		
+		
+		JPanel footer = new JPanel();
+		dlgSettings.add(footer, BorderLayout.SOUTH);
+		
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double leverage = txtLeverage.getValue() instanceof Number ? ((Number)txtLeverage.getValue()).doubleValue() : StockProperty.LEVERAGE;
+				double unitBias = txtUnitBias.getValue() instanceof Number ? ((Number)txtUnitBias.getValue()).doubleValue() : StockProperty.UNIT_BIAS;
+				double priceRatio = txtPriceRatio.getValue() instanceof Number ? ((Number)txtPriceRatio.getValue()).doubleValue() : StockProperty.PRICE_RATIO;
+				
+				group.setLeverage(leverage != 0 ? 1/leverage : leverage);
+				group.setUnitBias(unitBias);
+				group.getProperty().priceRatio = priceRatio;
+				
+				update();
+				
+				dlgSettings.dispose();
+			}
+		});
+		footer.add(ok);
+		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dlgSettings.dispose();
+			}
+		});
+		footer.add(cancel);
+		
+		dlgSettings.setVisible(true);
+	}
+	
 	
 	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
@@ -260,6 +352,32 @@ public class MarketTable extends JTable implements MarketListener {
 				});
 			ctxMenu.add(miModifyList);
 			
+			JMenuItem miSettings = new JMenuItem("Settings");
+			miSettings.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						settings(stock);
+					}
+				});
+			ctxMenu.add(miSettings);
+
+			JMenuItem miProperties = new JMenuItem("Properties");
+			miProperties.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						StockPropertySetting setting = new StockPropertySetting(stock.getProperty(), tblMarket);
+						setting.setVisible(true);
+						StockProperty output = setting.getOutput();
+						if (output != null) {
+							stock.getProperty().set(output);
+							update();
+						}
+					}
+				});
+			ctxMenu.add(miProperties);
+
 			ctxMenu.addSeparator();
 			
 			JMenuItem miRefresh = new JMenuItem("Refresh");
@@ -406,6 +524,12 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	public Market getPlacedMarket() {
+		Universe u = getMarket().getNearestUniverse();
+		return u != null ? u.getPlacedMarket(getMarket().getName()) : null;
+	}
+	
+	
 	public void update() {
 		getModel2().update();
 	}
@@ -495,15 +619,19 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private MarketImpl m() {
-		Universe u = getMarket().getNearestUniverse();
-		return u != null ? u.c(getMarket()) : null;
+	public MarketImpl m() {
+		return getModel2().m();
 	}
 
 
 	private StockImpl c(Stock stock) {
 		MarketImpl m = m();
 		return m != null ? m.c(stock) : null;
+	}
+	
+	
+	public void applyPlaced() {
+		getModel2().applyPlaced();
 	}
 	
 	
@@ -535,9 +663,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	private MarketImpl m() {
-		Universe u = getMarket().getNearestUniverse();
-		return u != null ? u.c(getMarket()) : null;
+	protected MarketImpl m() {
+		Universe u = market.getNearestUniverse();
+		return u != null ? u.c(market) : null;
 	}
 
 
@@ -581,8 +709,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			MarketImpl m = m();
 			Universe u = m != null ? m.getNearestUniverse() : null;
 			if (u != null) {
-				int index = u.lookup(market.getName());
-				QueryEstimator query = u.query(index);
+				QueryEstimator query = u.query(market.getName(), market);
 				for (int i = 0; i < m.size(); i++) {
 					StockGroup group = m.get(i);
 					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
@@ -598,11 +725,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			}
 		}
 		else {
-			Universe universe = market.getNearestUniverse();
-			if (universe != null) {
-				MarketImpl mi = ((Universe)universe).c(market);
-				for (int i = 0; i < mi.size(); i++) {
-					StockGroup group = mi.get(i);
+			MarketImpl m = m();
+			if (m != null) {
+				List<StockGroup> groups = m.getGroups(market.getTimeValidInterval());
+				for (StockGroup group : groups) {
 					Vector<Object> row = toRow(group);
 					if (row != null) data.add(row);
 				}
@@ -613,6 +739,15 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		setDataVector(data, toColumns());
 		
 		fireInvestorEvent(new MarketEvent(this));
+	}
+	
+	
+	protected void applyPlaced() {
+		MarketImpl m = m();
+		if (m != null) {
+			m.applyPlaced();
+			update();
+		}
 	}
 	
 	
@@ -664,18 +799,21 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				row.add("");
 			}
 			else {
-				int index = u.lookup(market.getName());
-				QueryEstimator query = u.query(index);
+				QueryEstimator query = u.query(market.getName(), market);
 				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
 				
 				if (estimator == null) {
 					row.add("");
 				}
 				else {
-					String volume = Util.format(estimator.estimateInvestVolume(timeViewInterval));
-					String amount = Util.format(estimator.estimateInvestAmount(timeViewInterval));
-					String totalAmount = Util.format(estimator.getInvestAmount(timeViewInterval));
-					row.add(volume + " (" + amount + " / " + totalAmount + ")");
+					if (group.getLeverage() != 0) {
+						String volume = Util.format(estimator.estimateInvestVolume(timeViewInterval));
+						String amount = Util.format(estimator.estimateInvestAmount(timeViewInterval));
+						String totalAmount = Util.format(estimator.getInvestAmount(timeViewInterval));
+						row.add(volume + " (" + amount + " / " + totalAmount + ")");
+					}
+					else
+						row.add("Infinity");
 				}
 			}
 		}
@@ -864,7 +1002,7 @@ abstract class StockSummary extends JDialog {
 
 		int index = u.lookup(market.getName());
 		if (index < 0) return;
-		QueryEstimator query = u.query(index);
+		QueryEstimator query = u.query(market.getName(), market);
 		Estimator estimator = query.getEstimator(code, buy);
 		if (estimator == null) return;
 		
@@ -880,6 +1018,7 @@ abstract class StockSummary extends JDialog {
 			info.append("Margin: " + Util.format(group.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(group.getProfit(timeViewInterval)) + "\n");
 			info.append("ROI: " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("Unit bias (setting): " + Util.format(group.getUnitBias()) + "\n");
 			
 			info.append("\n");
 			info.append("Estimated unit bias: " + Util.format(estimator.estimateUnitBias(timeViewInterval)) + "\n");
@@ -889,13 +1028,21 @@ abstract class StockSummary extends JDialog {
 			info.append("Estimated high price: " + Util.format(estimator.estimateHighPrice(timeViewInterval)) + "\n");
 	
 			info.append("\n");
-			info.append("Estimated invest amount: " + Util.format(estimator.getInvestAmount(timeViewInterval)) + "\n");
-			double recInvestAmount = estimator.getInvestAmount(timeViewInterval);
-			if (recInvestAmount > 0)
-				info.append("Recommended invest amount: " + Util.format(recInvestAmount) + "\n");
-			double recInvestVolume = estimator.estimateInvestVolume(timeViewInterval);
-			if (recInvestVolume > 0)
-				info.append("Recommended invest volume: " + Util.format(recInvestVolume) + "\n");
+			if (group.getLeverage() != 0) {
+				double investAmount = estimator.getInvestAmount(timeViewInterval);
+				if (investAmount > 0) {
+					info.append("Estimated invest amount: " + Util.format(investAmount) + "\n");
+					double recInvestAmount = estimator.estimateInvestAmount(timeViewInterval);
+					if (recInvestAmount > 0)
+						info.append("Recommended invest amount: " + Util.format(recInvestAmount) + "\n");
+					double recInvestVolume = estimator.estimateInvestVolume(timeViewInterval);
+					if (recInvestVolume > 0)
+						info.append("Recommended invest volume: " + Util.format(recInvestVolume) + "\n");
+				}
+			}
+			else {
+				info.append("Recommended invest amount: Free due to infinity leverage"+ "\n");
+			}
 			
 			Estimator.Invest[] dualInvest = estimator.estimateDualInvest(timeViewInterval);
 			if (dualInvest != null && dualInvest.length >= 2) {
@@ -932,6 +1079,7 @@ abstract class StockSummary extends JDialog {
 			info.append("Margin: " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(stock.getProfit(timeViewInterval)) + "\n");
 			info.append("ROI: " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");
 			
 			info.append("\n");
 			info.append("Estimated unit bias: " + Util.format(estimator.estimateUnitBias(timeViewInterval)) + "\n");
@@ -1082,7 +1230,7 @@ class AddPrice extends JDialog {
 		
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
 		txtLastDate.setValue(new Date(input.getPrice().getDate().getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
 		//
@@ -1194,6 +1342,8 @@ class AddPrice extends JDialog {
 		
 		if (!s.setPrice(price)) return;
 
+		m.applyPlaced();
+		
 		output = input;
 		
 		JOptionPane.showMessageDialog(this, "Add price successfully", "Add price", JOptionPane.INFORMATION_MESSAGE);
@@ -1206,77 +1356,6 @@ class AddPrice extends JDialog {
 	}
 	
 
-}
-
-
-/**
- * Text field contains stock property.
- * 
- * @author Loc Nguyen
- * @version 10.0
- *
- */
-class StockPropertyTextField extends JTextField {
-
-	
-	/**
-	 * Serial version UID for serializable class. 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	
-	/**
-	 * Internal stock property.
-	 */
-	protected StockProperty property = null;
-	
-	
-	/**
-	 * Default constructor.
-	 */
-	public StockPropertyTextField() {
-		super();
-		setEditable(false);
-	}
-	
-	
-	/**
-	 * Constructor with specified stock property.
-	 * @param property specified stock property.
-	 */
-	public StockPropertyTextField(StockProperty property) {
-		this();
-		setStockProperty(property);
-	}
-
-	
-	/**
-	 * Getting stock property.
-	 * @return internal stock property.
-	 */
-	public StockProperty getStockProperty() {
-		return property;
-	}
-	
-	
-	/**
-	 * Setting stock property.
-	 * @param property specified stock property.
-	 */
-	public void setStockProperty(StockProperty property) {
-		this.property = property;
-		if (property == null)
-			setText("");
-		else
-			setText("(stock property)");
-	}
-	
-	
-	public void modify() {
-		
-	}
-	
-	
 }
 
 
@@ -1366,7 +1445,7 @@ class PriceListTable extends JTable {
 	private void edit(Price input) {
 		input = input != null ? input : getSelectedPrice();
 		if (input == null) return;
-		JDialog editor = new JDialog(UIUtil.getFrameForComponent(this), "Edit price", true);
+		JDialog editor = new JDialog(Util.getFrameForComponent(this), "Edit price", true);
 		
 		editor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		editor.setSize(350, 250);
@@ -1437,7 +1516,7 @@ class PriceListTable extends JTable {
 		
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		JFormattedTextField txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+		JFormattedTextField txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
 		txtLastDate.setValue(new Date(input.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
 		//
@@ -1704,6 +1783,9 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 	protected boolean modified = false;
 	
 	
+	protected boolean modifiedDate = false;
+	
+	
 	protected boolean editable = true;
 	
 	
@@ -1794,6 +1876,21 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 		}
 		
 		modified = false;
+		boolean flag = modifiedDate;
+		modifiedDate = false;
+
+		MarketImpl m = m();
+		if (m == null) return;
+		m.applyPlaced();
+		
+		if (flag) {
+			MarketImpl placedMarket = m.getPlacedMarket();
+			if (placedMarket != null && placedMarket != m) {
+				StockGroup group = placedMarket.get(getGroup().code(), getGroup().isBuy());
+				if (group != null) group.resortPrices();
+			}
+		}
+		
 	}
 	
 	
@@ -1814,6 +1911,7 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 		setDataVector(data, toColumns());
 
 		modified = false;
+		modifiedDate = false;
 	}
 	
 	
@@ -1883,7 +1981,7 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 				aValue = 0;
 			else if (!(aValue instanceof Date)) {
 				try {
-					SimpleDateFormat df = new SimpleDateFormat(Util.DATE_FORMAT);
+					SimpleDateFormat df = new SimpleDateFormat(Util.DATETIME_FORMAT);
 					aValue = df.parse(aValue.toString());
 				}
 				catch (Exception e) {
@@ -1904,6 +2002,9 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 			
 		super.setValueAt(aValue, row, column);
 		modified = true;
+		if (column == 1) {
+			modifiedDate = true;
+		}
 	}
 
 	
@@ -1974,6 +2075,7 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		modified = true;
+		//modifiedDate = true;
 	}
 
 

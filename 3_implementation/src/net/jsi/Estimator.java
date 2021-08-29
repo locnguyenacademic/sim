@@ -74,6 +74,9 @@ public interface Estimator extends Serializable, Cloneable {
 	double estimateUnitBias(long timeInterval);
 	
 	
+	double estimateUnitBiasFromData(long timeInterval);
+
+	
 	double estimateLowPrice(long timeInterval);
 	
 	

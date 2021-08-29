@@ -7,6 +7,7 @@
  */
 package net.jsi;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public class TakenPrice implements Price {
@@ -97,6 +98,18 @@ public class TakenPrice implements Price {
 
 	
 	@Override
+	public Serializable getTag() {
+		return price.getTag();
+	}
+
+
+	@Override
+	public void setTag(Serializable tag) {
+		price.setTag(tag);
+	}
+
+
+	@Override
 	public boolean isValid() {
 		return price.isValid();
 	}
@@ -108,12 +121,26 @@ public class TakenPrice implements Price {
 
 
 	@Override
+	public double getPriceRatio() {
+		return price.getPriceRatio();
+	}
+
+
+	@Override
+	public void setPriceRatio(double priceRatio) {
+		price.setPriceRatio(priceRatio);
+	}
+
+
+	@Override
 	public boolean copy(Price price) {
 		if (price == null) return false;
 		this.set(price.get());
 		this.setLow(price.getLow());
 		this.setHigh(price.getHigh());
 		this.setTime(price.getTime());
+		this.setPriceRatio(price.getPriceRatio());
+		this.setTag(price.getTag());
 		
 		if (price instanceof TakenPrice) {
 			this.price = ((TakenPrice)price).price;

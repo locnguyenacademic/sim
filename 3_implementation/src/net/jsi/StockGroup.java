@@ -125,6 +125,9 @@ public class StockGroup extends StockAbstract implements Market {
 			ret = ret && stock.setUnitBias(unitBias);
 		}
 		
+		StockGroup other = getOtherGroup();
+		if (other != null) other.setUnitBias(unitBias);
+
 		return ret;
 	}
 
@@ -238,18 +241,48 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 	
+	public boolean containsStocks(long timeInterval) {
+		for (Stock stock : stocks) {
+			if (stock instanceof StockImpl) {
+				Price takenPrice = ((StockImpl)stock).getTakenPrice(timeInterval);
+				if (takenPrice != null) return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
 	public Stock add(long timeInterval, long takenTimePoint, double volume) {
 		if (prices.size() == 0) return null;
 		StockImpl stock = (StockImpl) newStock(timeInterval, takenTimePoint, volume);
-		if (stock.isValid(timeInterval) && stocks.add(stock))
+		if (stock == null) return null;
+		
+		if (stock.isValid(timeInterval) && stocks.add(stock)) {
+			StockGroup other = getOtherGroup();
+			if (other != null) {
+				other.setLeverage(this.getLeverage());
+				other.setUnitBias(this.getUnitBias());
+			}
+			
 			return stock;
+		}
 		else
 			return null;
 	}
 	
 	
 	public Stock newStock(long timeInterval, long takenTimePoint, double volume) {
-		StockImpl stock = new StockImpl();
+		StockGroup group = this;
+		StockImpl stock = new StockImpl() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected StockGroup getGroup() {
+				return group;
+			}
+		};
+		
 		stock.setBasicInfo(this);
 		stock.volume = volume;
 		
@@ -262,6 +295,11 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	public Stock remove(int index) {
 		return stocks.remove(index);
+	}
+	
+	
+	protected boolean remove(Stock stock) {
+		return stocks.remove(stock);
 	}
 	
 	
@@ -341,6 +379,39 @@ public class StockGroup extends StockAbstract implements Market {
 		if (leverage < 0 || leverage == this.leverage) return;
 		this.leverage = leverage;
 		for (Stock stock : stocks) stock.setLeverage(leverage);
+		
+		StockGroup other = getOtherGroup();
+		if (other != null) other.setLeverage(leverage);
+	}
+	
+	
+	protected StockGroup getOtherGroup() {
+		Market market = getOtherMarket();
+		if (market == null)
+			return null;
+		else {
+			Universe universe = getNearestUniverse();
+			MarketImpl m = universe.c(market);
+			StockGroup other = m.get(code(), isBuy());
+			return other != null && other != this ? other : null;
+		}
+	}
+	
+	
+	private Market getOtherMarket() {
+		Market thisMarket = getSuperMarket();
+		if (thisMarket == null) return null;
+		
+		Universe universe = getNearestUniverse();
+		if (universe == null) return null;
+		
+		Market market = universe.get(thisMarket.getName());
+		if (market == null) return null;
+		
+		Market placedMarket = universe.getPlacedMarket(thisMarket.getName());
+		if (placedMarket == null || placedMarket == market) return null;
+		
+		return thisMarket == market ? placedMarket : (thisMarket == placedMarket ? market : null);
 	}
 	
 	
@@ -422,6 +493,18 @@ public class StockGroup extends StockAbstract implements Market {
 			return m.newPrice(price, lowPrice, highPrice, time);
 		else
 			return new PriceImpl(price, lowPrice, highPrice, time);
+	}
+
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	

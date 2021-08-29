@@ -18,10 +18,10 @@ public abstract class MarketAbstract implements Market {
 	protected String name = StockProperty.NONAME;
 	
 	
-	protected long timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
+	private long timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
 
 	
-	protected long timeValidInterval = StockProperty.TIME_VALID_INTERVAL;
+	private long timeValidInterval = StockProperty.TIME_VALID_INTERVAL;
 
 	
 	public MarketAbstract() {
@@ -137,6 +137,7 @@ public abstract class MarketAbstract implements Market {
 	
 	protected void reset() {
 		this.timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
+		this.timeValidInterval = StockProperty.TIME_VALID_INTERVAL;
 	}
 	
 	

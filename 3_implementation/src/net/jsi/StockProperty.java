@@ -8,6 +8,8 @@
 package net.jsi;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 public class StockProperty implements Serializable, Cloneable {
 
@@ -33,6 +35,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String NOTCODE2 = "-1";
 
 	
+	public final static String NOTCODE3 = "0";
+
+	
 	public final static String JSI_EXT = "jsi";
 
 	
@@ -55,9 +60,12 @@ public class StockProperty implements Serializable, Cloneable {
 
 
 	public static long TIME_VALID_INTERVAL = TIME_VIEW_INTERVAL*10;
+	
+	
+	public static double PRICE_RATIO = 1;
 
 
-	public int maxPriceCount = StockProperty.MAX_PRICE_COUNT;
+	public int maxPriceCount = MAX_PRICE_COUNT;
 	
 	
 	public double swap = 0;
@@ -72,7 +80,10 @@ public class StockProperty implements Serializable, Cloneable {
 	public long timeUpdatePriceInterval = StockProperty.TIME_UPDATE_PRICE_INTERVAL;
 	
 	
-	public Serializable moreProperty = null;
+	public double priceRatio = PRICE_RATIO;
+	
+	
+	public Map<String, String> moreProperty = Util.newMap(0);
 	
 	
 	public void set(StockProperty property) {
@@ -83,7 +94,46 @@ public class StockProperty implements Serializable, Cloneable {
 		this.spread = property.spread;
 		this.commission = property.commission;
 		this.timeUpdatePriceInterval = property.timeUpdatePriceInterval;
-		this.moreProperty = property.moreProperty;
+		
+		this.moreProperty.clear();
+		if (property != null) this.moreProperty.putAll(property.moreProperty);
+	}
+	
+	
+	public String getMorePropertyText() {
+		StringBuffer buffer = new StringBuffer();
+		Set<String> keys = moreProperty.keySet();
+		boolean first = false;
+		for (String key : keys) {
+			if (first) buffer.append(", ");
+			buffer.append(key + "=" + moreProperty.get(key));
+			first = true;
+		}
+		
+		return buffer.toString();
+	}
+	
+	
+	public void setMorePropertyText(String propertyText) {
+		this.moreProperty.clear();
+		if (propertyText == null) return;
+		
+		String[] eqs = propertyText.split("[[\n][,]]");
+		if (eqs == null) return;
+		for (String eq : eqs) {
+			String[] pair = eq.split("=");
+			try {
+				if (pair == null || pair.length < 2) continue;
+				String key = pair[0].trim();
+				String value = pair[1].trim();
+				if (!key.isEmpty() && !value.isEmpty()) this.moreProperty.put(key, value);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 	}
 	
 	

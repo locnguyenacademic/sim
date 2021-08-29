@@ -7,6 +7,7 @@
  */
 package net.jsi;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public class PriceImpl implements Price {
@@ -15,16 +16,22 @@ public class PriceImpl implements Price {
 	private static final long serialVersionUID = 1L;
 
 
-	protected double price = 0;
+	private double price = 0;
 	
 	
-	protected double lowPrice = 0;
+	private double lowPrice = 0;
 	
 	
-	protected double highPrice = 0;
+	private double highPrice = 0;
+	
+	
+	private double priceRatio = StockProperty.PRICE_RATIO;
 	
 	
 	protected long time = System.currentTimeMillis();
+	
+	
+	protected Serializable tag = null;
 	
 	
 	public PriceImpl() {
@@ -42,7 +49,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double get() {
-		return price;
+		return price*priceRatio;
 	}
 	
 	
@@ -54,7 +61,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double getLow() {
-		return lowPrice;
+		return lowPrice*priceRatio;
 	}
 	
 	
@@ -66,7 +73,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double getHigh() {
-		return highPrice;
+		return highPrice*priceRatio;
 	}
 	
 	
@@ -111,6 +118,30 @@ public class PriceImpl implements Price {
 	}
 
 
+	@Override
+	public Serializable getTag() {
+		return tag;
+	}
+
+
+	@Override
+	public void setTag(Serializable tag) {
+		this.tag = tag;
+	}
+
+
+	@Override
+	public double getPriceRatio() {
+		return priceRatio;
+	}
+	
+	
+	@Override
+	public void setPriceRatio(double priceRatio) {
+		this.priceRatio = priceRatio;
+	}
+	
+	
 	@Override
 	public Object clone() {
 		try {
