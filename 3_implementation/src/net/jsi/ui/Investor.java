@@ -20,7 +20,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -43,14 +42,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.text.NumberFormatter;
 
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
-import net.jsi.UniverseExt;
+import net.jsi.UniverseImpl;
 import net.jsi.Util;
 import net.jsi.ui.MarketPanel.MarketDialog;
 
@@ -145,18 +143,6 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-//	private void updateAll(Object source) {
-//		boolean mtm = (source != null) && (source instanceof MarketTableModel);
-//		MarketPanel[] mps = getMarketPanels();
-//		for (MarketPanel mp : mps) {
-//			if (mtm && mp.getMarketTable().getModel2() != source)
-//				mp.update();
-//		}
-//		
-//		if (!mtm) update();
-//	}
-	
-	
 	private JMenuBar createMenuBar() {
 		JMenuBar mnBar = new JMenuBar();
 		
@@ -212,6 +198,7 @@ public class Investor extends JFrame implements MarketListener {
 			}
 		});
 		mniShowPlacedMarket.setMnemonic('p');
+		mniShowPlacedMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniShowPlacedMarket);
 
 		mnFile.addSeparator();
@@ -618,13 +605,13 @@ public class Investor extends JFrame implements MarketListener {
 			
 			JPanel paneBalance = new JPanel(new BorderLayout());
 			right.add(paneBalance);
-			txtBalanceBase = new JFormattedTextField(new NumberFormatter());
+			txtBalanceBase = new JFormattedTextField(Util.getNumberFormatter());
 			txtBalanceBase.setValue(m.getBalanceBase());
 			paneBalance.add(txtBalanceBase, BorderLayout.CENTER);
 			
 			JPanel paneBalanceBias = new JPanel(new BorderLayout());
 			right.add(paneBalanceBias);
-			txtBalanceBias = new JFormattedTextField(new NumberFormatter());
+			txtBalanceBias = new JFormattedTextField(Util.getNumberFormatter());
 			txtBalanceBias.setValue(m.getBalanceBias());
 			paneBalanceBias.add(txtBalanceBias, BorderLayout.CENTER);
 			//
@@ -645,7 +632,7 @@ public class Investor extends JFrame implements MarketListener {
 			
 			JPanel paneMarginFee = new JPanel(new BorderLayout());
 			right.add(paneMarginFee);
-			txtMarginFee = new JFormattedTextField(new NumberFormatter());
+			txtMarginFee = new JFormattedTextField(Util.getNumberFormatter());
 			txtMarginFee.setValue(m.getMarginFee());
 			paneMarginFee.add(txtMarginFee, BorderLayout.CENTER);
 			//
@@ -666,21 +653,21 @@ public class Investor extends JFrame implements MarketListener {
 			
 			JPanel paneDayViewInterval = new JPanel(new BorderLayout());
 			right.add(paneDayViewInterval);
-			txtDayViewInterval = new JFormattedTextField(new NumberFormatter());
+			txtDayViewInterval = new JFormattedTextField(Util.getNumberFormatter());
 			txtDayViewInterval.setToolTipText("Value 0 specifies viewing al time points");
 			txtDayViewInterval.setValue(m.getTimeViewInterval() / (1000*3600*24));
 			paneDayViewInterval.add(txtDayViewInterval, BorderLayout.CENTER);
 			
 			JPanel paneDayValidInterval = new JPanel(new BorderLayout());
 			right.add(paneDayValidInterval);
-			txtDayValidInterval = new JFormattedTextField(new NumberFormatter());
+			txtDayValidInterval = new JFormattedTextField(Util.getNumberFormatter());
 			txtDayValidInterval.setToolTipText("Value 0 specifies viewing al time points");
 			txtDayValidInterval.setValue(m.getTimeValidInterval() / (1000*3600*24));
 			paneDayValidInterval.add(txtDayValidInterval, BorderLayout.CENTER);
 			
 			JPanel paneTimeStartPoint = new JPanel(new BorderLayout());
 			right.add(paneTimeStartPoint);
-			txtTimeStartPoint = new JFormattedTextField(new SimpleDateFormat(Util.DATE_FORMAT));
+			txtTimeStartPoint = new JFormattedTextField(Util.getDateSimpleFormatter());
 			txtTimeStartPoint.setValue(new Date(m.getTimeStartPoint()));
 			paneTimeStartPoint.add(txtTimeStartPoint, BorderLayout.CENTER);
 			//
@@ -695,14 +682,14 @@ public class Investor extends JFrame implements MarketListener {
 			
 			JPanel paneRefLeverage = new JPanel(new BorderLayout());
 			right.add(paneRefLeverage);
-			txtRefLeverage = new JFormattedTextField(new NumberFormatter());
+			txtRefLeverage = new JFormattedTextField(Util.getNumberFormatter());
 			txtRefLeverage.setToolTipText("Value 0 specifies infinity leverage");
 			txtRefLeverage.setValue(m.getLeverage() == 0 ? 0 : 1/m.getLeverage());
 			paneRefLeverage.add(txtRefLeverage, BorderLayout.CENTER);
 			
 			JPanel paneRefUnitBias = new JPanel(new BorderLayout());
 			right.add(paneRefUnitBias);
-			txtRefUnitBias = new JFormattedTextField(new NumberFormatter());
+			txtRefUnitBias = new JFormattedTextField(Util.getNumberFormatter());
 			txtRefUnitBias.setValue(m.getUnitBias());
 			paneRefUnitBias.add(txtRefUnitBias, BorderLayout.CENTER);
 			
@@ -836,7 +823,7 @@ public class Investor extends JFrame implements MarketListener {
 
 	
 	public static void main(String[] args) {
-		Investor investor = new Investor(new UniverseExt());
+		Investor investor = new Investor(new UniverseImpl());
 		File workingJSIDir = new File(StockProperty.WORKING_DIRECTORY);
 		if (workingJSIDir.exists() && workingJSIDir.isFile()) {
 			investor.addMarket(StockProperty.MARKET_NAME_PREFIX + "1");

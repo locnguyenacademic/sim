@@ -55,6 +55,9 @@ public interface Price extends Serializable, Cloneable {
 	void setTag(Serializable tag);
 	
 	
+	void clearTag();
+
+	
 	boolean copy(Price price);
 	
 	

@@ -103,12 +103,6 @@ public abstract class MarketAbstract implements Market {
 
 
 	@Override
-	public Market getSuperMarket() {
-		return null;
-	}
-
-
-	@Override
 	public Universe getNearestUniverse() {
 		Market superMarket = this;
 		if (superMarket instanceof Universe) return (Universe)superMarket;
@@ -151,12 +145,6 @@ public abstract class MarketAbstract implements Market {
 		}
 		
 		return buffer.toString();
-	}
-
-
-	@Override
-	public Market getDualMarket() {
-		return null;
 	}
 
 

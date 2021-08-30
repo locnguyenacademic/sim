@@ -47,7 +47,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.text.NumberFormatter;
 
 import net.jsi.EstimateStock;
 import net.jsi.Estimator;
@@ -245,13 +244,13 @@ public class MarketTable extends JTable implements MarketListener {
 		double leverage = group.getLeverage();
 		JPanel paneLeverage = new JPanel(new BorderLayout());
 		right.add(paneLeverage);
-		JFormattedTextField txtLeverage = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtLeverage = new JFormattedTextField(Util.getNumberFormatter());
 		txtLeverage.setValue(leverage != 0 ? 1.0/leverage : 0);
 		paneLeverage.add(txtLeverage, BorderLayout.CENTER);
 		
 		JPanel paneUnitBias = new JPanel(new BorderLayout());
 		right.add(paneUnitBias);
-		JFormattedTextField txtUnitBias = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtUnitBias = new JFormattedTextField(Util.getNumberFormatter());
 		txtUnitBias.setValue(group.getUnitBias());
 		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
 		//
@@ -269,7 +268,7 @@ public class MarketTable extends JTable implements MarketListener {
 		double priceRatio = group.getProperty().priceRatio;
 		JPanel panePriceRatio = new JPanel(new BorderLayout());
 		right.add(panePriceRatio);
-		JFormattedTextField txtPriceRatio = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtPriceRatio = new JFormattedTextField(Util.getNumberFormatter());
 		txtPriceRatio.setValue(priceRatio);
 		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);
 		
@@ -1182,7 +1181,7 @@ class AddPrice extends JDialog {
 		
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
-		txtPrice = new JFormattedTextField(new NumberFormatter());
+		txtPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtPrice.setValue(input.getPrice().get());
 		panePrice.add(txtPrice, BorderLayout.CENTER);
 		//
@@ -1198,7 +1197,7 @@ class AddPrice extends JDialog {
 		
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
-		txtLowPrice = new JFormattedTextField(new NumberFormatter());
+		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtLowPrice.setValue(input.getPrice().getLow());
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		//
@@ -1214,7 +1213,7 @@ class AddPrice extends JDialog {
 		
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
-		txtHighPrice = new JFormattedTextField(new NumberFormatter());
+		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtHighPrice.setValue(input.getPrice().getHigh());
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		//
@@ -1230,7 +1229,7 @@ class AddPrice extends JDialog {
 		
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
+		txtLastDate = new JFormattedTextField(Util.getDateFormatter());
 		txtLastDate.setValue(new Date(input.getPrice().getDate().getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
 		//
@@ -1468,7 +1467,7 @@ class PriceListTable extends JTable {
 		
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
-		JFormattedTextField txtPrice = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtPrice.setValue(input.get());
 		panePrice.add(txtPrice, BorderLayout.CENTER);
 		//
@@ -1484,7 +1483,7 @@ class PriceListTable extends JTable {
 		
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
-		JFormattedTextField txtLowPrice = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtLowPrice.setValue(input.getLow());
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		//
@@ -1500,7 +1499,7 @@ class PriceListTable extends JTable {
 		
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
-		JFormattedTextField txtHighPrice = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtHighPrice.setValue(input.getHigh());
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		//
@@ -1516,7 +1515,7 @@ class PriceListTable extends JTable {
 		
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		JFormattedTextField txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
+		JFormattedTextField txtLastDate = new JFormattedTextField(Util.getDateFormatter());
 		txtLastDate.setValue(new Date(input.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
 		//
@@ -1981,7 +1980,7 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 				aValue = 0;
 			else if (!(aValue instanceof Date)) {
 				try {
-					SimpleDateFormat df = new SimpleDateFormat(Util.DATETIME_FORMAT);
+					SimpleDateFormat df = new SimpleDateFormat(Util.DATE_FORMAT);
 					aValue = df.parse(aValue.toString());
 				}
 				catch (Exception e) {

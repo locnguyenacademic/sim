@@ -131,6 +131,12 @@ public class PriceImpl implements Price {
 
 
 	@Override
+	public void clearTag() {
+		this.tag = null;
+	}
+
+
+	@Override
 	public double getPriceRatio() {
 		return priceRatio;
 	}

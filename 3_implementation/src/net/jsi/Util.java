@@ -9,6 +9,9 @@ package net.jsi;
 
 import java.awt.Component;
 import java.awt.Frame;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +24,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.NumberFormatter;
+
 /**
  * This is utility class to provide static utility methods.
  * 
@@ -31,13 +38,13 @@ import java.util.Vector;
 public final class Util {
 
 	
-	public static String DATE_FORMAT = "yyyy-MM-dd";
+	public static String DATESIMPLE_FORMAT = "yyyy-MM-dd";
 
 	
-	public static String DATETIME_FORMAT = DATE_FORMAT + " HH-mm-ss";
+	public static String DATE_FORMAT = DATESIMPLE_FORMAT + " HH-mm-ss";
 			
 	
-	public static int DECIMAL_PRECISION = 2;
+	public static int DECIMAL_PRECISION = 4;
 
 	
 	/**
@@ -153,7 +160,7 @@ public final class Util {
 	 * @return formatted text.
 	 */
 	public static String format(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(DATETIME_FORMAT);
+		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
 		return df.format(date);
 	}
 
@@ -164,7 +171,7 @@ public final class Util {
 	 * @return simple formatted text.
 	 */
 	public static String formatSimple(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		SimpleDateFormat df = new SimpleDateFormat(DATESIMPLE_FORMAT);
 		return df.format(date);
 	}
 
@@ -175,8 +182,62 @@ public final class Util {
 	 * @return text format of number of the specified number.
 	 */
 	public static String format(double number) {
-		return String.format("%." + DECIMAL_PRECISION + "f", number);
+		return "" + round(number, DECIMAL_PRECISION);
+		//return String.format("%." + DECIMAL_PRECISION + "f", number);
 	}
 
+
+	/**
+	 * Rounding the specified number with decimal precision specified by the number of decimal digits.
+	 * 
+	 * @param number specified number.
+	 * @param n decimal precision which is the number of decimal digits.
+	 * @return number rounded from the specified number.
+	 */
+	public static double round(double number, int n) {
+		if (Double.isNaN(number))
+			return Double.NaN;
+		
+		long d = (long) Math.pow(10, n);
+		return (double) Math.round(number * d) / d;
+	}
+
+	
+	public static AbstractFormatter getNumberFormatter() {
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMinimumFractionDigits(2);
+		nf.setMaximumFractionDigits(DECIMAL_PRECISION);
+		
+		NumberFormatter formatter = new NumberFormatter(nf);
+		formatter.setAllowsInvalid(false);
+        return formatter;
+	}
+	
+	
+	public static AbstractFormatter getDateFormatter() {
+		DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		
+		DateFormatter formatter = new DateFormatter(df);
+		formatter.setAllowsInvalid(false);
+        return formatter;
+	}
+
+	
+	public static AbstractFormatter getDateSimpleFormatter() {
+		DateFormat df = new SimpleDateFormat(DATESIMPLE_FORMAT);
+		
+		DateFormatter formatter = new DateFormatter(df);
+		formatter.setAllowsInvalid(false);
+        return formatter;
+	}
+
+	
+	public static Date parseDate(String dateTimeText) throws ParseException {
+		if (dateTimeText == null || dateTimeText.isEmpty()) return null;
+		DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		return df.parse(dateTimeText);
+	}
+	
+	
 
 }

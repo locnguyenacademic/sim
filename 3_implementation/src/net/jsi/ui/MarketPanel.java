@@ -22,7 +22,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -44,7 +43,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.NumberFormatter;
 
 import net.jsi.Estimator;
 import net.jsi.Market;
@@ -132,6 +130,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				take(stock, false);
 			}
 		});
+		take.setMnemonic('n');
 		toolbar2.add(take);
 		
 		JButton summary = new JButton("Summary");
@@ -142,6 +141,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				new MarketSummary(getMarket(), tblMarket, thisPanel).setVisible(true);
 			}
 		});
+		summary.setMnemonic('s');
 		toolbar2.add(summary);
 
 		
@@ -682,7 +682,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneLeverage = new JPanel(new BorderLayout());
 		right.add(paneLeverage);
-		txtLeverage = new JFormattedTextField(new NumberFormatter());
+		txtLeverage = new JFormattedTextField(Util.getNumberFormatter());
 		txtLeverage.setValue(0);
 		txtLeverage.setEditable(false);
 		txtLeverage.setToolTipText("Value 0 specified infinity leverage");
@@ -698,13 +698,13 @@ class StockTaker extends JDialog {
 		});
 		paneLeverage.add(chkLeverage, BorderLayout.WEST);
 	
-		txtVolume = new JFormattedTextField(new NumberFormatter());
+		txtVolume = new JFormattedTextField(Util.getNumberFormatter());
 		txtVolume.setValue(update ? input.getVolume(0, false) : 1.0);
 		right.add(txtVolume);
 
 		JPanel paneTakenPrice = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenPrice);
-		txtTakenPrice = new JFormattedTextField(new NumberFormatter());
+		txtTakenPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtTakenPrice.setValue(1.0);
 		if (update && m() != null) {
 			try {
@@ -730,7 +730,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenDate);
-		txtTakenDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
+		txtTakenDate = new JFormattedTextField(Util.getDateFormatter());
 		txtTakenDate.setValue(new Date(0));
 		txtTakenDate.setEditable(false);
 		paneTakenDate.add(txtTakenDate, BorderLayout.CENTER);
@@ -747,7 +747,7 @@ class StockTaker extends JDialog {
 
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
-		txtPrice = new JFormattedTextField(new NumberFormatter());
+		txtPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtPrice.setValue(update ? input.getPrice().get() : 1.0);
 		panePrice.add(txtPrice, BorderLayout.CENTER);
 		//
@@ -763,7 +763,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
-		txtLowPrice = new JFormattedTextField(new NumberFormatter());
+		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtLowPrice.setValue(update ? input.getPrice().getLow() : 1.0);
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		//
@@ -779,7 +779,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
-		txtHighPrice = new JFormattedTextField(new NumberFormatter());
+		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 1.0);
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		//
@@ -795,7 +795,7 @@ class StockTaker extends JDialog {
 		
 		paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
-		txtLastDate = new JFormattedTextField(new SimpleDateFormat(Util.DATETIME_FORMAT));
+		txtLastDate = new JFormattedTextField(Util.getDateFormatter());
 		txtLastDate.setValue(new Date());
 		txtLastDate.setEditable(false);
 		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
@@ -847,7 +847,7 @@ class StockTaker extends JDialog {
 		btnUnitBias.setEnabled(false);
 		paneUnitBias.add(btnUnitBias, BorderLayout.EAST);
 		//
-		txtUnitBias = new JFormattedTextField(new NumberFormatter());
+		txtUnitBias = new JFormattedTextField(Util.getNumberFormatter());
 		txtUnitBias.setValue(0);
 		txtUnitBias.setEditable(false);
 		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
@@ -865,7 +865,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneStopLoss = new JPanel(new BorderLayout());
 		right.add(paneStopLoss);
-		txtStopLoss = new JFormattedTextField(new NumberFormatter());
+		txtStopLoss = new JFormattedTextField(Util.getNumberFormatter());
 		txtStopLoss.setValue(0);
 		txtStopLoss.setToolTipText("Value 0 specifies no effect");
 		paneStopLoss.add(txtStopLoss, BorderLayout.CENTER);
@@ -882,7 +882,7 @@ class StockTaker extends JDialog {
 		
 		JPanel paneTakeProfit = new JPanel(new BorderLayout());
 		right.add(paneTakeProfit);
-		txtTakeProfit = new JFormattedTextField(new NumberFormatter());
+		txtTakeProfit = new JFormattedTextField(Util.getNumberFormatter());
 		txtTakeProfit.setToolTipText("Value 0 specifies no effect");
 		txtTakeProfit.setValue(0);
 		paneTakeProfit.add(txtTakeProfit, BorderLayout.CENTER);
@@ -1309,37 +1309,37 @@ class StockPropertySetting extends JDialog {
 		
 		JPanel paneMaxPriceCount = new JPanel(new BorderLayout());
 		right.add(paneMaxPriceCount);
-		JFormattedTextField txtMaxPriceCount = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtMaxPriceCount = new JFormattedTextField(Util.getNumberFormatter());
 		txtMaxPriceCount.setValue(property.maxPriceCount);
 		paneMaxPriceCount.add(txtMaxPriceCount, BorderLayout.CENTER);
 		
 		JPanel paneSwap = new JPanel(new BorderLayout());
 		right.add(paneSwap);
-		JFormattedTextField txtSwap = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtSwap = new JFormattedTextField(Util.getNumberFormatter());
 		txtSwap.setValue(property.swap);
 		paneSwap.add(txtSwap, BorderLayout.CENTER);
 		
 		JPanel paneSpread = new JPanel(new BorderLayout());
 		right.add(paneSpread);
-		JFormattedTextField txtSpread = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtSpread = new JFormattedTextField(Util.getNumberFormatter());
 		txtSpread.setValue(property.spread);
 		paneSpread.add(txtSpread, BorderLayout.CENTER);
 
 		JPanel paneCommission = new JPanel(new BorderLayout());
 		right.add(paneCommission);
-		JFormattedTextField txtCommission = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtCommission = new JFormattedTextField(Util.getNumberFormatter());
 		txtCommission.setValue(property.commission);
 		paneCommission.add(txtCommission, BorderLayout.CENTER);
 		
 		JPanel panePriceRatio = new JPanel(new BorderLayout());
 		right.add(panePriceRatio);
-		JFormattedTextField txtPriceRatio = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtPriceRatio = new JFormattedTextField(Util.getNumberFormatter());
 		txtPriceRatio.setValue(property.priceRatio);
 		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);
 		
 		JPanel panePriceUpdateInterval = new JPanel(new BorderLayout());
 		right.add(panePriceUpdateInterval);
-		JFormattedTextField txtTimePriceUpdateInterval = new JFormattedTextField(new NumberFormatter());
+		JFormattedTextField txtTimePriceUpdateInterval = new JFormattedTextField(Util.getNumberFormatter());
 		txtTimePriceUpdateInterval.setValue(property.timeUpdatePriceInterval / (1000*3600*24));
 		panePriceUpdateInterval.add(txtTimePriceUpdateInterval, BorderLayout.CENTER);
 		
@@ -1354,7 +1354,7 @@ class StockPropertySetting extends JDialog {
 		JTextArea txtMoreProperties = new JTextArea();
 		txtMoreProperties.setLineWrap(true);
 		txtMoreProperties.setToolTipText("Pairs \"key=value\" are separated by a comma or a new line character");
-		txtMoreProperties.setText(property.getMorePropertyText());
+		txtMoreProperties.setText(property.getMorePropertiesText());
 		paneMoreProperties.add(new JScrollPane(txtMoreProperties), BorderLayout.CENTER);
 
 		
@@ -1382,7 +1382,7 @@ class StockPropertySetting extends JDialog {
 				output.commission = commission;
 				output.priceRatio = priceRatio;
 				output.timeUpdatePriceInterval = timePriceUpdateInterval;
-				output.setMorePropertyText(txtMoreProperties.getText());
+				output.setMorePropertiesText(txtMoreProperties.getText());
 				
 				dispose();
 			}

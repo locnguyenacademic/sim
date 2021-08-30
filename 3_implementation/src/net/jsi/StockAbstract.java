@@ -54,14 +54,14 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		
 		boolean cascade = true;
 		Serializable tag = price.getTag();
-		if (tag != null && tag instanceof Boolean) cascade = ((Boolean)tag).booleanValue();
+		if (tag != null && tag instanceof Cascade) cascade = ((Cascade)tag).is();
 		if (set && cascade) {
 			try {
 				StockGroup otherGroup = getDualGroup();
 				if (otherGroup != null) {
-					price.setTag(false);
+					price.setTag(new Cascade(false));
 					otherGroup.setPrice(price);
-					price.setTag(null);
+					price.clearTag();
 				}
 			}
 			catch (Exception e) {e.printStackTrace();}

@@ -110,6 +110,12 @@ public class TakenPrice implements Price {
 
 
 	@Override
+	public void clearTag() {
+		this.price.clearTag();
+	}
+
+
+	@Override
 	public boolean isValid() {
 		return price.isValid();
 	}
