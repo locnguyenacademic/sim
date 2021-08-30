@@ -7,6 +7,8 @@
  */
 package net.jsi;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -503,6 +505,62 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
+	protected void addPrices(List<Price> prices, long timeInterval) {
+		List<Price> newPrices = Util.newList(0);
+		for (Price price : prices) {
+			if (this.prices.contains(price)) continue;
+			Price price0 = price instanceof TakenPrice ? ((TakenPrice)price).getPrice() : null;
+			if (price0 != null && this.prices.contains(price0)) continue;
+			
+			newPrices.add(price);
+		}
+		if (newPrices.size() == 0) return;
+		
+		this.prices.addAll(newPrices);
+		Collections.sort(this.prices, new Comparator<Price>() {
+			@Override
+			public int compare(Price o1, Price o2) {
+				long time1 = o1.getTime();
+				long time2 = o2.getTime();
+				if (time1 < time2)
+					return -1;
+				else if (time1 == time2)
+					return 0;
+				else
+					return 1;
+			}
+		});
+		if (this.prices.size() == 0) return;
+		
+		long thisTime = getPrice().getTime();
+		List<Price> removedPrices = Util.newList(0);
+		for (Price price : this.prices) {
+			if (isSelectAsTakenPrice(price, timeInterval))
+				continue;
+			else if (thisTime - price.getTime() > timeInterval)
+				removedPrices.add(price);
+			else
+				break;
+		}
+		
+		for (Price removedPrice : removedPrices) this.prices.remove(removedPrice);
+	}
+	
+	
+	protected boolean isSelectAsTakenPrice(Price price, long timeInterval) {
+		if (price == null) return false;
+		
+		MarketImpl m = m();
+		for (Stock stock : stocks) {
+			StockImpl s = m.c(stock);
+			Price takenPrice = s != null ? s.getTakenPrice(timeInterval) : null;
+			if (takenPrice != null && takenPrice.checkRefEquals(price)) return true;
+		}
+		
+		return false;
+	}
+	
+	
 	@Override
 	public Object clone() {
 		try {

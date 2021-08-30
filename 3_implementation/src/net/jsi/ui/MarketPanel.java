@@ -479,7 +479,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 			JPanel body = new JPanel(new BorderLayout());
 			add(body, BorderLayout.CENTER);
 			MarketPanel mp = new MarketPanel(market);
-			if (mp.getMarketTable() != null && listener != null)
+			if (mp.getMarketTable() != null && listener != null && StockProperty.PLACED_RUNTIME_SYNC)
 				mp.getMarketTable().getModel2().addMarketListener(listener);
 			body.add(mp, BorderLayout.CENTER);
 			

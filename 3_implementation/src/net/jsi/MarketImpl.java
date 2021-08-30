@@ -901,8 +901,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	protected void applyPlaced(MarketImpl placedMarket, long timeViewInterval, long timeValidInterval) {
-		if (placedMarket == null || placedMarket == this) return;
+	protected static void applyPlaced(MarketImpl market, MarketImpl placedMarket, long timeValidInterval) {
+		if (placedMarket == null || placedMarket == market) return;
 		
 		List<Stock> placedStocks = placedMarket.getStocks(timeValidInterval);
 		for (Stock ps : placedStocks) {
@@ -910,7 +910,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			
 			StockImpl placedStock = placedMarket.c(ps);
 			if (placedStock == null) continue;
-			StockGroup thisGroup = get(placedStock.code(), placedStock.isBuy());
+			StockGroup thisGroup = market.get(placedStock.code(), placedStock.isBuy());
 			if (thisGroup == null) continue;
 			StockGroup placedGroup = placedMarket.get(placedStock.code(), placedStock.isBuy());
 			if (placedGroup == null) continue;
@@ -926,14 +926,17 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			if (!placedGroup.remove(ps)) continue;
 			if (placedGroup.size() == 0) placedMarket.remove(placedGroup.getName(), placedGroup.isBuy());
 			
-			thisGroup.add(timeViewInterval, thisPrice.getTime(), placedStock.getVolume(timeViewInterval, false));
+			thisGroup.add(timeValidInterval, thisPrice.getTime(), placedStock.getVolume(timeValidInterval, false));
+			
+			//Review later
+			thisGroup.addPrices(ps.getPrices(timeValidInterval), timeValidInterval);
 		}
 
 	}
 	
 
 	public void applyPlaced() {
-		applyPlaced(getPlacedMarket(), getTimeViewInterval(), getTimeValidInterval());
+		applyPlaced(this, getPlacedMarket(), getTimeValidInterval());
 	}
 	
 	

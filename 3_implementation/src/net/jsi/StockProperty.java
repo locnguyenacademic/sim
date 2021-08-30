@@ -93,6 +93,9 @@ public class StockProperty implements Serializable, Cloneable {
 	
 	
 	public static double PRICE_RATIO = 1;
+	
+	
+	public static boolean PLACED_RUNTIME_SYNC = true;
 
 
 	public int maxPriceCount = MAX_PRICE_COUNT;
