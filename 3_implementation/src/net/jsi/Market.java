@@ -76,4 +76,6 @@ public interface Market extends Serializable, Cloneable {
 	Market getDualMarket();
 	
 	
+	StockInfoStore getStore();
+	
 }

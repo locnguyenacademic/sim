@@ -30,32 +30,17 @@ public class StockImpl extends StockAbstract {
 	protected double takeProfit = 0;
 
 	
-	public StockImpl() {
-		
-	}
-	
-	
-	public StockImpl(double volume, boolean buy, Price price) {
-		super(buy, price);
+	public StockImpl(String code, double volume, boolean buy) {
+		super(code, buy, null);
 		this.volume = volume;
-		take(price);
-	}
-	
-	
-	protected boolean reset(double volume, Price price) {
-		this.prices.clear();
-		this.takenPrice = null;
-		this.committed = false;
-		this.volume = volume;
-		take(price);
 		
-		return true;
+		take();
 	}
-
+	
 	
 	private void setExtraForTakenPrice(TakenPrice takenPrice) {
 		if (buy) {
-			takenPrice.setExtra(property.spread);
+			takenPrice.setExtra(getProperty().spread);
 		}
 		else {
 			
@@ -64,56 +49,45 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public boolean take(long timeInterval, long takenTimePoint) {
-		if (committed) return false;
 		Price price = getPrice(timeInterval, takenTimePoint);
-		if (price == null) return false;
-		takenPrice = new TakenPrice(price);
-		
-		setExtraForTakenPrice(takenPrice);
-
-		return true;
-	}
-	
-	
-	public boolean take(Price price) {
-		if (committed) return false;
-		boolean notNullPrice = price != null;
-		if (notNullPrice && !checkPrice(price)) return false;
-		
-		if (notNullPrice)
-			takenPrice = new TakenPrice(price);
-		else {
-			Price lastPrice = getPrice();
-			if (lastPrice == null)
-				return false;
-			else {
-				takenPrice = new TakenPrice(lastPrice);
-				price = lastPrice;
-			}
-		}
-		
-		setExtraForTakenPrice(takenPrice);
-		
-		if (!notNullPrice)
-			return true;
-		else if (setPrice(price))
-			return true;
-		else {
+		if (price == null) {
 			takenPrice = null;
 			return false;
 		}
+		else
+			return take(price);
 	}
 	
 	
 	public boolean take() {
-		return take(null);
+		Price lastPrice = getPrice();
+		if (lastPrice == null)
+			return false;
+		else
+			return take(lastPrice);
 	}
 	
 	
+	private boolean take(Price price) {
+		if (committed)
+			return false;
+		else if (price == null) {
+			takenPrice = null;
+			return false;
+		}
+		else {
+			takenPrice = new TakenPrice(price);
+			setExtraForTakenPrice(takenPrice);
+			return true;
+		}
+	}
+	
+	
+	
 	@Override
-	public boolean setUnitBias(double unitBias, boolean cascade) {
+	public boolean setUnitBias(double unitBias) {
 		if (!committed)
-			return super.setUnitBias(unitBias, cascade);
+			return super.setUnitBias(unitBias);
 		else
 			return false;
 	}
@@ -132,7 +106,7 @@ public class StockImpl extends StockAbstract {
 
 
 	public boolean isValid(long timeInterval) {
-		if (takenPrice == null || prices.size() == 0 || volume <= 0)
+		if (takenPrice == null || getPriceCount() == 0 || volume <= 0)
 			return false;
 		else {
 			long priceTime = getPrice().getTime();
@@ -194,7 +168,7 @@ public class StockImpl extends StockAbstract {
 		if (buy)
 			return volume * last.get();
 		else
-			return volume * (last.get() + property.spread);
+			return volume * (last.get() + getProperty().spread);
 	}
 	
 	
@@ -209,7 +183,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public double getFee(long timeInterval) {
-		return getTotalSwap(timeInterval) + property.commission; // + (timeInterval == 0 ? property.commission : 0);
+		return getTotalSwap(timeInterval) + getProperty().commission; // + (timeInterval == 0 ? getProperty().commission : 0);
 	}
 	
 	
@@ -219,7 +193,7 @@ public class StockImpl extends StockAbstract {
 			return 0;
 		else {
 			int days = (int) ((prices.get(prices.size()-1).getTime() - prices.get(0).getTime()) / (1000*3600*24) + 0.5);
-			return days*property.swap*volume;
+			return days*getProperty().swap*volume;
 		}
 	}
 	
@@ -269,6 +243,30 @@ public class StockImpl extends StockAbstract {
 	
 	public void setTakeProfit(double takeProfit) {
 		this.takeProfit = takeProfit;
+	}
+
+
+	@Override
+	public StockGroup getGroup() {
+		if (StockProperty.g == null) return null;
+		
+		for (int i = 0; i < StockProperty.g.size(); i++) {
+			Market market = StockProperty.g.get(i);
+			MarketImpl m = StockProperty.g.c(market);
+			if (m == null) continue;
+			
+			StockGroup group = m.get(code(), isBuy());
+			if (group != null) return group;
+		}
+		
+		return null;
+	}
+
+
+	@Override
+	public StockInfoStore getStore() {
+		StockGroup group = getGroup();
+		return group != null ? group.getStore() : null;
 	}
 
 

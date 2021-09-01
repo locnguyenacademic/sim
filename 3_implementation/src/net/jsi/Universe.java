@@ -54,5 +54,6 @@ public interface Universe extends Market, Serializable, Cloneable {
 	
 	
 	Market getPlacedMarket(String name);
-
+	
+	
 }

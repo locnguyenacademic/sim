@@ -25,6 +25,9 @@ public class PriceImpl implements Price {
 	private double highPrice = 0;
 	
 	
+	private double openPrice = 0;
+
+	
 	private double priceRatio = StockProperty.PRICE_RATIO;
 	
 	
@@ -43,6 +46,7 @@ public class PriceImpl implements Price {
 		this.price = price;
 		this.lowPrice = lowPrice;
 		this.highPrice = highPrice;
+		this.openPrice = price;
 		this.time = time;
 	}
 	
@@ -84,6 +88,18 @@ public class PriceImpl implements Price {
 	
 	
 	@Override
+	public double getOpen() {
+		return openPrice*priceRatio;
+	}
+	
+	
+	@Override
+	public void setOpen(double openPrice) {
+		this.openPrice = openPrice;
+	}
+	
+	
+	@Override
 	public long getTime() {
 		return time;
 	}
@@ -121,18 +137,6 @@ public class PriceImpl implements Price {
 	@Override
 	public Serializable getTag() {
 		return tag;
-	}
-
-
-	@Override
-	public void setTag(Serializable tag) {
-		this.tag = tag;
-	}
-
-
-	@Override
-	public void clearTag() {
-		this.tag = null;
 	}
 
 

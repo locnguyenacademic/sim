@@ -370,10 +370,13 @@ public abstract class EstimatorAbstract implements Estimator {
 		double unitBias = estimateBiasAtCurrentPrice(timeInterval);
 		double nextTakeProfit = Math.min(isBuy() ? takeProfit + unitBias : takeProfit - unitBias, isBuy() ? getHighestPrice(timeInterval) : getLowestPrice(timeInterval));
 
-		Invest invest1 = new Invest(isBuy(), volume/2, p.get(), stopLoss, takeProfit, takeProfit);
-		invest1.margin = volume/2 * p.get() * getLeverage();
-		Invest invest2 = new Invest(isBuy(), volume/2, p.get(), stopLoss, takeProfit, nextTakeProfit);
-		invest2.margin = volume/2 * p.get() * getLeverage();
+		double nearEstimatedPrice = estimatePrice((long)(timeInterval/StockProperty.TIME_VIEW_PERIOD_RATIO));
+		double price = isBuy() ? Math.min(nearEstimatedPrice, p.get()) : Math.max(nearEstimatedPrice, p.get());
+		
+		Invest invest1 = new Invest(isBuy(), volume/2, price, stopLoss, takeProfit, takeProfit);
+		invest1.margin = volume/2 * price * getLeverage();
+		Invest invest2 = new Invest(isBuy(), volume/2, price, stopLoss, takeProfit, nextTakeProfit);
+		invest2.margin = volume/2 * price * getLeverage();
 		return new Invest[] {invest1, invest2};
 	}
 

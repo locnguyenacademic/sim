@@ -31,6 +31,12 @@ public interface Price extends Serializable, Cloneable {
 	void setHigh(double highPrice);
 	
 	
+	double getOpen();
+	
+	
+	void setOpen(double openPrice);
+
+	
 	long getTime();
 	
 	
@@ -51,12 +57,6 @@ public interface Price extends Serializable, Cloneable {
 	
 	Serializable getTag();
 	
-	
-	void setTag(Serializable tag);
-	
-	
-	void clearTag();
-
 	
 	boolean copy(Price price);
 	

@@ -20,6 +20,9 @@ public class StockProperty implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
 	
+	protected static Universe g = null;
+	
+	
 	public final static String NONAME = "noname";
 
 
@@ -41,13 +44,13 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String NOTCODE3 = "0";
 
 	
-	public final static String NOTCODE4 = "#";
+	public final static String NOTCODE4 = "$";
 
 	
-	public final static String NOTCODE5 = "@0";
+	public final static String NOTCODE5 = "#";
 
 	
-	public final static String NOTCODE6 = "@#";
+	public final static String NOTCODE6 = "@";
 
 	
 	public final static String JSI_EXT = "jsi";
@@ -56,22 +59,22 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String JSI_DESC = "JSI files";
 
 	
-	public final static String MAX_PRICE_COUNT_FIELD = "max_price_count";
+	public final static String MAX_PRICE_COUNT_FIELD = "mpc";
 	
 	
-	public final static String SWAP_FIELD = "swap";
+	public final static String SWAP_FIELD = "swp";
 	
 	
-	public final static String SPREAD_FIELD = "spread";
+	public final static String SPREAD_FIELD = "spd";
 	
 	
-	public final static String COMMISSION_FIELD = "commission";
+	public final static String COMMISSION_FIELD = "com";
 	
 	
-	public final static String TIME_UPDATE_PRICE_INTERVAL_FIELD = "time_update_price_interval";
+	public final static String TIME_UPDATE_PRICE_INTERVAL_FIELD = "tup";
 
 	
-	public final static String PRICE_RATIO_FIELD = "price_ratio";
+	public final static String PRICE_RATIO_FIELD = "prr";
 
 	
 	public static int MAX_PRICE_COUNT = 1000;
@@ -90,6 +93,9 @@ public class StockProperty implements Serializable, Cloneable {
 
 
 	public static long TIME_VALID_INTERVAL = TIME_VIEW_INTERVAL*10;
+
+
+	public static double TIME_VIEW_PERIOD_RATIO = 4.0;
 	
 	
 	public static double PRICE_RATIO = 1;

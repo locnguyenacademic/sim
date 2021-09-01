@@ -7,7 +7,7 @@ public class UniverseImpl extends UniverseAbstract {
 
 	
 	public UniverseImpl() {
-
+		StockProperty.g = this;
 	}
 
 

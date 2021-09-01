@@ -27,6 +27,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected Set<String> defaultStockCodes = Util.newSet(0);
 	
 	
+	protected StockInfoStore store = new StockInfoStore();
+	
+	
 	public UniverseAbstract() {
 		addDefaultStockCodes(Util.newSet(0));
 	}
@@ -321,6 +324,12 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			return backupPlacedMarkets.get(name);
 		else
 			return null;
+	}
+
+
+	@Override
+	public StockInfoStore getStore() {
+		return store;
 	}
 	
 	

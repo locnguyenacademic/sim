@@ -22,10 +22,13 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	List<Price> getPrices(long timeInterval);
 	
 	
+	List<Price> getInternalPrices();
+
+	
 	double getROIByLeverage(long timeInterval);
 
 	
-	boolean setUnitBias(double unitBias, boolean cascade);
+	boolean setUnitBias(double unitBias);
 	
 	
 	double getTakenValue(long timeInterval);
@@ -52,7 +55,7 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getLeverage();
 
 	
-	void setLeverage(double leverage, boolean cascade);
+	boolean setLeverage(double leverage);
 
 		
 	String code();
@@ -64,13 +67,13 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	StockProperty getProperty();
 	
 	
-	void setProperty(StockProperty property);
-	
-	
 	double getStopLoss();
 	
 	
 	double getTakeProfit();
+
+
+	StockInfoStore getStore();
 
 
 }

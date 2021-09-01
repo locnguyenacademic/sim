@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -90,9 +91,6 @@ public class MarketPanel extends JPanel implements MarketListener {
 
 	
 	protected JLabel lblEstInvest;
-
-	
-	//protected JLabel lblRecInvest;
 
 	
 	protected MarketTable tblMarket = null;
@@ -176,13 +174,14 @@ public class MarketPanel extends JPanel implements MarketListener {
 		footerRow2.add(lblBias = new JLabel());
 		footerRow2.add(new JLabel(" "));
 		footerRow2.add(lblEstInvest = new JLabel());
-		//footerRow2.add(new JLabel(" "));
-		//footerRow2.add(lblRecInvest = new JLabel());
 		
 		
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				Component parent = thisPanel.getParent();
+				if (!(parent instanceof JTabbedPane)) return;
+				
 				if(SwingUtilities.isRightMouseButton(e) ) {
 					JPopupMenu contextMenu = createContextMenu();
 					if(contextMenu != null) contextMenu.show((Component)e.getSource(), e.getX(), e.getY());
@@ -192,7 +191,6 @@ public class MarketPanel extends JPanel implements MarketListener {
 				}
 			}
 		});
-
 		
 		update();
 	}
@@ -361,6 +359,10 @@ public class MarketPanel extends JPanel implements MarketListener {
         return false;
 	}
 	
+	
+	public File getFile() {
+		return file;
+	}
 	
 	
 	protected void dispose() {
@@ -1140,25 +1142,16 @@ class StockTaker extends JDialog {
 		if (lastDate == null)
 			return false;
 		else if (chkAddPrice.isSelected()) {
-			if (s == null)
-				return false;
-			else if (!s.checkPriceTimePoint(lastDate.getTime()))
-				return false;
+			if (s == null) return false;
 		}
 		else if (update) {
-			if (s == null)
-				return false;
-			else if (!s.checkPriceTimePointPrevious(lastDate.getTime()))
-				return false;
+			if (s == null) return false;
 		}
 		else if (s != null) { //add new
-			if (!s.checkPriceTimePoint(lastDate.getTime()))
-				return false;
+
 		}
 		else {
-			StockGroup group = getStockGroup();
-			if (group != null && !group.checkPriceTimePoint(lastDate.getTime()))
-				return false;
+
 		}
 		
 		double unitBias = txtUnitBias.getValue() instanceof Number ? ((Number)txtUnitBias.getValue()).doubleValue() : 0;
@@ -1199,9 +1192,7 @@ class StockTaker extends JDialog {
 		if (update)
 			output = input;
 		else {
-			price.setTag(false);
 			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), price);
-			price.setTag(null);
 			if (output == null) return;
 		}
 		
@@ -1214,19 +1205,9 @@ class StockTaker extends JDialog {
 				long takenTimePoint = ((Date)txtTakenDate.getValue()).getTime();
 				s.take(market.getTimeViewInterval(), takenTimePoint);
 				
-//				long takenTime =  ((Date)txtTakenDate.getValue()).getTime();
-//				Price p = group.getPrice(); if (p == null) return;
-//				if (p.getTime() == takenTime) {
-//					if (!s.setPrice(price)) return;
-//				}
-//				else if (chkLastDate.isSelected()) {
-//					s.setPriceTimePoint(lastTime);
-//				}
-				if (chkLastDate.isSelected()) {
-					s.setPriceTimePoint(lastTime);
-				}
+				if (chkLastDate.isSelected()) s.setPriceTimePoint(lastTime);
 				
-				if (!Double.isNaN(leverage)) group.setLeverage(leverage, true);
+				if (!Double.isNaN(leverage)) group.setLeverage(leverage);
 				s.setCommitted(chkCommitted.isSelected());
 				
 			}
@@ -1246,7 +1227,7 @@ class StockTaker extends JDialog {
 			s.getPrice().setHigh(price.getHigh());
 			s.setStopLoss(((Number)txtStopLoss.getValue()).doubleValue());
 			s.setTakeProfit(((Number)txtTakeProfit.getValue()).doubleValue());
-			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue(), true);
+			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue());
 			
 			if (chkProperty.isSelected() && txtProperty.getStockProperty() != null) {
 				s.getProperty().set(txtProperty.getStockProperty());

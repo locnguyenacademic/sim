@@ -176,6 +176,18 @@ public class Investor extends JFrame implements MarketListener {
 		mniSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniSave);
 
+		JMenuItem mniSaveAs = new JMenuItem(
+			new AbstractAction("Save as") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					onSaveAs();
+				}
+			});
+		mniSaveAs.setMnemonic('v');
+		mnFile.add(mniSaveAs);
+
 		mnFile.addSeparator();
 
 		Investor thisInvestor = this;
@@ -201,6 +213,23 @@ public class Investor extends JFrame implements MarketListener {
 		mniShowPlacedMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniShowPlacedMarket);
 
+		JMenuItem mniApplyPlacedMarket = new JMenuItem(
+		new AbstractAction("Apply placed stocks") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Market selectedMarket = getSelectedPlacedMarket();
+				if (selectedMarket != null) {
+					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+					tblMarket.applyPlaced();
+				}
+			}
+		});
+		mniApplyPlacedMarket.setMnemonic('l');
+		mnFile.add(mniApplyPlacedMarket);
+		
 		mnFile.addSeparator();
 		
 		JMenuItem mniAddMarket = new JMenuItem(
@@ -335,8 +364,8 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private JToolBar createToolbar() {
-		//JToolBar toolbar = new JToolBar();
-		//return toolbar;
+//		JToolBar toolbar = new JToolBar();
+//		return toolbar;
 		return null;
 	}
 
@@ -349,9 +378,23 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	private void onSave() {
+	private void onSaveAs() {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp != null) mp.onSave();
+	}
+	
+	
+	private void onSave() {
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp == null)
+			return;
+		else if (mp.getFile() != null) {
+			boolean ret = mp.save(mp.getFile());
+			if (ret)
+				JOptionPane.showMessageDialog(this, "Success to save market \"" + mp.getMarket().getName() + "\"", "Save market", JOptionPane.INFORMATION_MESSAGE);
+		}
+		else
+			mp.onSave();
 	}
 	
 	
@@ -772,7 +815,7 @@ public class Investor extends JFrame implements MarketListener {
 			File curDir = new File(txtCurDir.getText());
 			List<String> codes = codesText != null ? Arrays.asList(codesText.split(Util.DEFAULT_SEP)) : Util.newList(0);
 			
-			if (dayViewInterval < 0 || dayValidInterval < 0 || (dayViewInterval == 0 && dayValidInterval != 0) || dayViewInterval > dayValidInterval) {
+			if (dayViewInterval < 0 || dayValidInterval < 0 || (dayViewInterval == 0 && dayValidInterval != 0) || (dayViewInterval > dayValidInterval && dayValidInterval != 0)) {
 				JOptionPane.showMessageDialog(this, "Invalidate day interval", "Invalidate day interval", JOptionPane.ERROR_MESSAGE);
 				dispose();
 				return;

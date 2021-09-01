@@ -7,9 +7,6 @@
  */
 package net.jsi;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class StockAbstract extends EstimatorAbstract implements Stock {
@@ -18,150 +15,74 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	private static final long serialVersionUID = 1L;
 
 
-	public StockProperty property = new StockProperty();
-	
-	
-	protected List<Price> prices = Util.newList(0);
-	
-	
-	protected double leverage = StockProperty.LEVERAGE;
+	private StockInfo info = null;
 	
 	
 	protected boolean buy = true;
 	
 	
-	protected double unitBias = StockProperty.UNIT_BIAS;
-	
-	
-	protected String code = StockProperty.NONAME;
-	
-	
-	public StockAbstract() {
-		
+	public StockAbstract(String code, boolean buy) {
+		this(code, buy, null);
 	}
+
 	
-	
-	public StockAbstract(boolean buy, Price price) {
+	public StockAbstract(String code, boolean buy, Price price) {
 		this.buy = buy;
-		this.setPrice(price);
+		
+		StockInfoStore store = getStore();
+		this.info = store != null ? store.get(code) : new StockInfo(code);
+		this.info = this.info != null ? this.info : store.create(code);
+		this.info = this.info != null ? this.info : new StockInfo(code);
+		
+		if (price != null) this.setPrice(price);
 	}
 	
 	
 	@Override
 	public boolean setPrice(Price price) {
-		boolean set = setPrice0(price);
-		if (!set) return set;
-		
-		boolean cascade = true;
-		Serializable tag = price.getTag();
-		if (tag != null && tag instanceof Cascade) cascade = ((Cascade)tag).is();
-		if (set && cascade) {
-			try {
-				StockGroup otherGroup = getDualGroup();
-				if (otherGroup != null) {
-					price.setTag(new Cascade(false));
-					otherGroup.setPrice(price);
-					price.clearTag();
-				}
-			}
-			catch (Exception e) {e.printStackTrace();}
-		}
-		
-		return set;
-	}
-	
-	
-	private boolean setPrice0(Price price) {
-		if (!checkPrice(price))
+		if (price == null)
 			return false;
-		else if (prices.size() == 0)
-			return prices.add(price);
-		else {
-			boolean added = false;
-			for (int i = 0; i < prices.size(); i++) {
-				Price p = prices.get(i);
-				if (p.getTime() > price.getTime()) {
-					try {
-						prices.add(i, price);
-						added = true;
-					} catch (Exception e) {}
-					
-					break;
-				}
-			}
-			if (!added) added = prices.add(price);
-			if (!added) return false;
-
-			int index = prices.size() - property.maxPriceCount;
-			if (index > 0) {
-				List<Price> subList = prices.subList(index, prices.size());
-				prices.clear();
-				prices.addAll(subList);
-			}
-			
-			return added;
-		}
-	}
-
-	
-	public boolean checkPrice(Price price) {
-		if (price == null || !price.isValid())
-			return false;
-		else if (prices.size() == 0)
-			return true;
+		else if (info.checkPricePossibleAdded(price.getTime()))
+			return info.addPrice(price);
 		else
-			return checkPriceTimePoint(price.getTime());
+			return false;
+	}
+	
+	
+	public int getPriceCount() {
+		return info.getPriceCount();
 	}
 	
 	
 	@Override
 	public Price getPrice() {
-		if (prices.size() == 0)
-			return null;
-		else
-			return prices.get(prices.size() - 1);
+		return info.getLastPrice();
 	}
 	
 	
 	@Override
 	public Price getPrice(long timePoint) {
-		return getPrice(0, timePoint);
+		return info.getPrice(timePoint);
 	}
 	
 	
-	public Price getPrice(long timeInterval, long timePoint) {
-		Price lastPrice = getPrice();
-		if (lastPrice == null) return null;
-		
-		for (Price price : prices) {
-			if (price.getTime() == timePoint) {
-				if (timeInterval <= 0)
-					return price;
-				else if (lastPrice.getTime() - timePoint <= timeInterval)
-					return price;
-			}
-		}
-		
-		return null;
+	protected Price getPrice(long timeInterval, long timePoint) {
+		return info.getPrice(timeInterval, timePoint);
 	}
 	
 	
 	@Override
 	public List<Price> getPrices(long timeInterval) {
-		if (timeInterval <= 0) return prices;
-		
-		List<Price> priceList = Util.newList(0);
-		Price lastPrice = getPrice();
-		if (lastPrice == null) return priceList;
-		for (Price price : prices) {
-			if (lastPrice.getTime() - price.getTime() <= timeInterval)
-				priceList.add(price);
-		}
-		
-		return priceList;
+		return info.getPrices(timeInterval);
 	}
 	
 	
+	@Override
+	public List<Price> getInternalPrices() {
+		return info.getInternalPrices();
+	}
+
+
 	public long getPriceTimePoint() {
 		Price price = getPrice();
 		if (price != null)
@@ -171,31 +92,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public void setPriceTimePoint(long priceTimePoint) {
-		if (!checkPriceTimePointPrevious(priceTimePoint)) return;
-		getPrice().setTime(priceTimePoint);
-	}
-	
-	
-	public boolean checkPriceTimePoint(long priceTimePoint) {
-		if (priceTimePoint < 0)
+	public boolean setPriceTimePoint(long priceTimePoint) {
+		Price price = getPrice();
+		if (price == null)
 			return false;
-		else if (prices.size() == 0)
+		else if (info.checkPricePossibleAdded2(priceTimePoint)) {
+			price.setTime(priceTimePoint);
 			return true;
+		}
 		else
-			return (priceTimePoint - getPrice().getTime() >= property.timeUpdatePriceInterval);
-	}
-	
-	
-	public boolean checkPriceTimePointPrevious(long priceTimePoint) {
-		if (priceTimePoint < 0)
 			return false;
-		else if (prices.size() <= 1)
-			return true;
-		else
-			return (priceTimePoint - prices.get(prices.size() - 2).getTime() >= property.timeUpdatePriceInterval);
 	}
-
+	
 	
 	@Override
 	public double getROI(long timeInterval) {
@@ -215,14 +123,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public double getUnitBias() {
-		return unitBias;
+		return info.getUnitBias();
 	}
 	
 	
 	@Override
-	public boolean setUnitBias(double unitBias, boolean cascade) {
-		this.unitBias = unitBias > 0 ? unitBias : 0;
-		return true;
+	public boolean setUnitBias(double unitBias) {
+		return info.setUnitBias(unitBias);
 	}
 	
 	
@@ -252,7 +159,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 
 	@Override
 	public String code() {
-		return code;
+		return info.code();
 	}
 	
 	
@@ -264,13 +171,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public double getLeverage() {
-		return leverage;
+		return info.getLeverage();
 	}
 
 
 	@Override
-	public void setLeverage(double leverage, boolean cascade) {
-		if (leverage >= 0) this.leverage = leverage;
+	public boolean setLeverage(double leverage) {
+		return info.setLeverage(leverage);
 	}
 	
 	
@@ -279,30 +186,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		if (!(stock instanceof StockAbstract)) return;
 		StockAbstract sa = (StockAbstract)stock;
 		
-		this.property = sa.property;
 		this.buy = sa.buy;
-		this.prices = sa.prices;
-		this.leverage = sa.leverage;
-		this.unitBias = sa.unitBias;
-		this.code = sa.code;
+		this.info = sa.info;
 	}
 
 
 	@Override
 	public StockProperty getProperty() {
-		return property;
+		return info.getProperty();
 	}
 
 
-	@Override
-	public void setProperty(StockProperty property) {
-		this.property = property;
-	}
-
-
-	protected StockGroup getGroup() {
-		return null;
-	}
+	public abstract StockGroup getGroup();
 	
 	
 	protected StockGroup getDualGroup() {
@@ -311,93 +206,34 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public void resortPrices() {
-		Collections.sort(prices, new Comparator<Price>() {
-
-			@Override
-			public int compare(Price o1, Price o2) {
-				long tp1 = o1.getTime();
-				long tp2 = o2.getTime();
-				if (tp1 < tp2)
-					return -1;
-				else if (tp1 == tp2)
-					return 0;
-				else
-					return 1;
-			}
-			
-		});
+	protected StockGroup getOtherGroup() {
+		StockGroup group = getGroup();
+		return group != null ? group.getOtherGroup() : null;
 	}
+	
+
+//	public void resortPrices() {
+//		Collections.sort(info.prices, new Comparator<Price>() {
+//
+//			@Override
+//			public int compare(Price o1, Price o2) {
+//				long tp1 = o1.getTime();
+//				long tp2 = o2.getTime();
+//				if (tp1 < tp2)
+//					return -1;
+//				else if (tp1 == tp2)
+//					return 0;
+//				else
+//					return 1;
+//			}
+//			
+//		});
+//	}
 	
 	
 	@Override
 	public String toString() {
-		return code;
-	}
-	
-	
-	public static Stock empty() {
-		return new StockAbstract() {
-			
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public double getAverageTakenPrice(long timeInterval) {
-				return 0;
-			}
-			
-			@Override
-			public double estimateUnitBias(long timeInterval) {
-				return 0;
-			}
-			
-			@Override
-			public void setCommitted(boolean committed) {
-				
-			}
-			
-			@Override
-			public boolean isCommitted() {
-				return false;
-			}
-			
-			@Override
-			public double getVolume(long timeInterval, boolean countCommitted) {
-				return 0;
-			}
-			
-			@Override
-			public double getValue(long timeInterval) {
-				return 0;
-			}
-			
-			@Override
-			public double getTakenValue(long timeInterval) {
-				return 0;
-			}
-			
-			@Override
-			public double getProfit(long timeInterval) {
-				return 0;
-			}
-			
-			@Override
-			public double getMargin(long timeInterval) {
-				return 0;
-			}
-
-			@Override
-			public double getStopLoss() {
-				Price price = getPrice();
-				return price != null ? price.get() : 0;
-			}
-
-			@Override
-			public double getTakeProfit() {
-				return getStopLoss();
-			}
-			
-		};
+		return info.code();
 	}
 	
 	

@@ -215,11 +215,19 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	private void settings(Stock stock) {
-		if (getModel2().isForStock()) return;
 		stock = stock != null ? stock : getSelectedStock();
 		if (stock == null) return;
-		StockGroup group = stock instanceof StockGroup ? (StockGroup)stock : null;
-		if (group == null) return;
+		
+		StockGroup group0 = null;
+		if (stock instanceof StockGroup)
+			group0 = (StockGroup)stock;
+		else {
+			StockImpl s = c(stock);
+			group0 = s != null ? s.getGroup() : null;
+		}
+		if (group0 == null) return;
+		
+		StockGroup group = group0;
 
 		JDialog dlgSettings = new JDialog(Util.getFrameForComponent(this), "Settings for stock group", true);
 		dlgSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -285,8 +293,8 @@ public class MarketTable extends JTable implements MarketListener {
 				double unitBias = txtUnitBias.getValue() instanceof Number ? ((Number)txtUnitBias.getValue()).doubleValue() : StockProperty.UNIT_BIAS;
 				double priceRatio = txtPriceRatio.getValue() instanceof Number ? ((Number)txtPriceRatio.getValue()).doubleValue() : StockProperty.PRICE_RATIO;
 				
-				group.setLeverage(leverage != 0 ? 1/leverage : leverage, true);
-				group.setUnitBias(unitBias, true);
+				group.setLeverage(leverage != 0 ? 1/leverage : leverage);
+				group.setUnitBias(unitBias);
 				group.getProperty().priceRatio = priceRatio;
 				
 				update();
@@ -472,6 +480,18 @@ public class MarketTable extends JTable implements MarketListener {
 			});
 		ctxMenu.add(miModifyList);
 		
+		JMenuItem miSettings = new JMenuItem("Settings");
+		miSettings.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					settings(stock);
+				}
+			});
+		ctxMenu.add(miSettings);
+
+		ctxMenu.addSeparator();
+
 		if (stock != null) {
 			JMenuItem miDetailedSummary = new JMenuItem("Summary");
 			miDetailedSummary.addActionListener( 
@@ -726,7 +746,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		else {
 			MarketImpl m = m();
 			if (m != null) {
-				List<StockGroup> groups = m.getGroups(market.getTimeValidInterval());
+				List<StockGroup> groups = m.getGroups(market.getTimeViewInterval());
 				for (StockGroup group : groups) {
 					Vector<Object> row = toRow(group);
 					if (row != null) data.add(row);
@@ -1013,6 +1033,7 @@ abstract class StockSummary extends JDialog {
 		if (stock == null || estimateStocks == null || estimateStocks.size() == 0) {
 			info.append("Leverage: " + (group.getLeverage() != 0 ? Util.format(1.0 / group.getLeverage()) : "Infinity") + "\n");
 			info.append("Volume: " + Util.format(group.getVolume(timeViewInterval, true)) + "\n");
+			info.append("Price (unit): " + Util.format(group.getPrice().get()) + "\n");
 			info.append("Taken value: " + Util.format(group.getTakenValue(timeViewInterval)) + "\n");
 			info.append("Margin: " + Util.format(group.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(group.getProfit(timeViewInterval)) + "\n");
@@ -1054,7 +1075,7 @@ abstract class StockSummary extends JDialog {
 				info.append("Stop loss: " + dualInvest[0].stopLoss + "\n");
 				info.append("Take profit: " + dualInvest[0].takeProfit + "\n");
 				
-				info.append((dualInvest[1].buy ? "Buy" : "Sell") + "1\n");
+				info.append((dualInvest[1].buy ? "Buy" : "Sell") + "2\n");
 				info.append("Volume: " + dualInvest[1].volume + "\n");
 				info.append("Price: " + dualInvest[1].price + "\n");
 				info.append("Margin: " + dualInvest[1].margin + "\n");
@@ -1315,8 +1336,7 @@ class AddPrice extends JDialog {
 		Universe universe = market.getNearestUniverse();
 		if (lastDate == null || input == null || universe == null) return false;
 		StockImpl s = universe.c(input);
-		if (s == null || !s.checkPriceTimePoint(lastDate.getTime()))
-			return false;
+		if (s == null) return false;
 		
 		return true;
 	}
@@ -1782,9 +1802,6 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 	protected boolean modified = false;
 	
 	
-	protected boolean modifiedDate = false;
-	
-	
 	protected boolean editable = true;
 	
 	
@@ -1874,28 +1891,16 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 			internalPrices.addAll(prices);
 		}
 		
-		modified = false;
-		boolean flag = modifiedDate;
-		modifiedDate = false;
-
 		MarketImpl m = m();
-		if (m == null) return;
-		m.applyPlaced();
+		if (m != null) m.applyPlaced();
 		
-		if (flag) {
-			MarketImpl placedMarket = m.getPlacedMarket();
-			if (placedMarket != null && placedMarket != m) {
-				StockGroup group = placedMarket.get(getGroup().code(), getGroup().isBuy());
-				if (group != null) group.resortPrices();
-			}
-		}
-		
+		modified = false;
 	}
 	
 	
 	private List<Price> getInternalPrices() {
 		Stock s = group != null ? group : stock;
-		return s != null ? s.getPrices(0) : null;
+		return s != null ? s.getInternalPrices() : null;
 	}
 	
 	
@@ -1910,7 +1915,6 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 		setDataVector(data, toColumns());
 
 		modified = false;
-		modifiedDate = false;
 	}
 	
 	
@@ -2001,9 +2005,6 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 			
 		super.setValueAt(aValue, row, column);
 		modified = true;
-		if (column == 1) {
-			modifiedDate = true;
-		}
 	}
 
 	
@@ -2074,7 +2075,7 @@ abstract class PriceListTableModel extends DefaultTableModel implements TableMod
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		modified = true;
-		//modifiedDate = true;
+//		modifiedDate = true;
 	}
 
 

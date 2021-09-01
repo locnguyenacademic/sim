@@ -148,4 +148,22 @@ public abstract class MarketAbstract implements Market {
 	}
 
 
+	@Override
+	public StockInfoStore getStore() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.getStore() : null;
+	}
+
+	
+	protected StockInfo getStoreInfo(String code) {
+		StockInfoStore store = getStore();
+		if (store == null)
+			return null;
+		else {
+			StockInfo info = store.get(code);
+			return info != null ? info : store.create(code);
+		}
+	}
+	
+
 }

@@ -7,8 +7,6 @@
  */
 package net.jsi;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,13 +19,15 @@ public class StockGroup extends StockAbstract implements Market {
 	protected List<Stock> stocks = Util.newList(0);
 
 	
+	public StockGroup(String code, boolean buy) {
+		this(code, buy, Double.NaN, Double.NaN, null);
+	}
+
+	
 	public StockGroup(String code, boolean buy, double leverage, double unitBias, Price price) {
-		super(buy, null);
-		this.code = code;
-		this.leverage = leverage;
-		this.unitBias = unitBias;
-		if (price == null) price = new PriceImpl();
-		setPrice(price);
+		super(code, buy, price);
+		if (price != null) setLeverage(leverage);
+		if (price != null) setUnitBias(unitBias);
 	}
 
 	
@@ -118,25 +118,6 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public boolean setUnitBias(double unitBias, boolean cascade) {
-		if (unitBias == getUnitBias()) return false;
-		
-		boolean ret = super.setUnitBias(unitBias, cascade);
-		if (!ret) return false;
-		for (Stock stock : stocks) {
-			ret = ret && stock.setUnitBias(unitBias, cascade);
-		}
-		
-		if (cascade) {
-			StockGroup other = getDualGroup();
-			if (other != null) other.setUnitBias(unitBias, false);
-		}
-		
-		return ret;
-	}
-
-
-	@Override
 	public double getVolume(long timeInterval, boolean countCommitted) {
 		double volume = 0;
 		for (Stock stock : stocks) {
@@ -171,23 +152,6 @@ public class StockGroup extends StockAbstract implements Market {
 	@Override
 	public double calcInvestAmount(long timeInterval) {
 		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
-	}
-
-
-	@Override
-	public boolean setPrice(Price price) {
-		boolean ret = super.setPrice(price);
-		if (!ret) return false;
-		for (Stock stock : stocks) {
-			if (stock.isCommitted()) continue;
-			
-			StockImpl s = c(stock);
-			if (s != null && s.prices == this.prices)
-				continue;
-			else
-				stock.setPrice(price);
-		}
-		return ret;
 	}
 
 
@@ -258,42 +222,31 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	public Stock add(long timeInterval, long takenTimePoint, double volume) {
-		if (prices.size() == 0) return null;
+		if (getPriceCount() == 0) return null;
 		StockImpl stock = (StockImpl) newStock(timeInterval, takenTimePoint, volume);
 		if (stock == null) return null;
 		
-		if (stock.isValid(timeInterval) && stocks.add(stock)) {
-			StockGroup other = getDualGroup();
-			if (other != null) {
-				other.setLeverage(this.getLeverage(), false);
-				other.setUnitBias(this.getUnitBias(), false);
-			}
-			
+		if (stocks.add(stock))
 			return stock;
-		}
 		else
 			return null;
 	}
 	
 	
-	public Stock newStock(long timeInterval, long takenTimePoint, double volume) {
+	private Stock newStock(long timeInterval, long takenTimePoint, double volume) {
 		StockGroup group = this;
-		StockImpl stock = new StockImpl() {
+		StockImpl stock = new StockImpl(code(), volume, isBuy()) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected StockGroup getGroup() {
+			public StockGroup getGroup() {
 				return group;
 			}
 		};
-		
 		stock.setBasicInfo(this);
-		stock.volume = volume;
 		
-		if (takenTimePoint <= 0)
-			return stock.take() ? stock : null;
-		else
-			return stock.take(timeInterval, takenTimePoint) ? stock : null;
+		if (takenTimePoint > 0) stock.take(timeInterval, takenTimePoint);
+		return stock.isValid(timeInterval) ? stock : null;
 	}
 	
 	
@@ -379,19 +332,6 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public void setLeverage(double leverage, boolean cascade) {
-		if (leverage < 0 || leverage == this.leverage) return;
-		this.leverage = leverage;
-		for (Stock stock : stocks) stock.setLeverage(leverage, cascade);
-		
-		if (cascade) {
-			StockGroup other = getDualGroup();
-			if (other != null) other.setLeverage(leverage, false);
-		}
-	}
-	
-	
-	@Override
 	protected StockGroup getDualGroup() {
 		Market thisMarket = getSuperMarket();
 		if (thisMarket == null) return null;
@@ -419,11 +359,24 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	@Override
+	public StockGroup getGroup() {
+		return this;
+	}
+
+
+	@Override
 	public Market getDualMarket() {
 		return getDualGroup();
 	}
 
+	
+	@Override
+	protected StockGroup getOtherGroup() {
+		MarketImpl m = m();
+		return m != null ? m.get(code(), !isBuy()) : null;
+	}
 
+	
 	@Override
 	public Universe getNearestUniverse() {
 		Market superMarket = this;
@@ -505,49 +458,8 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
-	protected void addPrices(List<Price> prices, long timeInterval) {
-		List<Price> newPrices = Util.newList(0);
-		for (Price price : prices) {
-			if (this.prices.contains(price)) continue;
-			Price price0 = price instanceof TakenPrice ? ((TakenPrice)price).getPrice() : null;
-			if (price0 != null && this.prices.contains(price0)) continue;
-			
-			newPrices.add(price);
-		}
-		if (newPrices.size() == 0) return;
-		
-		this.prices.addAll(newPrices);
-		Collections.sort(this.prices, new Comparator<Price>() {
-			@Override
-			public int compare(Price o1, Price o2) {
-				long time1 = o1.getTime();
-				long time2 = o2.getTime();
-				if (time1 < time2)
-					return -1;
-				else if (time1 == time2)
-					return 0;
-				else
-					return 1;
-			}
-		});
-		if (this.prices.size() == 0) return;
-		
-		long thisTime = getPrice().getTime();
-		List<Price> removedPrices = Util.newList(0);
-		for (Price price : this.prices) {
-			if (isSelectAsTakenPrice(price, timeInterval))
-				continue;
-			else if (thisTime - price.getTime() > timeInterval)
-				removedPrices.add(price);
-			else
-				break;
-		}
-		
-		for (Price removedPrice : removedPrices) this.prices.remove(removedPrice);
-	}
-	
-	
-	protected boolean isSelectAsTakenPrice(Price price, long timeInterval) {
+	@SuppressWarnings("unused")
+	private boolean isSelectAsTakenPrice(Price price, long timeInterval) {
 		if (price == null) return false;
 		
 		MarketImpl m = m();
@@ -562,15 +474,10 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	
 	@Override
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+	public StockInfoStore getStore() {
+		Market superMarket = getSuperMarket();
+		return superMarket != null ? superMarket.getStore() : null;
 	}
-	
-	
+
+
 }
