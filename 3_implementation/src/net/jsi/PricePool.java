@@ -23,22 +23,22 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	protected String code() {
+	public String code() {
 		return code;
 	}
 
 
-	protected int getPriceCount() {
+	public int size() {
 		return prices.size();
 	}
 	
 	
-	protected Price getPrice(int index) {
+	public Price getByIndex(int index) {
 		return prices.get(index);
 	}
 	
 	
-	protected int lookupPrice(long timePoint) {
+	public int lookup(long timePoint) {
 		int n = prices.size();
 		for (int i = n - 1; i >= 0 ; i--) {
 			Price price = prices.get(i);
@@ -49,17 +49,22 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
-	protected Price getPrice(long timePoint) {
-		int index = lookupPrice(timePoint);
-		return index >= 0 ? getPrice(index) : null;
+	public boolean contains(Price price) {
+		return prices.contains(price);
 	}
 	
 	
-	protected List<Price> getPrices(long timeInterval) {
+	public Price getByTimePoint(long timePoint) {
+		int index = lookup(timePoint);
+		return index >= 0 ? getByIndex(index) : null;
+	}
+	
+	
+	public List<Price> gets(long timeInterval) {
 		if (timeInterval <= 0) return prices;
 		
 		List<Price> priceList = Util.newList(0);
-		Price lastPrice = getLastPrice();
+		Price lastPrice = getLast();
 		if (lastPrice == null) return prices;
 		
 		long lastTime = lastPrice.getTime();
@@ -76,7 +81,7 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
-	protected Price getLastPrice() {
+	public Price getLast() {
 		if (prices.size() == 0)
 			return null;
 		else
@@ -84,8 +89,8 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 
-	protected Price getPrice(long timeInterval, long timePoint) {
-		Price lastPrice = getLastPrice();
+	public Price get(long timeInterval, long timePoint) {
+		Price lastPrice = getLast();
 		if (lastPrice == null) return null;
 		
 		int n = prices.size();
@@ -105,32 +110,32 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	protected List<Price> getInternalPrices() {
+	public List<Price> getInternals() {
 		return prices;
 	}
 
 	
-	protected Price removePrice(int index) {
+	public Price removeByIndex(int index) {
 		return prices.remove(index);
 	}
 	
 	
-	protected Price removePrice(long timePoint) {
-		int index = lookupPrice(timePoint);
+	public Price removeByTimePoint(long timePoint) {
+		int index = lookup(timePoint);
 		if (index >= 0)
-			return removePrice(index);
+			return removeByIndex(index);
 		else
 			return null;
 	}
 	
 	
-	protected boolean removePrice(Price price) {
+	public boolean remove(Price price) {
 		return price != null ? prices.remove(price) : false;
 	}
 	
 	
 	protected boolean checkPricePossibleAdded(long timePoint) {
-		Price lastPrice = getLastPrice();
+		Price lastPrice = getLast();
 		if (lastPrice == null)
 			return true;
 		else
@@ -147,7 +152,7 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	protected boolean addPrice(Price price, int maxPriceCount) {
+	public boolean add(Price price, int maxPriceCount) {
 		if (price == null || !price.isValid()) return false;
 		
 		int n = prices.size();
@@ -186,5 +191,81 @@ public class PricePool implements Serializable, Cloneable {
 		return true;
 	}
 
+	
+	
+	public class TakenStockPrice implements Serializable, Cloneable {
 
+		private static final long serialVersionUID = 1L;
+		
+		public TakenPrice takenPrice = null;
+		
+		public StockImpl stock = null;
+		
+		public TakenStockPrice(StockImpl stock, TakenPrice takenPrice) {
+			this.stock = stock;
+			this.takenPrice = takenPrice;
+		}
+		
+	}
+	
+	
+	public List<TakenStockPrice> getTakenPrices(Price price, Universe universe, long timeInterval) {
+		List<TakenStockPrice> takenPrices = Util.newList(0);
+		if (price == null || universe == null) return takenPrices;
+		
+		List<String> marketNames = universe.names();
+		for (String marketName : marketNames) {
+			Market market = universe.get(marketName);
+			MarketImpl m = universe.c(market);
+			if (m == null) continue;
+			
+			for (int i = 0; i < m.size(); i++) {
+				StockGroup group = m.get(i);
+				if (!group.code().equals(code())) continue;
+				
+				List<Stock> stocks = group.getStocks(timeInterval);
+				for (Stock stock : stocks) {
+					StockImpl s = group.c(stock);
+					if (s == null) continue;
+					Price p = s.getTakenPrice(timeInterval);
+					if (p != null && p instanceof TakenPrice && p.checkRefEquals(price))
+						takenPrices.add(new TakenStockPrice(s, (TakenPrice)p));
+				}
+			}
+		}
+		
+		return takenPrices;
+	}
+	
+	
+	public static void addSortedPrices(List<Price> targetSortedPrices, List<Price> addingSortedPrices) {
+		if (addingSortedPrices.size() == 0) return;
+		
+		for (Price addingPrice : addingSortedPrices) targetSortedPrices.remove(addingPrice);
+		
+		int startIndex = 0;
+		for (int i = 0; i < addingSortedPrices.size(); i++) {
+			Price addingPrice = addingSortedPrices.get(i);
+			int found = -1;
+			for (int j = startIndex; j < targetSortedPrices.size(); j++) {
+				Price targetPrice = targetSortedPrices.get(j);
+				if (targetPrice.getTime() > addingPrice.getTime()) {
+					found = j;
+					break;
+				}
+			}
+			
+			if (found == -1) {
+				targetSortedPrices.addAll(addingSortedPrices.subList(i, addingSortedPrices.size()));
+				return;
+			}
+			else {
+				targetSortedPrices.add(found, addingPrice);
+				startIndex = found;
+			}
+		}
+		
+	}
+	
+	
 }

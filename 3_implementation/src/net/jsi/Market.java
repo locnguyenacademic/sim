@@ -78,4 +78,8 @@ public interface Market extends Serializable, Cloneable {
 	
 	StockInfoStore getStore();
 	
+	
+	Price newPrice(double price, double lowPrice, double highPrice, long time);
+	
+	
 }

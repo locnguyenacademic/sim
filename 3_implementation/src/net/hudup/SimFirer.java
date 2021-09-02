@@ -7,6 +7,8 @@
  */
 package net.hudup;
 
+import net.ea.pso.adapter.PSORemote;
+import net.ea.pso.adapter.PSORemoteWrapper;
 import net.hudup.core.Constants;
 import net.hudup.core.Firer;
 import net.hudup.core.alg.AlgRemote;
@@ -18,8 +20,6 @@ import net.rem.em.EMRemote;
 import net.rem.em.EMRemoteWrapper;
 import net.rem.regression.RMRemote;
 import net.rem.regression.RMRemoteWrapper;
-import net.temp.ea.pso.PSORemote;
-import net.temp.ea.pso.PSORemoteWrapper;
 
 /**
  * This is advanced plug-in manager which derives from {@link Firer}.

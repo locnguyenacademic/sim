@@ -29,48 +29,57 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
+	public PricePool getPricePool() {
+		return pricePool;
+	}
+	
 	protected int getPriceCount() {
-		return pricePool.getPriceCount();
+		return pricePool.size();
 	}
 
 	
+	protected boolean containsPrice(Price price) {
+		return pricePool.contains(price);
+	}
+	
+	
 	protected Price getLastPrice() {
-		return pricePool.getLastPrice();
+		return pricePool.getLast();
 	}
 
 	
 	protected Price getPrice(long timeInterval, long timePoint) {
-		return pricePool.getPrice(timeInterval, timePoint);
+		return pricePool.get(timeInterval, timePoint);
 	}
 
 	
-	protected Price getPrice(long timePoint) {
-		return pricePool.getPrice(timePoint);
+	protected Price getPriceByTimePoint(long timePoint) {
+		return pricePool.getByTimePoint(timePoint);
 	}
 	
 	
-	protected Price getPriceAt(int index) {
-		return pricePool.getPrice(index);
+	protected Price getPriceByIndex(int index) {
+		return pricePool.getByIndex(index);
 	}
 
 	
 	protected List<Price> getPrices(long timeInterval) {
-		return pricePool.getPrices(timeInterval);
+		return pricePool.gets(timeInterval);
 	}
 	
 	
 	protected List<Price> getInternalPrices() {
-		return pricePool.getInternalPrices();
+		return pricePool.getInternals();
 	}
 	
 	
 	protected boolean addPrice(Price price) {
-		return pricePool.addPrice(price, property.maxPriceCount);
+		return pricePool.add(price, property.maxPriceCount);
 	}
 	
 	
 	protected boolean removePrice(Price price) {
-		return pricePool.removePrice(price);
+		return pricePool.remove(price);
 	}
 	
 	
@@ -90,6 +99,7 @@ public class StockInfo implements Serializable, Cloneable {
 	
 	
 	protected boolean setLeverage(double leverage) {
+		if (Double.isNaN(leverage)) return false;
 		this.leverage = leverage;
 		return true;
 	}

@@ -16,7 +16,10 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	boolean setPrice(Price price);
 	
 	
-	Price getPrice(long timePoint);
+	boolean addPrice(Price price);
+
+		
+	Price getPriceByTimePoint(long timePoint);
 	
 	
 	List<Price> getPrices(long timeInterval);

@@ -20,7 +20,7 @@ public class StockProperty implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	protected static Universe g = null;
+	public static Universe g = null;
 	
 	
 	public final static String NONAME = "noname";
@@ -101,7 +101,11 @@ public class StockProperty implements Serializable, Cloneable {
 	public static double PRICE_RATIO = 1;
 	
 	
-	public static boolean PLACED_RUNTIME_SYNC = true;
+	/**
+	 * If this flag is set to be true, the main table will be updated when the other table is being processed.
+	 * Therefore setting this flag to be true will consume more time.
+	 */
+	public static boolean RUNTIME_CASCADE = false;
 
 
 	public int maxPriceCount = MAX_PRICE_COUNT;

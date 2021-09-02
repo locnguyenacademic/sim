@@ -31,11 +31,11 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected StockInfo get(String code) {
+	public StockInfo get(String code) {
 		if (stores.containsKey(code))
 			return stores.get(code);
 		else
-			return null;
+			return create(code);
 	}
 	
 	

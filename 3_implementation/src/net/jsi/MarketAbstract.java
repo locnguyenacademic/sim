@@ -155,14 +155,16 @@ public abstract class MarketAbstract implements Market {
 	}
 
 	
-	protected StockInfo getStoreInfo(String code) {
-		StockInfoStore store = getStore();
-		if (store == null)
-			return null;
-		else {
-			StockInfo info = store.get(code);
-			return info != null ? info : store.create(code);
-		}
+	@Override
+	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
+		Market superMarket = getSuperMarket();
+		if (superMarket != null) return superMarket.newPrice(price, lowPrice, highPrice, time);
+		
+		Universe u = getNearestUniverse();
+		if (u != null)
+			return u.newPrice(price, lowPrice, highPrice, time);
+		else
+			return UniverseAbstract.newPrice0(price, lowPrice, highPrice, time);
 	}
 	
 

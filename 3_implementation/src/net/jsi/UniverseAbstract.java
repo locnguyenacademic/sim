@@ -253,14 +253,15 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	public List<String> getSupportStockCodes() {
 		Set<String> codes = Util.newSet(0);
 		
-		Universe u = getNearestUniverse();
-		if (u != null && u != this)
-			codes.addAll(u.getSupportStockCodes());
-		else {
-			List<Stock> stocks = getStocks(0);
-			for (Stock stock : stocks) codes.add(stock.code());
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m == null) continue;
+			for (int i = 0; i < m.size(); i++) {
+				StockGroup group = m.get(i);
+				codes.add(group.code());
+			}
 		}
-		
+
 		codes.addAll(defaultStockCodes);
 		return Util.sort(codes);
 	}
@@ -330,6 +331,17 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public StockInfoStore getStore() {
 		return store;
+	}
+	
+	
+	@Override
+	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
+		return newPrice0(price, lowPrice, highPrice, time);
+	}
+	
+	
+	protected static Price newPrice0(double price, double lowPrice, double highPrice, long time) {
+		return new PriceImpl(price, lowPrice, highPrice, time);
 	}
 	
 	

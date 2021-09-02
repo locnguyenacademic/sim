@@ -45,7 +45,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		else if (info.checkPricePossibleAdded(price.getTime()))
 			return info.addPrice(price);
 		else
-			return false;
+			return info.containsPrice(price);
+	}
+	
+	
+	@Override
+	public boolean addPrice(Price price) {
+		return info.addPrice(price);
 	}
 	
 	
@@ -61,8 +67,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	
 	@Override
-	public Price getPrice(long timePoint) {
-		return info.getPrice(timePoint);
+	public Price getPriceByTimePoint(long timePoint) {
+		return info.getPriceByTimePoint(timePoint);
+	}
+	
+	
+	protected Price getPriceByIndex(int index) {
+		return info.getPriceByIndex(index);
 	}
 	
 	
@@ -212,25 +223,6 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 
-//	public void resortPrices() {
-//		Collections.sort(info.prices, new Comparator<Price>() {
-//
-//			@Override
-//			public int compare(Price o1, Price o2) {
-//				long tp1 = o1.getTime();
-//				long tp2 = o2.getTime();
-//				if (tp1 < tp2)
-//					return -1;
-//				else if (tp1 == tp2)
-//					return 0;
-//				else
-//					return 1;
-//			}
-//			
-//		});
-//	}
-	
-	
 	@Override
 	public String toString() {
 		return info.code();

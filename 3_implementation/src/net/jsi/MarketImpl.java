@@ -349,7 +349,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private StockGroup newGroup(String code, boolean buy, long timePoint) {
 		StockInfo info = getStore().get(code);
 		if (info == null) return null;
-		Price price = info.getPrice(timePoint);
+		Price price = info.getPriceByTimePoint(timePoint);
 		if (price == null) return null;
 		
 		final Market superMarket = this;
@@ -426,7 +426,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				return null;
 			}
 			
-			Stock stock = group.add(getTimeViewInterval(), group.getPriceTimePoint(), volume);
+			Stock stock = group.add(getTimeViewInterval(), takenTimePoint, volume);
 			if (stock == null) {
 				remove(code, buy);
 				info.removePrice(price);
@@ -549,11 +549,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (placedMarket != null && placedMarket != this) placedMarket.setTimeStartPoint(timeStartPoint);
 	}
 
-	
-	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
-		return new PriceImpl(price, lowPrice, highPrice, time);
-	}
-	
 	
 	@Override
 	public List<String> getSupportStockCodes() {
@@ -758,7 +753,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		long priceDate = Long.parseLong(fields[6]);
 		double unitBias = Double.parseDouble(fields[7]);
 		
-		StockInfo si = market.getStoreInfo(code);
+		StockInfo si = market.getStore().get(code);
 		if (si == null) return;
 		
 		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
@@ -778,7 +773,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double takeProfit = Double.parseDouble(fields[5]);
 		boolean committed = Boolean.parseBoolean(fields[6]);
 		
-		StockInfo si = market.getStoreInfo(code);
+		StockInfo si = market.getStore().get(code);
 		if (si == null) return;
 		
 		Stock stock = market.addStock(code, buy, volume, takenDate);
@@ -796,7 +791,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	private static void readProperties(MarketImpl market, String[] fields) {
 		String code = fields[0];
-		StockInfo si = market.getStoreInfo(code);
+		StockInfo si = market.getStore().get(code);
 		if (si != null) si.getProperty().parseText(Arrays.asList(fields));
 	}
 
@@ -853,7 +848,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		for (String code : codes) {
 			StockInfo info = store.get(code);
 			for (int i = 0; i < info.getPriceCount(); i++) {
-				Price price = info.getPriceAt(i);
+				Price price = info.getPriceByIndex(i);
 				StringBuffer buffer = new StringBuffer();
 				
 				buffer.append(code + ", ");

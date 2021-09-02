@@ -61,7 +61,7 @@ public class Investor extends JFrame implements MarketListener {
 	protected Universe universe = null;
 	
 	
-	JTabbedPane body;
+	protected JTabbedPane body;
 	
 	
 	protected JLabel lblTotalProfit;
@@ -262,6 +262,24 @@ public class Investor extends JFrame implements MarketListener {
 		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
 
+		JMenuItem mniPriceList = new JMenuItem(
+			new AbstractAction("Price list") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+					PriceList pl = new PriceList(universe, universe.getTimeValidInterval(), thisInvestor);
+					pl.setVisible(true);
+					if (pl.isApplied()) tblMarket.applyPlaced();
+				}
+			});
+		mniPriceList.setMnemonic('p');
+		mnTool.add(mniPriceList);
+
+		mnTool.addSeparator();
+		
 		JMenuItem mniOption = new JMenuItem(
 			new AbstractAction("Option") {
 				private static final long serialVersionUID = 1L;
@@ -271,7 +289,7 @@ public class Investor extends JFrame implements MarketListener {
 					if (getSelectedMarket() != null) new Option().setVisible(true);
 				}
 			});
-		mniOption.setMnemonic('p');
+		mniOption.setMnemonic('o');
 		mnTool.add(mniOption);
 
 		JMenu mnHelp = new JMenu("Help");

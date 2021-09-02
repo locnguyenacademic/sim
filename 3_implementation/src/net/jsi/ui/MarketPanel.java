@@ -136,7 +136,9 @@ public class MarketPanel extends JPanel implements MarketListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new MarketSummary(getMarket(), tblMarket, thisPanel).setVisible(true);
+				MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisPanel);
+				ms.setVisible(true);
+				if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
 			}
 		});
 		summary.setMnemonic('s');
@@ -481,7 +483,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 			JPanel body = new JPanel(new BorderLayout());
 			add(body, BorderLayout.CENTER);
 			MarketPanel mp = new MarketPanel(market);
-			if (mp.getMarketTable() != null && listener != null && StockProperty.PLACED_RUNTIME_SYNC)
+			if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
 				mp.getMarketTable().getModel2().addMarketListener(listener);
 			body.add(mp, BorderLayout.CENTER);
 			
@@ -1070,7 +1072,7 @@ class StockTaker extends JDialog {
 	
 	
 	private void modifyPriceList() {
-		PriceList pl = new PriceList(market, input, market.getTimeViewInterval(), update, false, this);
+		PriceListPartial pl = new PriceListPartial(market, input, market.getTimeViewInterval(), update, false, this);
 		pl.setVisible(true);
 		if (!update || !pl.isPressOK()) return;
 		
@@ -1101,7 +1103,7 @@ class StockTaker extends JDialog {
 	
 	
 	private void setTakenPrice() {
-		PriceList pl = new PriceList(market, input, m().getTimeViewInterval(), false, true, this);
+		PriceListPartial pl = new PriceListPartial(market, input, m().getTimeViewInterval(), false, true, this);
 		pl.setVisible(true);
 		if (pl.getOutput() != null) {
 			txtTakenPrice.setValue(pl.getOutput().get());

@@ -1,5 +1,11 @@
 package net.temp;
 
+import java.util.Date;
+
+import javax.swing.JFormattedTextField;
+
+import net.jsi.Util;
+
 /**
  * This is temporal testing class.
  * 
@@ -133,8 +139,15 @@ public class Test {
 //		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
 //		System.out.println(1.0 / Float.MIN_VALUE);
 		
-		System.out.println(Math.log(Float.MIN_VALUE));
-		System.out.println(Math.log(2 + Float.MIN_VALUE));
+//		System.out.println(Math.log(Float.MIN_VALUE));
+//		System.out.println(Math.log(2 + Float.MIN_VALUE));
+		
+		JFormattedTextField txtLastDate = new JFormattedTextField(Util.getDateFormatter());
+		Date date = new Date();
+		txtLastDate.setValue(new Date(date.getTime() + 1));
+		System.out.println(date.getTime());
+		System.out.println(((Date)txtLastDate.getValue()).getTime());
+
 	}
 
 	

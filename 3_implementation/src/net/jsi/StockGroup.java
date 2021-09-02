@@ -8,7 +8,6 @@
 package net.jsi;
 
 import java.util.List;
-import java.util.Set;
 
 public class StockGroup extends StockAbstract implements Market {
 
@@ -26,8 +25,8 @@ public class StockGroup extends StockAbstract implements Market {
 	
 	public StockGroup(String code, boolean buy, double leverage, double unitBias, Price price) {
 		super(code, buy, price);
-		if (price != null) setLeverage(leverage);
-		if (price != null) setUnitBias(unitBias);
+		setLeverage(leverage);
+		setUnitBias(unitBias);
 	}
 
 	
@@ -396,10 +395,9 @@ public class StockGroup extends StockAbstract implements Market {
 		if (u != null)
 			return u.getSupportStockCodes();
 		else {
-			Set<String> codes = Util.newSet(0);
-			for (Stock stock : stocks) codes.add(stock.code());
-			
-			return Util.sort(codes);
+			List<String> codes = Util.newList(0);
+			codes.add(code());
+			return codes;
 		}
 	}
 
@@ -446,15 +444,16 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
+	@Override
 	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
-		Universe u = getNearestUniverse();
-		if (u == null) return new PriceImpl(price, lowPrice, highPrice, time);
+		Market superMarket = getSuperMarket();
+		if (superMarket != null) return superMarket.newPrice(price, lowPrice, highPrice, time);
 		
-		MarketImpl m = u.c(getSuperMarket());
-		if (m != null) 
-			return m.newPrice(price, lowPrice, highPrice, time);
+		Universe u = getNearestUniverse();
+		if (u != null)
+			return u.newPrice(price, lowPrice, highPrice, time);
 		else
-			return new PriceImpl(price, lowPrice, highPrice, time);
+			return UniverseAbstract.newPrice0(price, lowPrice, highPrice, time);
 	}
 
 
