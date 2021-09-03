@@ -25,7 +25,7 @@ public class PriceImpl implements Price {
 	private double highPrice = 0;
 	
 	
-	private double openPrice = 0;
+	private double altPrice = 0;
 
 	
 	private double priceRatio = StockProperty.PRICE_RATIO;
@@ -46,7 +46,6 @@ public class PriceImpl implements Price {
 		this.price = price;
 		this.lowPrice = lowPrice;
 		this.highPrice = highPrice;
-		this.openPrice = price;
 		this.time = time;
 	}
 	
@@ -88,14 +87,14 @@ public class PriceImpl implements Price {
 	
 	
 	@Override
-	public double getOpen() {
-		return openPrice*priceRatio;
+	public double getAlt() {
+		return altPrice*priceRatio;
 	}
 	
 	
 	@Override
-	public void setOpen(double openPrice) {
-		this.openPrice = openPrice;
+	public void setAlt(double altPrice) {
+		this.altPrice = altPrice;
 	}
 	
 	
@@ -123,6 +122,7 @@ public class PriceImpl implements Price {
 		this.set(price.get());
 		this.setLow(price.getLow());
 		this.setHigh(price.getHigh());
+		this.setAlt(price.getAlt());
 		this.setTime(price.getTime());
 		return true;
 	}

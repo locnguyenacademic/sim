@@ -80,14 +80,14 @@ public class TakenPrice implements Price {
 
 	
 	@Override
-	public double getOpen() {
-		return price.getOpen();
+	public double getAlt() {
+		return price.getAlt();
 	}
 
 	
 	@Override
-	public void setOpen(double openPrice) {
-		price.setOpen(openPrice);
+	public void setAlt(double altPrice) {
+		price.setAlt(altPrice);
 	}
 
 	
@@ -144,6 +144,7 @@ public class TakenPrice implements Price {
 		this.set(price.get());
 		this.setLow(price.getLow());
 		this.setHigh(price.getHigh());
+		this.setAlt(price.getAlt());
 		this.setTime(price.getTime());
 		this.setPriceRatio(price.getPriceRatio());
 		
@@ -169,4 +170,15 @@ public class TakenPrice implements Price {
 	}
 	
 	
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+
 }

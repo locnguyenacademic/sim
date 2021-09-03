@@ -452,7 +452,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private Stock addStock(String code, boolean buy, double volume, long takenTimePoint) {
+	public Stock addStock(String code, boolean buy, double volume, long takenTimePoint) {
 		return addStock(code, buy, Double.NaN, volume, takenTimePoint, null);
 	}
 
@@ -556,25 +556,14 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (u != null)
 			return u.getSupportStockCodes();
 		else {
-			List<Stock> stocks = getAllStocks();
 			Set<String> codes = Util.newSet(0);
-			for (Stock stock : stocks) codes.add(stock.code());
+			for (StockGroup group : groups) codes.add(group.code());
 			
 			return Util.sort(codes);
 		}
 	}
 
 
-	private List<Stock> getAllStocks() {
-		List<Stock> stocks = Util.newList(0);
-		for (StockGroup group : groups) {
-			stocks.addAll(group.getStocks(0));
-		}
-		
-		return stocks;
-	}
-	
-	
 	@Override
 	protected void reset() {
 		super.reset();
@@ -757,7 +746,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (si == null) return;
 		
 		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
-		p.setOpen(openPrice);
+		p.setAlt(openPrice);
 		si.addPrice(p);
 		si.setLeverage(leverage);
 		si.setUnitBias(unitBias);
@@ -856,7 +845,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(price.get()) + ", ");
 				buffer.append(Util.format(price.getLow()) + ", ");
 				buffer.append(Util.format(price.getHigh()) + ", ");
-				buffer.append(Util.format(price.getOpen()) + ", ");
+				buffer.append(Util.format(price.getAlt()) + ", ");
 				buffer.append(price.getTime() + ", ");
 				buffer.append(Util.format(info.getUnitBias()) + "\n");
 				

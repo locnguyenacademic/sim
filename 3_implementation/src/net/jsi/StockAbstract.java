@@ -211,7 +211,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	public abstract StockGroup getGroup();
 	
 	
-	protected StockGroup getDualGroup() {
+	public StockGroup getDualGroup() {
 		StockGroup group = getGroup();
 		return group != null ? group.getDualGroup() : null;
 	}

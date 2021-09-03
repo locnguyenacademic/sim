@@ -198,7 +198,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void modifyPriceList(Stock stock) {
+	private void priceList(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
 		if (stock == null) return;
 		
@@ -342,12 +342,12 @@ public class MarketTable extends JTable implements MarketListener {
 				ctxMenu.addSeparator();
 			}
 			
-			JMenuItem miModifyList = new JMenuItem("Modify price list");
+			JMenuItem miModifyList = new JMenuItem("Price list");
 			miModifyList.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						modifyPriceList(stock);
+						priceList(stock);
 					}
 				});
 			ctxMenu.add(miModifyList);
@@ -463,12 +463,12 @@ public class MarketTable extends JTable implements MarketListener {
 
 		ctxMenu.addSeparator();
 		
-		JMenuItem miModifyList = new JMenuItem("Modify price list");
+		JMenuItem miModifyList = new JMenuItem("Price list");
 		miModifyList.addActionListener( 
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					modifyPriceList(stock);
+					priceList(stock);
 				}
 			});
 		ctxMenu.add(miModifyList);
@@ -1152,6 +1152,12 @@ class AddPrice extends JDialog {
 	protected JButton btnHighPrice;
 	
 	
+	protected JFormattedTextField txtAltPrice;
+	
+	
+	protected JButton btnAltPrice;
+	
+	
 	protected JFormattedTextField txtLastDate;
 	
 	
@@ -1189,6 +1195,7 @@ class AddPrice extends JDialog {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
+		//left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -1242,6 +1249,21 @@ class AddPrice extends JDialog {
 		});
 		paneHighPrice.add(btnHighPrice, BorderLayout.EAST);
 		
+		JPanel paneAltPrice = new JPanel(new BorderLayout());
+		//right.add(paneAltPrice);
+		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtAltPrice.setValue(input.getPrice().getAlt());
+		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
+		//
+		btnAltPrice = new JButton("Estimate");
+		btnAltPrice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		paneAltPrice.add(btnAltPrice, BorderLayout.EAST);
+
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
 		txtLastDate = new JFormattedTextField(Util.getDateFormatter());

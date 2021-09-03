@@ -219,8 +219,12 @@ public class PricePool implements Serializable, Cloneable {
 			MarketImpl m = universe.c(market);
 			if (m == null) continue;
 			
-			for (int i = 0; i < m.size(); i++) {
-				StockGroup group = m.get(i);
+			List<StockGroup> groups = Util.newList(0);
+			groups.addAll(m.groups);
+			MarketImpl pm = m.getPlacedMarket();
+			if (pm != null) groups.addAll(pm.groups);
+			
+			for (StockGroup group : groups) {
 				if (!group.code().equals(code())) continue;
 				
 				List<Stock> stocks = group.getStocks(timeInterval);

@@ -331,7 +331,7 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	protected StockGroup getDualGroup() {
+	public StockGroup getDualGroup() {
 		Market thisMarket = getSuperMarket();
 		if (thisMarket == null) return null;
 		

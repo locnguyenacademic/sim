@@ -3,6 +3,7 @@ package net.jsi.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,7 @@ import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Price;
 import net.jsi.PricePool;
+import net.jsi.PricePool.TakenStockPrice;
 import net.jsi.Stock;
 import net.jsi.StockAbstract;
 import net.jsi.StockGroup;
@@ -52,7 +54,6 @@ import net.jsi.StockProperty;
 import net.jsi.TakenPrice;
 import net.jsi.Universe;
 import net.jsi.Util;
-import net.jsi.PricePool.TakenStockPrice;
 
 public class PriceListTable extends JTable {
 
@@ -67,12 +68,19 @@ public class PriceListTable extends JTable {
 
 	
 	public PriceListTable(Universe universe, long timeInterval) {
+		this(universe, null, timeInterval);
+	}
+
+		
+	public PriceListTable(Universe universe, String code, long timeInterval) {
 		super();
 		setModel(new PriceListTableModel(universe, timeInterval));
 
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (!isEditable()) return;
+				
 				if(SwingUtilities.isRightMouseButton(e) ) {
 					JPopupMenu contextMenu = createContextMenu();
 					if(contextMenu != null)
@@ -87,7 +95,7 @@ public class PriceListTable extends JTable {
 		
 		setDefaultRenderer(Date.class, dateCellRenderer);
 
-		update((String)null);
+		update(code);
 	}
 	
 	
@@ -137,7 +145,10 @@ public class PriceListTable extends JTable {
 		List<Price> removedPrices = Util.newList(0);
 		int[] selectedRows = getSelectedRows();
 		if (selectedRows == null) return;
-		for (int selectedRow : selectedRows) removedPrices.add(m.getPriceAt(selectedRow));
+		for (int selectedRow : selectedRows) {
+			if (!m.isSelectAsTakenPrice(selectedRow))
+				removedPrices.add(m.getPriceAt(selectedRow));
+		}
 
 		for (Price removedPrice : removedPrices) {
 			int removedRow = m.rowOf(removedPrice);
@@ -294,6 +305,11 @@ public class PriceListTable extends JTable {
 	}
 	
 	
+	public boolean update() {
+		return update((String)null);
+	}
+	
+	
 	public boolean apply() {
 		return getModel2().apply();
 	}
@@ -315,8 +331,32 @@ public class PriceListTable extends JTable {
 	}
 
 	
+	protected Price getLastRowPrice() {
+		int lastRow = getRowCount() - 1;
+		if (lastRow < 0) return null;
+		return getModel2().getRowPriceAt(lastRow);
+	}
+	
+	
+	protected boolean addPrice(Price price) {
+		Vector<Object> rowData = getModel2().toRow(price);
+		getModel2().addRow(rowData);
+		return true;
+	}
+	
+	
 	protected Universe u() {
 		return getModel2().universe;
+	}
+	
+	
+	public void setEditable(boolean editable) {
+		getModel2().editable = editable;
+	}
+	
+	
+	public boolean isEditable() {
+		return getModel2().editable;
 	}
 	
 	
@@ -330,19 +370,6 @@ public class PriceListTable extends JTable {
 			renderer = getDefaultRenderer(value.getClass());
 			if(renderer == null) renderer = super.getCellRenderer(row, column);
 		}
-		
-		try {
-			if (value != null && renderer instanceof DefaultTableCellRenderer) {
-				Price price = getModel2().getPriceAt(row);
-				if (price != null && getModel2().isSelectAsTakenPrice(price))
-					((DefaultTableCellRenderer)renderer).setBackground(PriceListPartialTable.LIGHTGRAY);
-				else
-					((DefaultTableCellRenderer)renderer).setBackground(null);
-			}
-			else if (renderer instanceof DefaultTableCellRenderer)
-				((DefaultTableCellRenderer)renderer).setBackground(null);
-		}
-		catch (Exception e) {}
 		
 		return renderer;
 	}
@@ -398,6 +425,9 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	protected boolean modified = false;
 	
 	
+	protected boolean editable = true;
+	
+	
 	public PriceListTableModel(Universe universe, long timeInterval) {
 		this.universe = universe;
 		this.timeInterval = timeInterval;
@@ -409,24 +439,24 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		if (pricePool == null || !modified) return false;
 		modified = false;
 		
+		List<Price> stockPrices = pricePool.gets(timeInterval);
 		List<Price> modifiedStockPrices = Util.newList(0);
 		List<Price> removedStockPrices = Util.newList(0);
-		for (int i = 0; i < pricePool.size(); i++) {
-			Price stockPrice = pricePool.getByIndex(i);
-			int row = rowOf(stockPrice);
-			if (row < 0) {
+		List<Price> tablePrices = getTablePrices();
+		for (Price stockPrice : stockPrices) {
+			if (!tablePrices.contains(stockPrice)) {
 				boolean selectedAsTaken = isSelectAsTakenPrice(stockPrice); 
-				if (selectedAsTaken)
-					continue;
-				else
-					removedStockPrices.add(stockPrice);
+				if (!selectedAsTaken) removedStockPrices.add(stockPrice);
 			}
 			else {
 				modifiedStockPrices.add(stockPrice);
 				Price rowPrice = rowPriceOf(stockPrice);
 				if (rowPrice != null && rowPrice.isValid()) stockPrice.copy(rowPrice);
+				
+				tablePrices.remove(stockPrice);
 			}
 		}
+		modifiedStockPrices.addAll(tablePrices);
 		
 		
 		List<Price> internalPrices = pricePool.getInternals();
@@ -484,6 +514,11 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	}
 
 	
+	protected boolean update() {
+		return update((PricePool)null);
+	}
+	
+	
 	protected long getTimeInterval() {
 		return timeInterval;
 	}
@@ -497,12 +532,17 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	}
 
 	
-	protected boolean isSelectAsTakenPrice(Price price) {
+	private boolean isSelectAsTakenPrice(Price price) {
 		return getTakenPrices(price).size() > 0;
 	}
 
 	
-	protected List<Price> getTablePrices() {
+	protected boolean isSelectAsTakenPrice(int row) {
+		return (boolean)getValueAt(row, 5);
+	}
+	
+	
+	private List<Price> getTablePrices() {
 		List<Price> prices = Util.newList(0);
 		int n = getRowCount();
 		for (int i = 0; i < n; i++) {
@@ -564,7 +604,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if (column != 0 && column != 1)
+		if (column != 0 && column != 1 && column != 5 && editable)
 			return super.isCellEditable(row, column);
 		else
 			return false;
@@ -593,7 +633,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	}
 	
 	
-	private Price getRowPriceAt(int row) {
+	protected Price getRowPriceAt(int row) {
 		Object date = getValueAt(row, 1);
 		Object price = getValueAt(row, 2);
 		Object lowPrice = getValueAt(row, 3);
@@ -617,7 +657,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	}
 
 
-	private static Vector<Object> toRow(Price price) {
+	protected Vector<Object> toRow(Price price) {
 		Vector<Object> row = Util.newVector(0);
 		
 		row.add(price);
@@ -625,6 +665,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		row.add(price.get());
 		row.add(price.getLow());
 		row.add(price.getHigh());
+		row.add(isSelectAsTakenPrice(price));
 		
 		return row;
 	}
@@ -634,13 +675,14 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	 * Getting list of column names.
 	 * @return list of column names.
 	 */
-	private static Vector<String> toColumns() {
+	private Vector<String> toColumns() {
 		Vector<String> columns = Util.newVector(0);
 		columns.add("");
 		columns.add("Date");
 		columns.add("Price");
 		columns.add("Low price");
 		columns.add("High price");
+		columns.add("Taken");
 		
 		return columns;
 	}
@@ -662,12 +704,25 @@ class PriceList extends JDialog {
 	protected PriceListTable tblPriceList = null;
 	
 	
+	protected Price output = null;
+	
+	
 	protected boolean applied = false;
 	
 	
+	protected boolean selectMode = false;
+	
+	
 	public PriceList(Universe universe, long timeInterval, Component parent) {
+		this(universe, null, timeInterval, false, parent);
+	}
+	
+	
+	public PriceList(Universe universe, String code, long timeInterval, boolean selectMode, Component parent) {
 		super(Util.getFrameForComponent(parent), "Price list", true);
-		this.tblPriceList = new PriceListTable(universe, timeInterval);
+		this.selectMode = selectMode;
+		this.tblPriceList = new PriceListTable(universe, code, timeInterval);
+		this.tblPriceList.setEditable(!selectMode);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(600, 400);
@@ -680,25 +735,39 @@ class PriceList extends JDialog {
 		
 		header.add(new JLabel("Code: "), BorderLayout.WEST);
 		cmbCode = new JComboBox<String>(universe.getSupportStockCodes().toArray(new String[] {}));
+		if (code != null) cmbCode.setSelectedItem(code);
 		cmbCode.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				update();
 			}
 		});
+		cmbCode.setEnabled(!selectMode);
 		header.add(cmbCode, BorderLayout.CENTER);
 		
 		
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		body.add(toolbar, BorderLayout.NORTH);
+		
+		JButton newPrice = new JButton("New price");
+		newPrice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addNewPrice();
+			}
+		});
+		if (!selectMode) toolbar.add(newPrice);
+
 		body.add(new JScrollPane(tblPriceList), BorderLayout.CENTER);
 		
 		
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton("OK");
+		JButton ok = new JButton(selectMode ? "Select" : "OK");
 		ok.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -714,7 +783,7 @@ class PriceList extends JDialog {
 				apply();
 			}
 		});
-		footer.add(apply);
+		if (!selectMode) footer.add(apply);
 
 		JButton refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
@@ -740,7 +809,11 @@ class PriceList extends JDialog {
 	
 	
 	private void ok() {
-		apply();
+		if (selectMode)
+			this.output = tblPriceList.getSelectedPrice();
+		else
+			apply();
+		
 		dispose();
 	}
 	
@@ -755,8 +828,24 @@ class PriceList extends JDialog {
 	}
 	
 	
+	private void addNewPrice() {
+		Price input = tblPriceList.getLastRowPrice();
+		if (input == null) return;
+		NewPrice newPrice = new NewPrice(input, this);
+		newPrice.setVisible(true);
+		
+		Price output = newPrice.getOutput();
+		if (output == null) return;
+		
+		boolean ret = tblPriceList.addPrice(output);
+		if (ret) {
+			JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	
 	private void update() {
-		if (tblPriceList.isModified()) {
+		if (tblPriceList.isModified() && !selectMode) {
 			int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
@@ -764,13 +853,13 @@ class PriceList extends JDialog {
 		if (cmbCode.getSelectedItem() != null)
 			tblPriceList.update(cmbCode.getSelectedItem().toString());
 		else
-			tblPriceList.update((String)null);
+			tblPriceList.update();
 	}
 	
 	
 	@Override
 	public void dispose() {
-		if (tblPriceList.isModified()) {
+		if (tblPriceList.isModified() && !selectMode) {
 			int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
@@ -778,6 +867,11 @@ class PriceList extends JDialog {
 		tblPriceList.update((String)null);
 		
 		super.dispose();
+	}
+	
+	
+	public Price getOutput() {
+		return output;
 	}
 	
 	
@@ -799,7 +893,7 @@ class TakenStocksOfPrice extends JDialog {
 		this.tblTakenStocks = new TakenStocksTable(universe, price, timeInterval);
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setSize(400, 300);
+		setSize(450, 350);
 		setLocationRelativeTo(Util.getFrameForComponent(component));
 		setLayout(new BorderLayout());
 		
@@ -842,13 +936,22 @@ class TakenStocksOfPrice extends JDialog {
 		
 		public void update() {
 			getModel2().update();
-			if (getColumnModel().getColumnCount() > 0) {
-				getColumnModel().getColumn(0).setMaxWidth(0);
-				getColumnModel().getColumn(0).setMinWidth(0);
-				getColumnModel().getColumn(0).setPreferredWidth(0);
-			}
 		}
 		
+		@Override
+		public TableCellRenderer getCellRenderer(int row, int column) {
+			Object value = getValueAt(row, column);
+			if (value == null)
+				return super.getCellRenderer(row, column);
+			else {
+				TableCellRenderer renderer = getDefaultRenderer(value.getClass());
+				if(renderer == null)
+					return super.getCellRenderer(row, column);
+				else
+					return renderer;
+			}
+		}
+
 	}
 
 		
@@ -870,6 +973,17 @@ class TakenStocksOfPrice extends JDialog {
 		
 		protected void update() {
 			Vector<Vector<Object>> data = Util.newVector(0);
+			List<String> marketNames = universe.names();
+			Collections.sort(marketNames);
+			for (String marketName : marketNames) {
+				MarketImpl m = universe.c(universe.get(marketName));
+				if (m == null) continue;
+				addRows(data, m, false);
+				
+				MarketImpl pm = m.getPlacedMarket();
+				if (pm != null) addRows(data, pm, true);
+			}
+			
 			setDataVector(data, toColumns());
 		}
 
@@ -878,17 +992,48 @@ class TakenStocksOfPrice extends JDialog {
 			return false;
 		}
 
+		private void addRows(Vector<Vector<Object>> data, MarketImpl market, boolean placed) {
+			List<Stock> stocks = market.getStocks(timeInterval);
+			for (Stock stock : stocks) {
+				StockImpl s = market.c(stock);
+				if (s == null) continue;
+				
+				Price p = s.getTakenPrice(timeInterval);
+				if (p == null || !(p instanceof TakenPrice)) continue;
+				
+				if (((TakenPrice)p).checkRefEquals(this.price)) {
+					Vector<Object> row = toRow(s, market.getName(), placed);
+					if (row != null) data.add(row);
+				}
+			}
+		}
+		
+		private Vector<Object> toRow(StockImpl stock, String marketName, boolean placed) {
+			Vector<Object> row = Util.newVector(0);
+			
+			row.add(stock);
+			row.add(marketName);
+			row.add(placed);
+			row.add(stock.isBuy());
+			row.add(Util.format(stock.getTakenPrice(timeInterval).getDate()));
+			row.add(stock.getVolume(timeInterval, true));
+			row.add(Util.format(stock.getStopLoss()) + " / " + Util.format(stock.getTakeProfit()));
+			row.add(stock.getMargin(timeInterval));
+			row.add(stock.isCommitted());
+			
+			return row;
+		}
+
 		/**
 		 * Getting list of column names.
 		 * @return list of column names.
 		 */
 		private Vector<String> toColumns() {
 			Vector<String> columns = Util.newVector(0);
-			columns.add("");
-			columns.add("Market");
 			columns.add("Code");
-			columns.add("Buy");
+			columns.add("Market");
 			columns.add("Placed");
+			columns.add("Buy");
 			columns.add("Date");
 			columns.add("Volume");
 			columns.add("Stop loss / take profit");
@@ -995,7 +1140,10 @@ class PriceListPartialTable extends JTable {
 		List<Price> removedPrices = Util.newList(0);
 		int[] selectedRows = getSelectedRows();
 		if (selectedRows == null) return;
-		for (int selectedRow : selectedRows) removedPrices.add(m.getPriceAt(selectedRow));
+		for (int selectedRow : selectedRows) {
+			if (!m.isSelectAsTakenPrice(selectedRow))
+				removedPrices.add(m.getPriceAt(selectedRow));
+		}
 
 		for (Price removedPrice : removedPrices) {
 			int removedRow = m.rowOf(removedPrice);
@@ -1224,14 +1372,14 @@ class PriceListPartialTable extends JTable {
 		try {
 			if (value != null && renderer instanceof DefaultTableCellRenderer) {
 				Price price = getModel2().getPriceAt(row);
-				if (price != null && getModel2().isSelectAsTakenPrice(price)) {
+				if (price != null && getModel2().isSelectAsTakenPrice(row)) {
 					StockImpl stock = getModel2().c(getModel2().stock);
 					Price takenPrice = stock != null ? stock.getTakenPrice(getTimeInterval()) : null;
-					boolean selected = takenPrice != null && takenPrice instanceof TakenPrice ? (((TakenPrice)takenPrice).getPrice() == price) : false;
-					if (selected)
-						((DefaultTableCellRenderer)renderer).setBackground(GRAY);
-					else
+					boolean as = takenPrice != null && takenPrice instanceof TakenPrice ? (((TakenPrice)takenPrice).getPrice() == price) : false;
+					if (as)
 						((DefaultTableCellRenderer)renderer).setBackground(LIGHTGRAY);
+					else
+						((DefaultTableCellRenderer)renderer).setBackground(null);
 				}
 				else
 					((DefaultTableCellRenderer)renderer).setBackground(null);
@@ -1370,22 +1518,21 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		List<Price> stockPrices = getStockPrices();
 		List<Price> modifiedStockPrices = Util.newList(0);
 		List<Price> removedStockPrices = Util.newList(0);
+		List<Price> tablePrices = getTablePrices();
 		for (Price stockPrice : stockPrices) {
-			int row = rowOf(stockPrice);
-			if (row < 0) {
+			if (!tablePrices.contains(stockPrice)) {
 				boolean selectedAsTaken = isSelectAsTakenPrice(stockPrice); 
-				if (selectedAsTaken)
-					continue;
-				else
-					removedStockPrices.add(stockPrice);
+				if (!selectedAsTaken) removedStockPrices.add(stockPrice);
 			}
 			else {
 				modifiedStockPrices.add(stockPrice);
 				Price rowPrice = rowPriceOf(stockPrice);
-				if (rowPrice != null && rowPrice.isValid())
-					stockPrice.copy(rowPrice);
+				if (rowPrice != null && rowPrice.isValid()) stockPrice.copy(rowPrice);
+				
+				tablePrices.remove(stockPrice);
 			}
 		}
+		modifiedStockPrices.addAll(tablePrices);
 		
 		
 		List<Price> internalPrices = getInternalPrices();
@@ -1480,7 +1627,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
-	protected boolean isSelectAsTakenPrice(Price price) {
+	private boolean isSelectAsTakenPrice(Price price) {
 		if (price == null) return false;
 		List<TakenPrice> takenPrices = getTakenPrices();
 		if (takenPrices.size() == 0) return false;
@@ -1493,6 +1640,11 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
+	protected boolean isSelectAsTakenPrice(int row) {
+		return (boolean)getValueAt(row, 5);
+	}
+	
+	
 	protected List<Price> getStockPrices() {
 		if (group != null)
 			return group.getPrices(timeInterval);
@@ -1501,7 +1653,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
-	protected List<Price> getTablePrices() {
+	private List<Price> getTablePrices() {
 		List<Price> prices = Util.newList(0);
 		int n = getRowCount();
 		for (int i = 0; i < n; i++) {
@@ -1563,7 +1715,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if (editable && column != 0 && column != 1)
+		if (editable && column != 0 && column != 1 && column != 5)
 			return super.isCellEditable(row, column);
 		else
 			return false;
@@ -1632,7 +1784,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 
 
-	private static Vector<Object> toRow(Price price) {
+	private Vector<Object> toRow(Price price) {
 		Vector<Object> row = Util.newVector(0);
 		
 		row.add(price);
@@ -1640,6 +1792,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		row.add(price.get());
 		row.add(price.getLow());
 		row.add(price.getHigh());
+		row.add(isSelectAsTakenPrice(price));
 		
 		return row;
 	}
@@ -1649,13 +1802,14 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	 * Getting list of column names.
 	 * @return list of column names.
 	 */
-	private static Vector<String> toColumns() {
+	private Vector<String> toColumns() {
 		Vector<String> columns = Util.newVector(0);
 		columns.add("");
 		columns.add("Date");
 		columns.add("Price");
 		columns.add("Low price");
 		columns.add("High price");
+		columns.add("Taken");
 		
 		return columns;
 	}
@@ -1790,3 +1944,164 @@ class PriceListPartial extends JDialog {
 }
 
 
+
+class NewPrice extends JDialog {
+
+
+	private static final long serialVersionUID = 1L;
+
+
+	protected JFormattedTextField txtPrice;
+	
+	
+	protected JFormattedTextField txtLowPrice;
+	
+	
+	protected JFormattedTextField txtHighPrice;
+	
+	
+	protected JFormattedTextField txtAltPrice;
+	
+	
+	protected JFormattedTextField txtLastDate;
+	
+	
+	protected JButton btnLastDateNow;
+	
+	
+	protected Price input = null;
+
+	
+	protected Price output = null;
+
+	
+	public NewPrice(Price input, Component parent) {
+		super(Util.getFrameForComponent(parent), "New price", true);
+		this.input = input;
+		
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setSize(300, 250);
+		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLayout(new BorderLayout());
+		
+		JPanel header = new JPanel(new BorderLayout());
+		add(header, BorderLayout.NORTH);
+		
+		JPanel left = new JPanel(new GridLayout(0, 1));
+		header.add(left, BorderLayout.WEST);
+		
+		left.add(new JLabel("Price (*): "));
+		left.add(new JLabel("Low price (*): "));
+		left.add(new JLabel("High price (*): "));
+		//left.add(new JLabel("Alt price: "));
+		left.add(new JLabel("Date: "));
+
+		JPanel right = new JPanel(new GridLayout(0, 1));
+		header.add(right, BorderLayout.CENTER);
+		
+		JPanel panePrice = new JPanel(new BorderLayout());
+		right.add(panePrice);
+		txtPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtPrice.setValue(input.get());
+		panePrice.add(txtPrice, BorderLayout.CENTER);
+		
+		JPanel paneLowPrice = new JPanel(new BorderLayout());
+		right.add(paneLowPrice);
+		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtLowPrice.setValue(input.getLow());
+		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
+		
+		JPanel paneHighPrice = new JPanel(new BorderLayout());
+		right.add(paneHighPrice);
+		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtHighPrice.setValue(input.getHigh());
+		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
+		
+		JPanel paneAltPrice = new JPanel(new BorderLayout());
+		//right.add(paneAltPrice);
+		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtAltPrice.setValue(input.getAlt());
+		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
+
+		JPanel paneLastDate = new JPanel(new BorderLayout());
+		right.add(paneLastDate);
+		txtLastDate = new JFormattedTextField(Util.getDateFormatter());
+		txtLastDate.setValue(new Date(input.getDate().getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
+		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
+		//
+		btnLastDateNow = new JButton("Now");
+		btnLastDateNow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtLastDate.setValue(new Date());
+			}
+		});
+		btnLastDateNow.setEnabled(true);
+		paneLastDate.add(btnLastDateNow, BorderLayout.EAST);
+		
+		
+		JPanel footer = new JPanel();
+		add(footer, BorderLayout.SOUTH);
+		
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ok();
+			}
+		});
+		footer.add(ok);
+		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		footer.add(cancel);
+	}
+	
+	
+	private boolean validateInput() {
+		double price = txtPrice.getValue() instanceof Number ? ((Number)txtPrice.getValue()).doubleValue() : 0;
+		if (price < 0) return false;
+
+		double lowPrice = txtLowPrice.getValue() instanceof Number ? ((Number)txtLowPrice.getValue()).doubleValue() : 0;
+		if (lowPrice < 0) return false;
+
+		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
+		if (highPrice < 0) return false;
+		
+		if (price < lowPrice || price > highPrice) return false;
+		
+		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
+		if (lastDate == null) return false;
+		
+		return true;
+	}
+	
+	
+	private void ok() {
+		output = (Price)input.clone();
+		if (!validateInput() || output == null) {
+			JOptionPane.showMessageDialog(this, "Invalid input", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		output = (Price)input.clone();
+		output.set(((Number)txtPrice.getValue()).doubleValue());
+		output.setLow(((Number) txtLowPrice.getValue()).doubleValue());
+		output.setHigh(((Number) txtHighPrice.getValue()).doubleValue());
+		
+		dispose();
+	}
+	
+	
+	public Price getOutput() {
+		return output;
+	}
+	
+
+}

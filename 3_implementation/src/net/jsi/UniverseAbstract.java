@@ -343,6 +343,48 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected static Price newPrice0(double price, double lowPrice, double highPrice, long time) {
 		return new PriceImpl(price, lowPrice, highPrice, time);
 	}
+
+
+	@Override
+	public long getTimeViewInterval() {
+		long maxInterval = 0;
+		for (Market market : markets) {
+			maxInterval = Math.max(maxInterval,  market.getTimeViewInterval());
+		}
+		this.timeViewInterval = maxInterval;
+		return maxInterval;
+	}
+
+
+	@Override
+	public void setTimeViewInterval(long timeViewInterval) {
+		this.timeViewInterval = timeViewInterval;
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m != null) m.setTimeViewInterval(timeViewInterval);
+		}
+	}
+
+
+	@Override
+	public long getTimeValidInterval() {
+		long maxInterval = 0;
+		for (Market market : markets) {
+			maxInterval = Math.max(maxInterval,  market.getTimeValidInterval());
+		}
+		this.timeValidInterval = maxInterval;
+		return maxInterval;
+	}
 	
 	
+	@Override
+	public void setTimeValidInterval(long timeValidInterval) {
+		this.timeValidInterval = timeValidInterval;
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m != null) m.setTimeValidInterval(timeValidInterval);
+		}
+	}
+
+
 }
