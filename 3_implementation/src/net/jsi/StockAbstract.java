@@ -31,8 +31,6 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		
 		StockInfoStore store = getStore();
 		this.info = store != null ? store.get(code) : new StockInfo(code);
-		this.info = this.info != null ? this.info : store.create(code);
-		this.info = this.info != null ? this.info : new StockInfo(code);
 		
 		if (price != null) this.setPrice(price);
 	}

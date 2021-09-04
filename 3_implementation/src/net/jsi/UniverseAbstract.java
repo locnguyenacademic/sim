@@ -9,7 +9,6 @@ package net.jsi;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class UniverseAbstract extends MarketAbstract implements Universe {
@@ -21,14 +20,35 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected List<Market> markets = Util.newList(0);
 	
 	
-	protected Map<String, Market> backupPlacedMarkets = Util.newMap(0);
-	
-	
 	protected Set<String> defaultStockCodes = Util.newSet(0);
 	
 	
 	protected StockInfoStore store = new StockInfoStore();
 	
+	
+	protected StockInfoStore placeStore = new StockInfoStore() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected StockInfo create(String code) {
+			if (code == null || code.isEmpty()) return null;
+			StockInfo si = new StockInfo(code) {
+				
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected PricePool referPricePool(String code) {
+					return StockInfoStore.getPlacePricePool(code);
+				}
+				
+				
+			};
+			return set(code, si);
+		}
+		
+	};
+
 	
 	public UniverseAbstract() {
 		addDefaultStockCodes(Util.newSet(0));
@@ -126,8 +146,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		else if (refMarket == null || refMarket == market)
 			return c(market);
 		else {
-			Market placedMarket = getPlacedMarket(name);
-			return placedMarket == refMarket ? c(placedMarket) : null;
+			Market watchMarket = getWatchMarket(name);
+			return watchMarket == refMarket ? c(watchMarket) : null;
 		}
 	}
 
@@ -143,27 +163,16 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	@Override
 	public boolean add(Market market) {
-		if (market == null || lookup(market.getName()) >= 0) return false;
-		
-		boolean ret = markets.add(market);
-		
-		if (ret && !(market instanceof MarketImpl)) {
-			if (backupPlacedMarkets.containsKey(market.getName())) backupPlacedMarkets.remove(market.getName());
-			Market placedMarket = newBackupPlacedMarket(market);
-			if (placedMarket != null) backupPlacedMarkets.put(placedMarket.getName(), placedMarket);
-		}
-		
-		return ret;
+		if (market == null || lookup(market.getName()) >= 0)
+			return false;
+		else
+			return markets.add(market);
 	}
 	
 	
 	@Override
 	public Market remove(int index) {
-		Market removedMarket = markets.remove(index);
-		if (removedMarket != null && !(removedMarket instanceof MarketImpl) && backupPlacedMarkets.containsKey(removedMarket.getName()))
-			backupPlacedMarkets.remove(removedMarket.getName());
-		
-		return removedMarket;
+		return markets.remove(index);
 	}
 	
 	
@@ -171,16 +180,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	public Market set(int index, Market market) {
 		if (market == null || lookup(market.getName()) >= 0)
 			return null;
-		else {
-			Market previousMarket = markets.set(index, market);
-			if (previousMarket != null && !(previousMarket instanceof MarketImpl)) {
-				backupPlacedMarkets.remove(previousMarket.getName());
-				Market placedMarket = newBackupPlacedMarket(market);
-				if (placedMarket != null) backupPlacedMarkets.put(placedMarket.getName(), placedMarket);
-			}
-			
-			return previousMarket;
-		}
+		else
+			return markets.set(index, market);
 	}
 
 
@@ -203,30 +204,6 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 	
-	private static Market newBackupPlacedMarket(Market market) {
-		MarketImpl placedMarket = new MarketImpl(market.getName(), market.getLeverage(), market.getUnitBias()) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Market getSuperMarket() {
-				return market.getSuperMarket();
-			}
-
-			@Override
-			public double getBalanceBase() {
-				return market.calcInvestAmount(market.getTimeViewInterval());
-			}
-			
-		};
-		placedMarket.setTimeViewInterval(market.getTimeViewInterval());
-		placedMarket.setTimeValidInterval(market.getTimeValidInterval());
-		
-		return placedMarket;
-	}
-	
-	
-
 	@Override
 	public MarketImpl c(Market market) {
 		if (market == null)
@@ -299,7 +276,6 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected void reset() {
 		super.reset();
 		this.markets.clear();
-		this.backupPlacedMarkets.clear();
 		this.defaultStockCodes.clear();
 	}
 	
@@ -317,12 +293,20 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public Market getPlacedMarket(String name) {
+	public Market getWatchMarket(String name) {
 		Market market = get(name);
 		if (market != null && market instanceof MarketImpl)
-			return ((MarketImpl)market).getPlacedMarket();
-		else if (backupPlacedMarkets.containsKey(name))
-			return backupPlacedMarkets.get(name);
+			return ((MarketImpl)market).getWatchMarket();
+		else
+			return null;
+	}
+
+
+	@Override
+	public Market getPlaceMarket(String name) {
+		Market market = get(name);
+		if (market != null && market instanceof MarketImpl)
+			return ((MarketImpl)market).getPlaceMarket();
 		else
 			return null;
 	}
@@ -334,6 +318,12 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 	
 	
+	@Override
+	public StockInfoStore getPlaceStore() {
+		return placeStore;
+	}
+
+
 	@Override
 	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
 		return newPrice0(price, lowPrice, highPrice, time);

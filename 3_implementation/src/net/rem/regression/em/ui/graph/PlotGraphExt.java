@@ -258,11 +258,11 @@ class PlotGraphViewOptionDlg extends JDialog {
 	 * @param option view option.
 	 */
 	public PlotGraphViewOptionDlg(Component comp, GraphViewOption option) {
-		super (UIUtil.getFrameForComponent(comp), "Plot graph option", true);
+		super (UIUtil.getDialogForComponent(comp), "Plot graph option", true);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(400, 200);
-		setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+		setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 		
 		setLayout(new BorderLayout());
 		

@@ -78,5 +78,5 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 
 	StockInfoStore getStore();
 
-
+	
 }

@@ -86,7 +86,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	public MarketPanel(Market market) {
-		tblMarket = new MarketTable(market, true, null);
+		tblMarket = createMarketTable(market);
 		tblMarket.getModel2().addMarketListener(this);
 		setLayout(new BorderLayout());
 		
@@ -175,7 +175,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 					if(contextMenu != null) contextMenu.show((Component)e.getSource(), e.getX(), e.getY());
 				}
 				else if (e.getClickCount() >= 2) {
-					placedStocks();
+					onDoubleClick();
 				}
 			}
 		});
@@ -184,39 +184,39 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	private JPopupMenu createContextMenu() {
+	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		
-		JMenuItem placedStocks = new JMenuItem("Placed stocks");
-		placedStocks.addActionListener( 
+		JMenuItem watchStocks = new JMenuItem("Watch stocks");
+		watchStocks.addActionListener( 
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					placedStocks();
+					onDoubleClick();
 				}
 			});
-		ctxMenu.add(placedStocks);
+		ctxMenu.add(watchStocks);
 
 		return ctxMenu;
 	}
 	
 	
-	private void placedStocks() {
-		MarketDialog dlgMarket = new MarketDialog(tblMarket.getPlacedMarket(), tblMarket, this);
-		dlgMarket.setTitle("Placed stocks for market " + tblMarket.getMarket().getName());
+	protected void onDoubleClick() {
+		MarketDialog dlgMarket = new MarketDialog(tblMarket.getWatchMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
-		tblMarket.applyPlaced();
+		tblMarket.applyWatchPlace();
 	}
 	
 	
 	
-	public Market getMarket() {
+	protected Market getMarket() {
 		return tblMarket.getMarket();
 	}
 	
 	
-	public MarketTable getMarketTable() {
+	protected MarketTable getMarketTable() {
 		return tblMarket;
 	}
 	
@@ -226,7 +226,12 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	private void take(Stock input, boolean update) {
+	protected MarketTable createMarketTable(Market market) {
+		return new MarketTable(market, true, null);
+	}
+	
+	
+	protected void take(Stock input, boolean update) {
 		if (update && input == null) return;
 		StockTaker taker = new StockTaker(getMarket(), input, update, this);
 		taker.setVisible(true);
@@ -348,7 +353,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	public File getFile() {
+	protected File getFile() {
 		return file;
 	}
 	
@@ -357,7 +362,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 		Universe u = getMarket().getNearestUniverse();
 		if (u != null) {
 			MarketImpl m = u.c(getMarket());
-			if (m != null) m.applyPlaced();
+			if (m != null) m.applyWatchPlace();
 		}
 		
 		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -442,8 +447,10 @@ public class MarketPanel extends JPanel implements MarketListener {
 
 		private static final long serialVersionUID = 1L;
 		
+		private boolean isPressOK = false;
+		
 		public MarketDialog(Market market, MarketListener listener, Component parent) {
-			super(Util.getFrameForComponent(parent), "Market " + market.getName(), true);
+			super(Util.getDialogForComponent(parent), "Market " + market.getName(), true);
 			
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			addWindowListener(new WindowAdapter() {
@@ -457,15 +464,13 @@ public class MarketPanel extends JPanel implements MarketListener {
 			
 			setSize(600, 400);
 			setLocationRelativeTo(null);
-//			setJMenuBar(createMenuBar());
+			//setJMenuBar(createMenuBar());
 			
 			setLayout(new BorderLayout());
 
-			
-//			JToolBar toolbar = createToolbar();
-//			if (toolbar != null) add(toolbar, BorderLayout.NORTH);
+			//JToolBar toolbar = createToolbar();
+			//if (toolbar != null) add(toolbar, BorderLayout.NORTH);
 
-			
 			JPanel body = new JPanel(new BorderLayout());
 			add(body, BorderLayout.CENTER);
 			MarketPanel mp = new MarketPanel(market);
@@ -481,10 +486,25 @@ public class MarketPanel extends JPanel implements MarketListener {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					isPressOK = true;
 					dispose();
 				}
 			});
 			footer.add(ok);
+			
+			JButton cancel = new JButton("Cancel");
+			cancel.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+			footer.add(cancel);
+		}
+		
+		public boolean isPressOK() {
+			return isPressOK;
 		}
 		
 	}

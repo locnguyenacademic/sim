@@ -123,10 +123,10 @@ public class LargeStatisticsTable extends SortableTable implements MouseListener
 			var = rm.extractRegressor(selectedColumn);
 		else
 			var = rm.extractResponse();
-		final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(this), "Histogram of \"" + var.toString() + "\"", true);
+		final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(this), "Histogram of \"" + var.toString() + "\"", true);
 		dlg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dlg.setSize(400, 300);
-		dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(this));
+		dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(this));
 		dlg.setLayout(new BorderLayout());
 		JPanel body = new JPanel(new BorderLayout());
 		dlg.add(body, BorderLayout.CENTER);
@@ -235,10 +235,10 @@ public class LargeStatisticsTable extends SortableTable implements MouseListener
 		LargeStatisticsTable tblStats = new LargeStatisticsTable();
 		tblStats.update(rm);
 		
-		final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(comp), "Large statistics", modal);
+		final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(comp), "Large statistics", modal);
 		dlg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dlg.setSize(400, 300);
-		dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+		dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 		dlg.setLayout(new BorderLayout());
 		JPanel body = new JPanel(new BorderLayout());
 		dlg.add(body, BorderLayout.CENTER);
@@ -483,10 +483,10 @@ class LargeStatisticsTable2 extends JTable implements MouseListener {
 			var = rm.extractRegressor(selectedColumn);
 		else
 			var = rm.extractResponse();
-		final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(this), "Histogram of \"" + var.toString() + "\"", true);
+		final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(this), "Histogram of \"" + var.toString() + "\"", true);
 		dlg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dlg.setSize(400, 300);
-		dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(this));
+		dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(this));
 		dlg.setLayout(new BorderLayout());
 		JPanel body = new JPanel(new BorderLayout());
 		dlg.add(body, BorderLayout.CENTER);
@@ -594,10 +594,10 @@ class LargeStatisticsTable2 extends JTable implements MouseListener {
 		LargeStatisticsTable2 tblStats = new LargeStatisticsTable2();
 		tblStats.update(rm);
 		
-		final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(comp), "Large statistics", modal);
+		final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(comp), "Large statistics", modal);
 		dlg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dlg.setSize(400, 300);
-		dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+		dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 		dlg.setLayout(new BorderLayout());
 		JPanel body = new JPanel(new BorderLayout());
 		dlg.add(body, BorderLayout.CENTER);

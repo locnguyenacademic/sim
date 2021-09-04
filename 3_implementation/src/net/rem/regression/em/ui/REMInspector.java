@@ -122,10 +122,10 @@ public class REMInspector extends JDialog implements Inspector {
 	 * @throws RemoteException if any error raises.
 	 */
 	public REMInspector(final Component comp, final RM rm) throws RemoteException {
-		super(UIUtil.getFrameForComponent(comp), "Regression Information", true);
+		super(UIUtil.getDialogForComponent(comp), "Regression Information", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(800, 600);
-		setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+		setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 		
 		this.rm = rm;
 		
@@ -231,10 +231,10 @@ public class REMInspector extends JDialog implements Inspector {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(comp), "Graph", true);
+						final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(comp), "Graph", true);
 						dlg.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 						dlg.setSize(600, 400);
-						dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+						dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 						
 						dlg.setLayout(new BorderLayout());
 						dlg.add( (Component)graph2, BorderLayout.CENTER);
@@ -530,10 +530,10 @@ public class REMInspector extends JDialog implements Inspector {
 			return;
 		}
 		
-		final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(this), "Graph", true);
+		final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(this), "Graph", true);
 		dlg.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		dlg.setSize(450, 380);
-		dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(this));
+		dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(this));
 		
 		dlg.setLayout(new BorderLayout());
 		dlg.add( (Component)graph, BorderLayout.CENTER);
@@ -697,10 +697,10 @@ public class REMInspector extends JDialog implements Inspector {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final JDialog dlg = new JDialog(UIUtil.getFrameForComponent(getThisDlg()), "Big zoom", true);
+					final JDialog dlg = new JDialog(UIUtil.getDialogForComponent(getThisDlg()), "Big zoom", true);
 					dlg.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					dlg.setSize(600, 400);
-					dlg.setLocationRelativeTo(UIUtil.getFrameForComponent(getThisDlg()));
+					dlg.setLocationRelativeTo(UIUtil.getDialogForComponent(getThisDlg()));
 					
 					dlg.setLayout(new BorderLayout());
 					JPanel body = new JPanel(new GridLayout(1, 0));

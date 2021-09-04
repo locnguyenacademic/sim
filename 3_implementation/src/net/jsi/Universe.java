@@ -53,7 +53,13 @@ public interface Universe extends Market, Serializable, Cloneable {
 	MarketImpl c(Market market);
 	
 	
-	Market getPlacedMarket(String name);
+	Market getWatchMarket(String name);
+	
+	
+	StockInfoStore getPlaceStore();
+	
+	
+	Market getPlaceMarket(String name);
 	
 	
 }

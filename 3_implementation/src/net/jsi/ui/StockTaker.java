@@ -165,7 +165,7 @@ public class StockTaker extends JDialog {
 	
 	
 	public StockTaker(Market market, Stock input, boolean update, Component parent) {
-		super(Util.getFrameForComponent(parent), "Stock taker: " + (update ? "Update" : "Add new"), true);
+		super(Util.getDialogForComponent(parent), "Stock taker: " + (update ? "Update" : "Add new"), true);
 		this.market = market;
 		this.input = input;
 		this.update = update;
@@ -173,7 +173,7 @@ public class StockTaker extends JDialog {
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(500, 550);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 	    setJMenuBar(createMenuBar());
 
 	    setLayout(new BorderLayout());
@@ -899,10 +899,10 @@ class StockPropertySetting extends JDialog {
 	
 	
 	public StockPropertySetting(StockProperty property, Component comp) {
-		super(Util.getFrameForComponent(comp), "Settings stock property (this function not completed for permanant storing yet)", true);
+		super(Util.getDialogForComponent(comp), "Settings stock property (this function not completed for permanant storing yet)", true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(300, 250);
-		setLocationRelativeTo(Util.getFrameForComponent(this));
+		setLocationRelativeTo(Util.getDialogForComponent(this));
 		setLayout(new BorderLayout());
 		
 		
@@ -1191,7 +1191,7 @@ class StockSelector extends JDialog {
 	
 	
 	public StockSelector(Market market, Stock input, boolean update, Component parent) {
-		super(Util.getFrameForComponent(parent), "Stock selector: " + (update ? "Update" : "Add new"), true);
+		super(Util.getDialogForComponent(parent), "Stock selector: " + (update ? "Update" : "Add new"), true);
 		this.market = market;
 		this.input = input;
 		this.update = update;
@@ -1199,7 +1199,7 @@ class StockSelector extends JDialog {
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(500, 550);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 	    setJMenuBar(createMenuBar());
 		
 		setLayout(new BorderLayout());
@@ -1612,7 +1612,7 @@ class StockSelector extends JDialog {
 			output = pl.getOutput();
 		}
 		else {
-			PriceList pl = new PriceList(market.getNearestUniverse(), code, market.getTimeViewInterval(), true, this);
+			PriceList pl = new PriceList(market.getNearestUniverse(), code, market.getTimeViewInterval(), false, true, this);
 			pl.setVisible(true);
 			output = pl.getOutput();
 		}

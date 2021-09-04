@@ -196,7 +196,7 @@ public abstract class PSOAbstract<T> extends ExecuteAsLearnAlgAbstract implement
 			desc = getDescription();
 		} catch (Exception e) {Util.trace(e);}
 		
-		return new DescriptionDlg(UIUtil.getFrameForComponent(null), "Inspector", desc);
+		return new DescriptionDlg(UIUtil.getDialogForComponent(null), "Inspector", desc);
 	}
 
 	

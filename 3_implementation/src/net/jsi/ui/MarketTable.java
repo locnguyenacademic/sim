@@ -64,7 +64,7 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	public MarketTable(Market market, boolean forStock, MarketListener listener) {
 		super();
-		setModel(new MarketTableModel(market, forStock));
+		setModel(createModel(market, forStock));
 
 		setAutoCreateRowSorter(true);
 		setAutoResizeMode(AUTO_RESIZE_OFF);
@@ -107,7 +107,12 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 	
-	private void updateStock(Stock stock, boolean update) {
+	protected MarketTableModel createModel(Market market, boolean forStock) {
+		return new MarketTableModel(market, forStock);
+	}
+	
+	
+	protected void take(Stock stock, boolean update) {
 		stock = stock != null ? stock : getSelectedStock();
 		StockTaker taker = new StockTaker(getMarket(), stock, update, this);
 		taker.setVisible(true);
@@ -115,9 +120,9 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void view(Stock stock) {
+	protected void view(Stock stock) {
 		if (getModel2().isForStock())
-			updateStock(stock, true);
+			take(stock, true);
 		else {
 			stock = stock != null ? stock : getSelectedStock();
 			if (stock != null) {
@@ -135,7 +140,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void summary(Stock stock) {
+	protected void summary(Stock stock) {
 		if (!getModel2().isForStock()) return;
 		
 		stock = stock != null ? stock : getSelectedStock();
@@ -172,7 +177,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 	
-	private void delete() {
+	protected void delete() {
 		List<Stock> stocks = getSelectedStocks();
 		boolean ret = false;
 		for (Stock stock : stocks) {
@@ -194,7 +199,10 @@ public class MarketTable extends JTable implements MarketListener {
 		if (selectedPrice == null) return;
 		
 		StockImpl s = c(stock);
-		if (s != null) s.take(getMarket().getTimeViewInterval(), selectedPrice.getTime());
+		if (s != null) {
+			s.take(getMarket().getTimeViewInterval(), selectedPrice.getTime());
+			update();
+		}
 	}
 	
 	
@@ -206,6 +214,7 @@ public class MarketTable extends JTable implements MarketListener {
 		pl.setVisible(true);
 		if (pl.isPressOK()) update();
 	}
+	
 	
 	private void settings(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
@@ -222,10 +231,10 @@ public class MarketTable extends JTable implements MarketListener {
 		
 		StockGroup group = group0;
 
-		JDialog dlgSettings = new JDialog(Util.getFrameForComponent(this), "Settings for stock group", true);
+		JDialog dlgSettings = new JDialog(Util.getDialogForComponent(this), "Settings for stock group", true);
 		dlgSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		dlgSettings.setSize(300, 200);
-		dlgSettings.setLocationRelativeTo(Util.getFrameForComponent(this));
+		dlgSettings.setLocationRelativeTo(Util.getDialogForComponent(this));
 		dlgSettings.setLayout(new BorderLayout());
 		
 		
@@ -340,45 +349,45 @@ public class MarketTable extends JTable implements MarketListener {
 				}
 	
 				ctxMenu.addSeparator();
-			}
 			
-			JMenuItem miModifyList = new JMenuItem("Price list");
-			miModifyList.addActionListener( 
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						priceList(stock);
-					}
-				});
-			ctxMenu.add(miModifyList);
-			
-			JMenuItem miSettings = new JMenuItem("Settings");
-			miSettings.addActionListener( 
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						settings(stock);
-					}
-				});
-			ctxMenu.add(miSettings);
-
-			JMenuItem miProperties = new JMenuItem("Properties");
-			miProperties.addActionListener( 
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						StockPropertySetting setting = new StockPropertySetting(stock.getProperty(), tblMarket);
-						setting.setVisible(true);
-						StockProperty output = setting.getOutput();
-						if (output != null) {
-							stock.getProperty().set(output);
-							update();
+				JMenuItem miPriceList = new JMenuItem("Price list");
+				miPriceList.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							priceList(stock);
 						}
-					}
-				});
-			ctxMenu.add(miProperties);
-
-			ctxMenu.addSeparator();
+					});
+				ctxMenu.add(miPriceList);
+				
+				JMenuItem miSettings = new JMenuItem("Settings");
+				miSettings.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							settings(stock);
+						}
+					});
+				ctxMenu.add(miSettings);
+	
+				JMenuItem miProperties = new JMenuItem("Properties");
+				miProperties.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							StockPropertySetting setting = new StockPropertySetting(stock.getProperty(), tblMarket);
+							setting.setVisible(true);
+							StockProperty output = setting.getOutput();
+							if (output != null) {
+								stock.getProperty().set(output);
+								update();
+							}
+						}
+					});
+				ctxMenu.add(miProperties);
+	
+				ctxMenu.addSeparator();
+			}
 			
 			JMenuItem miRefresh = new JMenuItem("Refresh");
 			miRefresh.addActionListener( 
@@ -399,7 +408,7 @@ public class MarketTable extends JTable implements MarketListener {
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					updateStock(stock, false);
+					take(stock, false);
 				}
 			});
 		ctxMenu.add(miTake);
@@ -432,7 +441,7 @@ public class MarketTable extends JTable implements MarketListener {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						updateStock(stock, true);
+						take(stock, true);
 					}
 				});
 			ctxMenu.add(miModify);
@@ -459,33 +468,31 @@ public class MarketTable extends JTable implements MarketListener {
 					}
 				});
 			ctxMenu.add(miDelete);
-		}
 
-		ctxMenu.addSeparator();
-		
-		JMenuItem miModifyList = new JMenuItem("Price list");
-		miModifyList.addActionListener( 
-			new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					priceList(stock);
-				}
-			});
-		ctxMenu.add(miModifyList);
-		
-		JMenuItem miSettings = new JMenuItem("Settings");
-		miSettings.addActionListener( 
-			new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					settings(stock);
-				}
-			});
-		ctxMenu.add(miSettings);
+			ctxMenu.addSeparator();
+			
+			JMenuItem miModifyList = new JMenuItem("Price list");
+			miModifyList.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						priceList(stock);
+					}
+				});
+			ctxMenu.add(miModifyList);
+			
+			JMenuItem miSettings = new JMenuItem("Settings");
+			miSettings.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						settings(stock);
+					}
+				});
+			ctxMenu.add(miSettings);
 
-		ctxMenu.addSeparator();
+			ctxMenu.addSeparator();
 
-		if (stock != null) {
 			JMenuItem miDetailedSummary = new JMenuItem("Summary");
 			miDetailedSummary.addActionListener( 
 				new ActionListener() {
@@ -496,7 +503,9 @@ public class MarketTable extends JTable implements MarketListener {
 				});
 			ctxMenu.add(miDetailedSummary);
 		}
-
+		else
+			ctxMenu.addSeparator();
+		
 		JMenuItem miSummary = new JMenuItem("Market summary");
 		miSummary.addActionListener( 
 			new ActionListener() {
@@ -532,14 +541,20 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public Market getMarket() {
+	protected Market getMarket() {
 		return getModel2().getMarket();
 	}
 	
 	
-	public Market getPlacedMarket() {
-		Universe u = getMarket().getNearestUniverse();
-		return u != null ? u.getPlacedMarket(getMarket().getName()) : null;
+	protected Market getWatchMarket() {
+		MarketImpl m = m();
+		return m != null ? m.getWatchMarket() : null;
+	}
+	
+	
+	protected Market getPlaceMarket() {
+		MarketImpl m = m();
+		return m != null ? m.getPlaceMarket() : null;
 	}
 	
 	
@@ -632,7 +647,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public MarketImpl m() {
+	protected MarketImpl m() {
 		return getModel2().m();
 	}
 
@@ -643,8 +658,8 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public void applyPlaced() {
-		getModel2().applyPlaced();
+	public boolean applyWatchPlace() {
+		return getModel2().applyWatchPlace();
 	}
 	
 	
@@ -673,6 +688,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
     public MarketTableModel(Market market, boolean forStock) {
 		this.market = market;
 		this.forStock = forStock;
+		
+		this.addTableModelListener(this);
 	}
 	
 	
@@ -755,16 +772,25 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	protected void applyPlaced() {
+	protected boolean applyWatchPlace() {
 		MarketImpl m = m();
 		if (m != null) {
-			m.applyPlaced();
+			boolean ret = m.applyWatchPlace();
 			update();
+			return ret;
 		}
+		else
+			return false;
 	}
 	
 	
-	private Vector<Object> toRow(Stock stock) {
+	@Override
+	public void setValueAt(Object aValue, int row, int column) {
+		super.setValueAt(aValue, row, column);
+	}
+
+
+	protected Vector<Object> toRow(Stock stock) {
 		long timeViewInterval = market.getTimeViewInterval();
 		Vector<Object> row = Util.newVector(0);
 		Universe u = market.getNearestUniverse();
@@ -839,7 +865,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	 * Getting list of column names.
 	 * @return list of column names.
 	 */
-	private Vector<String> toColumns() {
+	protected Vector<String> toColumns() {
 		Vector<String> columns = Util.newVector(0);
 		
 		if (forStock) {
@@ -915,6 +941,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 }
 
 
+
 class MarketSummary extends JDialog {
 
 	
@@ -928,12 +955,12 @@ class MarketSummary extends JDialog {
 	
 	
 	public MarketSummary(Market market, MarketListener listener, Component component) {
-		super(Util.getFrameForComponent(component), "Market summary", true);
+		super(Util.getDialogForComponent(component), "Market summary", true);
 		this.market = market;
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(600, 400);
-		setLocationRelativeTo(Util.getFrameForComponent(component));
+		setLocationRelativeTo(Util.getDialogForComponent(component));
 		setLayout(new BorderLayout());
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -975,12 +1002,12 @@ abstract class StockSummary extends JDialog {
 	
 	
 	public StockSummary(Market market, String code, boolean buy, Stock stock, Component component) {
-		super(Util.getFrameForComponent(component), stock != null ? "Stock summary" : "Stock group summary", true);
+		super(Util.getDialogForComponent(component), stock != null ? "Stock summary" : "Stock group summary", true);
 		this.market = market;
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(300, 400);
-		setLocationRelativeTo(Util.getFrameForComponent(component));
+		setLocationRelativeTo(Util.getDialogForComponent(component));
 		setLayout(new BorderLayout());
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -1177,13 +1204,13 @@ class AddPrice extends JDialog {
 
 	
 	public AddPrice(Market market, Stock input, Component parent) {
-		super(Util.getFrameForComponent(parent), "Add price", true);
+		super(Util.getDialogForComponent(parent), "Add price", true);
 		this.market = market;
 		this.input = input;
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(350, 250);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 		setLayout(new BorderLayout());
 		
 		JPanel header = new JPanel(new BorderLayout());
@@ -1377,7 +1404,7 @@ class AddPrice extends JDialog {
 		
 		if (!s.setPrice(price)) return;
 
-		m.applyPlaced();
+		m.applyWatchPlace();
 		
 		output = input;
 		

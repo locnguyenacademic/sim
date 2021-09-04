@@ -65,10 +65,10 @@ public class RegressResponseChooser extends JDialog {
 	 */
 	public RegressResponseChooser(Component comp, AttributeList attList) {
 		// TODO Auto-generated constructor stub
-		super(UIUtil.getFrameForComponent(comp), "Choosing algorithms", true);
+		super(UIUtil.getDialogForComponent(comp), "Choosing algorithms", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(400, 300);
-		setLocationRelativeTo(UIUtil.getFrameForComponent(comp));
+		setLocationRelativeTo(UIUtil.getDialogForComponent(comp));
 		
 		setLayout(new BorderLayout());
 		JPanel body = new JPanel(new GridLayout(1, 0));

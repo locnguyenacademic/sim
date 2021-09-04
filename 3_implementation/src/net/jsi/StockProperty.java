@@ -50,7 +50,10 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String NOTCODE5 = "#";
 
 	
-	public final static String NOTCODE6 = "@";
+	public final static String NOTCODE6 = "&";
+
+	
+	public final static String NOTCODE7 = "@";
 
 	
 	public final static String JSI_EXT = "jsi";
@@ -101,6 +104,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public static double PRICE_RATIO = 1;
 	
 	
+	public static boolean NULL_DIALOG = false;
+	
+	
 	/**
 	 * If this flag is set to be true, the main table will be updated when the other table is being processed.
 	 * Therefore setting this flag to be true will consume more time.
@@ -108,6 +114,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public static boolean RUNTIME_CASCADE = false;
 
 
+	public static boolean LOOKUP_WHEN_READ_PRICES = true;
+	
+	
 	public int maxPriceCount = MAX_PRICE_COUNT;
 	
 	

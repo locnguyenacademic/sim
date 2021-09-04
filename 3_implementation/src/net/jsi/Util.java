@@ -8,7 +8,7 @@
 package net.jsi;
 
 import java.awt.Component;
-import java.awt.Frame;
+import java.awt.Dialog;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -144,13 +144,15 @@ public final class Util {
 	 * @param comp specified component.
 	 * @return Frame of the specified component. The method return {@code null} if the specified component has no parent frame.
 	 */
-	public static Frame getFrameForComponent(Component comp) {
-	    if (comp == null)
+	public static Dialog getDialogForComponent(Component comp) {
+		if (StockProperty.NULL_DIALOG)
+			return null;
+		else if (comp == null)
 	        return null;
-	    if (comp instanceof Frame)
-	        return (Frame)comp;
+	    if (comp instanceof Dialog)
+	        return (Dialog)comp;
 	    else
-	    	return getFrameForComponent(comp.getParent());
+	    	return getDialogForComponent(comp.getParent());
 	}
 
 

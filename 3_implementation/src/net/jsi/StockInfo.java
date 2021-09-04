@@ -19,10 +19,15 @@ public class StockInfo implements Serializable, Cloneable {
 	
 	
 	public StockInfo(String code) {
-		this.pricePool = StockInfoStore.getPricePool(code);
+		this.pricePool = referPricePool(code);
 		this.pricePool = this.pricePool != null ? this.pricePool : new PricePool(code);
 	}
 
+	
+	protected PricePool referPricePool(String code) {
+		return StockInfoStore.getPricePool(code);
+	}
+	
 	
 	protected String code() {
 		return pricePool.code();

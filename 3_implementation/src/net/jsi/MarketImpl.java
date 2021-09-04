@@ -43,7 +43,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	protected List<StockGroup> groups = Util.newList(0);
 	
 	
-	private MarketImpl placedMarket = null;
+	private MarketImpl watchMarket = null;
+	
+	
+	private MarketImpl placeMarket = null;
 	
 	
 	public MarketImpl(String name, double refLeverage, double unitBias) {
@@ -51,18 +54,21 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private MarketImpl(String name, double refLeverage, double unitBias, boolean createPlacedMarket) {
+	private MarketImpl(String name, double refLeverage, double unitBias, boolean createAssocMarkets) {
 		super(name);
 		this.refLeverage = refLeverage;
 		this.refUnitBias = unitBias;
 		
-		if (createPlacedMarket) placedMarket = newPlacedMarket();
+		if (createAssocMarkets) {
+			this.watchMarket = newWatchMarket();
+			this.placeMarket = newPlaceMarket();
+		}
 	}
 
 	
-	protected MarketImpl newPlacedMarket() {
+	protected MarketImpl newWatchMarket() {
 		MarketImpl thisMarket = this;
-		this.placedMarket = new MarketImpl(thisMarket.getName(), thisMarket.getLeverage(), thisMarket.getUnitBias(), false) {
+		MarketImpl watchMarket = new MarketImpl(thisMarket.getName(), thisMarket.getLeverage(), thisMarket.getUnitBias(), false) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -82,12 +88,48 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			}
 
 		};
-		placedMarket.setTimeViewInterval(getTimeViewInterval());
-		placedMarket.setTimeValidInterval(getTimeValidInterval());
+		watchMarket.setTimeViewInterval(getTimeViewInterval());
+		watchMarket.setTimeValidInterval(getTimeValidInterval());
 		
-		return placedMarket;
+		return watchMarket;
 	}
 	
+	
+	protected MarketImpl newPlaceMarket() {
+		MarketImpl thisMarket = this;
+		MarketImpl placeMarket = new MarketImpl(thisMarket.getName(), thisMarket.getLeverage(), thisMarket.getUnitBias(), false) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Market getSuperMarket() {
+				return thisMarket.getSuperMarket();
+			}
+
+			@Override
+			public Market getDualMarket() {
+				return null;
+			}
+
+			@Override
+			public double getBalanceBase() {
+				return thisMarket.calcInvestAmount(thisMarket.getTimeViewInterval());
+			}
+
+			@Override
+			public StockInfoStore getStore() {
+				Universe u = getNearestUniverse();
+				return u != null ? u.getPlaceStore() : null;
+			}
+
+
+		};
+		placeMarket.setTimeViewInterval(getTimeViewInterval());
+		placeMarket.setTimeValidInterval(getTimeValidInterval());
+		
+		return placeMarket;
+	}
+
 	
 	private double getBalance0(long timeInterval) {
 		double profit = 0;
@@ -500,8 +542,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void setUnitBias(double refUnitBias) {
 		this.refUnitBias = refUnitBias;
 		
-		MarketImpl placedMarket = getPlacedMarket();
-		if (placedMarket != null && placedMarket != this) placedMarket.setUnitBias(refUnitBias);
+		MarketImpl watchMarket = getWatchMarket();
+		if (watchMarket != null && watchMarket != this) watchMarket.setUnitBias(refUnitBias);
 	}
 	
 	
@@ -514,8 +556,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void setLeverage(double refLeverage) {
 		this.refLeverage = refLeverage;
 		
-		MarketImpl placedMarket = getPlacedMarket();
-		if (placedMarket != null && placedMarket != this) placedMarket.setLeverage(refLeverage);
+		MarketImpl watchMarket = getWatchMarket();
+		if (watchMarket != null && watchMarket != this) watchMarket.setLeverage(refLeverage);
 	}
 	
 	
@@ -523,8 +565,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void setTimeViewInterval(long timeViewInterval) {
 		super.setTimeViewInterval(timeViewInterval);
 		
-		MarketImpl placedMarket = getPlacedMarket();
-		if (placedMarket != null && placedMarket != this) placedMarket.setTimeViewInterval(timeViewInterval);
+		MarketImpl watchMarket = getWatchMarket();
+		if (watchMarket != null && watchMarket != this) watchMarket.setTimeViewInterval(timeViewInterval);
 	}
 
 
@@ -532,8 +574,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void setTimeValidInterval(long timeValidInterval) {
 		super.setTimeValidInterval(timeValidInterval);
 		
-		MarketImpl placedMarket = getPlacedMarket();
-		if (placedMarket != null && placedMarket != this) placedMarket.setTimeValidInterval(timeValidInterval);
+		MarketImpl watchMarket = getWatchMarket();
+		if (watchMarket != null && watchMarket != this) watchMarket.setTimeValidInterval(timeValidInterval);
 	}
 
 
@@ -545,8 +587,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	public void setTimeStartPoint(long timeStartPoint) {
 		this.timeStartPoint = timeStartPoint;
 		
-		MarketImpl placedMarket = getPlacedMarket();
-		if (placedMarket != null && placedMarket != this) placedMarket.setTimeStartPoint(timeStartPoint);
+		MarketImpl watchMarket = getWatchMarket();
+		if (watchMarket != null && watchMarket != this) watchMarket.setTimeStartPoint(timeStartPoint);
 	}
 
 	
@@ -576,25 +618,25 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public MarketImpl getPlacedMarket() {
-		if (placedMarket != null)
-			return placedMarket;
-		else {
-			Universe u = getNearestUniverse();
-			return u != null ? u.c(u.getPlacedMarket(this.getName())) : null;
-		}
+	public MarketImpl getWatchMarket() {
+		return watchMarket;
 	}
 
 
 	@Override
 	public Market getDualMarket() {
-		return getPlacedMarket();
+		return getWatchMarket();
 	}
 	
 	
 	@Override
 	public Market getSuperMarket() {
 		return getNearestUniverse();
+	}
+
+
+	public MarketImpl getPlaceMarket() {
+		return placeMarket;
 	}
 
 
@@ -616,8 +658,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			boolean readPrices = false;
 			boolean readStocksStart = false;
 			boolean readStocks = false;
-			boolean readPlacedStocksStart = false;
-			boolean readPlacedStocks = false;
+			boolean readWatchStocksStart = false;
+			boolean readWatchStocks = false;
+			boolean readPlaceStocksStart = false;
+			boolean readPlaceStocks = false;
 			boolean readPropertiesStart = false;
 			boolean readProperties = false;
 			while ((line = reader.readLine()) != null) {
@@ -683,23 +727,35 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					continue;
 				}
 				
-				if (!readPlacedStocks) {
+				if (!readWatchStocks) {
 					if (!readStocks) continue;
-					if (!readPlacedStocksStart && fields[0].equals(StockProperty.NOTCODE5))
-						readPlacedStocksStart = true;
+					if (!readWatchStocksStart && fields[0].equals(StockProperty.NOTCODE5))
+						readWatchStocksStart = true;
 					else if (!fields[0].equals(StockProperty.NOTCODE5))
-						readStocks(getPlacedMarket(), fields);
+						readStocks(getWatchMarket(), fields);
 					else
-						readPlacedStocks = true;
+						readWatchStocks = true;
 					
 					continue;
 				}
 
-				if (!readProperties) {
-					if (!readPlacedStocks) continue;
-					if (!readPropertiesStart && fields[0].equals(StockProperty.NOTCODE6))
-						readPropertiesStart = true;
+				if (!readPlaceStocks) {
+					if (!readWatchStocks) continue;
+					if (!readPlaceStocksStart && fields[0].equals(StockProperty.NOTCODE6))
+						readPlaceStocksStart = true;
 					else if (!fields[0].equals(StockProperty.NOTCODE6))
+						readPlaceStocks(getPlaceMarket(), fields);
+					else
+						readPlaceStocks = true;
+					
+					continue;
+				}
+				
+				if (!readProperties) {
+					if (!readWatchStocks) continue;
+					if (!readPropertiesStart && fields[0].equals(StockProperty.NOTCODE7))
+						readPropertiesStart = true;
+					else if (!fields[0].equals(StockProperty.NOTCODE7))
 						readProperties(this, fields);
 					else
 						readProperties = true;
@@ -710,11 +766,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			} //End while
 			
 			compactGroups(market);
-			compactGroups(getPlacedMarket());
+			compactGroups(getWatchMarket());
 			
 			setTimeViewInterval(timeViewInterval);
 			setTimeValidInterval(timeValidInterval);
-			applyPlaced();
+			applyWatchPlace();
 			
 			return true;
 		}
@@ -732,21 +788,27 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private static void readPrices(MarketImpl market, String[] fields) {
+	private void readPrices(MarketImpl market, String[] fields) {
+		Universe u = market.getNearestUniverse();
+		int marketIndex = u.lookup(market.getName());
+		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
+		
 		String code = fields[0];
 		double leverage = Double.parseDouble(fields[1]);
 		double price = Double.parseDouble(fields[2]);
 		double lowPrice = Double.parseDouble(fields[3]);
 		double highPrice = Double.parseDouble(fields[4]);
-		double openPrice = Double.parseDouble(fields[5]);
+		double altPrice = Double.parseDouble(fields[5]);
 		long priceDate = Long.parseLong(fields[6]);
 		double unitBias = Double.parseDouble(fields[7]);
 		
 		StockInfo si = market.getStore().get(code);
 		if (si == null) return;
+		if (marketIndex > 0 && si.getPrice(0, priceDate) != null)
+			return;
 		
 		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
-		p.setAlt(openPrice);
+		p.setAlt(altPrice);
 		si.addPrice(p);
 		si.setLeverage(leverage);
 		si.setUnitBias(unitBias);
@@ -766,17 +828,48 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (si == null) return;
 		
 		Stock stock = market.addStock(code, buy, volume, takenDate);
-		if (stock != null) {
-			StockImpl s = market.c(stock);
-			if (s != null) {
-				s.setStopLoss(stopLoss);
-				s.setTakeProfit(takeProfit);
-			}
-			
-			stock.setCommitted(committed);
+		if (stock == null) return;
+		
+		stock.setCommitted(committed);
+		StockImpl s = market.c(stock);
+		if (s != null) {
+			s.setStopLoss(stopLoss);
+			s.setTakeProfit(takeProfit);
 		}
 	}
 	
+	
+	private static void readPlaceStocks(MarketImpl market, String[] fields) {
+		String code = fields[0];
+		boolean buy = Boolean.parseBoolean(fields[1]);
+		double leverage = Double.parseDouble(fields[2]);
+		double volume = Double.parseDouble(fields[3]);
+		double price = Double.parseDouble(fields[4]);
+		double lowPrice = Double.parseDouble(fields[5]);
+		double highPrice = Double.parseDouble(fields[6]);
+		double altPrice = Double.parseDouble(fields[7]);
+		long priceDate = Long.parseLong(fields[8]);
+		double unitBias = Double.parseDouble(fields[9]);
+		double stopLoss = Double.parseDouble(fields[10]);
+		double takeProfit = Double.parseDouble(fields[11]);
+		boolean committed = Boolean.parseBoolean(fields[12]);
+		
+		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
+		p.setAlt(altPrice);
+
+		Stock stock = market.addStock(code, buy, leverage, volume, p);
+		if (stock == null) return;
+		
+		stock.setUnitBias(unitBias);
+		stock.setCommitted(committed);
+		
+		StockImpl s = market.c(stock);
+		if (s != null) {
+			s.setStopLoss(stopLoss);
+			s.setTakeProfit(takeProfit);
+		}
+	}
+
 	
 	private static void readProperties(MarketImpl market, String[] fields) {
 		String code = fields[0];
@@ -789,7 +882,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		try {
 			BufferedWriter writer = new BufferedWriter(out);
 			
-			String header = "code, buy, leverage, volume, taken_price, taken_date, price, low_price, high_price, price_date, unit_bias, stop_loss, take_profit, committed\n";
+			String header = "code, buy, leverage, volume, taken_price, taken_date, price, low_price, high_price, alt_price, price_date, unit_bias, stop_loss, take_profit, committed\n";
 			writer.write(header);
 			
 			String info = StockProperty.NOTCODE1 + ", " +
@@ -810,17 +903,22 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			writer.write(StockProperty.NOTCODE3 + "\n");
 			
 			writer.write(StockProperty.NOTCODE4 + "\n");
-			if (placedMarket != null) writeStocks(this, writer);
+			if (watchMarket != null) writeStocks(this, writer);
 			writer.write(StockProperty.NOTCODE4 + "\n");
 
-			MarketImpl placedMarket = getPlacedMarket();
+			MarketImpl watchMarket = getWatchMarket();
 			writer.write(StockProperty.NOTCODE5 + "\n");
-			if (placedMarket != null) writeStocks(placedMarket, writer);
+			if (watchMarket != null) writeStocks(watchMarket, writer);
 			writer.write(StockProperty.NOTCODE5 + "\n");
 
+			MarketImpl placeMarket = getPlaceMarket();
 			writer.write(StockProperty.NOTCODE6 + "\n");
+			if (placeMarket != null) writePlaceStocks(placeMarket, writer);
+			writer.write(StockProperty.NOTCODE6 + "\n");
+
+			writer.write(StockProperty.NOTCODE7 + "\n");
 			writeProperties(getStore(), writer);
-			writer.write(StockProperty.NOTCODE6 + "\n");
+			writer.write(StockProperty.NOTCODE7 + "\n");
 
 			writer.flush();
 			return true;
@@ -880,6 +978,38 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	private static void writePlaceStocks(MarketImpl market, Writer writer) throws IOException {
+		for (StockGroup group : market.groups) {
+			for (int i = 0; i < group.size(); i++) {
+				Stock stock = group.get(i);
+				StockImpl s = market.c(stock);
+				if (s == null) continue;
+				StringBuffer buffer = new StringBuffer();
+				
+				buffer.append(stock.code() + ", ");
+				buffer.append(stock.isBuy() + ", ");
+				buffer.append(Util.format(stock.getLeverage()) + ", ");
+				buffer.append(Util.format(stock.getVolume(0, true)) + ", ");
+				
+				Price price = stock.getPrice();
+				buffer.append(Util.format(price.get()) + ", ");
+				buffer.append(Util.format(price.getLow()) + ", ");
+				buffer.append(Util.format(price.getHigh()) + ", ");
+				buffer.append(Util.format(price.getAlt()) + ", ");
+				buffer.append(price.getTime() + ", ");
+				
+				buffer.append(Util.format(stock.getUnitBias()) + ", ");
+				buffer.append(Util.format(stock.getStopLoss()) + ", ");
+				buffer.append(Util.format(stock.getTakeProfit()) + ", ");
+				buffer.append(stock.isCommitted() + "\n");
+				
+				writer.write(buffer.toString());
+			}
+		}
+
+	}
+
+	
 	private static void writeProperties(StockInfoStore store, Writer writer) throws IOException {
 		if (store == null) return;
 		Set<String> codes = store.codes();
@@ -897,40 +1027,72 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	protected static void applyPlaced(MarketImpl market, MarketImpl placedMarket, long timeValidInterval) {
-		if (placedMarket == null || placedMarket == market) return;
+	protected static boolean applyWatchPlace(MarketImpl market, long timeValidInterval) {
+		boolean ret = false;
+		if (market == null) return ret;
 		
-		List<Stock> placedStocks = placedMarket.getStocks(timeValidInterval);
-		for (Stock ps : placedStocks) {
-			if (ps.isCommitted()) continue;
-			
-			StockImpl placedStock = placedMarket.c(ps);
-			if (placedStock == null) continue;
-			StockGroup thisGroup = market.get(placedStock.code(), placedStock.isBuy());
+		MarketImpl watchMarket = market.getWatchMarket();
+		List<Stock> watchStocks = watchMarket != null ? watchMarket.getStocks(timeValidInterval) : Util.newList(0);
+		for (Stock stock : watchStocks) {
+			if (stock.isCommitted()) continue;
+			StockImpl watchStock = watchMarket.c(stock);
+			if (watchStock == null) continue;
+			StockGroup thisGroup = market.get(watchStock.code(), watchStock.isBuy());
 			if (thisGroup == null) continue;
-			StockGroup placedGroup = placedMarket.get(placedStock.code(), placedStock.isBuy());
-			if (placedGroup == null) continue;
+			StockGroup watchGroup = watchMarket.get(watchStock.code(), watchStock.isBuy());
+			if (watchGroup == null) continue;
 			
-			Price placedTakenPrice = placedStock.getTakenPrice(timeValidInterval);
-			if (placedTakenPrice == null) continue;
+			Price watchTakenPrice = watchStock.getTakenPrice(timeValidInterval);
+			if (watchTakenPrice == null) continue;
 			
 			Price thisPrice = thisGroup.getPrice();
-			boolean valid = ((thisPrice.get() <= placedTakenPrice.get() && placedStock.isBuy()) || (thisPrice.get() >= placedTakenPrice.get() && !placedStock.isBuy()));
-			valid = valid && (thisPrice.getTime() > placedTakenPrice.getTime());
+			boolean valid = ((thisPrice.get() <= watchTakenPrice.get() && watchStock.isBuy()) || (thisPrice.get() >= watchTakenPrice.get() && !watchStock.isBuy()));
+			valid = valid && (thisPrice.getTime() > watchTakenPrice.getTime());
 			if (!valid) continue;
 			
-			Stock added = thisGroup.add(timeValidInterval, placedTakenPrice.getTime(), placedStock.getVolume(timeValidInterval, false));
+			Stock added = thisGroup.add(timeValidInterval, watchTakenPrice.getTime(), watchStock.getVolume(timeValidInterval, false));
 			if (added == null) continue;
 
-			placedGroup.remove(ps);
-			if (placedGroup.size() == 0) placedMarket.remove(placedGroup.getName(), placedGroup.isBuy());
+			watchGroup.remove(stock);
+			if (watchGroup.size() == 0) watchMarket.remove(watchGroup.getName(), watchGroup.isBuy());
+			
+			ret = true;
 		}
 
+		
+		MarketImpl placeMarket = market.getPlaceMarket();
+		List<Stock> placeStocks = placeMarket != null ? placeMarket.getStocks(timeValidInterval) : Util.newList(0);
+		for (Stock stock : placeStocks) {
+			if (stock.isCommitted()) continue;
+			StockImpl placeStock = placeMarket.c(stock);
+			if (placeStock == null) continue;
+			StockGroup thisGroup = market.get(placeStock.code(), placeStock.isBuy());
+			if (thisGroup == null) continue;
+			StockGroup placeGroup = placeMarket.get(placeStock.code(), placeStock.isBuy());
+			if (placeGroup == null) continue;
+
+			Price placeTakenPrice = placeStock.getTakenPrice(timeValidInterval);
+			if (placeTakenPrice == null) continue;
+
+			Price thisPrice = thisGroup.getPrice();
+			boolean valid = ((thisPrice.get() <= placeTakenPrice.get() && placeStock.isBuy()) || (thisPrice.get() >= placeTakenPrice.get() && !placeStock.isBuy()));
+			if (!valid) continue;
+			
+			Stock added = thisGroup.add(timeValidInterval, thisPrice.getTime(), placeStock.getVolume(timeValidInterval, false));
+			if (added == null) continue;
+
+			placeGroup.remove(stock);
+			if (placeGroup.size() == 0) placeMarket.remove(placeGroup.getName(), placeGroup.isBuy());
+			
+			ret = true;
+		}
+		
+		return ret;
 	}
 	
 
-	public void applyPlaced() {
-		applyPlaced(this, getPlacedMarket(), getTimeValidInterval());
+	public boolean applyWatchPlace() {
+		return applyWatchPlace(this, getTimeValidInterval());
 	}
 	
 	

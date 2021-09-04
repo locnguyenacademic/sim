@@ -160,11 +160,11 @@ public class PriceListTable extends JTable {
 	private void edit(Price input) {
 		input = input != null ? input : getSelectedPrice();
 		if (input == null) return;
-		JDialog editor = new JDialog(Util.getFrameForComponent(this), "Edit price", true);
+		JDialog editor = new JDialog(Util.getDialogForComponent(this), "Edit price", true);
 		
 		editor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		editor.setSize(350, 250);
-		editor.setLocationRelativeTo(Util.getFrameForComponent(this));
+		editor.setLocationRelativeTo(Util.getDialogForComponent(this));
 		editor.setLayout(new BorderLayout());
 		
 		JPanel header = new JPanel(new BorderLayout());
@@ -485,7 +485,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		for (String marketName : marketNames) {
 			Market market = universe.get(marketName);
 			MarketImpl m = universe.c(market);
-			if (m != null) m.applyPlaced();
+			if (m != null) m.applyWatchPlace();
 		}
 		
 		return true;
@@ -710,23 +710,25 @@ class PriceList extends JDialog {
 	protected boolean applied = false;
 	
 	
+	protected boolean editMode = false;
+
+	
 	protected boolean selectMode = false;
 	
 	
-	public PriceList(Universe universe, long timeInterval, Component parent) {
-		this(universe, null, timeInterval, false, parent);
-	}
+	boolean pressOK = false;
+
 	
-	
-	public PriceList(Universe universe, String code, long timeInterval, boolean selectMode, Component parent) {
-		super(Util.getFrameForComponent(parent), "Price list", true);
+	public PriceList(Universe universe, String code, long timeInterval, boolean editMode, boolean selectMode, Component parent) {
+		super(Util.getDialogForComponent(parent), "Price list", true);
+		this.editMode = editMode;
 		this.selectMode = selectMode;
 		this.tblPriceList = new PriceListTable(universe, code, timeInterval);
 		this.tblPriceList.setEditable(!selectMode);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(600, 400);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 		setLayout(new BorderLayout());
 		
 		
@@ -783,7 +785,7 @@ class PriceList extends JDialog {
 				apply();
 			}
 		});
-		if (!selectMode) footer.add(apply);
+		if (editMode) footer.add(apply);
 
 		JButton refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
@@ -792,7 +794,7 @@ class PriceList extends JDialog {
 				update();
 			}
 		});
-		footer.add(refresh);
+		if (selectMode) footer.add(refresh);
 
 		JButton cancel = new JButton("Cancel");
 		cancel.addActionListener(new ActionListener() {
@@ -809,17 +811,18 @@ class PriceList extends JDialog {
 	
 	
 	private void ok() {
-		if (selectMode)
-			this.output = tblPriceList.getSelectedPrice();
-		else
-			apply();
+		apply();
+		
+		if (selectMode) this.output = tblPriceList.getSelectedPrice();
+		
+		pressOK = true;
 		
 		dispose();
 	}
 	
 	
 	private void apply() {
-		applied = applied || tblPriceList.apply();
+		if (editMode) applied = applied || tblPriceList.apply();
 	}
 	
 	
@@ -837,15 +840,13 @@ class PriceList extends JDialog {
 		Price output = newPrice.getOutput();
 		if (output == null) return;
 		
-		boolean ret = tblPriceList.addPrice(output);
-		if (ret) {
-			JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
-		}
+		tblPriceList.addPrice(output);
+		//if (ret) JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	
 	private void update() {
-		if (tblPriceList.isModified() && !selectMode) {
+		if (tblPriceList.isModified() && editMode) {
 			int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
@@ -864,7 +865,7 @@ class PriceList extends JDialog {
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
 		
-		tblPriceList.update((String)null);
+		tblPriceList.update();
 		
 		super.dispose();
 	}
@@ -889,12 +890,12 @@ class TakenStocksOfPrice extends JDialog {
 	
 	
 	public TakenStocksOfPrice(Universe universe, Price price, long timeInterval, Component component) {
-		super(Util.getFrameForComponent(component), "Stocks taken with give price", true);
+		super(Util.getDialogForComponent(component), "Stocks taken with give price", true);
 		this.tblTakenStocks = new TakenStocksTable(universe, price, timeInterval);
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(450, 350);
-		setLocationRelativeTo(Util.getFrameForComponent(component));
+		setLocationRelativeTo(Util.getDialogForComponent(component));
 		setLayout(new BorderLayout());
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -980,7 +981,7 @@ class TakenStocksOfPrice extends JDialog {
 				if (m == null) continue;
 				addRows(data, m, false);
 				
-				MarketImpl pm = m.getPlacedMarket();
+				MarketImpl pm = m.getWatchMarket();
 				if (pm != null) addRows(data, pm, true);
 			}
 			
@@ -992,7 +993,7 @@ class TakenStocksOfPrice extends JDialog {
 			return false;
 		}
 
-		private void addRows(Vector<Vector<Object>> data, MarketImpl market, boolean placed) {
+		private void addRows(Vector<Vector<Object>> data, MarketImpl market, boolean watch) {
 			List<Stock> stocks = market.getStocks(timeInterval);
 			for (Stock stock : stocks) {
 				StockImpl s = market.c(stock);
@@ -1002,18 +1003,18 @@ class TakenStocksOfPrice extends JDialog {
 				if (p == null || !(p instanceof TakenPrice)) continue;
 				
 				if (((TakenPrice)p).checkRefEquals(this.price)) {
-					Vector<Object> row = toRow(s, market.getName(), placed);
+					Vector<Object> row = toRow(s, market.getName(), watch);
 					if (row != null) data.add(row);
 				}
 			}
 		}
 		
-		private Vector<Object> toRow(StockImpl stock, String marketName, boolean placed) {
+		private Vector<Object> toRow(StockImpl stock, String marketName, boolean watch) {
 			Vector<Object> row = Util.newVector(0);
 			
 			row.add(stock);
 			row.add(marketName);
-			row.add(placed);
+			row.add(watch);
 			row.add(stock.isBuy());
 			row.add(Util.format(stock.getTakenPrice(timeInterval).getDate()));
 			row.add(stock.getVolume(timeInterval, true));
@@ -1032,7 +1033,7 @@ class TakenStocksOfPrice extends JDialog {
 			Vector<String> columns = Util.newVector(0);
 			columns.add("Code");
 			columns.add("Market");
-			columns.add("Placed");
+			columns.add("Watch");
 			columns.add("Buy");
 			columns.add("Date");
 			columns.add("Volume");
@@ -1155,11 +1156,11 @@ class PriceListPartialTable extends JTable {
 	private void edit(Price input) {
 		input = input != null ? input : getSelectedPrice();
 		if (input == null) return;
-		JDialog editor = new JDialog(Util.getFrameForComponent(this), "Edit price", true);
+		JDialog editor = new JDialog(Util.getDialogForComponent(this), "Edit price", true);
 		
 		editor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		editor.setSize(350, 250);
-		editor.setLocationRelativeTo(Util.getFrameForComponent(this));
+		editor.setLocationRelativeTo(Util.getDialogForComponent(this));
 		editor.setLayout(new BorderLayout());
 		
 		JPanel header = new JPanel(new BorderLayout());
@@ -1357,6 +1358,20 @@ class PriceListPartialTable extends JTable {
 		return getModel2().isModified();
 	}
 	
+	
+	protected Price getLastRowPrice() {
+		int lastRow = getRowCount() - 1;
+		if (lastRow < 0) return null;
+		return getModel2().getRowPriceAt(lastRow);
+	}
+	
+	
+	protected boolean addPrice(Price price) {
+		Vector<Object> rowData = getModel2().toRow(price);
+		getModel2().addRow(rowData);
+		return true;
+	}
+
 	
 	@Override
 	public TableCellRenderer getCellRenderer(int row, int column) {
@@ -1558,7 +1573,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		
 		
 		MarketImpl m = m();
-		if (m != null) m.applyPlaced();
+		if (m != null) m.applyWatchPlace();
 	}
 	
 	
@@ -1577,7 +1592,12 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		}
 		
 		setDataVector(data, toColumns());
-
+		modified = false;
+	}
+	
+	
+	protected void clearTable() {
+		setDataVector(Util.newVector(0), toColumns());
 		modified = false;
 	}
 	
@@ -1722,7 +1742,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 
 
-	public boolean isModified() {
+	protected boolean isModified() {
 		return modified;
 	}
 
@@ -1744,7 +1764,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
-	private Price getRowPriceAt(int row) {
+	protected Price getRowPriceAt(int row) {
 		Object date = getValueAt(row, 1);
 		Object price = getValueAt(row, 2);
 		Object lowPrice = getValueAt(row, 3);
@@ -1784,7 +1804,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 
 
-	private Vector<Object> toRow(Price price) {
+	protected Vector<Object> toRow(Price price) {
 		Vector<Object> row = Util.newVector(0);
 		
 		row.add(price);
@@ -1844,22 +1864,34 @@ class PriceListPartial extends JDialog {
 
 	
 	public PriceListPartial(Market market, Stock stock, long timeInterval, boolean editMode, boolean selectMode, Component parent) {
-		super(Util.getFrameForComponent(parent), "Price list", true);
+		super(Util.getDialogForComponent(parent), "Price list", true);
 		this.tblPriceList = new PriceListPartialTable(market, stock, timeInterval);
 		this.editMode = editMode;
 		this.selectMode = selectMode;
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(400, 300);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 		setLayout(new BorderLayout());
 		
 		
-		JPanel header = new JPanel();
+		JPanel header = new JPanel(new BorderLayout());
 		add(header, BorderLayout.NORTH);
 		
 		JLabel info = new JLabel(stock.code() + " in " + (stock.isBuy() ? "Buy" : "Sell"));
-		header.add(info);
+		header.add(info, BorderLayout.NORTH);
+
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		header.add(toolbar, BorderLayout.SOUTH);
+		
+		JButton newPrice = new JButton("New price");
+		newPrice .addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addNewPrice();
+			}
+		});
+		if(editMode) toolbar.add(newPrice);
 		
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -1872,15 +1904,23 @@ class PriceListPartial extends JDialog {
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton(editMode ? (selectMode ? "Apply and select" : "Apply") : (selectMode ? "Select" : "Close"));
+		JButton ok = new JButton(selectMode ? "Select" : "OK");
 		ok.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ok();
 			}
 		});
 		footer.add(ok);
+		
+		JButton apply = new JButton("Apply");
+		apply.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				apply();
+			}
+		});
+		if (editMode) footer.add(apply);
 		
 		JButton refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
@@ -1889,7 +1929,7 @@ class PriceListPartial extends JDialog {
 				tblPriceList.update();
 			}
 		});
-		if(editMode) footer.add(refresh);
+		if(selectMode) footer.add(refresh);
 
 		JButton cancel = new JButton("Cancel");
 		cancel.addActionListener(new ActionListener() {
@@ -1898,22 +1938,37 @@ class PriceListPartial extends JDialog {
 				dispose();
 			}
 		});
-		if (editMode || selectMode) footer.add(cancel);
+		footer.add(cancel);
 	}
 	
 	
-	private void ok() {
-		if (editMode) {
-			tblPriceList.apply();
-		}
+	private void addNewPrice() {
+		Price input = tblPriceList.getLastRowPrice();
+		if (input == null) return;
+		NewPrice newPrice = new NewPrice(input, this);
+		newPrice.setVisible(true);
 		
-		if (selectMode) {
-			output = tblPriceList.getSelectedPrice();
-		}
+		Price output = newPrice.getOutput();
+		if (output == null) return;
+		
+		tblPriceList.addPrice(output);
+		//if (ret) JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	
+	private void ok() {
+		apply();
+		
+		if (selectMode) output = tblPriceList.getSelectedPrice();
 		
 		pressOK = true;
 		
 		dispose();
+	}
+	
+	
+	private void apply() {
+		if (editMode) tblPriceList.apply();
 	}
 	
 	
@@ -1925,11 +1980,10 @@ class PriceListPartial extends JDialog {
 	@Override
 	public void dispose() {
 		if (editMode) {
-			
-		}
-		
-		if (selectMode) {
-			
+			if (tblPriceList.isModified() && editMode) {
+				int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
+				if (ret == JOptionPane.YES_OPTION) tblPriceList.apply();
+			}
 		}
 		
 		super.dispose();
@@ -1976,12 +2030,12 @@ class NewPrice extends JDialog {
 
 	
 	public NewPrice(Price input, Component parent) {
-		super(Util.getFrameForComponent(parent), "New price", true);
+		super(Util.getDialogForComponent(parent), "New price", true);
 		this.input = input;
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(300, 250);
-		setLocationRelativeTo(Util.getFrameForComponent(parent));
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 		setLayout(new BorderLayout());
 		
 		JPanel header = new JPanel(new BorderLayout());
@@ -2066,14 +2120,8 @@ class NewPrice extends JDialog {
 	
 	private boolean validateInput() {
 		double price = txtPrice.getValue() instanceof Number ? ((Number)txtPrice.getValue()).doubleValue() : 0;
-		if (price < 0) return false;
-
 		double lowPrice = txtLowPrice.getValue() instanceof Number ? ((Number)txtLowPrice.getValue()).doubleValue() : 0;
-		if (lowPrice < 0) return false;
-
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
-		if (highPrice < 0) return false;
-		
 		if (price < lowPrice || price > highPrice) return false;
 		
 		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
@@ -2094,6 +2142,8 @@ class NewPrice extends JDialog {
 		output.set(((Number)txtPrice.getValue()).doubleValue());
 		output.setLow(((Number) txtLowPrice.getValue()).doubleValue());
 		output.setHigh(((Number) txtHighPrice.getValue()).doubleValue());
+		output.setAlt(((Number) txtAltPrice.getValue()).doubleValue());
+		output.setTime(((Date)txtLastDate.getValue()).getTime());
 		
 		dispose();
 	}

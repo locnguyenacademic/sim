@@ -221,7 +221,7 @@ public class PricePool implements Serializable, Cloneable {
 			
 			List<StockGroup> groups = Util.newList(0);
 			groups.addAll(m.groups);
-			MarketImpl pm = m.getPlacedMarket();
+			MarketImpl pm = m.getWatchMarket();
 			if (pm != null) groups.addAll(pm.groups);
 			
 			for (StockGroup group : groups) {

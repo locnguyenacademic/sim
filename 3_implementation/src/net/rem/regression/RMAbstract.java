@@ -307,7 +307,7 @@ public abstract class RMAbstract extends ExecutableAlgAbstract implements RM, RM
 		}
 		else {
 			try {
-				return new REMInspector(UIUtil.getFrameForComponent(null), rm);
+				return new REMInspector(UIUtil.getDialogForComponent(null), rm);
 			} 
 			catch (Exception e) {
 				LogUtil.trace(e);

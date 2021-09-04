@@ -343,10 +343,10 @@ public class StockGroup extends StockAbstract implements Market {
 			Market market = u.get(thisMarket.getName());
 			if (market == null) return null;
 			
-			Market placedMarket = u.getPlacedMarket(thisMarket.getName());
-			if (placedMarket == null || placedMarket == market) return null;
+			Market watchMarket = u.getWatchMarket(thisMarket.getName());
+			if (watchMarket == null || watchMarket == market) return null;
 			
-			dualMarket = thisMarket == market ? placedMarket : (thisMarket == placedMarket ? market : null);
+			dualMarket = thisMarket == market ? watchMarket : (thisMarket == watchMarket ? market : null);
 		}
 		if (dualMarket == null) return null;
 		

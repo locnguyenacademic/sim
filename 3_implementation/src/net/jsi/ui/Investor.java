@@ -51,6 +51,7 @@ import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.Util;
 import net.jsi.ui.MarketPanel.MarketDialog;
+import net.jsi.ui.MarketPlacePanel.MarketPlaceDialog;
 
 public class Investor extends JFrame implements MarketListener {
 
@@ -190,45 +191,67 @@ public class Investor extends JFrame implements MarketListener {
 
 		mnFile.addSeparator();
 
-		Investor thisInvestor = this;
-		JMenuItem mniShowPlacedMarket = new JMenuItem(
-		new AbstractAction("Placed stocks") {
+		Component thisInvestor = Util.getDialogForComponent(this);
+		JMenuItem mniWatchMarket = new JMenuItem(
+		new AbstractAction("Watch stocks") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedPlacedMarket();
-				if (selectedMarket != null) {
-					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					MarketDialog dlgMarket = new MarketDialog(selectedMarket, tblMarket, thisInvestor);
-					dlgMarket.setTitle("Placed stocks for market " + tblMarket.getMarket().getName());
-					dlgMarket.setVisible(true);
-					
-					tblMarket.applyPlaced();
-				}
+				Market selectedMarket = getSelectedWatchMarket();
+				if (selectedMarket == null) return;
+				
+				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+				MarketDialog dlgMarket = new MarketDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
+				dlgMarket.setVisible(true);
+				
+				tblMarket.applyWatchPlace();
 			}
 		});
-		mniShowPlacedMarket.setMnemonic('p');
-		mniShowPlacedMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
-		mnFile.add(mniShowPlacedMarket);
+		mniWatchMarket.setMnemonic('w');
+		mniWatchMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
+		mnFile.add(mniWatchMarket);
 
-		JMenuItem mniApplyPlacedMarket = new JMenuItem(
-		new AbstractAction("Apply placed stocks") {
+
+		JMenuItem mniPlaceMarket = new JMenuItem(
+		new AbstractAction("Place stocks") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedPlacedMarket();
+				Market selectedMarket = getSelectedPlaceMarket();
+				if (selectedMarket == null) return;
+				
+				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
+				dlgMarket.setVisible(true);
+				
+				tblMarket.applyWatchPlace();
+			}
+		});
+		mniPlaceMarket.setMnemonic('p');
+		mnFile.add(mniPlaceMarket);
+
+		JMenuItem mniApplyWatchMarket = new JMenuItem(
+		new AbstractAction("Apply watch and place") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Market selectedMarket = getSelectedWatchMarket();
 				if (selectedMarket != null) {
 					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					tblMarket.applyPlaced();
+					tblMarket.applyWatchPlace();
 				}
 			}
 		});
-		mniApplyPlacedMarket.setMnemonic('l');
-		mnFile.add(mniApplyPlacedMarket);
+		mniApplyWatchMarket.setMnemonic('a');
+		mnFile.add(mniApplyWatchMarket);
 		
 		mnFile.addSeparator();
 		
@@ -241,7 +264,7 @@ public class Investor extends JFrame implements MarketListener {
 					addMarket();
 				}
 			});
-		mniAddMarket.setMnemonic('a');
+		mniAddMarket.setMnemonic('d');
 		mnFile.add(mniAddMarket);
 		
 		JMenuItem mniRemoveMarket = new JMenuItem(
@@ -270,9 +293,9 @@ public class Investor extends JFrame implements MarketListener {
 				public void actionPerformed(ActionEvent e) {
 					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					PriceList pl = new PriceList(universe, universe.getTimeValidInterval(), thisInvestor);
+					PriceList pl = new PriceList(universe, null, universe.getTimeValidInterval(), true, false, thisInvestor);
 					pl.setVisible(true);
-					if (pl.isApplied()) tblMarket.applyPlaced();
+					if (pl.isApplied()) tblMarket.applyWatchPlace();
 				}
 			});
 		mniPriceList.setMnemonic('p');
@@ -578,14 +601,23 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
-	private Market getSelectedPlacedMarket() {
+	private Market getSelectedWatchMarket() {
 		Market selectedMarket = getSelectedMarket();
 		if (selectedMarket == null)
 			return null;
 		else
-			return universe.getPlacedMarket(selectedMarket.getName());
+			return universe.c(selectedMarket).getWatchMarket();
 	}
 	
+	
+	private Market getSelectedPlaceMarket() {
+		Market selectedMarket = getSelectedMarket();
+		if (selectedMarket == null)
+			return null;
+		else
+			return universe.c(selectedMarket).getPlaceMarket();
+	}
+
 	
 	protected MarketImpl[] getMarkets() {
 		MarketPanel[] mps = getMarketPanels();
@@ -835,7 +867,6 @@ public class Investor extends JFrame implements MarketListener {
 			
 			if (dayViewInterval < 0 || dayValidInterval < 0 || (dayViewInterval == 0 && dayValidInterval != 0) || (dayViewInterval > dayValidInterval && dayValidInterval != 0)) {
 				JOptionPane.showMessageDialog(this, "Invalidate day interval", "Invalidate day interval", JOptionPane.ERROR_MESSAGE);
-				dispose();
 				return;
 			}
 			
