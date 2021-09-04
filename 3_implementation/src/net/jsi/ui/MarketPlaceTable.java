@@ -7,17 +7,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import net.jsi.Market;
+import net.jsi.Price;
 import net.jsi.Stock;
+import net.jsi.StockGroup;
+import net.jsi.StockImpl;
 import net.jsi.StockProperty;
 import net.jsi.Util;
 
@@ -40,12 +43,55 @@ public class MarketPlaceTable extends MarketTable {
 
 			@Override
 			protected Vector<Object> toRow(Stock stock) {
-				return super.toRow(stock);
+				long timeViewInterval = market.getTimeViewInterval();
+				Vector<Object> row = Util.newVector(0);
+				StockImpl s = market.c(stock);
+
+				row.add(stock);
+				row.add(stock.isBuy());
+				row.add(stock.getLeverage());
+				row.add(stock.getVolume(timeViewInterval, stock instanceof StockGroup));
+				
+				if (stock instanceof StockGroup)
+					row.add("");
+				else if (s != null)
+					row.add(Util.format(new Date(s.getTakenTimePoint(timeViewInterval))));
+				else
+					row.add("");
+				
+				Price price = stock.getPrice();
+				row.add(price.get());
+				row.add(Util.format(price.getLow()) + " / " + Util.format(price.getHigh()));
+				
+				if (stock instanceof StockGroup)
+					row.add("");
+				else if (s != null)
+					row.add(Util.format(s.getStopLoss()) + " / " + Util.format(s.getTakeProfit()));
+				else
+					row.add("");
+				
+				row.add(stock.getUnitBias());
+				row.add(s.isCommitted());
+
+				return row;
 			}
 
 			@Override
 			protected Vector<String> toColumns() {
-				return super.toColumns();
+				Vector<String> columns = Util.newVector(0);
+
+				columns.add("Code");
+				columns.add("Buy");
+				columns.add("Leverage");
+				columns.add("Volume");
+				columns.add("Date");
+				columns.add("Price");
+				columns.add("Low/high prices");
+				columns.add("Stop loss / take profit");
+				columns.add("Unit bias");
+				columns.add("Committed");
+
+				return columns;
 			}
 			
 		};
@@ -105,14 +151,13 @@ class MarketPlacePanel extends MarketPanel {
 
 	@Override
 	protected MarketTable createMarketTable(Market market) {
-		return super.createMarketTable(market);
+		return  new MarketPlaceTable(market, true, null);
 	}
 
 
 	@Override
 	protected void take(Stock input, boolean update) {
-		//super.take(input, update);
-		JOptionPane.showMessageDialog(this, "This function not implemented yet", "Not implemented yet", JOptionPane.WARNING_MESSAGE);
+		super.take(input, update);
 	}
 
 	

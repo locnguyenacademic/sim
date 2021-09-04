@@ -122,7 +122,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				return u != null ? u.getPlaceStore() : null;
 			}
 
-
 		};
 		placeMarket.setTimeViewInterval(getTimeViewInterval());
 		placeMarket.setTimeValidInterval(getTimeValidInterval());
@@ -451,7 +450,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint, Price price) {
+	protected Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint, Price price) {
 		StockInfo info = getStore().get(code);
 		if (info == null) return null;
 		
@@ -996,7 +995,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(price.getLow()) + ", ");
 				buffer.append(Util.format(price.getHigh()) + ", ");
 				buffer.append(Util.format(price.getAlt()) + ", ");
-				buffer.append(price.getTime() + ", ");
+				buffer.append(s.getTakenTimePoint(0) + ", ");
 				
 				buffer.append(Util.format(stock.getUnitBias()) + ", ");
 				buffer.append(Util.format(stock.getStopLoss()) + ", ");

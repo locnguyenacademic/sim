@@ -740,6 +740,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			Universe u = m != null ? m.getNearestUniverse() : null;
 			if (u != null) {
 				QueryEstimator query = u.query(market.getName(), market);
+				if (query == null) query = m;
 				for (int i = 0; i < m.size(); i++) {
 					StockGroup group = m.get(i);
 					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
@@ -839,6 +840,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			}
 			else {
 				QueryEstimator query = u.query(market.getName(), market);
+				if (query == null) query = m();
 				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
 				
 				if (estimator == null) {
