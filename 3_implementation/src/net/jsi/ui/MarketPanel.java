@@ -41,6 +41,7 @@ import net.jsi.Stock;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.Util;
+import net.jsi.ui.MarketPlacePanel.MarketPlaceDialog;
 
 public class MarketPanel extends JPanel implements MarketListener {
 
@@ -225,7 +226,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void placeStocks() {
-		MarketDialog dlgMarket = new MarketDialog(tblMarket.getPlaceMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
