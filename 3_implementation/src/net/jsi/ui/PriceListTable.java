@@ -716,11 +716,15 @@ class PriceList extends JDialog {
 	protected boolean selectMode = false;
 	
 	
+	protected Universe universe = null;
+	
+	
 	boolean pressOK = false;
 
 	
 	public PriceList(Universe universe, String code, long timeInterval, boolean editMode, boolean selectMode, Component parent) {
 		super(Util.getDialogForComponent(parent), "Price list", true);
+		this.universe = universe;
 		this.editMode = editMode;
 		this.selectMode = selectMode;
 		this.tblPriceList = new PriceListTable(universe, code, timeInterval);
@@ -833,7 +837,7 @@ class PriceList extends JDialog {
 	
 	private void addNewPrice() {
 		Price input = tblPriceList.getLastRowPrice();
-		if (input == null) return;
+		if (input == null) input = universe.newPrice(1, 1, 1, System.currentTimeMillis());
 		NewPrice newPrice = new NewPrice(input, this);
 		newPrice.setVisible(true);
 		

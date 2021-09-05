@@ -107,7 +107,7 @@ public class Investor extends JFrame implements MarketListener {
 		JToolBar toolbar = createToolbar();
 		if (toolbar != null) add(toolbar, BorderLayout.NORTH);
 
-		body = new DraggableTabbedPane();
+		body = new InvestorTabbedPane();
 		add(body, BorderLayout.CENTER);
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);

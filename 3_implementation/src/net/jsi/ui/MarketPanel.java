@@ -32,7 +32,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -168,7 +167,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Component parent = thisPanel.getParent();
-				if (!(parent instanceof JTabbedPane)) return;
+				if (!(parent instanceof InvestorTabbedPane)) return;
 				
 				if(SwingUtilities.isRightMouseButton(e) ) {
 					JPopupMenu contextMenu = createContextMenu();
@@ -192,16 +191,31 @@ public class MarketPanel extends JPanel implements MarketListener {
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					onDoubleClick();
+					watchStocks();
 				}
 			});
 		ctxMenu.add(watchStocks);
+
+		JMenuItem placeStocks = new JMenuItem("Place stocks");
+		placeStocks.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					placeStocks();
+				}
+			});
+		ctxMenu.add(placeStocks);
 
 		return ctxMenu;
 	}
 	
 	
 	protected void onDoubleClick() {
+		watchStocks();
+	}
+	
+	
+	private void watchStocks() {
 		MarketDialog dlgMarket = new MarketDialog(tblMarket.getWatchMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
@@ -210,6 +224,14 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
+	private void placeStocks() {
+		MarketDialog dlgMarket = new MarketDialog(tblMarket.getPlaceMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
+		dlgMarket.setVisible(true);
+		
+		tblMarket.applyWatchPlace();
+	}
+
 	
 	protected Market getMarket() {
 		return tblMarket.getMarket();

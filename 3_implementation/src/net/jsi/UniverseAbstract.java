@@ -141,14 +141,24 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public QueryEstimator query(String name, Market refMarket) {
 		Market market = get(name);
-		if (market == null)
-			return null;
-		else if (refMarket == null || refMarket == market)
-			return c(market);
-		else {
-			Market watchMarket = getWatchMarket(name);
-			return watchMarket == refMarket ? c(watchMarket) : null;
+		Market watchMarket = getWatchMarket(name);
+		Market placeMarket = getPlaceMarket(name);
+		
+		QueryEstimator refEstimator = refMarket != null && refMarket instanceof QueryEstimator ? (QueryEstimator)refMarket : null;
+		QueryEstimator estimator = market != null && market instanceof QueryEstimator ? (QueryEstimator)market : null;
+		QueryEstimator watchEstimator = watchMarket != null && watchMarket instanceof QueryEstimator ? (QueryEstimator)watchMarket : null;
+		QueryEstimator placeEstimator = placeMarket != null && placeMarket instanceof QueryEstimator ? (QueryEstimator)placeMarket : null;
+
+		if (refEstimator != null) {
+			if (refMarket.getName().equals(name))
+				return refEstimator;
+			else
+				return null;
 		}
+		else if (estimator != null)
+			return estimator;
+		else
+			return watchEstimator != null ? watchEstimator : placeEstimator;
 	}
 
 

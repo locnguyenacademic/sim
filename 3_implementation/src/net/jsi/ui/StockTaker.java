@@ -191,8 +191,8 @@ public class StockTaker extends JDialog {
 		if (update) left.add(new JLabel("Taken price: "));
 		if (update) left.add(new JLabel("Taken date: "));
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		//left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 		left.add(new JLabel("Unit bias: "));
@@ -547,17 +547,13 @@ public class StockTaker extends JDialog {
 		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
 
-		StockTaker taker = this;
 		JMenuItem mniSwitch = new JMenuItem(
 			new AbstractAction("Switch to selector") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					taker.dispose();
-					StockSelector selector = new StockSelector(market, input, update, parent);
-					selector.setVisible(true);
-					taker.setOutput(selector.getOutput());
+					switchSelector();
 				}
 			});
 		mniSwitch.setMnemonic('w');
@@ -567,7 +563,15 @@ public class StockTaker extends JDialog {
 		return mnBar;
 	}
 
-		
+	
+	protected void switchSelector() {
+		this.dispose();
+		StockSelector selector = new StockSelector(market, input, update, parent);
+		selector.setVisible(true);
+		this.setOutput(selector.getOutput());
+	}
+	
+	
 	private MarketImpl m() {
 		Universe u = market.getNearestUniverse();
 		return u != null ? u.c(market) : null;
@@ -626,7 +630,7 @@ public class StockTaker extends JDialog {
 	}
 	
 	
-	private void update() {
+	protected void update() {
 		StockImpl s = getInputStock();
 
 		if (update) {
@@ -764,7 +768,11 @@ public class StockTaker extends JDialog {
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 		if (highPrice < 0) return false;
 		
-		if (price < lowPrice || price > highPrice) return false;
+		if (price < lowPrice || price > highPrice) {
+			txtLowPrice.setValue(price);
+			txtHighPrice.setValue(price);
+			return false;
+		}
 		
 		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 		StockImpl s = getInputStock();
@@ -1468,17 +1476,13 @@ class StockSelector extends JDialog {
 		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
 
-		StockSelector selector = this;
 		JMenuItem mniSwitch = new JMenuItem(
 			new AbstractAction("Switch to taker") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					selector.dispose();
-					StockTaker taker = new StockTaker(market, input, update, parent);
-					taker.setVisible(true);
-					selector.setOutput(taker.getOutput());
+					switchTaker();
 				}
 			});
 		mniSwitch.setMnemonic('w');
@@ -1488,6 +1492,14 @@ class StockSelector extends JDialog {
 		return mnBar;
 	}
 
+	
+	protected void switchTaker() {
+		this.dispose();
+		StockTaker taker = new StockTaker(market, input, update, parent);
+		taker.setVisible(true);
+		this.setOutput(taker.getOutput());
+	}
+	
 	
 	private MarketImpl m() {
 		Universe u = market.getNearestUniverse();
@@ -1547,7 +1559,7 @@ class StockSelector extends JDialog {
 	}
 	
 	
-	private void update() {
+	protected void update() {
 		StockImpl s = getInputStock();
 
 		if (update) {

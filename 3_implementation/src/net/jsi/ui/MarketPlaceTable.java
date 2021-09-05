@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -50,7 +51,7 @@ public class MarketPlaceTable extends MarketTable {
 				row.add(stock);
 				row.add(stock.isBuy());
 				row.add(stock.getLeverage());
-				row.add(stock.getVolume(timeViewInterval, stock instanceof StockGroup));
+				row.add(stock.getVolume(timeViewInterval, !(stock instanceof StockGroup)));
 				
 				if (stock instanceof StockGroup)
 					row.add("");
@@ -71,7 +72,6 @@ public class MarketPlaceTable extends MarketTable {
 					row.add("");
 				
 				row.add(stock.getUnitBias());
-				row.add(s.isCommitted());
 
 				return row;
 			}
@@ -89,7 +89,6 @@ public class MarketPlaceTable extends MarketTable {
 				columns.add("Low/high prices");
 				columns.add("Stop loss / take profit");
 				columns.add("Unit bias");
-				columns.add("Committed");
 
 				return columns;
 			}
@@ -98,27 +97,263 @@ public class MarketPlaceTable extends MarketTable {
 	}
 
 
+	private class PlaceStockTaker extends StockTaker {
+
+		private static final long serialVersionUID = 1L;
+		
+		protected boolean addPrice = false;
+		
+		public PlaceStockTaker(Market market, Stock input, boolean update, Component parent) {
+			super(market, input, update, parent);
+		}
+
+		@Override
+		protected void update() {
+			super.update();
+			chkAddPrice.setEnabled(addPrice);
+		}
+		
+		@Override
+		protected void switchSelector() {
+			this.dispose();
+			PlaceStockSelector selector = new PlaceStockSelector(market, input, update, parent);
+			selector.addPrice = this.addPrice;
+			selector.setVisible(true);
+			this.setOutput(selector.getOutput());
+		}
+		
+	}
+	
+	
+	private class PlaceStockSelector extends StockSelector {
+
+		private static final long serialVersionUID = 1L;
+		
+		protected boolean addPrice = false;
+		
+		public PlaceStockSelector(Market market, Stock input, boolean update, Component parent) {
+			super(market, input, update, parent);
+		}
+
+		protected void switchTaker() {
+			this.dispose();
+			PlaceStockTaker taker = new PlaceStockTaker(market, input, update, parent);
+			taker.addPrice = this.addPrice;
+			taker.setVisible(true);
+			this.setOutput(taker.getOutput());
+		}
+
+	}
+	
+	
 	@Override
 	protected void take(Stock stock, boolean update) {
-		super.take(stock, update);
+		stock = stock != null ? stock : getSelectedStock();
+		PlaceStockTaker taker = new PlaceStockTaker(getMarket(), stock, update, this);
+		taker.setVisible(true);
+		if (taker.getOutput() != null) update();
 	}
 
 
 	@Override
-	protected void summary(Stock stock) {
-		super.summary(stock);
-	}
-
-
-	@Override
-	protected void delete() {
-		super.delete();
+	protected Stock addPrice(Stock stock) {
+		Stock output = super.addPrice(stock);
+		StockImpl s = c(stock);
+		if (s == null) return output;
+		
+		Price lastPrice = s.getPrice();
+		s.take(getMarket().getTimeViewInterval(), lastPrice.getTime());
+		
+		return output;
 	}
 
 
 	@Override
 	protected JPopupMenu createContextMenu() {
-		return super.createContextMenu();
+		JPopupMenu ctxMenu = new JPopupMenu();
+		Stock stock = getSelectedStock();
+		MarketTable tblMarket = this;
+
+		if (!getModel2().isForStock()) {
+			if (stock != null) {
+				JMenuItem miView = new JMenuItem("View");
+				miView.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							view(stock);
+						}
+					});
+				ctxMenu.add(miView);
+	
+				if (stock != null) {
+					JMenuItem miDelete = new JMenuItem("Delete");
+					miDelete.addActionListener( 
+						new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								delete();
+							}
+						});
+					ctxMenu.add(miDelete);
+				}
+	
+				ctxMenu.addSeparator();
+			
+				JMenuItem miPriceList = new JMenuItem("Price list");
+				miPriceList.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							priceList(stock);
+						}
+					});
+				ctxMenu.add(miPriceList);
+				
+				JMenuItem miSettings = new JMenuItem("Settings");
+				miSettings.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							settings(stock);
+						}
+					});
+				ctxMenu.add(miSettings);
+	
+				ctxMenu.addSeparator();
+			}
+			
+			JMenuItem miRefresh = new JMenuItem("Refresh");
+			miRefresh.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						update();
+					}
+				});
+			ctxMenu.add(miRefresh);
+
+			return ctxMenu;
+		}
+
+		
+		JMenuItem miTake = new JMenuItem("Add new");
+		miTake.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					take(stock, false);
+				}
+			});
+		ctxMenu.add(miTake);
+		
+		if (stock != null) {
+			JMenuItem miAddPrice = new JMenuItem("Add price");
+			miAddPrice.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						addPrice(stock);
+					}
+				});
+			ctxMenu.add(miAddPrice);
+
+			JMenuItem miSetTakenPrice = new JMenuItem("Set taken price");
+			miSetTakenPrice.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						setTakenPrice(stock);
+					}
+				});
+			ctxMenu.add(miSetTakenPrice);
+
+			JMenuItem miModify = new JMenuItem("Update");
+			miModify.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						take(stock, true);
+					}
+				});
+			ctxMenu.add(miModify);
+			
+			ctxMenu.addSeparator();
+
+			JMenuItem miDelete = new JMenuItem("Delete");
+			miDelete.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						delete();
+					}
+				});
+			ctxMenu.add(miDelete);
+
+			ctxMenu.addSeparator();
+			
+			JMenuItem miModifyList = new JMenuItem("Price list");
+			miModifyList.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						priceList(stock);
+					}
+				});
+			ctxMenu.add(miModifyList);
+			
+			JMenuItem miSettings = new JMenuItem("Settings");
+			miSettings.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						settings(stock);
+					}
+				});
+			ctxMenu.add(miSettings);
+
+			ctxMenu.addSeparator();
+
+			JMenuItem miDetailedSummary = new JMenuItem("Summary");
+			miDetailedSummary.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						summary(stock);
+					}
+				});
+			ctxMenu.add(miDetailedSummary);
+		}
+		else
+			ctxMenu.addSeparator();
+		
+		JMenuItem miSummary = new JMenuItem("Market summary");
+		miSummary.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket);
+					ms.setVisible(true);
+					
+					if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
+				}
+			});
+		ctxMenu.add(miSummary);
+
+		ctxMenu.addSeparator();
+		
+		JMenuItem miRefresh = new JMenuItem("Refresh");
+		miRefresh.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					update();
+				}
+			});
+		ctxMenu.add(miRefresh);
+
+		
+		return ctxMenu;
 	}
 
 	

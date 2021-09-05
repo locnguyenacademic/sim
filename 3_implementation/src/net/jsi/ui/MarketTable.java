@@ -190,7 +190,17 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void setTakenPrice(Stock stock) {
+	protected Stock addPrice(Stock stock) {
+		AddPrice addPrice = new AddPrice(getMarket(), stock, this);
+		addPrice.setVisible(true);
+		Stock output = addPrice.getOutput();
+		if (output != null) update();
+		
+		return output;
+	}
+	
+	
+	protected void setTakenPrice(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock(); if (stock == null) return;
 		
 		PriceListPartial pl = new PriceListPartial(getMarket(), stock, getMarket().getTimeViewInterval(), false, true, this);
@@ -206,7 +216,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void priceList(Stock stock) {
+	protected void priceList(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
 		if (stock == null) return;
 		
@@ -216,7 +226,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	private void settings(Stock stock) {
+	protected void settings(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
 		if (stock == null) return;
 		
@@ -336,17 +346,25 @@ public class MarketTable extends JTable implements MarketListener {
 					});
 				ctxMenu.add(miView);
 	
-				if (stock != null) {
-					JMenuItem miDelete = new JMenuItem("Delete");
-					miDelete.addActionListener( 
-						new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								delete();
-							}
-						});
-					ctxMenu.add(miDelete);
-				}
+				JMenuItem miAddPrice = new JMenuItem("Add price");
+				miAddPrice.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							addPrice(stock);
+						}
+					});
+				ctxMenu.add(miAddPrice);
+
+				JMenuItem miDelete = new JMenuItem("Delete");
+				miDelete.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							delete();
+						}
+					});
+				ctxMenu.add(miDelete);
 	
 				ctxMenu.addSeparator();
 			
@@ -419,9 +437,7 @@ public class MarketTable extends JTable implements MarketListener {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AddPrice addPrice = new AddPrice(getMarket(), stock, tblMarket);
-						addPrice.setVisible(true);
-						if (addPrice.getOutput() != null) update();
+						addPrice(stock);
 					}
 				});
 			ctxMenu.add(miAddPrice);
@@ -652,7 +668,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 
-	private StockImpl c(Stock stock) {
+	protected StockImpl c(Stock stock) {
 		MarketImpl m = m();
 		return m != null ? m.c(stock) : null;
 	}
@@ -803,7 +819,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(stock);
 			row.add(stock.isBuy());
 			row.add(Util.format(s.getTakenPrice(timeViewInterval).getDate()));
-			row.add(s.getVolume(timeViewInterval, false));
+			row.add(s.getVolume(timeViewInterval, true));
 			row.add(s.getAverageTakenPrice(timeViewInterval));
 			
 			Price price = s.getPrice();
@@ -829,7 +845,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group);
 			row.add(group.isBuy());
 			row.add(group.getLeverage() != 0 ? 1.0 / group.getLeverage() : "Infinity");
-			row.add(group.getVolume(timeViewInterval, true));
+			row.add(group.getVolume(timeViewInterval, false));
 			row.add(group.getTakenValue(timeViewInterval));
 			row.add(group.getMargin(timeViewInterval));
 			row.add(group.getProfit(timeViewInterval));
@@ -1045,6 +1061,7 @@ abstract class StockSummary extends JDialog {
 		int index = u.lookup(market.getName());
 		if (index < 0) return;
 		QueryEstimator query = u.query(market.getName(), market);
+		if (query == null) query = m;
 		Estimator estimator = query.getEstimator(code, buy);
 		if (estimator == null) return;
 		
@@ -1380,8 +1397,6 @@ class AddPrice extends JDialog {
 		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 		Universe universe = market.getNearestUniverse();
 		if (lastDate == null || input == null || universe == null) return false;
-		StockImpl s = universe.c(input);
-		if (s == null) return false;
 		
 		return true;
 	}
@@ -1395,7 +1410,6 @@ class AddPrice extends JDialog {
 		
 		MarketImpl m = m();
 		if (m == null) return;
-		StockImpl s = m.c(input); if (s == null) return;
 
 		long lastTime = ((Date)txtLastDate.getValue()).getTime();
 		Price price = m.newPrice(
@@ -1404,7 +1418,7 @@ class AddPrice extends JDialog {
 				((Number) txtHighPrice.getValue()).doubleValue(),
 				lastTime);
 		
-		if (!s.setPrice(price)) return;
+		if (!input.setPrice(price)) return;
 
 		m.applyWatchPlace();
 		
