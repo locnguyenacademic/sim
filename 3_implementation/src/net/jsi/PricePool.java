@@ -153,6 +153,16 @@ public class PricePool implements Serializable, Cloneable {
 
 	
 	public boolean add(Price price, int maxPriceCount) {
+		return add(price, maxPriceCount, true);
+	}
+	
+	
+	protected boolean addWithoutDuplicate(Price price, int maxPriceCount) {
+		return add(price, maxPriceCount, false);
+	}
+	
+	
+	private boolean add(Price price, int maxPriceCount, boolean duplicate) {
 		if (price == null || !price.isValid()) return false;
 		
 		int n = prices.size();
@@ -164,6 +174,8 @@ public class PricePool implements Serializable, Cloneable {
 				added = true;
 				break;
 			}
+			else if (price.getTime() == p.getTime() && !duplicate)
+				return false;
 		}
 		if (!added) prices.add(0, price);
 		
@@ -178,7 +190,7 @@ public class PricePool implements Serializable, Cloneable {
 		
 		return true;
 	}
-	
+
 	
 	protected double getUnitBias() {
 		return unitBias;

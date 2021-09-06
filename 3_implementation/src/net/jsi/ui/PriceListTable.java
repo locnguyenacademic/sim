@@ -485,7 +485,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		for (String marketName : marketNames) {
 			Market market = universe.get(marketName);
 			MarketImpl m = universe.c(market);
-			if (m != null) m.applyWatchPlace();
+			if (m != null) m.applyPlace();
 		}
 		
 		return true;
@@ -1577,7 +1577,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		
 		
 		MarketImpl m = m();
-		if (m != null) m.applyWatchPlace();
+		if (m != null) m.applyPlace();
 	}
 	
 	

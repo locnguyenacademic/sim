@@ -48,6 +48,11 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
+	public int lookup(long timePoint) {
+		return pricePool.lookup(timePoint);
+	}
+
+	
 	protected Price getLastPrice() {
 		return pricePool.getLast();
 	}
@@ -82,6 +87,11 @@ public class StockInfo implements Serializable, Cloneable {
 		return pricePool.add(price, property.maxPriceCount);
 	}
 	
+	
+	protected boolean addPriceWithoutDuplicate(Price price) {
+		return pricePool.addWithoutDuplicate(price, property.maxPriceCount);
+	}
+
 	
 	protected boolean removePrice(Price price) {
 		return pricePool.remove(price);

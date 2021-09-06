@@ -158,6 +158,14 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	protected void commit(Stock stock) {
+		stock = stock != null ? stock : getSelectedStock();
+		if (stock == null) return;
+		stock.setCommitted(!stock.isCommitted());
+		update();
+	}
+	
+	
 	private boolean delete0(Stock stock) {
 		if (stock == null) return false;
 		MarketImpl m = m(); if (m == null) return false;
@@ -361,7 +369,8 @@ public class MarketTable extends JTable implements MarketListener {
 					new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							delete();
+							int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+							if (ret == JOptionPane.YES_OPTION) delete();
 						}
 					});
 				ctxMenu.add(miDelete);
@@ -469,8 +478,7 @@ public class MarketTable extends JTable implements MarketListener {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						stock.setCommitted(!stock.isCommitted());
-						update();
+						commit(stock);
 					}
 				});
 			ctxMenu.add(miCommit);
@@ -480,7 +488,8 @@ public class MarketTable extends JTable implements MarketListener {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						delete();
+						int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+						if (ret == JOptionPane.YES_OPTION) delete();
 					}
 				});
 			ctxMenu.add(miDelete);
@@ -674,8 +683,8 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public boolean applyWatchPlace() {
-		return getModel2().applyWatchPlace();
+	public boolean applyPlace() {
+		return getModel2().applyPlace();
 	}
 	
 	
@@ -760,7 +769,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				for (int i = 0; i < m.size(); i++) {
 					StockGroup group = m.get(i);
 					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
-					List<EstimateStock> estimateStocks = estimator.estimateStopLossTakeProfit(group.getStocks(group.getTimeValidInterval()), group.getTimeViewInterval());
+					List<EstimateStock> estimateStocks = estimator.estimateStopLossTakeProfit(group.getStocks(group.getTimeViewInterval()), group.getTimeViewInterval());
 					estimators.put(group.code(), estimateStocks);
 				}
 			}
@@ -789,10 +798,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	protected boolean applyWatchPlace() {
+	protected boolean applyPlace() {
 		MarketImpl m = m();
 		if (m != null) {
-			boolean ret = m.applyWatchPlace();
+			boolean ret = m.applyPlace();
 			update();
 			return ret;
 		}
@@ -1420,7 +1429,7 @@ class AddPrice extends JDialog {
 		
 		if (!input.setPrice(price)) return;
 
-		m.applyWatchPlace();
+		m.applyPlace();
 		
 		output = input;
 		

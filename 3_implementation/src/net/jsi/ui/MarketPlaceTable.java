@@ -1,20 +1,13 @@
 package net.jsi.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import net.jsi.Market;
@@ -192,7 +185,8 @@ public class MarketPlaceTable extends MarketTable {
 						new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								delete();
+								int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+								if (ret == JOptionPane.YES_OPTION) delete();
 							}
 						});
 					ctxMenu.add(miDelete);
@@ -396,57 +390,29 @@ class MarketPlacePanel extends MarketPanel {
 	}
 
 	
-	public static class MarketPlaceDialog extends JDialog {
+}
 
-		private static final long serialVersionUID = 1L;
-		
-		public MarketPlaceDialog(Market market, MarketListener listener, Component parent) {
-			super(Util.getDialogForComponent(parent), "Market " + market.getName(), true);
-			
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent e) {
-					super.windowClosing(e);
-				}
-			});
-			
-			addMouseListener(new MouseAdapter() { });
-			
-			setSize(600, 400);
-			setLocationRelativeTo(null);
-			//setJMenuBar(createMenuBar());
-			
-			setLayout(new BorderLayout());
 
-			//JToolBar toolbar = createToolbar();
-			//if (toolbar != null) add(toolbar, BorderLayout.NORTH);
 
-			JPanel body = new JPanel(new BorderLayout());
-			add(body, BorderLayout.CENTER);
-			MarketPlacePanel mp = new MarketPlacePanel(market);
-			if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
-				mp.getMarketTable().getModel2().addMarketListener(listener);
-			body.add(mp, BorderLayout.CENTER);
-			
-			JPanel footer = new JPanel();
-			add(footer, BorderLayout.SOUTH);
-			
-			JButton ok = new JButton("OK");
-			ok.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					dispose();
-				}
-			});
-			footer.add(ok);
-		}
-		
+class MarketPlaceDialog extends MarketDialog {
+
+	
+	private static final long serialVersionUID = 1L;
+	
+	
+	public MarketPlaceDialog(Market market, MarketListener listener, Component parent) {
+		super(market, listener, parent);
 	}
 
 
+	@Override
+	protected MarketPanel createMarketPanel(Market market) {
+		return new MarketPlacePanel(market);
+	}
+	
+	
 }
+
 
 
 

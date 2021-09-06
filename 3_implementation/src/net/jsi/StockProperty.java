@@ -80,7 +80,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String PRICE_RATIO_FIELD = "prr";
 
 	
-	public static int MAX_PRICE_COUNT = 1000;
+	public static int MAX_PRICE_COUNT = 0;
 
 
 	public static double LEVERAGE = 0.05;
@@ -95,7 +95,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;
 
 
-	public static long TIME_VALID_INTERVAL = TIME_VIEW_INTERVAL*10;
+	public static long TIME_VALID_INTERVAL = 0;
 
 
 	public static double TIME_VIEW_PERIOD_RATIO = 4.0;

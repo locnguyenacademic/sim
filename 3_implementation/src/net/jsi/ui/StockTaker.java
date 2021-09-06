@@ -964,6 +964,7 @@ class StockPropertySetting extends JDialog {
 		right.add(panePriceUpdateInterval);
 		JFormattedTextField txtTimePriceUpdateInterval = new JFormattedTextField(Util.getNumberFormatter());
 		txtTimePriceUpdateInterval.setValue(property.timeUpdatePriceInterval / (1000*3600*24));
+		txtTimePriceUpdateInterval.setEditable(false);
 		panePriceUpdateInterval.add(txtTimePriceUpdateInterval, BorderLayout.CENTER);
 		
 		
@@ -1686,8 +1687,7 @@ class StockSelector extends JDialog {
 			output = input;
 		}
 		else {
-			output = m.addStock(code, chkBuy.isSelected(), ((Number)txtVolume.getValue()).doubleValue(), takenTimePoint);
-			if (!Double.isNaN(leverage)) output.setLeverage(leverage);
+			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), takenTimePoint);
 			if (output == null) return;
 		}
 		

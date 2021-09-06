@@ -50,8 +50,6 @@ import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.Util;
-import net.jsi.ui.MarketPanel.MarketDialog;
-import net.jsi.ui.MarketPlacePanel.MarketPlaceDialog;
 
 public class Investor extends JFrame implements MarketListener {
 
@@ -203,11 +201,11 @@ public class Investor extends JFrame implements MarketListener {
 				
 				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketDialog dlgMarket = new MarketDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
-				tblMarket.applyWatchPlace();
+				tblMarket.applyPlace();
 			}
 		});
 		mniWatchMarket.setMnemonic('w');
@@ -230,14 +228,14 @@ public class Investor extends JFrame implements MarketListener {
 				dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
-				tblMarket.applyWatchPlace();
+				tblMarket.applyPlace();
 			}
 		});
 		mniPlaceMarket.setMnemonic('p');
 		mnFile.add(mniPlaceMarket);
 
-		JMenuItem mniApplyWatchMarket = new JMenuItem(
-		new AbstractAction("Apply watch and place") {
+		JMenuItem mniApplyPlaceMarket = new JMenuItem(
+		new AbstractAction("Apply place") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -246,12 +244,13 @@ public class Investor extends JFrame implements MarketListener {
 				if (selectedMarket != null) {
 					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					tblMarket.applyWatchPlace();
+					tblMarket.applyPlace();
 				}
 			}
 		});
-		mniApplyWatchMarket.setMnemonic('a');
-		mnFile.add(mniApplyWatchMarket);
+		mniApplyPlaceMarket.setMnemonic('a');
+		mniApplyPlaceMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
+		mnFile.add(mniApplyPlaceMarket);
 		
 		mnFile.addSeparator();
 		
@@ -293,9 +292,9 @@ public class Investor extends JFrame implements MarketListener {
 				public void actionPerformed(ActionEvent e) {
 					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					PriceList pl = new PriceList(universe, null, universe.getTimeValidInterval(), true, false, thisInvestor);
+					PriceList pl = new PriceList(universe, null, universe.getTimeViewInterval(), true, false, thisInvestor);
 					pl.setVisible(true);
-					if (pl.isApplied()) tblMarket.applyWatchPlace();
+					if (pl.isApplied()) tblMarket.applyPlace();
 				}
 			});
 		mniPriceList.setMnemonic('p');
