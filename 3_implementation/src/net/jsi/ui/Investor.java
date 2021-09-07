@@ -137,7 +137,7 @@ public class Investor extends JFrame implements MarketListener {
 		double totalBias = universe.calcTotalBias(timeViewInterval);
 		
 		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
-		lblTotalROI.setText("ROI: " + Util.format(roi*100) + "%");
+		lblTotalROI.setText("LEV. ROI: " + Util.format(roi*100) + "%");
 		lblTotalBias.setText("BIAS: " + Util.format(totalBias));
 	}
 	

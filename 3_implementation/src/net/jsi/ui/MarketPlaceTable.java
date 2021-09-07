@@ -402,6 +402,8 @@ class MarketPlaceDialog extends MarketDialog {
 	
 	public MarketPlaceDialog(Market market, MarketListener listener, Component parent) {
 		super(market, listener, parent);
+		btnOK.setText("Close");
+		btnCancel.setVisible(false);
 	}
 
 

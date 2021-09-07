@@ -142,6 +142,24 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
+	public double getPriceOscillWithin(long timeInterval) {
+		Price price = info.getPriceWithin(timeInterval);
+		if (price == null)
+			return 0;
+		else
+			return getPrice().get() - price.get();
+	}
+	
+	
+	public double getPriceOscillRatioWithin(long timeInterval) {
+		Price price = info.getPriceWithin(timeInterval);
+		if (price == null)
+			return 0;
+		else
+			return (getPrice().get() - price.get()) / price.get();
+	}
+
+	
 	public static double calcMaxUnitBias(double unitBias, double leverage, double refBaseLeverage) {
 		//Referred leverage (base leverage) is often larger than the specified leverage.
 		if (leverage == 0 && refBaseLeverage == 0)

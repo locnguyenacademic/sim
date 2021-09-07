@@ -271,7 +271,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 		double freeMargin = market.getFreeMargin(timeViewInterval);
 		double equity = margin + freeMargin;
 		double profit = market.getProfit(timeViewInterval);
-		double roi = market.getROIByLeverage(timeViewInterval);
+		double roi = market.getROI(timeViewInterval);
 		double bias = getMarket().calcTotalBias(timeViewInterval);
 		double estInvest = market.calcInvestAmount(timeViewInterval);
 		
@@ -474,6 +474,12 @@ class MarketDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
+	protected JButton btnOK;
+	
+	
+	protected JButton btnCancel;
+	
+	
 	private boolean isPressOK = false;
 	
 	
@@ -509,8 +515,8 @@ class MarketDialog extends JDialog {
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton("OK");
-		ok.addActionListener(new ActionListener() {
+		btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -518,17 +524,17 @@ class MarketDialog extends JDialog {
 				dispose();
 			}
 		});
-		footer.add(ok);
+		footer.add(btnOK);
 		
-		JButton cancel = new JButton("Cancel");
-		cancel.addActionListener(new ActionListener() {
+		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		footer.add(cancel);
+		footer.add(btnCancel);
 	}
 	
 	

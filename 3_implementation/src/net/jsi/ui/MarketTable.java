@@ -999,7 +999,7 @@ class MarketSummary extends JDialog {
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton("OK");
+		JButton ok = new JButton("Close");
 		ok.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1086,7 +1086,10 @@ abstract class StockSummary extends JDialog {
 			info.append("Taken value: " + Util.format(group.getTakenValue(timeViewInterval)) + "\n");
 			info.append("Margin: " + Util.format(group.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(group.getProfit(timeViewInterval)) + "\n");
-			info.append("ROI: " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("ROI: " + Util.format(group.getROI(timeViewInterval)*100) + "%\n");
+			info.append("ROI (leverage): " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("Price oscillate (nearest): " + Util.format(group.getPriceOscillWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))) + "\n");
+			info.append("Price oscillate ratio (nearest): " + Util.format(group.getPriceOscillRatioWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))*100) + "%\n");
 			info.append("Unit bias (setting): " + Util.format(group.getUnitBias()) + "\n");
 			
 			info.append("\n");
@@ -1147,7 +1150,10 @@ abstract class StockSummary extends JDialog {
 			info.append("Take profit: " + Util.format(s.getTakeProfit()) + "\n");
 			info.append("Margin: " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(stock.getProfit(timeViewInterval)) + "\n");
-			info.append("ROI: " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("ROI: " + Util.format(stock.getROI(timeViewInterval)*100) + "%\n");
+			info.append("ROI (leverage): " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("Price oscillate (nearest): " + Util.format(s.getPriceOscillWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))) + "\n");
+			info.append("Price oscillate ratio (nearest): " + Util.format(s.getPriceOscillRatioWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))*100) + "%\n");
 			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");
 			
 			info.append("\n");

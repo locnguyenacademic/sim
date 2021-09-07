@@ -110,6 +110,24 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
+	protected Price getPriceWithin(long timeInterval) {
+		Price lastPrice = getLast();
+		if (lastPrice == null) return null;
+		
+		int n = prices.size();
+		Price found = null;
+		for (int i = n - 1; i >= 0 ; i--) {
+			Price price = prices.get(i);
+			if (lastPrice.getTime() - price.getTime() >= timeInterval) {
+				found = price;
+				break;
+			}
+		}
+		
+		return found != null ? found : prices.get(0);
+	}
+
+	
 	public List<Price> getInternals() {
 		return prices;
 	}
