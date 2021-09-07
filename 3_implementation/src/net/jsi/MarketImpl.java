@@ -142,7 +142,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			List<Stock> stocks = group.getStocks(timeInterval);
 			for (Stock stock : stocks) {
 				if (stock.isCommitted())
-					profit += stock.getProfit(timeInterval) + stock.getValue(timeInterval);
+					profit += stock.getProfit(timeInterval) + stock.getMargin(timeInterval);
 			}
 		}
 		

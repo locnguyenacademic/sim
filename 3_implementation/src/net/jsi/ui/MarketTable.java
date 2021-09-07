@@ -9,9 +9,12 @@ package net.jsi.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -588,6 +592,16 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	public boolean isShowCommit() {
+		return getModel2().showCommit;
+	}
+	
+	
+	public void setShowCommit(boolean showCommit) {
+		getModel2().showCommit = showCommit;
+	}
+	
+	
 	public Stock getSelectedStock() {
 		int selectedRow = getSelectedRow();
 		if (selectedRow < 0) return null;
@@ -708,6 +722,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
     protected EventListenerList listenerList = new EventListenerList();
+    
+    
+    protected boolean showCommit = true;
 
     
     public MarketTableModel(Market market, boolean forStock) {
@@ -768,6 +785,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				if (query == null) query = m;
 				for (int i = 0; i < m.size(); i++) {
 					StockGroup group = m.get(i);
+					if (group.isCommitted() && !showCommit) continue;
 					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
 					List<EstimateStock> estimateStocks = estimator.estimateStopLossTakeProfit(group.getStocks(group.getTimeViewInterval()), group.getTimeViewInterval());
 					estimators.put(group.code(), estimateStocks);
@@ -776,6 +794,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			
 			List<Stock> stocks = market.getStocks(market.getTimeViewInterval());
 			for (Stock stock : stocks) {
+				if (stock.isCommitted() && !showCommit) continue;
 				Vector<Object> row = toRow(stock);
 				data.add(row);
 			}
@@ -785,6 +804,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			if (m != null) {
 				List<StockGroup> groups = m.getGroups(market.getTimeViewInterval());
 				for (StockGroup group : groups) {
+					if (group.isCommitted() && !showCommit) continue;
 					Vector<Object> row = toRow(group);
 					if (row != null) data.add(row);
 				}
@@ -981,6 +1001,12 @@ class MarketSummary extends JDialog {
 	protected MarketTable tblMarket = null;
 	
 	
+	protected JCheckBox chkShowCommit = null;
+	
+	
+	protected JButton btnOK = null;
+	
+	
 	public MarketSummary(Market market, MarketListener listener, Component component) {
 		super(Util.getDialogForComponent(component), "Market summary", true);
 		this.market = market;
@@ -990,23 +1016,46 @@ class MarketSummary extends JDialog {
 		setLocationRelativeTo(Util.getDialogForComponent(component));
 		setLayout(new BorderLayout());
 		
+		
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		
 		tblMarket = new MarketTable(market, false, listener);
 		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
 		
+		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		body.add(paneMarket, BorderLayout.SOUTH);
+		
+		chkShowCommit = new JCheckBox("Show commit");
+		chkShowCommit.setSelected(true);
+		chkShowCommit.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (tblMarket.isShowCommit() != chkShowCommit.isSelected()) {
+					tblMarket.setShowCommit(chkShowCommit.isSelected());
+					tblMarket.update();
+				}
+				
+				if (chkShowCommit.isSelected())
+					chkShowCommit.setText("Show commit");
+				else
+					chkShowCommit.setText("Hide commit");
+			}
+		});
+		paneMarket.add(chkShowCommit);
+
+		
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton("Close");
-		ok.addActionListener(new ActionListener() {
+		btnOK = new JButton("Close");
+		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		footer.add(ok);
+		footer.add(btnOK);
 	}
 	
 	

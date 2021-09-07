@@ -12,6 +12,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -23,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -47,6 +50,9 @@ public class MarketPanel extends JPanel implements MarketListener {
 
 	private static final long serialVersionUID = 1L;
 
+	
+	protected JCheckBox chkShowCommit;
+	
 	
 	protected JLabel lblStartTime;
 			
@@ -134,6 +140,27 @@ public class MarketPanel extends JPanel implements MarketListener {
 		add(body, BorderLayout.CENTER);
 		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
 		
+		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		body.add(paneMarket, BorderLayout.SOUTH);
+		
+		chkShowCommit = new JCheckBox("Show commit");
+		chkShowCommit.setSelected(true);
+		chkShowCommit.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (tblMarket.isShowCommit() != chkShowCommit.isSelected()) {
+					tblMarket.setShowCommit(chkShowCommit.isSelected());
+					tblMarket.update();
+				}
+				
+				if (chkShowCommit.isSelected())
+					chkShowCommit.setText("Show commit");
+				else
+					chkShowCommit.setText("Hide commit");
+			}
+		});
+		paneMarket.add(chkShowCommit);
+
 		
 		JPanel footer = new JPanel(new BorderLayout());
 		add(footer, BorderLayout.SOUTH);
