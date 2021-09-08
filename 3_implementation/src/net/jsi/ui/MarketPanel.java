@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,6 +42,8 @@ import javax.swing.filechooser.FileFilter;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Stock;
+import net.jsi.StockGroup;
+import net.jsi.StockImpl;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.Util;
@@ -50,6 +53,12 @@ public class MarketPanel extends JPanel implements MarketListener {
 
 	private static final long serialVersionUID = 1L;
 
+	
+	protected JButton btnTake;
+	
+	
+	protected JButton btnSummary;
+	
 	
 	protected JCheckBox chkShowCommit;
 	
@@ -90,8 +99,12 @@ public class MarketPanel extends JPanel implements MarketListener {
 	protected File file = null;
 	
 	
-	public MarketPanel(Market market) {
-		tblMarket = createMarketTable(market);
+	protected boolean forStock = true;
+	
+	
+	public MarketPanel(Market market, boolean forStock, MarketListener listener) {
+		this.forStock = forStock;
+		tblMarket = createMarketTable(market, forStock, listener);
 		tblMarket.getModel2().addMarketListener(this);
 		setLayout(new BorderLayout());
 		
@@ -110,8 +123,8 @@ public class MarketPanel extends JPanel implements MarketListener {
 		JPanel toolbar2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		header.add(toolbar2, BorderLayout.EAST);
 		
-		JButton take = new JButton("Take new");
-		take.addActionListener(new ActionListener() {
+		btnTake = new JButton("Take new");
+		btnTake.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -119,11 +132,11 @@ public class MarketPanel extends JPanel implements MarketListener {
 				take(stock, false);
 			}
 		});
-		take.setMnemonic('n');
-		toolbar2.add(take);
+		btnTake.setMnemonic('n');
+		toolbar2.add(btnTake);
 		
-		JButton summary = new JButton("Summary");
-		summary.addActionListener(new ActionListener() {
+		btnSummary = new JButton("Summary");
+		btnSummary.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -132,8 +145,8 @@ public class MarketPanel extends JPanel implements MarketListener {
 				if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
 			}
 		});
-		summary.setMnemonic('s');
-		toolbar2.add(summary);
+		btnSummary.setMnemonic('s');
+		toolbar2.add(btnSummary);
 
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -143,8 +156,8 @@ public class MarketPanel extends JPanel implements MarketListener {
 		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		body.add(paneMarket, BorderLayout.SOUTH);
 		
-		chkShowCommit = new JCheckBox("Show commit");
-		chkShowCommit.setSelected(true);
+		chkShowCommit = new JCheckBox("Show/hide commit");
+		chkShowCommit.setSelected(tblMarket.isShowCommit());
 		chkShowCommit.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -152,11 +165,6 @@ public class MarketPanel extends JPanel implements MarketListener {
 					tblMarket.setShowCommit(chkShowCommit.isSelected());
 					tblMarket.update();
 				}
-				
-				if (chkShowCommit.isSelected())
-					chkShowCommit.setText("Show commit");
-				else
-					chkShowCommit.setText("Hide commit");
 			}
 		});
 		paneMarket.add(chkShowCommit);
@@ -243,7 +251,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void watchStocks() {
-		MarketWatchDialog dlgMarket = new MarketWatchDialog(tblMarket.getWatchMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketWatchDialog dlgMarket = new MarketWatchDialog(tblMarket.getWatchMarket(), forStock, StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
@@ -252,7 +260,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void placeStocks() {
-		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), forStock, StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
@@ -275,8 +283,57 @@ public class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	protected MarketTable createMarketTable(Market market) {
-		return new MarketTable(market, true, null);
+	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
+		MarketPanel thisPanel = this;
+		return new MarketTable(market, forStock, listener) {
+			private static final long serialVersionUID = 1L;
+
+			private boolean moveStockToTrash(Stock stock) {
+				if (stock == null) return false;
+				MarketImpl m = m(); if (m == null) return false;
+				StockImpl s = m.c(stock); if (s == null) return false;
+				
+				MarketImpl trashMarket = m.getTrashMarket();
+				double volume = stock.getVolume(m.getTimeViewInterval(), true);
+				if (trashMarket != null) {
+					Stock added = trashMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
+					if (added == null) return false;
+				}
+
+				Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), s.getTakenTimePoint(m.getTimeViewInterval()));
+				if (removedStock == null) return false;
+				StockGroup group = m.get(stock.code(), stock.isBuy());
+				if (group != null && group.size() == 0) m.remove(stock.code(), stock.isBuy());
+				
+				return true;
+			}
+
+			
+			@Override
+			protected void delete() {
+				if (!getModel2().isForStock()) {
+					super.delete();
+					return;
+				}
+				
+				int answer = JOptionPane.showConfirmDialog(thisPanel, "Would you like to move these stocks to trash?\nIf yes, they are moved to trash.\nIf no, they are deleted forever.", "Delete stocks", JOptionPane.YES_NO_OPTION);
+				if (answer != JOptionPane.YES_OPTION) {
+					super.delete();
+					return;
+				}
+				
+				List<Stock> stocks = getSelectedStocks();
+				boolean ret = false;
+				for (Stock stock : stocks) {
+					if (stock == null) continue;
+					boolean ret0 = moveStockToTrash(stock);
+					ret = ret || ret0;
+				}
+				
+				if (ret) update();
+			}
+			
+		};
 	}
 	
 	
@@ -328,8 +385,12 @@ public class MarketPanel extends JPanel implements MarketListener {
 		JFileChooser fc = createFileChooser();
         if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
         File file = fc.getSelectedFile();
-        boolean ret = open(file);
+        if (!file.exists() || file.isDirectory()) {
+			JOptionPane.showMessageDialog(this, "Wrong file", "Wrong file", JOptionPane.ERROR_MESSAGE);
+			return;
+        }
         
+        boolean ret = open(file);
         if (ret)
             JOptionPane.showMessageDialog(this, "Success to open market \"" + getMarket().getName() + "\"", "Open market", JOptionPane.INFORMATION_MESSAGE);
 		else
@@ -341,7 +402,8 @@ public class MarketPanel extends JPanel implements MarketListener {
 		if (file == null || !file.exists() || file.isDirectory()) return false;
         try {
         	FileReader reader = new FileReader(file);
-        	boolean ret = getMarketTable().open(reader);
+        	if (tblMarket.isShowCommit() != chkShowCommit.isSelected()) tblMarket.setShowCommit(chkShowCommit.isSelected());
+        	boolean ret = tblMarket.open(reader);
             if (ret) this.file = file;
 
             reader.close();
@@ -459,6 +521,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public boolean accept(File f) {
 				try {
+					if (f.isDirectory()) return true;
 					String name = f.getName();
 					int index = name.lastIndexOf('.');
 					if (index < 0) return false;
@@ -510,7 +573,7 @@ class MarketDialog extends JDialog {
 	private boolean isPressOK = false;
 	
 	
-	public MarketDialog(Market market, MarketListener listener, Component parent) {
+	public MarketDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
 		super(Util.getDialogForComponent(parent), "Market " + market.getName(), true);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -534,9 +597,7 @@ class MarketDialog extends JDialog {
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
-		MarketPanel mp = createMarketPanel(market);
-		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
-			mp.getMarketTable().getModel2().addMarketListener(listener);
+		MarketPanel mp = createMarketPanel(market, forStock, listener);
 		body.add(mp, BorderLayout.CENTER);
 		
 		JPanel footer = new JPanel();
@@ -570,8 +631,11 @@ class MarketDialog extends JDialog {
 	}
 	
 	
-	protected MarketPanel createMarketPanel(Market market) {
-		return new MarketPanel(market);
+	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener listener) {
+		MarketPanel mp = new MarketPanel(market, forStock, listener);
+		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
+			mp.getMarketTable().getModel2().addMarketListener(listener);
+		return mp;
 	}
 	
 	

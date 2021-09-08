@@ -129,17 +129,16 @@ public class MarketTable extends JTable implements MarketListener {
 			take(stock, true);
 		else {
 			stock = stock != null ? stock : getSelectedStock();
-			if (stock != null) {
-				new StockSummary(getMarket(), stock.code(), stock.isBuy(), null, this) {
-					private static final long serialVersionUID = 1L;
+			if (stock == null) return;
+			new StockSummary(getMarket(), stock.code(), stock.isBuy(), null, this) {
+				private static final long serialVersionUID = 1L;
 
-					@Override
-					protected List<EstimateStock> getEstimateStocks() {
-						return Util.newList(0);
-					}
-				
-				}.setVisible(true);
-			}
+				@Override
+				protected List<EstimateStock> getEstimateStocks() {
+					return Util.newList(0);
+				}
+			
+			}.setVisible(true);
 		}
 	}
 	
@@ -175,7 +174,8 @@ public class MarketTable extends JTable implements MarketListener {
 		MarketImpl m = m(); if (m == null) return false;
 		
 		if (getModel2().isForStock()) {
-			Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), m.c(stock).getTakenTimePoint(m.getTimeViewInterval()));
+			StockImpl s = m.c(stock); if (s == null) return false;
+			Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), s.getTakenTimePoint(m.getTimeViewInterval()));
 			if (removedStock == null) return false;
 			
 			StockGroup group = m.get(stock.code(), stock.isBuy());
@@ -190,6 +190,9 @@ public class MarketTable extends JTable implements MarketListener {
 
 	
 	protected void delete() {
+		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+
 		List<Stock> stocks = getSelectedStocks();
 		boolean ret = false;
 		for (Stock stock : stocks) {
@@ -373,8 +376,7 @@ public class MarketTable extends JTable implements MarketListener {
 					new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
-							if (ret == JOptionPane.YES_OPTION) delete();
+							delete();
 						}
 					});
 				ctxMenu.add(miDelete);
@@ -492,8 +494,7 @@ public class MarketTable extends JTable implements MarketListener {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
-						if (ret == JOptionPane.YES_OPTION) delete();
+						delete();
 					}
 				});
 			ctxMenu.add(miDelete);
@@ -1020,7 +1021,7 @@ class MarketSummary extends JDialog {
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		
-		tblMarket = new MarketTable(market, false, listener);
+		tblMarket = createMarketTable(market, listener);
 		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
 		
 		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -1061,6 +1062,11 @@ class MarketSummary extends JDialog {
 	
 	public MarketTable getMarketTable() {
 		return tblMarket;
+	}
+	
+	
+	protected MarketTable createMarketTable(Market market, MarketListener listener) {
+		return new MarketTable(market, false, listener);
 	}
 	
 	

@@ -47,10 +47,7 @@ public class MarketWatchTable extends MarketTable {
 		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
 		placeMarket.getStore().addPriceWithoutDuplicate(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
-		if (added != null) {
-			//m.removeStock(added.code(), added.isBuy(), m.getTimeViewInterval(), stock.getPrice().getTime());
-			update();
-		}
+		if (added != null) update();
 		
 		return added;
 	}
@@ -89,14 +86,14 @@ class MarketWatchPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketWatchPanel(Market market) {
-		super(market);
+	public MarketWatchPanel(Market market, boolean forStock, MarketListener listener) {
+		super(market, forStock, listener);
 	}
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market) {
-		return new MarketWatchTable(market, true, null);
+	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
+		return new MarketWatchTable(market, forStock, listener);
 	}
 
 
@@ -110,17 +107,20 @@ class MarketWatchDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketWatchDialog(Market market, MarketListener listener, Component parent) {
-		super(market, listener, parent);
+	public MarketWatchDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
+		super(market, forStock, listener, parent);
 		btnOK.setText("Close");
 		btnCancel.setVisible(false);
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market) {
-		return new MarketWatchPanel(market);
+	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener listener) {
+		MarketPanel mp = new MarketWatchPanel(market, forStock, listener);
+		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
+			mp.getMarketTable().getModel2().addMarketListener(listener);
+		return mp;
 	}
-	
-	
+
+
 }

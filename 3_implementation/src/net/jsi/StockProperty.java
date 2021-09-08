@@ -56,6 +56,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String NOTCODE7 = "@";
 
 	
+	public final static String NOTCODE8 = "!";
+
+	
 	public final static String JSI_EXT = "jsi";
 
 	

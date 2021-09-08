@@ -49,6 +49,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private MarketImpl placeMarket = null;
 	
 	
+	private MarketImpl trashMarket = null;
+
+	
 	public MarketImpl(String name, double refLeverage, double unitBias) {
 		this(name, refLeverage, unitBias, true);
 	}
@@ -62,12 +65,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (createAssocMarkets) {
 			this.watchMarket = newWatchMarket();
 			this.placeMarket = newPlaceMarket();
-			
-			this.watchMarket.watchMarket = this.watchMarket;
-			this.watchMarket.placeMarket = this.placeMarket;
-
-			this.placeMarket.watchMarket = this.watchMarket;
-			this.placeMarket.placeMarket = this.placeMarket;
+			this.trashMarket = newTrashMarket();
 		}
 	}
 
@@ -114,7 +112,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 			@Override
 			public Market getDualMarket() {
-				return null;
+				return thisMarket;
 			}
 
 			@Override
@@ -133,6 +131,35 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		placeMarket.setTimeValidInterval(getTimeValidInterval());
 		
 		return placeMarket;
+	}
+
+	
+	protected MarketImpl newTrashMarket() {
+		MarketImpl thisMarket = this;
+		MarketImpl trashMarket = new MarketImpl(thisMarket.getName(), thisMarket.getLeverage(), thisMarket.getUnitBias(), false) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Market getSuperMarket() {
+				return thisMarket.getSuperMarket();
+			}
+
+			@Override
+			public Market getDualMarket() {
+				return thisMarket;
+			}
+
+			@Override
+			public double getBalanceBase() {
+				return thisMarket.calcInvestAmount(thisMarket.getTimeViewInterval());
+			}
+
+		};
+		trashMarket.setTimeViewInterval(getTimeViewInterval());
+		trashMarket.setTimeValidInterval(getTimeValidInterval());
+		
+		return trashMarket;
 	}
 
 	
@@ -585,6 +612,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setTimeViewInterval(timeViewInterval);
+		
+		MarketImpl placeMarket = getPlaceMarket();
+		if (placeMarket != null && placeMarket != this) placeMarket.setTimeViewInterval(timeViewInterval);
+		
+		MarketImpl trashMarket = getTrashMarket();
+		if (trashMarket != null && trashMarket != this) trashMarket.setTimeViewInterval(timeViewInterval);
 	}
 
 
@@ -594,6 +627,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setTimeValidInterval(timeValidInterval);
+		
+		MarketImpl placeMarket = getPlaceMarket();
+		if (placeMarket != null && placeMarket != this) placeMarket.setTimeValidInterval(timeValidInterval);
+		
+		MarketImpl trashMarket = getTrashMarket();
+		if (trashMarket != null && trashMarket != this) trashMarket.setTimeValidInterval(timeValidInterval);
 	}
 
 
@@ -658,6 +697,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 
+	public MarketImpl getTrashMarket() {
+		return trashMarket;
+	}
+
+	
 	public boolean open(Reader in) {
 		reset();
 		
@@ -682,6 +726,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			boolean readPlaceStocks = false;
 			boolean readPropertiesStart = false;
 			boolean readProperties = false;
+			boolean readTrashStart = false;
+			boolean readTrash = false;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.isEmpty()) continue;
@@ -738,7 +784,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					if (!readStocksStart && fields[0].equals(StockProperty.NOTCODE4))
 						readStocksStart = true;
 					else if (!fields[0].equals(StockProperty.NOTCODE4))
-						readStocks(this, fields);
+						readRefStocks(this, fields);
 					else
 						readStocks = true;
 					
@@ -750,7 +796,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					if (!readWatchStocksStart && fields[0].equals(StockProperty.NOTCODE5))
 						readWatchStocksStart = true;
 					else if (!fields[0].equals(StockProperty.NOTCODE5))
-						readStocks(getWatchMarket(), fields);
+						readRefStocks(getWatchMarket(), fields);
 					else
 						readWatchStocks = true;
 					
@@ -762,7 +808,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					if (!readPlaceStocksStart && fields[0].equals(StockProperty.NOTCODE6))
 						readPlaceStocksStart = true;
 					else if (!fields[0].equals(StockProperty.NOTCODE6))
-						readPlaceStocks(getPlaceMarket(), fields);
+						readStocks(getPlaceMarket(), fields);
 					else
 						readPlaceStocks = true;
 					
@@ -781,6 +827,18 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					continue;
 				}
 				
+				if (!readTrash) {
+					if (!readProperties) continue;
+					if (!readTrashStart && fields[0].equals(StockProperty.NOTCODE8))
+						readTrashStart = true;
+					else if (!fields[0].equals(StockProperty.NOTCODE8))
+						readRefStocks(getTrashMarket(), fields);
+					else
+						readTrash = true;
+					
+					continue;
+				}
+
 			} //End while
 			
 			compactGroups(market);
@@ -833,7 +891,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private static void readStocks(MarketImpl market, String[] fields) {
+	private static void readRefStocks(MarketImpl market, String[] fields) {
 		String code = fields[0];
 		boolean buy = Boolean.parseBoolean(fields[1]);
 		double volume = Double.parseDouble(fields[2]);
@@ -854,7 +912,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private static void readPlaceStocks(MarketImpl market, String[] fields) {
+	private static void readStocks(MarketImpl market, String[] fields) {
 		String code = fields[0];
 		boolean buy = Boolean.parseBoolean(fields[1]);
 		double leverage = Double.parseDouble(fields[2]);
@@ -918,22 +976,27 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			writer.write(StockProperty.NOTCODE3 + "\n");
 			
 			writer.write(StockProperty.NOTCODE4 + "\n");
-			if (watchMarket != null) writeStocks(this, writer);
+			if (watchMarket != null) writeRefStocks(this, writer);
 			writer.write(StockProperty.NOTCODE4 + "\n");
 
 			MarketImpl watchMarket = getWatchMarket();
 			writer.write(StockProperty.NOTCODE5 + "\n");
-			if (watchMarket != null) writeStocks(watchMarket, writer);
+			if (watchMarket != null) writeRefStocks(watchMarket, writer);
 			writer.write(StockProperty.NOTCODE5 + "\n");
 
 			MarketImpl placeMarket = getPlaceMarket();
 			writer.write(StockProperty.NOTCODE6 + "\n");
-			if (placeMarket != null) writePlaceStocks(placeMarket, writer);
+			if (placeMarket != null) writeStocks(placeMarket, writer);
 			writer.write(StockProperty.NOTCODE6 + "\n");
 
 			writer.write(StockProperty.NOTCODE7 + "\n");
 			writeProperties(getStore(), writer);
 			writer.write(StockProperty.NOTCODE7 + "\n");
+
+			MarketImpl trashMarket = getTrashMarket();
+			writer.write(StockProperty.NOTCODE8 + "\n");
+			if (trashMarket != null) writeRefStocks(trashMarket, writer);
+			writer.write(StockProperty.NOTCODE8 + "\n");
 
 			writer.flush();
 			return true;
@@ -973,7 +1036,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private static void writeStocks(MarketImpl market, Writer writer) throws IOException {
+	private static void writeRefStocks(MarketImpl market, Writer writer) throws IOException {
 		for (StockGroup group : market.groups) {
 			for (int i = 0; i < group.size(); i++) {
 				Stock stock = group.get(i);
@@ -998,7 +1061,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	private static void writePlaceStocks(MarketImpl market, Writer writer) throws IOException {
+	private static void writeStocks(MarketImpl market, Writer writer) throws IOException {
 		for (StockGroup group : market.groups) {
 			for (int i = 0; i < group.size(); i++) {
 				Stock stock = group.get(i);

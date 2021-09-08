@@ -109,7 +109,7 @@ public class Investor extends JFrame implements MarketListener {
 		add(body, BorderLayout.CENTER);
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);
-			MarketPanel mp = new MarketPanel(market);
+			MarketPanel mp = new MarketPanel(market, true, null);
 			mp.getMarketTable().getModel2().addMarketListener(this);
 			body.add(market.getName(), mp);
 		}
@@ -201,7 +201,7 @@ public class Investor extends JFrame implements MarketListener {
 				
 				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
@@ -224,7 +224,7 @@ public class Investor extends JFrame implements MarketListener {
 				
 				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
 				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedMarket, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
@@ -251,6 +251,29 @@ public class Investor extends JFrame implements MarketListener {
 		mniApplyPlaceMarket.setMnemonic('a');
 		mniApplyPlaceMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniApplyPlaceMarket);
+		
+		mnFile.addSeparator();
+		
+		JMenuItem mniTrashMarket = new JMenuItem(
+		new AbstractAction("Trash") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Market selectedMarket = getSelectedTrashMarket();
+				if (selectedMarket == null) return;
+				
+				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
+				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
+				MarketTrashDialog dlgMarket = new MarketTrashDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				dlgMarket.setTitle("Stocks trash for market " + tblMarket.getMarket().getName());
+				dlgMarket.setVisible(true);
+				
+				tblMarket.update();
+			}
+		});
+		mniTrashMarket.setMnemonic('t');
+		mnFile.add(mniTrashMarket);
 		
 		mnFile.addSeparator();
 		
@@ -504,7 +527,7 @@ public class Investor extends JFrame implements MarketListener {
 		Market market = universe.newMarket(name, leverage, unitBias);
 		if (!universe.add(market)) return null;
 		
-		return new MarketPanel(market) {
+		return new MarketPanel(market, true, null) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -615,6 +638,15 @@ public class Investor extends JFrame implements MarketListener {
 			return null;
 		else
 			return universe.c(selectedMarket).getPlaceMarket();
+	}
+
+	
+	private Market getSelectedTrashMarket() {
+		Market selectedMarket = getSelectedMarket();
+		if (selectedMarket == null)
+			return null;
+		else
+			return universe.c(selectedMarket).getTrashMarket();
 	}
 
 	
