@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import net.jsi.Market;
@@ -25,19 +24,12 @@ public class MarketWatchTable extends MarketTable {
 	}
 
 
-	@Override
-	protected void commit(Stock stock) {
-		JOptionPane.showMessageDialog(this, "Commit function is unabled for watch mode", "Turn off commit", JOptionPane.INFORMATION_MESSAGE);
-		return;
-	}
-
-
 	private Stock place(Stock stock) {
 		if (stock == null) stock = getSelectedStock();
 		if (stock == null) return null;
 		MarketImpl m = m();
 		if (m == null) return null;
-		MarketImpl placeMarket = m().getPlaceMarket();
+		MarketImpl placeMarket = m.getPlaceMarket();
 		if (placeMarket == null) return null;
 		
 		Price price = (Price)stock.getPrice().clone();
@@ -47,7 +39,15 @@ public class MarketWatchTable extends MarketTable {
 		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
 		placeMarket.getStore().addPriceWithoutDuplicate(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
-		if (added != null) update();
+		if (added != null) {
+			added.setCommitted(stock.isCommitted());
+			try {
+				placeMarket.c(added).setStopLoss(stock.getStopLoss());
+				placeMarket.c(added).setTakeProfit(stock.getTakeProfit());
+			} catch (Exception e) {}
+			
+			update();
+		}
 		
 		return added;
 	}

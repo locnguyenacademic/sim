@@ -54,31 +54,25 @@ public class MarketTrashTable extends MarketTable {
 		
 		double volume = stock.getVolume(m.getTimeViewInterval(), true);
 		Stock added = dualMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-		if (added == null) return false;
+		if (added == null)
+			return false;
+		else {
+			added.setCommitted(stock.isCommitted());
+			try {
+				dualMarket.c(added).setStopLoss(s.getStopLoss());
+				dualMarket.c(added).setTakeProfit(s.getTakeProfit());
+			} catch (Exception e) {}
+		}
 
-		Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), s.getTakenTimePoint(m.getTimeViewInterval()));
-		if (removedStock == null) return false;
 		StockGroup group = m.get(stock.code(), stock.isBuy());
-		if (group != null && group.size() == 0) m.remove(stock.code(), stock.isBuy());
+		if (group == null) return false;
+		group.remove(stock);
+		if (group.size() == 0) m.remove(stock.code(), stock.isBuy());
 		return true;
 	}
 	
 	
 	private void recover() {
-		List<Stock> stocks = getSelectedStocks();
-		boolean ret = false;
-		for (Stock stock : stocks) {
-			if (stock == null) continue;
-			boolean ret0 = recover0(stock);
-			ret = ret || ret0;
-		}
-		
-		if (ret) update();
-
-	}
-	
-	
-	private void recoverGroup() {
 		List<Stock> stocks = getSelectedStocks();
 		boolean ret = false;
 		for (Stock stock : stocks) {
@@ -93,11 +87,14 @@ public class MarketTrashTable extends MarketTable {
 					ret = ret || ret0;
 				}
 			}
+			else {
+				boolean ret0 = recover0(stock);
+				ret = ret || ret0;
+			}
 		}
 		
 		if (ret) update();
 	}
-	
 	
 	
 	@Override
@@ -123,7 +120,7 @@ public class MarketTrashTable extends MarketTable {
 					new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							recoverGroup();
+							recover();
 						}
 					});
 				ctxMenu.add(miRecover);
@@ -212,8 +209,6 @@ public class MarketTrashTable extends MarketTable {
 			});
 		ctxMenu.add(miSummary);
 
-		ctxMenu.addSeparator();
-		
 		JMenuItem miRefresh = new JMenuItem("Refresh");
 		miRefresh.addActionListener( 
 			new ActionListener() {

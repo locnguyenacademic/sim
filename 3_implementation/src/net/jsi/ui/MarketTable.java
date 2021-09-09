@@ -174,12 +174,10 @@ public class MarketTable extends JTable implements MarketListener {
 		MarketImpl m = m(); if (m == null) return false;
 		
 		if (getModel2().isForStock()) {
-			StockImpl s = m.c(stock); if (s == null) return false;
-			Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), s.getTakenTimePoint(m.getTimeViewInterval()));
-			if (removedStock == null) return false;
-			
 			StockGroup group = m.get(stock.code(), stock.isBuy());
-			if (group != null && group.size() == 0) m.remove(stock.code(), stock.isBuy());
+			if (group == null) return false;
+			group.remove(stock);
+			if (group.size() == 0) m.remove(stock.code(), stock.isBuy());
 			
 			return true;
 		}
@@ -189,10 +187,7 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 	
-	protected void delete() {
-		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
-		if (answer != JOptionPane.YES_OPTION) return;
-
+	protected void deleteSelected() {
 		List<Stock> stocks = getSelectedStocks();
 		boolean ret = false;
 		for (Stock stock : stocks) {
@@ -202,6 +197,13 @@ public class MarketTable extends JTable implements MarketListener {
 		}
 		
 		if (ret) update();
+	}
+	
+	
+	protected void delete() {
+		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+		deleteSelected();
 	}
 	
 	
@@ -549,8 +551,6 @@ public class MarketTable extends JTable implements MarketListener {
 			});
 		ctxMenu.add(miSummary);
 
-		ctxMenu.addSeparator();
-		
 		JMenuItem miRefresh = new JMenuItem("Refresh");
 		miRefresh.addActionListener( 
 			new ActionListener() {
@@ -725,7 +725,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
     protected EventListenerList listenerList = new EventListenerList();
     
     
-    protected boolean showCommit = true;
+    protected boolean showCommit = false;
 
     
     public MarketTableModel(Market market, boolean forStock) {

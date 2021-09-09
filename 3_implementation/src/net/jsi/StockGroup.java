@@ -254,7 +254,7 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
-	protected boolean remove(Stock stock) {
+	public boolean remove(Stock stock) {
 		return stocks.remove(stock);
 	}
 	

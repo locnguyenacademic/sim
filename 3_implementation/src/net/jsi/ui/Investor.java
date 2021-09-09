@@ -252,8 +252,6 @@ public class Investor extends JFrame implements MarketListener {
 		mniApplyPlaceMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniApplyPlaceMarket);
 		
-		mnFile.addSeparator();
-		
 		JMenuItem mniTrashMarket = new JMenuItem(
 		new AbstractAction("Trash") {
 			private static final long serialVersionUID = 1L;

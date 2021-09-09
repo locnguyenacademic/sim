@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import net.jsi.Market;
@@ -185,8 +184,7 @@ public class MarketPlaceTable extends MarketTable {
 						new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								int ret = JOptionPane.showConfirmDialog(tblMarket, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
-								if (ret == JOptionPane.YES_OPTION) delete();
+								delete();
 							}
 						});
 					ctxMenu.add(miDelete);
@@ -334,8 +332,6 @@ public class MarketPlaceTable extends MarketTable {
 			});
 		ctxMenu.add(miSummary);
 
-		ctxMenu.addSeparator();
-		
 		JMenuItem miRefresh = new JMenuItem("Refresh");
 		miRefresh.addActionListener( 
 			new ActionListener() {
@@ -367,29 +363,11 @@ class MarketPlacePanel extends MarketPanel {
 
 
 	@Override
-	protected JPopupMenu createContextMenu() {
-		return super.createContextMenu();
-	}
-
-
-	@Override
-	protected void onDoubleClick() {
-		super.onDoubleClick();
-	}
-
-
-	@Override
 	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
 		return  new MarketPlaceTable(market, forStock, listener);
 	}
 
 
-	@Override
-	protected void take(Stock input, boolean update) {
-		super.take(input, update);
-	}
-
-	
 }
 
 

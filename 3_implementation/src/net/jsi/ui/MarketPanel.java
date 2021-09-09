@@ -297,13 +297,21 @@ public class MarketPanel extends JPanel implements MarketListener {
 				double volume = stock.getVolume(m.getTimeViewInterval(), true);
 				if (trashMarket != null) {
 					Stock added = trashMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-					if (added == null) return false;
+					if (added == null)
+						return false;
+					else {
+						added.setCommitted(stock.isCommitted());
+						try {
+							trashMarket.c(added).setStopLoss(s.getStopLoss());
+							trashMarket.c(added).setTakeProfit(s.getTakeProfit());
+						} catch (Exception e) {}
+					}
 				}
 
-				Stock removedStock = m.removeStock(stock.code(), stock.isBuy(), m.getTimeViewInterval(), s.getTakenTimePoint(m.getTimeViewInterval()));
-				if (removedStock == null) return false;
 				StockGroup group = m.get(stock.code(), stock.isBuy());
-				if (group != null && group.size() == 0) m.remove(stock.code(), stock.isBuy());
+				if (group == null) return false;
+				group.remove(stock);
+				if (group.size() == 0) m.remove(stock.code(), stock.isBuy());
 				
 				return true;
 			}
@@ -318,7 +326,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				
 				int answer = JOptionPane.showConfirmDialog(thisPanel, "Would you like to move these stocks to trash?\nIf yes, they are moved to trash.\nIf no, they are deleted forever.", "Delete stocks", JOptionPane.YES_NO_OPTION);
 				if (answer != JOptionPane.YES_OPTION) {
-					super.delete();
+					super.deleteSelected();
 					return;
 				}
 				
@@ -331,6 +339,82 @@ public class MarketPanel extends JPanel implements MarketListener {
 				}
 				
 				if (ret) update();
+			}
+
+
+			private boolean watch0(Stock stock) {
+				if (stock == null) return false;
+				MarketImpl m = m(); if (m == null) return false;
+				StockImpl s = m.c(stock); if (s == null) return false;
+				
+				MarketImpl watchMarket = m.getWatchMarket();
+				double volume = stock.getVolume(m.getTimeViewInterval(), true);
+				if (watchMarket != null) {
+					Stock added = watchMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
+					if (added == null)
+						return false;
+					else {
+						added.setCommitted(stock.isCommitted());
+						try {
+							watchMarket.c(added).setStopLoss(s.getStopLoss());
+							watchMarket.c(added).setTakeProfit(s.getTakeProfit());
+						} catch (Exception e) {}
+					}
+				}
+
+				StockGroup group = m.get(stock.code(), stock.isBuy());
+				if (group == null) return false;
+				group.remove(stock);
+				if (group.size() == 0) m.remove(stock.code(), stock.isBuy());
+				
+				return true;
+			}
+			
+			
+			private void watch() {
+				List<Stock> stocks = getSelectedStocks();
+				boolean ret = false;
+				for (Stock stock : stocks) {
+					if (stock == null)
+						continue;
+					else if (stock instanceof StockGroup) {
+						StockGroup group = (StockGroup)stock;
+						List<Stock> rmStocks = Util.newList(group.size());
+						for (int i = 0; i < group.size(); i++) rmStocks.add(group.get(i));
+						for (Stock rmStock : rmStocks) {
+							boolean ret0 = watch0(rmStock);
+							ret = ret || ret0;
+						}
+					}
+					else {
+						boolean ret0 = watch0(stock);
+						ret = ret || ret0;
+					}
+				}
+				
+				if (ret) update();
+			}
+			
+			
+			@Override
+			protected JPopupMenu createContextMenu() {
+				JPopupMenu ctxMenu = super.createContextMenu();
+				Stock stock = getSelectedStock();
+				if (stock == null) return ctxMenu;
+				
+				ctxMenu.addSeparator();
+				
+				JMenuItem miWatch = new JMenuItem("Watch");
+				miWatch.addActionListener( 
+					new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							watch();
+						}
+					});
+				ctxMenu.add(miWatch);
+				
+				return ctxMenu;
 			}
 			
 		};
