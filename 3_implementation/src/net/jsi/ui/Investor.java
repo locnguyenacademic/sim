@@ -81,8 +81,8 @@ public class Investor extends JFrame implements MarketListener {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
-				super.windowClosing(e);
+			public void windowClosed(WindowEvent e) {
+				super.windowClosed(e);
 				
 				for (int i = 0; i < body.getTabCount(); i++) {
 					Component comp = body.getComponentAt(i);
@@ -287,6 +287,18 @@ public class Investor extends JFrame implements MarketListener {
 		mniAddMarket.setMnemonic('d');
 		mnFile.add(mniAddMarket);
 		
+		JMenuItem mniRenameMarket = new JMenuItem(
+			new AbstractAction("Rename market") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					renameMarket();
+				}
+			});
+		mniRenameMarket.setMnemonic('n');
+		mnFile.add(mniRenameMarket);
+
 		JMenuItem mniRemoveMarket = new JMenuItem(
 			new AbstractAction("Remove current market") {
 				private static final long serialVersionUID = 1L;
@@ -301,6 +313,19 @@ public class Investor extends JFrame implements MarketListener {
 
 		mnFile.addSeparator();
 
+		JMenuItem mniExit = new JMenuItem(
+			new AbstractAction("Exit") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+		mniExit.setMnemonic('x');
+		mnFile.add(mniExit);
+
+		
 		JMenu mnTool = new JMenu("Tool");
 		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
@@ -372,7 +397,7 @@ public class Investor extends JFrame implements MarketListener {
 					JTextArea txtContent = new JTextArea();
 					txtContent.setLineWrap(true);
 					txtContent.setEditable(false);
-					txtContent.setText("JSI is the stock/forex investment manager.\nCopyright @ by Loc Nguyen - Loc Nguyen's Academic Network");
+					txtContent.setText("JSI is the stock/forex investment manager.\nJSI current version is " + StockProperty.VERSION + ".\nCopyright @ by Loc Nguyen - Loc Nguyen's Academic Network");
 					dlgAbout.add(new JScrollPane(txtContent), BorderLayout.CENTER);
 					
 					JPanel footer = new JPanel();
@@ -491,6 +516,26 @@ public class Investor extends JFrame implements MarketListener {
 		}
 	}
 	
+	
+	protected void renameMarket() {
+		MarketImpl selectedMarket = getSelectedMarket();
+		if (selectedMarket == null) return;
+		MarketPanel[] mps = getMarketPanels();
+		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
+		if (marketName == null) return;
+		
+		marketName = marketName.trim();
+		if (marketName.isEmpty())
+			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
+		else if (getMarketPanel(marketName) != null)
+			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
+		else {
+			selectedMarket.setName(marketName);
+			int index = getSelectedMarketPanelIndex();
+			body.setTitleAt(index, marketName);
+		}
+	}
+
 	
 	protected MarketPanel addMarket(String marketName) {
 		if (marketName == null || marketName.isEmpty()) return null;
