@@ -31,7 +31,15 @@ public abstract class EstimatorAbstract implements Estimator {
 	@Override
 	public double estimateUnitBiasFromData(long timeInterval) {
 		List<Price> prices = getPrices(timeInterval);
-		if (prices.size() == 0) return getUnitBias();
+		if (prices.size() == 0)
+			return getUnitBias();
+		else
+			return estimateUnitBiasFromData(prices);
+	}
+
+
+	public static double estimateUnitBiasFromData(List<Price> prices) {
+		if (prices.size() == 0) return 0;
 		
 		double mean1 = 0;
 		double mean2 = 0;
@@ -57,7 +65,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		return (bias1 + bias2) / 2;
 	}
 
-
+	
 	private double getLowestPrice(long timeInterval) {
 		Price price = getExtremePrice(true, timeInterval);
 		return price != null ? price.get() : 0;
@@ -322,15 +330,19 @@ public abstract class EstimatorAbstract implements Estimator {
 			return 0;
 		
 		double takenAmount = roi / refGlobalPositiveROISum * refGlobalInvestAmount;
-		double takenVolume = takenAmount / (price*getLeverage());
+		double price0 = price*getLeverage();
+		double takenVolume = takenAmount / price0;
 		if (takenVolume == 0) return 0;
 		
 		double bias = estimateBiasAtCurrentPrice(timeInterval);
 		int found = 0;
 		for (int i = 1; i <= takenVolume; i++) {
-			if (i*(price+bias) > takenAmount) found = i - 1;
+			if (price0 + i*bias > takenAmount) {
+				found = i - 1;
+				break;
+			}
 		}
-		return found * price;
+		return found * price0;
 	}
 	
 	
@@ -374,9 +386,17 @@ public abstract class EstimatorAbstract implements Estimator {
 		double price = isBuy() ? Math.min(nearEstimatedPrice, p.get()) : Math.max(nearEstimatedPrice, p.get());
 		
 		Invest invest1 = new Invest(isBuy(), volume/2, price, stopLoss, takeProfit, takeProfit);
-		invest1.margin = volume/2 * price * getLeverage();
 		Invest invest2 = new Invest(isBuy(), volume/2, price, stopLoss, takeProfit, nextTakeProfit);
-		invest2.margin = volume/2 * price * getLeverage();
+
+		invest1.margin = invest2.margin = volume/2 * price * getLeverage();
+		invest1.unitBias = invest2.unitBias = unitBias;
+		
+		double lowPrice = estimateLowPrice(timeInterval);
+		invest1.lowPrice = invest2.lowPrice = lowPrice;
+		
+		double highPrice = estimateHighPrice(timeInterval);
+		invest1.highPrice = invest2.highPrice = highPrice;
+		
 		return new Invest[] {invest1, invest2};
 	}
 

@@ -175,12 +175,12 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
-	protected boolean addWithoutDuplicate(Price price, int maxPriceCount) {
+	protected boolean addWithoutDuplicateTime(Price price, int maxPriceCount) {
 		return add(price, maxPriceCount, false);
 	}
 	
 	
-	private boolean add(Price price, int maxPriceCount, boolean duplicate) {
+	private boolean add(Price price, int maxPriceCount, boolean duplicateTime) {
 		if (price == null || !price.isValid()) return false;
 		
 		int n = prices.size();
@@ -192,7 +192,7 @@ public class PricePool implements Serializable, Cloneable {
 				added = true;
 				break;
 			}
-			else if (price.getTime() == p.getTime() && !duplicate)
+			else if (price.getTime() == p.getTime() && !duplicateTime)
 				return false;
 		}
 		if (!added) prices.add(0, price);
@@ -242,6 +242,7 @@ public class PricePool implements Serializable, Cloneable {
 	public List<TakenStockPrice> getTakenPrices(Price price, Universe universe, long timeInterval) {
 		List<TakenStockPrice> takenPrices = Util.newList(0);
 		if (price == null || universe == null) return takenPrices;
+		universe = universe != null ? universe : StockProperty.g;
 		
 		List<String> marketNames = universe.names();
 		for (String marketName : marketNames) {

@@ -23,6 +23,12 @@ public interface Estimator extends Serializable, Cloneable {
 		
 		public double price = 0;
 		
+		public double lowPrice = 0;
+
+		public double highPrice = 0;
+
+		public double unitBias = StockProperty.UNIT_BIAS;
+		
 		public double margin = 0;
 
 		public double stopLoss = 0;

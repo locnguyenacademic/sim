@@ -306,15 +306,15 @@ public class MarketPlaceTable extends MarketTable {
 
 			ctxMenu.addSeparator();
 
-			JMenuItem miDetailedSummary = new JMenuItem("Summary");
-			miDetailedSummary.addActionListener( 
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						summary(stock);
-					}
-				});
-			ctxMenu.add(miDetailedSummary);
+//			JMenuItem miDetailedSummary = new JMenuItem("Summary");
+//			miDetailedSummary.addActionListener( 
+//				new ActionListener() {
+//					@Override
+//					public void actionPerformed(ActionEvent e) {
+//						summary(stock);
+//					}
+//				});
+//			ctxMenu.add(miDetailedSummary);
 		}
 		else
 			ctxMenu.addSeparator();
@@ -324,7 +324,14 @@ public class MarketPlaceTable extends MarketTable {
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket);
+					MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket) {
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						protected MarketTable createMarketTable(Market market, MarketListener listener) {
+							return new MarketPlaceTable(market, false, listener);
+						}
+					};
 					ms.setVisible(true);
 					
 					if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
@@ -359,6 +366,25 @@ class MarketPlacePanel extends MarketPanel {
 	
 	public MarketPlacePanel(Market market, boolean forStock, MarketListener listener) {
 		super(market, forStock, listener);
+		
+		MarketPlacePanel thisPanel = this;
+		ActionListener[] als = btnSummary.getActionListeners();
+		for (ActionListener al : als) btnSummary.removeActionListener(al);
+		btnSummary.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisPanel) {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected MarketTable createMarketTable(Market market, MarketListener listener) {
+						return new MarketPlaceTable(market, false, listener);
+					}
+				};
+				ms.setVisible(true);
+				if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
+			}
+		});
 	}
 
 

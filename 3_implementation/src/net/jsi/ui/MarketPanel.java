@@ -671,13 +671,9 @@ class MarketDialog extends JDialog {
 		addMouseListener(new MouseAdapter() { });
 		
 		setSize(600, 400);
-		setLocationRelativeTo(null);
-		//setJMenuBar(createMenuBar());
+		setLocationRelativeTo(Util.getDialogForComponent(parent));
 		
 		setLayout(new BorderLayout());
-
-		//JToolBar toolbar = createToolbar();
-		//if (toolbar != null) add(toolbar, BorderLayout.NORTH);
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);

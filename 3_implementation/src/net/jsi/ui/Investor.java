@@ -321,6 +321,21 @@ public class Investor extends JFrame implements MarketListener {
 		mniPriceList.setMnemonic('p');
 		mnTool.add(mniPriceList);
 
+		JMenuItem mniRecommend = new JMenuItem(
+			new AbstractAction("Recommend") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MarketImpl selectedMarket = getSelectedMarket();
+					RecDialog rd = new RecDialog(selectedMarket, thisInvestor);
+					rd.setVisible(true);
+				}
+			});
+		mniRecommend.setMnemonic('r');
+		mniRecommend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniRecommend);
+		
 		mnTool.addSeparator();
 		
 		JMenuItem mniOption = new JMenuItem(

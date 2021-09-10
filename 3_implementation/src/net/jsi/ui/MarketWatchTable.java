@@ -37,7 +37,7 @@ public class MarketWatchTable extends MarketTable {
 		if (price == null || volume == 0) return null;
 		
 		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
-		placeMarket.getStore().addPriceWithoutDuplicate(stock.code(), price);
+		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
 		if (added != null) {
 			added.setCommitted(stock.isCommitted());

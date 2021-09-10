@@ -258,11 +258,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	private double queryPositiveROISum(long timeInterval) {
+	public double calcPositiveROISumOverStocks(long timeInterval) {
 		double sum = 0;
 		for (StockGroup group : groups) {
-			double roi = group.getROI(timeInterval);
-			if (roi > 0) sum += roi;
+			for (Stock stock : group.stocks) {
+				double roi = stock.getROI(timeInterval);
+				if (roi > 0) sum += roi;
+			}
 		}
 		return sum;
 	}
@@ -324,7 +326,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 		@Override
 		public double getPositiveROISum(long timeInterval) {
-			return market.queryPositiveROISum(timeInterval);
+			return market.calcPositiveROISumOverStocks(timeInterval);
 		}
 
 		@Override

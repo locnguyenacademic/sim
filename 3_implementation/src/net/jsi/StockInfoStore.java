@@ -30,7 +30,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected Set<String> codes() {
+	public Set<String> codes() {
 		return stores.keySet();
 	}
 	
@@ -74,7 +74,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected Price getLastPrice(String code) {
+	public Price getLastPrice(String code) {
 		if (stores.containsKey(code))
 			return stores.get(code).getLastPrice();
 		else
@@ -118,10 +118,10 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	public boolean addPriceWithoutDuplicate(String code, Price price) {
+	public boolean addPriceWithoutDuplicateTime(String code, Price price) {
 		StockInfo si = getCreate(code);
 		if (si != null)
-			return si.addPriceWithoutDuplicate(price);
+			return si.addPriceWithoutDuplicateTime(price);
 		else
 			return false;
 	}

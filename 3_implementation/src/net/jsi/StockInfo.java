@@ -38,7 +38,8 @@ public class StockInfo implements Serializable, Cloneable {
 		return pricePool;
 	}
 	
-	protected int getPriceCount() {
+	
+	public int getPriceCount() {
 		return pricePool.size();
 	}
 
@@ -53,7 +54,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 	
-	protected Price getLastPrice() {
+	public Price getLastPrice() {
 		return pricePool.getLast();
 	}
 
@@ -73,7 +74,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 	
-	protected List<Price> getPrices(long timeInterval) {
+	public List<Price> getPrices(long timeInterval) {
 		return pricePool.gets(timeInterval);
 	}
 	
@@ -83,7 +84,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected Price getPriceWithin(long timeInterval) {
+	public Price getPriceWithin(long timeInterval) {
 		return pricePool.getPriceWithin(timeInterval);
 	}
 	
@@ -93,8 +94,8 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected boolean addPriceWithoutDuplicate(Price price) {
-		return pricePool.addWithoutDuplicate(price, property.maxPriceCount);
+	protected boolean addPriceWithoutDuplicateTime(Price price) {
+		return pricePool.addWithoutDuplicateTime(price, property.maxPriceCount);
 	}
 
 	
@@ -113,7 +114,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 	
-	protected double getLeverage() {
+	public double getLeverage() {
 		return leverage;
 	}
 	
@@ -125,7 +126,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected double getUnitBias() {
+	public double getUnitBias() {
 		return pricePool.getUnitBias();
 	}
 	

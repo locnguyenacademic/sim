@@ -745,7 +745,11 @@ class PriceList extends JDialog {
 		cmbCode.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				update();
+				String selectedItem = e.getItem() != null ? e.getItem().toString() : null; 
+				if (e.getStateChange() == ItemEvent.DESELECTED)
+					update(selectedItem, false);
+				else
+					update(selectedItem, true);
 			}
 		});
 		cmbCode.setEnabled(!selectMode);
@@ -795,7 +799,7 @@ class PriceList extends JDialog {
 		refresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				update();
+				update((String)null, true);
 			}
 		});
 		if (selectMode) footer.add(refresh);
@@ -810,7 +814,7 @@ class PriceList extends JDialog {
 		footer.add(cancel);
 		
 		
-		update();
+		update((String)null, true);
 	}
 	
 	
@@ -849,13 +853,17 @@ class PriceList extends JDialog {
 	}
 	
 	
-	private void update() {
+	private void update(String code, boolean reload) {
 		if (tblPriceList.isModified() && editMode) {
 			int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
 		
-		if (cmbCode.getSelectedItem() != null)
+		if (!reload) return;
+		
+		if (code != null)
+			tblPriceList.update(code);
+		else if (cmbCode.getSelectedItem() != null)
 			tblPriceList.update(cmbCode.getSelectedItem().toString());
 		else
 			tblPriceList.update();
