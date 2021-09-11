@@ -60,6 +60,12 @@ public class MarketPanel extends JPanel implements MarketListener {
 	protected JButton btnSummary;
 	
 	
+	protected JButton btnResetLossProfits;
+
+	
+	protected JButton btnResetBiases;
+
+	
 	protected JCheckBox chkShowCommit;
 	
 	
@@ -137,7 +143,6 @@ public class MarketPanel extends JPanel implements MarketListener {
 		
 		btnSummary = new JButton("Summary");
 		btnSummary.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisPanel);
@@ -153,9 +158,35 @@ public class MarketPanel extends JPanel implements MarketListener {
 		add(body, BorderLayout.CENTER);
 		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
 		
-		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel paneMarket = new JPanel(new BorderLayout());
 		body.add(paneMarket, BorderLayout.SOUTH);
 		
+		JPanel paneMarketButtons = new JPanel();
+		paneMarket.add(paneMarketButtons, BorderLayout.WEST);
+		
+		btnResetLossProfits = new JButton("Reset LP");
+		btnResetLossProfits.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tblMarket.resetAllStopLossTakeProfits();
+			}
+		});
+		btnResetLossProfits.setMnemonic('l');
+		btnResetLossProfits.setVisible(false);
+		paneMarketButtons.add(btnResetLossProfits);
+
+		btnResetBiases = new JButton("Reset biases");
+		btnResetBiases.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tblMarket.resetAllBiases();
+				tblMarket.update();
+			}
+		});
+		btnResetBiases.setMnemonic('b');
+		btnResetBiases.setVisible(false);
+		paneMarketButtons.add(btnResetBiases);
+
 		chkShowCommit = new JCheckBox("Show/hide commit");
 		chkShowCommit.setSelected(tblMarket.isShowCommit());
 		chkShowCommit.addItemListener(new ItemListener() {
@@ -167,7 +198,7 @@ public class MarketPanel extends JPanel implements MarketListener {
 				}
 			}
 		});
-		paneMarket.add(chkShowCommit);
+		paneMarket.add(chkShowCommit, BorderLayout.EAST);
 
 		
 		JPanel footer = new JPanel(new BorderLayout());

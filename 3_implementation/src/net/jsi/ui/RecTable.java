@@ -100,7 +100,7 @@ public class RecTable extends JTable {
 		if (added2 == null || !(added2 instanceof StockImpl)) return false;
 		added2.setUnitBias(invest.invests[1].unitBias);
 		placeMarket.c(added2).setStopLoss(invest.invests[1].stopLoss);
-		placeMarket.c(added2).setTakeProfit(invest.invests[1].takeProfit);
+		placeMarket.c(added2).setTakeProfit(invest.invests[1].largeTakeProfit);
 
 		return added1 != null && added2 != null;
 	}
@@ -408,13 +408,13 @@ class RecTableModel extends DefaultTableModel {
 		double leverage = info.getLeverage() == 0 ? info.getLeverage() : 1.0/info.getLeverage();
 		row.add(leverage);
 		row.add(info.getLastPrice().get());
+		row.add(estimator.estimateUnitBias(timeInterval));
 		
 		row.add(invests[0].volume);
 		row.add(invests[0].price);
 		row.add(invests[0].margin);
 		row.add(invests[0].stopLoss);
 		row.add(invests[0].takeProfit);
-		row.add(invests[0].largeTakeProfit);
 		
 		row.add(invests[1].volume);
 		row.add(invests[1].price);
@@ -422,8 +422,6 @@ class RecTableModel extends DefaultTableModel {
 		row.add(invests[1].stopLoss);
 		row.add(invests[1].takeProfit);
 		row.add(invests[1].largeTakeProfit);
-		
-		row.add(estimator.estimateUnitBias(timeInterval));
 		
 		investedAmount += invests[0].margin + invests[1].margin;
 		return row;
@@ -441,13 +439,13 @@ class RecTableModel extends DefaultTableModel {
 		columns.add("Code");
 		columns.add("Leverage");
 		columns.add("Price (current)");
+		columns.add("Unit bias (est.)");
 		
 		columns.add("1.Volume");
 		columns.add("1.Taken price");
 		columns.add("1.Margin");
 		columns.add("1.Stop loss");
 		columns.add("1.Take profit");
-		columns.add("1.Take profit (large)");
 		
 		columns.add("2.Volume");
 		columns.add("2.Taken price");
@@ -456,8 +454,6 @@ class RecTableModel extends DefaultTableModel {
 		columns.add("2.Take profit");
 		columns.add("2.Take profit (large)");
 		
-		columns.add("Unit bias (est.)");
-			
 		return columns;
 	}
 

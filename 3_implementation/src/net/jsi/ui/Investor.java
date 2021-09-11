@@ -84,11 +84,8 @@ public class Investor extends JFrame implements MarketListener {
 			public void windowClosed(WindowEvent e) {
 				super.windowClosed(e);
 				
-				for (int i = 0; i < body.getTabCount(); i++) {
-					Component comp = body.getComponentAt(i);
-					if ((comp != null) && (comp instanceof MarketPanel))
-						((MarketPanel)comp).dispose();
-				}
+				MarketPanel[] mps = getMarketPanels();
+				for (MarketPanel mp : mps) mp.dispose();
 			}
 		});
 		
@@ -110,6 +107,7 @@ public class Investor extends JFrame implements MarketListener {
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);
 			MarketPanel mp = new MarketPanel(market, true, null);
+			mp.btnResetLossProfits.setVisible(true);
 			mp.getMarketTable().getModel2().addMarketListener(this);
 			body.add(market.getName(), mp);
 		}
@@ -375,6 +373,34 @@ public class Investor extends JFrame implements MarketListener {
 		mniOption.setMnemonic('o');
 		mnTool.add(mniOption);
 
+		JMenuItem mniResetLossProfits = new JMenuItem(
+			new AbstractAction("Reset loss / profits") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MarketPanel mp = getSelectedMarketPanel();
+					mp.getMarketTable().resetAllStopLossTakeProfits();
+				}
+			});
+		mniResetLossProfits.setMnemonic('o');
+		//mnTool.add(mniResetLossProfits);
+				
+		JMenuItem mniResetBiases = new JMenuItem(
+			new AbstractAction("Reset biases") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MarketPanel mp = getSelectedMarketPanel();
+					mp.getMarketTable().resetAllBiases();
+					mp.getMarketTable().update();
+				}
+			});
+		mniResetBiases.setMnemonic('b');
+		mnTool.add(mniResetBiases);
+					
+
 		JMenu mnHelp = new JMenu("Help");
 		mnHelp.setMnemonic('h');
 		mnBar.add(mnHelp);
@@ -585,7 +611,7 @@ public class Investor extends JFrame implements MarketListener {
 		Market market = universe.newMarket(name, leverage, unitBias);
 		if (!universe.add(market)) return null;
 		
-		return new MarketPanel(market, true, null) {
+		MarketPanel mp = new MarketPanel(market, true, null) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -595,6 +621,9 @@ public class Investor extends JFrame implements MarketListener {
 			}
 			
 		};
+		mp.btnResetLossProfits.setVisible(true);
+		
+		return mp;
 	}
 	
 	

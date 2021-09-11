@@ -582,10 +582,33 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public void update() {
-		getModel2().update();
+	protected Market getTrashMarket() {
+		MarketImpl m = m();
+		return m != null ? m.getTrashMarket() : null;
 	}
 	
+	
+	public void update() {
+		getModel2().update();
+		
+		int lastColumn = getColumnCount() - 1;
+		if (getModel2().isForStock() && lastColumn > 0) {
+			getColumnModel().getColumn(lastColumn).setMaxWidth(0);
+			getColumnModel().getColumn(lastColumn).setMinWidth(0);
+			getColumnModel().getColumn(lastColumn).setPreferredWidth(0);
+		}
+	}
+	
+	
+	public void resetAllStopLossTakeProfits() {
+		getModel2().resetAllStopLossTakeProfits();
+	}
+
+	
+	public void resetAllBiases() {
+		getModel2().resetAllBiases();
+	}
+
 	
 	public boolean isShowCommit() {
 		return getModel2().showCommit;
@@ -754,15 +777,18 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	@Override
-	public boolean isCellEditable(int row, int column) {
-		return false;
+	protected EstimateStock getEstimateStock(int row) {
+		if (!isForStock()) return null;
+		Object v = getValueAt(row, getColumnCount() - 1);
+		if (v != null && v instanceof EstimateStock)
+			return (EstimateStock)v;
+		else
+			return null;
 	}
-
 	
-	@Override
-	public void tableChanged(TableModelEvent e) {
 
+	protected Stock getStock(int row) {
+		return (Stock)getValueAt(row, 0);
 	}
 	
 
@@ -782,7 +808,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 					StockGroup group = m.get(i);
 					if (group.isCommitted() && !showCommit) continue;
 					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
-					List<EstimateStock> estimateStocks = estimator.estimateStopLossTakeProfit(group.getStocks(group.getTimeViewInterval()), group.getTimeViewInterval());
+					List<EstimateStock> estimateStocks = estimator.estimateStocks(group.getStocks(group.getTimeViewInterval()), group.getTimeViewInterval());
 					estimators.put(group.code(), estimateStocks);
 				}
 			}
@@ -813,6 +839,32 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
+	protected void resetAllStopLossTakeProfits() {
+		if (!isForStock()) return;
+		for (int row = 0; row < getRowCount(); row++) {
+			StockImpl stock = m().c(getStock(row));
+			EstimateStock es = getEstimateStock(row);
+			if (stock == null || es == null) continue;
+			
+			stock.setStopLoss(es.estimatedStopLoss);
+			stock.setTakeProfit(es.estimatedTakeProfit);
+			
+			String value = Util.format(es.estimatedStopLoss) + " / " + Util.format(es.estimatedTakeProfit);
+			setValueAt(value, row, 7);
+		}
+	}
+	
+	
+	protected void resetAllBiases() {
+		if (!isForStock()) return;
+		for (int row = 0; row < getRowCount(); row++) {
+			Stock stock = getStock(row);
+			EstimateStock es = getEstimateStock(row);
+			if (stock != null && es != null) stock.setUnitBias(es.estimatedBias);
+		}
+	}
+	
+	
 	protected boolean applyPlace() {
 		MarketImpl m = m();
 		if (m != null) {
@@ -830,7 +882,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		super.setValueAt(aValue, row, column);
 	}
 
-
+	
 	protected Vector<Object> toRow(Stock stock) {
 		long timeViewInterval = market.getTimeViewInterval();
 		Vector<Object> row = Util.newVector(0);
@@ -861,6 +913,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				row.add(Util.format(found.estimatedPrice) + " / " + Util.format(found.estimatedStopLoss) + " / " + Util.format(found.estimatedTakeProfit));
 			else
 				row.add("");
+			row.add(found);
 				
 		}
 		else {
@@ -923,6 +976,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Profit");
 			columns.add("Committed");
 			columns.add("Est. price / stop loss / take profit");
+			columns.add("");
 		}
 		else {
 			columns.add("Code");
@@ -939,6 +993,18 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		return columns;
 	}
 
+
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		return false;
+	}
+
+	
+	@Override
+	public void tableChanged(TableModelEvent e) {
+
+	}
+	
 
 	public void addMarketListener(MarketListener listener) {
 		if (listener == null) return;

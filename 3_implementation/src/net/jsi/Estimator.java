@@ -98,7 +98,7 @@ public interface Estimator extends Serializable, Cloneable {
 	double estimateTakeProfit(long timeInterval);
 
 	
-	List<EstimateStock> estimateStopLossTakeProfit(List<Stock> stocks, long timeInterval);
+	List<EstimateStock> estimateStocks(List<Stock> stocks, long timeInterval);
 	
 
 	double estimateInvestAmount(long timeInterval, double refGlobalPositiveROISum, double refGlobalInvestAmount);
