@@ -21,6 +21,7 @@ import net.jsi.EstimateStock;
 import net.jsi.Estimator;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
+import net.jsi.Price;
 import net.jsi.QueryEstimator;
 import net.jsi.Stock;
 import net.jsi.StockGroup;
@@ -150,8 +151,11 @@ public abstract class StockSummary extends JDialog {
 			StockImpl s = m.c(stock);
 			info.append("Leverage: " + (stock.getLeverage() != 0 ? Util.format(1.0 / stock.getLeverage()) : "Infinity") + "\n");
 			info.append("Volume: " + Util.format(stock.getVolume(timeViewInterval, true)) + "\n");
-			if (s != null)
-				info.append("Taken price: " + Util.format(s.getTakenPrice(timeViewInterval).get()) + "\n");
+			if (s != null) {
+				Price takenPrice = s.getTakenPrice(timeViewInterval);
+				info.append("Taken date: " + Util.format(takenPrice.getDate()) + "\n");
+				info.append("Taken price: " + Util.format(takenPrice.get()) + "\n");
+			}
 			info.append("Taken value: " + Util.format(stock.getTakenValue(timeViewInterval)) + "\n");
 			info.append("Price: " + Util.format(stock.getPrice().get()) + "\n");
 			info.append("Low price: " + Util.format(stock.getPrice().getLow()) + "\n");
@@ -236,8 +240,8 @@ class MarketSummary extends JDialog {
 		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		body.add(paneMarket, BorderLayout.SOUTH);
 		
-		chkShowCommit = new JCheckBox("Show commit");
-		chkShowCommit.setSelected(true);
+		chkShowCommit = new JCheckBox("Show/hide commit");
+		chkShowCommit.setSelected(tblMarket.isShowCommit());
 		chkShowCommit.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -245,11 +249,6 @@ class MarketSummary extends JDialog {
 					tblMarket.setShowCommit(chkShowCommit.isSelected());
 					tblMarket.update();
 				}
-				
-				if (chkShowCommit.isSelected())
-					chkShowCommit.setText("Show commit");
-				else
-					chkShowCommit.setText("Hide commit");
 			}
 		});
 		paneMarket.add(chkShowCommit);

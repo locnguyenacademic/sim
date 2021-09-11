@@ -86,6 +86,12 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String PRICE_RATIO_FIELD = "prr";
 
 	
+	public final static String ONETIME_FEE_FIELD = "otf";
+
+	
+	public final static String EVERYDAY_FEE_FIELD = "edf";
+
+	
 	public static int MAX_PRICE_COUNT = 0;
 
 
@@ -109,6 +115,12 @@ public class StockProperty implements Serializable, Cloneable {
 	
 	public static double PRICE_RATIO = 1;
 	
+	
+	public final static double ONETIME_FEE = 0;
+
+	
+	public final static double EVERYDAY_FEE = 0;
+
 	
 	public static boolean NULL_DIALOG = false;
 	
@@ -168,6 +180,28 @@ public class StockProperty implements Serializable, Cloneable {
 		keys.add(PRICE_RATIO_FIELD);
 		
 		return keys;
+	}
+	
+	
+	protected double getFee(long timeInterval) {
+		double fee = 0;
+		if (moreProperties.containsKey(ONETIME_FEE_FIELD)) {
+			double otf = 0;
+			try {
+				otf = Double.parseDouble(moreProperties.get(ONETIME_FEE_FIELD).toString());
+			} catch (Exception e) {}
+			fee += otf > 0 ? otf : 0;
+		}
+		
+		if (moreProperties.containsKey(EVERYDAY_FEE_FIELD)) {
+			double edf = 0;
+			try {
+				edf = Double.parseDouble(moreProperties.get(EVERYDAY_FEE_FIELD).toString());
+			} catch (Exception e) {}
+			fee += edf > 0 ? edf*timeInterval/1000/3600/24 : 0;
+		}
+		
+		return fee;
 	}
 	
 	
@@ -317,7 +351,8 @@ public class StockProperty implements Serializable, Cloneable {
 				Object v = null;
 				if (key.equals(MAX_PRICE_COUNT_FIELD))
 					v = parseInt(value);
-				else if (key.equals(SWAP_FIELD) || key.equals(SPREAD_FIELD) || key.equals(COMMISSION_FIELD) || key.equals(PRICE_RATIO_FIELD))
+				else if (key.equals(SWAP_FIELD) || key.equals(SPREAD_FIELD) || key.equals(COMMISSION_FIELD) || key.equals(PRICE_RATIO_FIELD) ||
+						key.equals(ONETIME_FEE_FIELD) || key.equals(EVERYDAY_FEE_FIELD))
 					v = Double.parseDouble(value);
 				else if (key.equals(TIME_UPDATE_PRICE_INTERVAL_FIELD))
 					v = parseLong(value);

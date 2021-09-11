@@ -306,15 +306,15 @@ public class MarketPlaceTable extends MarketTable {
 
 			ctxMenu.addSeparator();
 
-//			JMenuItem miDetailedSummary = new JMenuItem("Summary");
-//			miDetailedSummary.addActionListener( 
-//				new ActionListener() {
-//					@Override
-//					public void actionPerformed(ActionEvent e) {
-//						summary(stock);
-//					}
-//				});
-//			ctxMenu.add(miDetailedSummary);
+			JMenuItem miDetailedSummary = new JMenuItem("Summary");
+			miDetailedSummary.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						summary(stock);
+					}
+				});
+			ctxMenu.add(miDetailedSummary);
 		}
 		else
 			ctxMenu.addSeparator();

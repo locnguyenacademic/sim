@@ -183,7 +183,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public double getFee(long timeInterval) {
-		return getTotalSwap(timeInterval) + getProperty().commission; // + (timeInterval == 0 ? getProperty().commission : 0);
+		return getTotalSwap(timeInterval) + getProperty().commission + getProperty().getFee(timeInterval);
 	}
 	
 	

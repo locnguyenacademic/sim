@@ -163,6 +163,17 @@ public class MarketTrashTable extends MarketTable {
 				});
 			ctxMenu.add(miRecover);
 
+			int selectedCount = getSelectedRowCount();
+			JMenuItem miCommit = new JMenuItem(selectedCount == 1 ? (stock.isCommitted() ? "Uncommit" : "Commit") : "Switch commit");
+			miCommit.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						commit();
+					}
+				});
+			ctxMenu.add(miCommit);
+
 			JMenuItem miDelete = new JMenuItem("Delete foreover");
 			miDelete.addActionListener( 
 				new ActionListener() {
@@ -263,22 +274,16 @@ class MarketTrashPanel extends MarketPanel {
 			}
 		});
 	
-		this.lblStartTime.setVisible(false);
-		this.lblBalance.setVisible(false);
-		this.lblEquity.setVisible(false);
-		this.lblMargin.setVisible(false);
-		this.lblFreeMargin.setVisible(false);
-		this.lblMarginLevel.setVisible(false);
-		this.lblProfit.setVisible(false);
-		this.lblROI.setVisible(false);
-		this.lblBias.setVisible(false);
-		this.lblEstInvest.setVisible(false);
-	}
-
-
-	@Override
-	protected void update() {
-
+//		this.lblStartTime.setVisible(false);
+//		this.lblBalance.setVisible(false);
+//		this.lblEquity.setVisible(false);
+//		this.lblMargin.setVisible(false);
+//		this.lblFreeMargin.setVisible(false);
+//		this.lblMarginLevel.setVisible(false);
+//		this.lblProfit.setVisible(false);
+//		this.lblROI.setVisible(false);
+//		this.lblBias.setVisible(false);
+//		this.lblEstInvest.setVisible(false);
 	}
 
 
