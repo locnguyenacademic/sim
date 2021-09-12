@@ -114,7 +114,7 @@ public class Investor extends JFrame implements MarketListener {
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);
 			MarketPanel mp = new MarketPanel(market, true, null);
-			mp.btnResetLossProfits.setVisible(true);
+			
 			mp.getMarketTable().getModel2().addMarketListener(this);
 			body.add(market.getName(), mp);
 		}
@@ -216,7 +216,6 @@ public class Investor extends JFrame implements MarketListener {
 		mniWatchMarket.setMnemonic('w');
 		mniWatchMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mniWatchMarket);
-
 
 		JMenuItem mniPlaceMarket = new JMenuItem(
 		new AbstractAction("Place stocks") {
@@ -380,32 +379,42 @@ public class Investor extends JFrame implements MarketListener {
 		mniOption.setMnemonic('o');
 		mnTool.add(mniOption);
 
-		JMenuItem mniResetLossProfits = new JMenuItem(
-			new AbstractAction("Reset loss / profits") {
+		JMenuItem mniResetAllLossesProfits = new JMenuItem(
+			new AbstractAction("Reset all losses / profits") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MarketPanel mp = getSelectedMarketPanel();
-					mp.getMarketTable().resetAllStopLossTakeProfits();
+					resetAllStopLossesTakeProfits();
 				}
 			});
-		mniResetLossProfits.setMnemonic('o');
-		//mnTool.add(mniResetLossProfits);
-				
-		JMenuItem mniResetBiases = new JMenuItem(
-			new AbstractAction("Reset biases") {
+		mniResetAllLossesProfits.setMnemonic('o');
+		mniResetAllLossesProfits.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniResetAllLossesProfits);
+
+		JMenuItem mniResetAllUnitBiases = new JMenuItem(
+			new AbstractAction("Reset all unit biases") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MarketPanel mp = getSelectedMarketPanel();
-					mp.getMarketTable().resetAllBiases();
-					mp.getMarketTable().update();
+					resetAllUnitBiases();
 				}
 			});
-		mniResetBiases.setMnemonic('b');
-		mnTool.add(mniResetBiases);
+		mniResetAllUnitBiases.setMnemonic('b');
+		mnTool.add(mniResetAllUnitBiases);
+		
+		JMenuItem mniSortAllCodes = new JMenuItem(
+			new AbstractAction("Sort all codes") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sortAllCodes();
+				}
+			});
+		mniSortAllCodes.setMnemonic('s');
+		mnTool.add(mniSortAllCodes);
 					
 
 		JMenu mnHelp = new JMenu("Help");
@@ -631,7 +640,6 @@ public class Investor extends JFrame implements MarketListener {
 			}
 			
 		};
-		mp.btnResetLossProfits.setVisible(true);
 		
 		return mp;
 	}
@@ -757,6 +765,63 @@ public class Investor extends JFrame implements MarketListener {
 		return ms;
 	}
 	
+	
+	private void resetAllStopLossesTakeProfits() {
+		MarketPanel[] mps = getMarketPanels();
+		for (MarketPanel mp : mps) {
+			MarketImpl market = universe.c(mp.getMarket());
+			if (market == null) continue;
+			
+			market.resetAllStopLossesTakeProfits();
+			MarketImpl watchMarket = market.getWatchMarket();
+			if (watchMarket != null) watchMarket.resetAllStopLossesTakeProfits();
+			MarketImpl placeMarket = market.getPlaceMarket();
+			if (placeMarket != null) placeMarket.resetAllStopLossesTakeProfits();
+			MarketImpl trashMarket = market.getTrashMarket();
+			if (trashMarket != null) trashMarket.resetAllStopLossesTakeProfits();
+
+			mp.getMarketTable().update();
+		}
+	}
+	
+	
+	private void resetAllUnitBiases() {
+		MarketPanel[] mps = getMarketPanels();
+		for (MarketPanel mp : mps) {
+			MarketImpl market = universe.c(mp.getMarket());
+			if (market == null) continue;
+			
+			market.resetAllUnitBiases();
+			MarketImpl watchMarket = market.getWatchMarket();
+			if (watchMarket != null) watchMarket.resetAllUnitBiases();
+			MarketImpl placeMarket = market.getPlaceMarket();
+			if (placeMarket != null) placeMarket.resetAllUnitBiases();
+			MarketImpl trashMarket = market.getTrashMarket();
+			if (trashMarket != null) trashMarket.resetAllUnitBiases();
+
+			mp.getMarketTable().update();
+		}
+	}
+	
+	
+	private void sortAllCodes() {
+		MarketPanel[] mps = getMarketPanels();
+		for (MarketPanel mp : mps) {
+			MarketImpl market = universe.c(mp.getMarket());
+			if (market == null) continue;
+			
+			market.sortByCode();
+			MarketImpl watchMarket = market.getWatchMarket();
+			if (watchMarket != null) watchMarket.sortByCode();
+			MarketImpl placeMarket = market.getPlaceMarket();
+			if (placeMarket != null) placeMarket.sortByCode();
+			MarketImpl trashMarket = market.getTrashMarket();
+			if (trashMarket != null) trashMarket.sortByCode();
+
+			mp.getMarketTable().update();
+		}
+	}
+
 	
 	private Investor getInvestor() {
 		return this;

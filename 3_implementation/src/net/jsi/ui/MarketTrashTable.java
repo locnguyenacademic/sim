@@ -247,11 +247,13 @@ class MarketTrashPanel extends MarketPanel {
 	
 	public MarketTrashPanel(Market market, boolean forStock, MarketListener listener) {
 		super(market, forStock, listener);
-		this.btnTake.setVisible(false);
+		btnTake.setVisible(false);
+		btnResetLossesProfits.setVisible(false);
+		btnResetUnitBiases.setVisible(false);
 		
-		ActionListener[] als = this.btnSummary.getActionListeners();
+		ActionListener[] als = btnSummary.getActionListeners();
 		for (ActionListener al : als) {
-			this.btnSummary.removeActionListener(al);
+			btnSummary.removeActionListener(al);
 		}
 		MarketTrashPanel thisPanel = this;
 		btnSummary.addActionListener(new ActionListener() {
@@ -274,16 +276,6 @@ class MarketTrashPanel extends MarketPanel {
 			}
 		});
 	
-//		this.lblStartTime.setVisible(false);
-//		this.lblBalance.setVisible(false);
-//		this.lblEquity.setVisible(false);
-//		this.lblMargin.setVisible(false);
-//		this.lblFreeMargin.setVisible(false);
-//		this.lblMarginLevel.setVisible(false);
-//		this.lblProfit.setVisible(false);
-//		this.lblROI.setVisible(false);
-//		this.lblBias.setVisible(false);
-//		this.lblEstInvest.setVisible(false);
 	}
 
 

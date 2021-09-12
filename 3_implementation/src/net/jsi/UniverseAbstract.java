@@ -239,12 +239,14 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public List<String> getSupportStockCodes() {
 		Set<String> codes = Util.newSet(0);
+		codes.addAll(getStore().codes());
 		
 		for (Market market : markets) {
 			MarketImpl m = c(market);
-			if (m == null) continue;
-			for (int i = 0; i < m.size(); i++) {
-				StockGroup group = m.get(i);
+			MarketImpl placed = m != null ? m.getPlaceMarket() : null;
+			if (placed == null) continue;
+			for (int i = 0; i < placed.size(); i++) {
+				StockGroup group = placed.get(i);
 				codes.add(group.code());
 			}
 		}

@@ -69,7 +69,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected StockInfo remove(String code) {
+	public StockInfo remove(String code) {
 		return stores.remove(code);
 	}
 	

@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -29,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.TableModelEvent;
@@ -701,8 +703,29 @@ class PriceList extends JDialog {
 	protected JComboBox<String> cmbCode;
 
 	
+	protected JButton btnNewCode;
+			
+			
+	protected JButton btnRemoveCode;
+
+	
+	protected JButton btnNewPrice; 
+
+	
 	protected PriceListTable tblPriceList = null;
 	
+	
+	protected JButton btnOK;
+	
+	
+	protected JButton btnApply;
+	
+	
+	protected JButton btnRefresh;
+
+	
+	protected JButton btnCancel;
+
 	
 	protected Price output = null;
 	
@@ -759,17 +782,41 @@ class PriceList extends JDialog {
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		
-		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel toolbar = new JPanel(new BorderLayout());
 		body.add(toolbar, BorderLayout.NORTH);
 		
-		JButton newPrice = new JButton("New price");
-		newPrice.addActionListener(new ActionListener() {
+		JPanel paneCode = new JPanel();
+		if (!selectMode) toolbar.add(paneCode, BorderLayout.WEST);
+		
+		btnNewCode = new JButton("New code");
+		btnNewCode.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				addNewPrice();
+				addNewCode();
 			}
 		});
-		if (!selectMode) toolbar.add(newPrice);
+		paneCode.add(btnNewCode);
+
+		btnRemoveCode = new JButton("Remove code");
+		btnRemoveCode.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeCode();
+			}
+		});
+		paneCode.add(btnRemoveCode);
+
+		JPanel panePrice = new JPanel();
+		if (!selectMode) toolbar.add(panePrice, BorderLayout.EAST);
+
+		btnNewPrice = new JButton("New price");
+		btnNewPrice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addNewPrice(false);
+			}
+		});
+		panePrice.add(btnNewPrice);
 
 		body.add(new JScrollPane(tblPriceList), BorderLayout.CENTER);
 		
@@ -777,41 +824,41 @@ class PriceList extends JDialog {
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton ok = new JButton(selectMode ? "Select" : "OK");
-		ok.addActionListener(new ActionListener() {
+		btnOK = new JButton(selectMode ? "Select" : "OK");
+		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ok();
 			}
 		});
-		footer.add(ok);
+		footer.add(btnOK);
 		
-		JButton apply = new JButton("Apply");
-		apply.addActionListener(new ActionListener() {
+		btnApply = new JButton("Apply");
+		btnApply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				apply();
 			}
 		});
-		if (editMode) footer.add(apply);
+		if (editMode) footer.add(btnApply);
 
-		JButton refresh = new JButton("Refresh");
-		refresh.addActionListener(new ActionListener() {
+		btnRefresh = new JButton("Refresh");
+		btnRefresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				update((String)null, true);
 			}
 		});
-		if (selectMode) footer.add(refresh);
+		if (selectMode) footer.add(btnRefresh);
 
-		JButton cancel = new JButton("Cancel");
-		cancel.addActionListener(new ActionListener() {
+		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		footer.add(cancel);
+		footer.add(btnCancel);
 		
 		
 		update((String)null, true);
@@ -839,17 +886,92 @@ class PriceList extends JDialog {
 	}
 	
 	
-	private void addNewPrice() {
+	private boolean addNewCode() {
+		String newCode = JOptionPane.showInputDialog(this, "Enter new code", "New code");
+		if (newCode == null) return false;
+		newCode = newCode.trim();
+		if (newCode.isEmpty()) return false;
+
+		StockInfo si = universe.getStore().get(newCode);
+		if (si != null) return false;
+		si = universe.getStore().getCreate(newCode);
+		if (si != null) {
+			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
+			cmbCode.setModel(model);
+			
+			String selectedCode = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+			if (selectedCode == null || selectedCode.equals(newCode))
+				update(newCode, true);
+			else
+				cmbCode.setSelectedItem(newCode);
+			
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	
+	private boolean removeCode() {
+		String removedCode = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		if (removedCode == null) return false;
+		StockInfo si = universe.getStore().get(removedCode);
+		if (si == null)
+			return false;
+		else if (si.getPriceCount() > 0)
+			return false;
+		else {
+			universe.getStore().remove(removedCode);
+			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
+			cmbCode.setModel(model);
+			update(null, true);
+
+			return true;
+		}
+	}
+	
+	
+	private boolean addNewPrice(boolean bNewCode) {
+		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		btnRemoveCode.setVisible(false);
+		if (code != null) {
+			StockInfo si = universe.getStore().get(code);
+			if (si == null || si.getPriceCount() == 0) btnRemoveCode.setVisible(true);
+		}
+
 		Price input = tblPriceList.getLastRowPrice();
 		if (input == null) input = universe.newPrice(1, 1, 1, System.currentTimeMillis());
-		NewPrice newPrice = new NewPrice(input, this);
+		NewPrice newPrice = new NewPrice(input, bNewCode, this);
 		newPrice.setVisible(true);
 		
 		Price output = newPrice.getOutput();
-		if (output == null) return;
-		
-		tblPriceList.addPrice(output);
-		//if (ret) JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
+		if (output == null) return false;
+	
+		if (bNewCode) {
+			String newCode = newPrice.getNewCode();
+			if (newCode == null) return false;
+			
+			StockInfo si = universe.getStore().get(newCode);
+			if (si != null) return false;
+			si = universe.getStore().getCreate(newCode);
+			if (!si.addPrice(output))
+				return false;
+			else {
+				DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
+				cmbCode.setModel(model);
+				
+				String selectedCode = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+				if (selectedCode == null || selectedCode.equals(newCode))
+					update(newCode, true);
+				else
+					cmbCode.setSelectedItem(newCode);
+
+				return true;
+			}
+		}
+		else {
+			return tblPriceList.addPrice(output);
+		}
 	}
 	
 	
@@ -863,10 +985,18 @@ class PriceList extends JDialog {
 		
 		if (code != null)
 			tblPriceList.update(code);
-		else if (cmbCode.getSelectedItem() != null)
-			tblPriceList.update(cmbCode.getSelectedItem().toString());
+		else if (cmbCode.getSelectedItem() != null) {
+			code = cmbCode.getSelectedItem().toString();
+			tblPriceList.update(code);
+		}
 		else
 			tblPriceList.update();
+		
+		btnRemoveCode.setVisible(false);
+		if (code != null) {
+			StockInfo si = universe.getStore().get(code);
+			if (si == null || si.getPriceCount() == 0) btnRemoveCode.setVisible(true);
+		}
 	}
 	
 	
@@ -1957,7 +2087,7 @@ class PriceListPartial extends JDialog {
 	private void addNewPrice() {
 		Price input = tblPriceList.getLastRowPrice();
 		if (input == null) return;
-		NewPrice newPrice = new NewPrice(input, this);
+		NewPrice newPrice = new NewPrice(input, false, this);
 		newPrice.setVisible(true);
 		
 		Price output = newPrice.getOutput();
@@ -2017,6 +2147,9 @@ class NewPrice extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 
+	protected JTextField txtCode;
+
+	
 	protected JFormattedTextField txtPrice;
 	
 	
@@ -2039,9 +2172,12 @@ class NewPrice extends JDialog {
 
 	
 	protected Price output = null;
+	
+	
+	protected String newCode = null;
 
 	
-	public NewPrice(Price input, Component parent) {
+	public NewPrice(Price input, boolean newCode, Component parent) {
 		super(Util.getDialogForComponent(parent), "New price", true);
 		this.input = input;
 		
@@ -2056,6 +2192,7 @@ class NewPrice extends JDialog {
 		JPanel left = new JPanel(new GridLayout(0, 1));
 		header.add(left, BorderLayout.WEST);
 		
+		if(newCode) left.add(new JLabel("Code (*): "));
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
@@ -2065,6 +2202,11 @@ class NewPrice extends JDialog {
 		JPanel right = new JPanel(new GridLayout(0, 1));
 		header.add(right, BorderLayout.CENTER);
 		
+		JPanel paneCode = new JPanel(new BorderLayout());
+		if(newCode) right.add(paneCode);
+		txtCode = new JTextField(StockProperty.NONAME);
+		paneCode.add(txtCode, BorderLayout.CENTER);
+
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
 		txtPrice = new JFormattedTextField(Util.getNumberFormatter());
@@ -2157,6 +2299,10 @@ class NewPrice extends JDialog {
 		output.setAlt(((Number) txtAltPrice.getValue()).doubleValue());
 		output.setTime(((Date)txtLastDate.getValue()).getTime());
 		
+		newCode = txtCode.getText();
+		newCode = newCode != null ? newCode.trim() : "";
+		newCode = newCode.isEmpty() ? null : newCode;
+		
 		dispose();
 	}
 	
@@ -2166,270 +2312,11 @@ class NewPrice extends JDialog {
 	}
 	
 
-}
-
-
-
-class AddPrice extends JDialog {
-
-
-	private static final long serialVersionUID = 1L;
-
-
-	protected JFormattedTextField txtPrice;
-	
-	
-	protected JButton btnPrice;
-
-	
-	protected JFormattedTextField txtLowPrice;
-	
-	
-	protected JButton btnLowPrice;
-	
-	
-	protected JFormattedTextField txtHighPrice;
-	
-	
-	protected JButton btnHighPrice;
-	
-	
-	protected JFormattedTextField txtAltPrice;
-	
-	
-	protected JButton btnAltPrice;
-	
-	
-	protected JFormattedTextField txtLastDate;
-	
-	
-	protected JButton btnLastDateNow;
-
-	
-	protected JButton btnLastDateList;
-			
-	
-	protected Market market = null;
-	
-	
-	protected Stock input = null;
-
-	
-	protected Stock output = null;
-
-	
-	public AddPrice(Market market, Stock input, Component parent) {
-		super(Util.getDialogForComponent(parent), "Add price", true);
-		this.market = market;
-		this.input = input;
-		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(350, 250);
-		setLocationRelativeTo(Util.getDialogForComponent(parent));
-		setLayout(new BorderLayout());
-		
-		JPanel header = new JPanel(new BorderLayout());
-		add(header, BorderLayout.NORTH);
-		
-		JPanel left = new JPanel(new GridLayout(0, 1));
-		header.add(left, BorderLayout.WEST);
-		
-		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
-		//left.add(new JLabel("Alt price: "));
-		left.add(new JLabel("Last date: "));
-
-		JPanel right = new JPanel(new GridLayout(0, 1));
-		header.add(right, BorderLayout.CENTER);
-		
-		JPanel panePrice = new JPanel(new BorderLayout());
-		right.add(panePrice);
-		txtPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtPrice.setValue(input.getPrice().get());
-		panePrice.add(txtPrice, BorderLayout.CENTER);
-		//
-		btnPrice = new JButton("Estimate");
-		btnPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Estimator estimator = getEstimator();
-				if (estimator != null)  txtPrice.setValue(estimator.estimatePrice(market.getTimeViewInterval()));
-			}
-		});
-		panePrice.add(btnPrice, BorderLayout.EAST);
-		
-		JPanel paneLowPrice = new JPanel(new BorderLayout());
-		right.add(paneLowPrice);
-		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtLowPrice.setValue(input.getPrice().getLow());
-		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
-		//
-		btnLowPrice = new JButton("Estimate");
-		btnLowPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Estimator estimator = getEstimator();
-				if (estimator != null)  txtLowPrice.setValue(estimator.estimateLowPrice(market.getTimeViewInterval()));
-			}
-		});
-		paneLowPrice.add(btnLowPrice, BorderLayout.EAST);
-		
-		JPanel paneHighPrice = new JPanel(new BorderLayout());
-		right.add(paneHighPrice);
-		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtHighPrice.setValue(input.getPrice().getHigh());
-		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
-		//
-		btnHighPrice = new JButton("Estimate");
-		btnHighPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Estimator estimator = getEstimator();
-				if (estimator != null)  txtHighPrice.setValue(estimator.estimateHighPrice(market.getTimeViewInterval()));
-			}
-		});
-		paneHighPrice.add(btnHighPrice, BorderLayout.EAST);
-		
-		JPanel paneAltPrice = new JPanel(new BorderLayout());
-		//right.add(paneAltPrice);
-		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtAltPrice.setValue(input.getPrice().getAlt());
-		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
-		//
-		btnAltPrice = new JButton("Estimate");
-		btnAltPrice.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		paneAltPrice.add(btnAltPrice, BorderLayout.EAST);
-
-		JPanel paneLastDate = new JPanel(new BorderLayout());
-		right.add(paneLastDate);
-		txtLastDate = new JFormattedTextField(Util.getDateFormatter());
-		txtLastDate.setValue(new Date(input.getPrice().getDate().getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
-		paneLastDate.add(txtLastDate, BorderLayout.CENTER);
-		//
-		JPanel paneLastDate2 = new JPanel(new GridLayout(1, 0));
-		paneLastDate.add(paneLastDate2, BorderLayout.EAST);
-		btnLastDateNow = new JButton("Now");
-		btnLastDateNow.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				txtLastDate.setValue(new Date());
-			}
-		});
-		btnLastDateNow.setEnabled(true);
-		paneLastDate2.add(btnLastDateNow);
-		//
-		btnLastDateList = new JButton("List");
-		btnLastDateList.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				listPrices();
-			}
-		});
-		paneLastDate2.add(btnLastDateList);
-		
-		
-		JPanel footer = new JPanel();
-		add(footer, BorderLayout.SOUTH);
-		
-		JButton ok = new JButton("Add price");
-		ok.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ok();
-			}
-		});
-		footer.add(ok);
-		
-		JButton cancel = new JButton("Cancel");
-		cancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		footer.add(cancel);
+	public String getNewCode() {
+		return newCode;
 	}
 	
 	
-	private MarketImpl m() {
-		Universe u = market.getNearestUniverse();
-		return u != null ? u.c(market) : null;
-	}
-
-	
-	private Estimator getEstimator() {
-		MarketImpl m = m();
-		return m != null ? m.getEstimator(input.code(), input.isBuy()) : null;
-	}
-
-
-	private void listPrices() {
-		if (input == null) return;
-		
-		PriceListPartial pl = new PriceListPartial(market, input, market.getTimeViewInterval(), false, false, this);
-		pl.setVisible(true);
-	}
-	
-	
-	private boolean validateInput() {
-		double price = txtPrice.getValue() instanceof Number ? ((Number)txtPrice.getValue()).doubleValue() : 0;
-		if (price < 0) return false;
-
-		double lowPrice = txtLowPrice.getValue() instanceof Number ? ((Number)txtLowPrice.getValue()).doubleValue() : 0;
-		if (lowPrice < 0) return false;
-
-		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
-		if (highPrice < 0) return false;
-		
-		if (price < lowPrice || price > highPrice) return false;
-		
-		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
-		Universe universe = market.getNearestUniverse();
-		if (lastDate == null || input == null || universe == null) return false;
-		
-		return true;
-	}
-	
-	
-	private void ok() {
-		if (!validateInput()) {
-			JOptionPane.showMessageDialog(this, "Invalid input", "Invalid input", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		MarketImpl m = m();
-		if (m == null) return;
-
-		long lastTime = ((Date)txtLastDate.getValue()).getTime();
-		Price price = m.newPrice(
-				((Number)txtPrice.getValue()).doubleValue(), 
-				((Number) txtLowPrice.getValue()).doubleValue(),
-				((Number) txtHighPrice.getValue()).doubleValue(),
-				lastTime);
-		
-		if (!input.setPrice(price)) return;
-
-		m.applyPlace();
-		
-		output = input;
-		
-		JOptionPane.showMessageDialog(this, "Add price successfully", "Add price", JOptionPane.INFORMATION_MESSAGE);
-		dispose();
-	}
-	
-	
-	public Stock getOutput() {
-		return output;
-	}
-	
-
 }
 
 

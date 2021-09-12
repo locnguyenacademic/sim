@@ -212,7 +212,7 @@ public class StockTaker extends JDialog {
 		cmbCode.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				update();
+				if (e.getStateChange() == ItemEvent.SELECTED) update();
 			}
 		});
 		right.add(cmbCode);
@@ -592,26 +592,38 @@ public class StockTaker extends JDialog {
 	}
 
 	
-	@SuppressWarnings("unused")
-	private StockGroup getDualStockGroup() {
-		return getDualStockGroup(input != null ? input.isBuy() : true);
+	private StockGroup getAltStockGroup() {
+		return getAltStockGroup(input != null ? input.isBuy() : true);
 	}
 	
 	
-	private StockGroup getDualStockGroup(boolean buy) {
+	private StockGroup getAltStockGroup(boolean buy) {
 		StockGroup group = getStockGroup(buy);
-		if (group != null) return group.getDualGroup();
+		if (group != null) return group;
 		
 		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (code == null) return null;
-		
 		MarketImpl m = m();
-		Market dualMarket = m != null ? m.getDualMarket() : null;
-		if (dualMarket == null) return null;
+		if (m == null) return null;
+		if (m.getWatchMarket() != null) return stockGroupOf(m.getWatchMarket(), code, buy);
 		
-		Universe u = dualMarket.getNearestUniverse();
-		MarketImpl dm = u != null ? u.c(dualMarket) : null;
-		return dm != null ? dm.get(code, buy) : null;
+		Universe u = m.getNearestUniverse();
+		if (u == null) return null;
+		MarketImpl dualMarket = u.c(m.getDualMarket());
+		if (dualMarket == null || dualMarket.getWatchMarket() == null || dualMarket.getWatchMarket() == m)
+			return null;
+		
+		group = stockGroupOf(dualMarket, code, buy);
+		group = group != null ? group : stockGroupOf(dualMarket.getWatchMarket(), code, buy);
+		return group;
+	}
+	
+	
+	private StockGroup stockGroupOf(Market market, String code, boolean buy) {
+		if (market == null) return null;
+		Universe u = market.getNearestUniverse();
+		MarketImpl m = u != null ? u.c(market) : null;
+		return m != null ? m.get(code, buy) : null;
 	}
 
 	
@@ -654,6 +666,7 @@ public class StockTaker extends JDialog {
 		}
 		else {
 			StockGroup group = getStockGroup();
+			if (group == null) group = getAltStockGroup();
 			chkBuy.setSelected(group != null ? group.isBuy() : (input != null ? input.isBuy() : true));
 			
 			double leverage = StockProperty.LEVERAGE;
@@ -1032,7 +1045,7 @@ class StockSelector extends JDialog {
 		cmbCode.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				update();
+				if (e.getStateChange() == ItemEvent.SELECTED) update();
 			}
 		});
 		right.add(cmbCode);
@@ -1310,26 +1323,38 @@ class StockSelector extends JDialog {
 	}
 
 	
-	@SuppressWarnings("unused")
-	private StockGroup getDualStockGroup() {
-		return getDualStockGroup(input != null ? input.isBuy() : true);
+	private StockGroup getAltStockGroup() {
+		return getAltStockGroup(input != null ? input.isBuy() : true);
 	}
 	
 	
-	private StockGroup getDualStockGroup(boolean buy) {
+	private StockGroup getAltStockGroup(boolean buy) {
 		StockGroup group = getStockGroup(buy);
-		if (group != null) return group.getDualGroup();
+		if (group != null) return group;
 		
 		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (code == null) return null;
-		
 		MarketImpl m = m();
-		Market dualMarket = m != null ? m.getDualMarket() : null;
-		if (dualMarket == null) return null;
+		if (m == null) return null;
+		if (m.getWatchMarket() != null) return stockGroupOf(m.getWatchMarket(), code, buy);
 		
-		Universe u = dualMarket.getNearestUniverse();
-		MarketImpl dm = u != null ? u.c(dualMarket) : null;
-		return dm != null ? dm.get(code, buy) : null;
+		Universe u = m.getNearestUniverse();
+		if (u == null) return null;
+		MarketImpl dualMarket = u.c(m.getDualMarket());
+		if (dualMarket == null || dualMarket.getWatchMarket() == null || dualMarket.getWatchMarket() == m)
+			return null;
+		
+		group = stockGroupOf(dualMarket, code, buy);
+		group = group != null ? group : stockGroupOf(dualMarket.getWatchMarket(), code, buy);
+		return group;
+	}
+	
+	
+	private StockGroup stockGroupOf(Market market, String code, boolean buy) {
+		if (market == null) return null;
+		Universe u = market.getNearestUniverse();
+		MarketImpl m = u != null ? u.c(market) : null;
+		return m != null ? m.get(code, buy) : null;
 	}
 	
 	
@@ -1367,6 +1392,7 @@ class StockSelector extends JDialog {
 		}
 		else {
 			StockGroup group = getStockGroup();
+			if (group == null) group = getAltStockGroup();
 			chkBuy.setSelected(group != null ? group.isBuy() : (input != null ? input.isBuy() : true));
 			
 			double leverage = StockProperty.LEVERAGE;
@@ -1513,3 +1539,6 @@ class StockSelector extends JDialog {
 	
 
 }
+
+
+

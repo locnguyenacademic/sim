@@ -251,7 +251,7 @@ public abstract class EstimatorAbstract implements Estimator {
 			double takeProfit = estimator.estimateTakeProfit(timeInterval);
 			EstimateStock es = new EstimateStock(stock, stopLoss, takeProfit, false);
 			es.estimatedPrice = estimator.estimatePrice(timeInterval);
-			es.estimatedBias = estimator.estimateUnitBias(timeInterval);
+			es.estimatedUnitBias = estimator.estimateUnitBias(timeInterval);
 			estimateStocks.add(es);
 		}
 		Collections.sort(estimateStocks, new Comparator<EstimateStock>() {

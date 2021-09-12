@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MarketImpl extends MarketAbstract implements QueryEstimator {
@@ -580,6 +583,47 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	private static EstimateStock lookup(Map<String, List<EstimateStock>> estimators, Stock stock) {
+		List<EstimateStock> esList = estimators.get(stock.code());
+		if (esList == null) return null;
+		for (EstimateStock es : esList) {
+			if (es.stock == stock) return es;
+		}
+		
+		return null;
+	}
+	
+	
+	protected Map<String, List<EstimateStock>> retrieveStockEstimators() {
+		Map<String, List<EstimateStock>> estimators = Util.newMap(0);
+		long timeInterval = getTimeViewInterval();
+		for (int i = 0; i < size(); i++) {
+			StockGroup group = get(i);
+			if (group.isCommitted()) continue;
+			Estimator estimator = getEstimator(group.code(), group.isBuy());
+			List<EstimateStock> estimateStocks = estimator.estimateStocks(group.getStocks(timeInterval), timeInterval);
+			estimators.put(group.code(), estimateStocks);
+		}
+		
+		return estimators;
+	}
+	
+	
+	public void resetAllStopLossesTakeProfits() {
+		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators();
+		List<Stock> stocks = getStocks(getTimeViewInterval());
+		for (Stock stock : stocks) {
+			EstimateStock es = lookup(estimators, stock);
+			if (es == null) continue;
+			StockImpl s = c(stock);
+			if (s != null) {
+				s.setStopLoss(es.estimatedStopLoss);
+				s.setTakeProfit(es.estimatedTakeProfit);
+			}
+		}
+	}
+	
+	
 	@Override
 	public double getUnitBias() {
 		return refUnitBias;
@@ -591,6 +635,18 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setUnitBias(refUnitBias);
+	}
+	
+	
+	public void resetAllUnitBiases() {
+		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators();
+		List<Stock> stocks = getStocks(getTimeViewInterval());
+		for (Stock stock : stocks) {
+			EstimateStock es = lookup(estimators, stock);
+			if (es == null) continue;
+			StockImpl s = c(stock);
+			if (s != null) s.setUnitBias(es.estimatedUnitBias);
+		}
 	}
 	
 	
@@ -703,6 +759,18 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		return trashMarket;
 	}
 
+	
+	public void sortByCode() {
+		Collections.sort(groups, new Comparator<StockGroup>() {
+
+			@Override
+			public int compare(StockGroup o1, StockGroup o2) {
+				return o1.code().compareToIgnoreCase(o2.code());
+			}
+			
+		});
+	}
+	
 	
 	public boolean open(Reader in) {
 		reset();
@@ -1101,7 +1169,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		for (String code : codes) {
 			StockInfo info = store.get(code);
 			StockProperty property = info.getProperty();
-			if (property == null) continue;
+			if (info.getProperty() == null || info.getPriceCount() == 0) continue;
 			
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(info.code() + ", ");

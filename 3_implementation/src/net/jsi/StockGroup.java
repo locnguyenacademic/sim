@@ -352,8 +352,8 @@ public class StockGroup extends StockAbstract implements Market {
 		
 		Universe u = dualMarket.getNearestUniverse();
 		MarketImpl m = u != null ? u.c(dualMarket) : null;
-		StockGroup other = m != null ? m.get(code(), isBuy()) : null;
-		return other != null && other != this ? other : null;
+		StockGroup dual = m != null ? m.get(code(), isBuy()) : null;
+		return dual != null && dual != this ? dual : null;
 	}
 	
 	

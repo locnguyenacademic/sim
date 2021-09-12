@@ -89,7 +89,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected boolean addPrice(Price price) {
+	public boolean addPrice(Price price) {
 		return pricePool.add(price, property.maxPriceCount);
 	}
 	
