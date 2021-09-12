@@ -1201,7 +1201,6 @@ class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tblMarket.resetAllStopLossTakeProfits();
-				tblMarket.update();
 			}
 		});
 		btnResetLossesProfits.setMnemonic('o');
