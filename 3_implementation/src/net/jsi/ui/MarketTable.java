@@ -960,7 +960,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.getTakenValue(timeViewInterval));
 			row.add(group.getMargin(timeViewInterval));
 			row.add(group.getProfit(timeViewInterval));
-			row.add(Util.format(group.getROI(timeViewInterval) * 100) + "%");
+			row.add(group.getROI(timeViewInterval));
+			row.add(group.getROIByLeverage(timeViewInterval));
 			row.add(group.getUnitBias());
 			
 			if (u == null || u.lookup(market.getName()) < 0) {
@@ -1024,6 +1025,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Margin");
 			columns.add("Profit");
 			columns.add("ROI");
+			columns.add("ROI (leverage)");
 			columns.add("Unit bias");
 			columns.add("Rec. buy/sell");
 			columns.add("");
@@ -1041,9 +1043,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return Boolean.class;
 			else if (columnIndex == 2)
 				return Date.class;
-			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 12)
-				return super.getColumnClass(columnIndex);
 			else if (columnIndex ==  0 || columnIndex ==  13)
+				return super.getColumnClass(columnIndex);
+			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 12)
 				return super.getColumnClass(columnIndex);
 			else
 				return Double.class;
@@ -1051,9 +1053,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		else {
 			if (columnIndex == 1)
 				return Boolean.class;
-			else if (columnIndex == 9)
+			else if (columnIndex ==  0 || columnIndex ==  11)
 				return super.getColumnClass(columnIndex);
-			else if (columnIndex ==  0 || columnIndex ==  10)
+			else if (columnIndex == 10)
 				return super.getColumnClass(columnIndex);
 			else
 				return Double.class;
