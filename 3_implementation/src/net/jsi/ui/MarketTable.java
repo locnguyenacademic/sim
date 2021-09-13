@@ -618,7 +618,7 @@ public class MarketTable extends JTable implements MarketListener {
 		getModel2().update();
 		
 		int lastColumn = getColumnCount() - 1;
-		if (getModel2().isForStock() && lastColumn > 0) {
+		if (lastColumn > 0) {
 			getColumnModel().getColumn(lastColumn).setMaxWidth(0);
 			getColumnModel().getColumn(lastColumn).setMinWidth(0);
 			getColumnModel().getColumn(lastColumn).setPreferredWidth(0);
@@ -804,7 +804,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
 	protected EstimateStock getEstimateStock(int row) {
-		if (!isForStock()) return null;
 		Object v = getValueAt(row, getColumnCount() - 1);
 		if (v != null && v instanceof EstimateStock)
 			return (EstimateStock)v;
@@ -867,7 +866,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
 	protected void resetAllStopLossTakeProfits() {
-		if (!isForStock()) return;
 		for (int row = 0; row < getRowCount(); row++) {
 			StockImpl stock = m().c(getStock(row));
 			EstimateStock es = getEstimateStock(row);
@@ -876,18 +874,26 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			stock.setStopLoss(es.estimatedStopLoss);
 			stock.setTakeProfit(es.estimatedTakeProfit);
 			
-			String value = Util.format(es.estimatedStopLoss) + " / " + Util.format(es.estimatedTakeProfit);
-			setValueAt(value, row, 7);
+			if (isForStock()) {
+				String value = Util.format(es.estimatedStopLoss) + " / " + Util.format(es.estimatedTakeProfit);
+				setValueAt(value, row, 7);
+			}
 		}
 	}
 	
 	
 	protected void resetAllBiases() {
-		if (!isForStock()) return;
 		for (int row = 0; row < getRowCount(); row++) {
 			Stock stock = getStock(row);
 			EstimateStock es = getEstimateStock(row);
-			if (stock != null && es != null) stock.setUnitBias(es.estimatedUnitBias);
+			if (stock == null || es == null) continue;
+
+			stock.setUnitBias(es.estimatedUnitBias);
+			
+			if (isForStock())
+				setValueAt(es.estimatedUnitBias, row, 10);
+			else
+				setValueAt(es.estimatedUnitBias, row, 8);
 		}
 	}
 	
@@ -932,6 +938,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			
 			row.add(s.getMargin(timeViewInterval));
 			row.add(s.getProfit(timeViewInterval));
+			row.add(stock.getUnitBias());
 			row.add(s.isCommitted());
 			
 			List<EstimateStock> estimateStocks = getEstimateStocks(stock.code());
@@ -953,7 +960,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.getTakenValue(timeViewInterval));
 			row.add(group.getMargin(timeViewInterval));
 			row.add(group.getProfit(timeViewInterval));
-			row.add(Util.format(group.getROIByLeverage(timeViewInterval) * 100) + "%");
+			row.add(Util.format(group.getROI(timeViewInterval) * 100) + "%");
+			row.add(group.getUnitBias());
 			
 			if (u == null || u.lookup(market.getName()) < 0) {
 				row.add("");
@@ -963,9 +971,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				if (query == null) query = m();
 				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
 				
-				if (estimator == null) {
+				if (estimator == null)
 					row.add("");
-				}
 				else {
 					if (group.getLeverage() != 0) {
 						String volume = Util.format(estimator.estimateInvestVolume(timeViewInterval));
@@ -977,6 +984,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 						row.add("Infinity");
 				}
 			}
+			
+			row.add(null);
 		}
 
 		return row;
@@ -1001,6 +1010,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Stop loss / take profit");
 			columns.add("Margin");
 			columns.add("Profit");
+			columns.add("Unit bias");
 			columns.add("Committed");
 			columns.add("Est. price / stop loss / take profit");
 			columns.add("");
@@ -1014,10 +1024,40 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Margin");
 			columns.add("Profit");
 			columns.add("ROI");
+			columns.add("Unit bias");
 			columns.add("Rec. buy/sell");
+			columns.add("");
 		}
 		
 		return columns;
+	}
+
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		
+		if (forStock) {
+			if (columnIndex == 1 || columnIndex == 11)
+				return Boolean.class;
+			else if (columnIndex == 2)
+				return Date.class;
+			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 12)
+				return super.getColumnClass(columnIndex);
+			else if (columnIndex ==  0 || columnIndex ==  13)
+				return super.getColumnClass(columnIndex);
+			else
+				return Double.class;
+		}
+		else {
+			if (columnIndex == 1)
+				return Boolean.class;
+			else if (columnIndex == 9)
+				return super.getColumnClass(columnIndex);
+			else if (columnIndex ==  0 || columnIndex ==  10)
+				return super.getColumnClass(columnIndex);
+			else
+				return Double.class;
+		}
 	}
 
 
@@ -1212,7 +1252,6 @@ class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tblMarket.resetAllBiases();
-				tblMarket.update();
 			}
 		});
 		btnResetUnitBiases.setMnemonic('b');
