@@ -837,7 +837,8 @@ class PriceList extends JDialog {
 		btnApply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				apply();
+				boolean applied = apply();
+				if (applied) JOptionPane.showMessageDialog(null, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		if (editMode) footer.add(btnApply);
@@ -876,13 +877,23 @@ class PriceList extends JDialog {
 	}
 	
 	
-	private void apply() {
-		if (editMode) applied = applied || tblPriceList.apply();
+	private boolean apply() {
+		if (!editMode) return false;
+		
+		boolean applied = tblPriceList.apply();
+		if (applied) {
+			String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+			if (code != null) {
+				StockInfo si = universe.getStore().get(code);
+				btnRemoveCode.setVisible(si == null || si.getPriceCount() == 0);
+			}
+		}
+		return this.applied || applied;
 	}
 	
 	
 	public boolean isApplied() {
-		return applied;
+		return this.applied;
 	}
 	
 	
@@ -913,8 +924,10 @@ class PriceList extends JDialog {
 	
 	
 	private boolean removeCode() {
+		if (tblPriceList.getRowCount() > 0) return false;
 		String removedCode = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (removedCode == null) return false;
+		
 		StockInfo si = universe.getStore().get(removedCode);
 		if (si == null)
 			return false;
@@ -1460,8 +1473,8 @@ class PriceListPartialTable extends JTable {
 	}
 	
 	
-	public void apply() {
-		getModel2().apply();
+	public boolean apply() {
+		return getModel2().apply();
 	}
 	
 	
@@ -1668,8 +1681,8 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
-	public void apply() {
-		if (!modified) return;
+	public boolean apply() {
+		if (!modified) return false;
 		modified = false;
 		
 		List<Price> stockPrices = getStockPrices();
@@ -1716,6 +1729,8 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		
 		MarketImpl m = m();
 		if (m != null) m.applyPlace();
+		
+		return true;
 	}
 	
 	
@@ -2059,7 +2074,8 @@ class PriceListPartial extends JDialog {
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				apply();
+				boolean applied = apply();
+				if (applied) JOptionPane.showMessageDialog(null, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		if (editMode) footer.add(apply);
@@ -2109,8 +2125,11 @@ class PriceListPartial extends JDialog {
 	}
 	
 	
-	private void apply() {
-		if (editMode) tblPriceList.apply();
+	private boolean apply() {
+		if (editMode)
+			return tblPriceList.apply();
+		else
+			return false;
 	}
 	
 	

@@ -21,7 +21,7 @@ public class StockImpl extends StockAbstract {
 	private TakenPrice takenPrice = null;
 	
 	
-	protected Commit commit = null;
+	private Commit commit = new Commit(false, 0);
 	
 	
 	protected double stopLoss = 0;
@@ -99,6 +99,7 @@ public class StockImpl extends StockAbstract {
 	}
 	
 
+	@Override
 	public long getCommittedTimePoint() {
 		if (commit == null)
 			return 0;
@@ -111,11 +112,17 @@ public class StockImpl extends StockAbstract {
 	public void setCommitted(boolean committed) {
 		Price price = getPrice();
 		long timePoint = price != null ? price.getTime() : System.currentTimeMillis();
+		setCommitted(committed, timePoint);
+	}
+
+
+	@Override
+	public void setCommitted(boolean committed, long timePoint) {
 		if (commit == null)
-			commit = new Commit(committed, timePoint);
+			commit = new Commit(committed, committed ? timePoint : 0);
 		else {
 			commit.committed = committed;
-			commit.timePoint = timePoint;
+			commit.timePoint = committed ? timePoint : 0;
 		}
 	}
 

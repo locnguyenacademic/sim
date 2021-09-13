@@ -185,7 +185,6 @@ class MarketWatchPanel extends MarketPanel {
 	public MarketWatchPanel(Market market, boolean forStock, MarketListener listener) {
 		super(market, forStock, listener);
 		btnResetLossesProfits.setVisible(true);
-		btnResetUnitBiases.setVisible(true);
 	}
 
 

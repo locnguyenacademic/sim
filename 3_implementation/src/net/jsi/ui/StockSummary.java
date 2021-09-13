@@ -177,6 +177,10 @@ public abstract class StockSummary extends JDialog {
 				info.append("Dividend: " + Util.format(dividend) + "\n");
 				info.append("Dividend date: " + Util.format(new Date(stock.getDividendTimePoint(timeViewInterval))) + "\n");
 			}
+			long committedTime = stock.getCommittedTimePoint();
+			if (committedTime > 0) {
+				info.append("Committed date: " + Util.format(new Date(committedTime)) + "\n");
+			}
 			info.append("Price oscillate (nearest): " + Util.format(s.getPriceOscillWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))) + "\n");
 			info.append("Price oscillate ratio (nearest): " + Util.format(s.getPriceOscillRatioWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))*100) + "%\n");
 			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");

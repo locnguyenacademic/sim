@@ -766,6 +766,9 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private void resetAllStopLossesTakeProfits() {
+		int answer= JOptionPane.showConfirmDialog(this, "Be careful to reset all stop losses and take profits.\nAre you sure to reset them?", "Reset confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+
 		MarketPanel[] mps = getMarketPanels();
 		for (MarketPanel mp : mps) {
 			MarketImpl market = universe.c(mp.getMarket());
@@ -880,8 +883,8 @@ public class Investor extends JFrame implements MarketListener {
 			left.add(new JLabel("Balance (basic): "));
 			left.add(new JLabel("Balance bias: "));
 			left.add(new JLabel("Margin fee: "));
-			left.add(new JLabel("Day interval (days): "));
-			left.add(new JLabel("Day interval for long (days): "));
+			left.add(new JLabel("View interval (days): "));
+			left.add(new JLabel("Valid interval (days): "));
 			left.add(new JLabel("Start date: "));
 			left.add(new JLabel("Referred leverage: "));
 			left.add(new JLabel("Referred unit bias: "));

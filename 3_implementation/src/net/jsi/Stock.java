@@ -49,9 +49,15 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	boolean isCommitted();
 	
 	
+	long getCommittedTimePoint();
+
+		
 	void setCommitted(boolean committed);
 
 		
+	void setCommitted(boolean committed, long timePoint);
+
+	
 	double getVolume(long timeInterval, boolean countCommitted);
 	
 	

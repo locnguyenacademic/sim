@@ -293,8 +293,26 @@ public class StockGroup extends StockAbstract implements Market {
 
 	
 	@Override
+	public long getCommittedTimePoint() {
+		long ctp = 0;
+		if (stocks.size() == 0) return ctp;
+		for (Stock stock : stocks) {
+			ctp = Math.max(ctp, stock.getCommittedTimePoint());
+		}
+		
+		return ctp;
+	}
+
+
+	@Override
 	public void setCommitted(boolean committed) {
 		for (Stock stock : stocks) stock.setCommitted(committed);
+	}
+
+
+	@Override
+	public void setCommitted(boolean committed, long timePoint) {
+		for (Stock stock : stocks) stock.setCommitted(committed, timePoint);
 	}
 
 
