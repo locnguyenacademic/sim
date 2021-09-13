@@ -287,7 +287,7 @@ public class MarketTable extends JTable implements MarketListener {
 		
 		left.add(new JLabel("Leverage: "));
 		left.add(new JLabel("Unit bias: "));
-		left.add(new JLabel("Price ratio: "));
+		//left.add(new JLabel("Price ratio: "));
 		
 		JPanel right = new JPanel(new GridLayout(0, 1));
 		header.add(right, BorderLayout.CENTER);
@@ -318,7 +318,7 @@ public class MarketTable extends JTable implements MarketListener {
 		
 		double priceRatio = group.getProperty().priceRatio;
 		JPanel panePriceRatio = new JPanel(new BorderLayout());
-		right.add(panePriceRatio);
+		//right.add(panePriceRatio);
 		JFormattedTextField txtPriceRatio = new JFormattedTextField(Util.getNumberFormatter());
 		txtPriceRatio.setValue(priceRatio);
 		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);

@@ -207,6 +207,8 @@ class MarketWatchDialog extends MarketDialog {
 	
 	public MarketWatchDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
 		super(market, forStock, listener, parent);
+		setSize(650, 450);
+
 		btnOK.setText("Close");
 		btnCancel.setVisible(false);
 	}

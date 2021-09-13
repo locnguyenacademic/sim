@@ -389,7 +389,6 @@ public class Investor extends JFrame implements MarketListener {
 				}
 			});
 		mniResetAllLossesProfits.setMnemonic('o');
-		mniResetAllLossesProfits.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
 		mnTool.add(mniResetAllLossesProfits);
 
 		JMenuItem mniResetAllUnitBiases = new JMenuItem(

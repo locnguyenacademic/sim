@@ -21,7 +21,7 @@ public class StockImpl extends StockAbstract {
 	private TakenPrice takenPrice = null;
 	
 	
-	protected boolean committed = false;
+	protected Commit commit = null;
 	
 	
 	protected double stopLoss = 0;
@@ -69,7 +69,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	private boolean take(Price price) {
-		if (committed)
+		if (isCommitted())
 			return false;
 		else if (price == null) {
 			takenPrice = null;
@@ -86,7 +86,7 @@ public class StockImpl extends StockAbstract {
 	
 	@Override
 	public boolean setUnitBias(double unitBias) {
-		if (!committed)
+		if (!isCommitted())
 			return super.setUnitBias(unitBias);
 		else
 			return false;
@@ -95,13 +95,28 @@ public class StockImpl extends StockAbstract {
 
 	@Override
 	public boolean isCommitted() {
-		return committed;
+		return commit != null && commit.committed;
+	}
+	
+
+	public long getCommittedTimePoint() {
+		if (commit == null)
+			return 0;
+		else
+			return commit.timePoint;
 	}
 	
 	
 	@Override
 	public void setCommitted(boolean committed) {
-		this.committed = committed;
+		Price price = getPrice();
+		long timePoint = price != null ? price.getTime() : System.currentTimeMillis();
+		if (commit == null)
+			commit = new Commit(committed, timePoint);
+		else {
+			commit.committed = committed;
+			commit.timePoint = timePoint;
+		}
 	}
 
 
@@ -121,7 +136,7 @@ public class StockImpl extends StockAbstract {
 	
 	@Override
 	public boolean setPrice(Price price) {
-		if (!committed)
+		if (!isCommitted())
 			return super.setPrice(price);
 		else
 			return false;
@@ -183,18 +198,12 @@ public class StockImpl extends StockAbstract {
 	
 	
 	public double getFee(long timeInterval) {
-		return getTotalSwap(timeInterval) + getProperty().commission + getProperty().getFee(timeInterval);
-	}
-	
-	
-	protected double getTotalSwap(long timeInterval) {
-		List<Price> prices = getPrices(timeInterval);
-		if (prices.size() <= 1)
-			return 0;
-		else {
-			int days = (int) ((prices.get(prices.size()-1).getTime() - prices.get(0).getTime()) / (1000*3600*24) + 0.5);
-			return days*getProperty().swap*volume;
-		}
+		long interval = getCommittedTimePoint() - getTakenTimePoint(timeInterval);
+		int days = (int) (interval / (1000*3600*24) + 0.5);
+		days = days > 0 ? days : 0;
+
+		StockProperty property = getProperty();
+		return property.commission + volume*(days*property.swap + property.getExtraFee(days));
 	}
 	
 	
@@ -245,6 +254,25 @@ public class StockImpl extends StockAbstract {
 		this.takeProfit = takeProfit;
 	}
 
+
+	@Override
+	public double getDividend(long timeInterval) {
+		StockProperty property = getProperty();
+		if (property == null) return 0;
+		long takenTimePoint = getTakenTimePoint(timeInterval);
+		if (takenTimePoint <= 0) return 0;
+		
+		long dividendTimePoint = property.getDividendTime();
+		long lastTimePoint = getPrice().getTime();
+		if (isCommitted()) lastTimePoint = getCommittedTimePoint();
+		if (dividendTimePoint > lastTimePoint)
+			return 0;
+		else if (timeInterval > 0 && lastTimePoint - dividendTimePoint > timeInterval)
+			return 0;
+		else
+			return property.getDividend() * volume;
+	}
+	
 
 	@Override
 	public StockGroup getGroup() {

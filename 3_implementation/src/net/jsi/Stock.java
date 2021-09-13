@@ -76,6 +76,12 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getTakeProfit();
 
 
+	double getDividend(long timeInterval);
+
+		
+	long getDividendTimePoint(long timeInterval);
+
+		
 	StockInfoStore getStore();
 
 	

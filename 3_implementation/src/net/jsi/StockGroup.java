@@ -438,6 +438,16 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
+	@Override
+	public double getDividend(long timeInterval) {
+		double dividend = 0;
+		for (Stock stock : stocks) {
+			if (!stock.isCommitted()) dividend += stock.getDividend(timeInterval);
+		}
+		return dividend;
+	}
+
+
 	private MarketImpl m() {
 		Universe u = getNearestUniverse();
 		return u != null ? u.c(getSuperMarket()) : null;

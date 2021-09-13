@@ -223,7 +223,17 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		return info.getProperty();
 	}
 
-
+	
+	@Override
+	public long getDividendTimePoint(long timeInterval) {
+		double dividend = getDividend(timeInterval);
+		if (dividend > 0)
+			return getProperty().getDividendTime();
+		else
+			return 0;
+	}
+	
+	
 	public abstract StockGroup getGroup();
 	
 	

@@ -5,15 +5,23 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.Date;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import net.jsi.StockProperty;
@@ -25,15 +33,21 @@ public class StockPropertySetting extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
+	protected JTextArea txtMoreProperties;
+	
+	
 	protected StockProperty output = null;
 	
 	
 	public StockPropertySetting(StockProperty property, Component comp) {
-		super(Util.getDialogForComponent(comp), "Settings stock property (this function not completed for permanant storing yet)", true);
+		super(Util.getDialogForComponent(comp), "Settings stock property", true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setSize(300, 250);
+		setSize(350, 250);
 		setLocationRelativeTo(Util.getDialogForComponent(this));
-		setLayout(new BorderLayout());
+		
+	    setJMenuBar(createMenuBar());
+
+	    setLayout(new BorderLayout());
 		
 		
 		JPanel header = new JPanel(new BorderLayout());
@@ -42,18 +56,18 @@ public class StockPropertySetting extends JDialog {
 		JPanel left = new JPanel(new GridLayout(0, 1));
 		header.add(left, BorderLayout.WEST);
 		
-		left.add(new JLabel("Maxium price count: "));
+		//left.add(new JLabel("Maxium price count: "));
 		left.add(new JLabel("Swap: "));
 		left.add(new JLabel("Spread: "));
 		left.add(new JLabel("Commission: "));
-		left.add(new JLabel("Price ratio: "));
-		left.add(new JLabel("Price update interval (days): "));
+		//left.add(new JLabel("Price ratio: "));
+		//left.add(new JLabel("Price update interval (days): "));
 		
 		JPanel right = new JPanel(new GridLayout(0, 1));
 		header.add(right, BorderLayout.CENTER);
 		
 		JPanel paneMaxPriceCount = new JPanel(new BorderLayout());
-		right.add(paneMaxPriceCount);
+		//right.add(paneMaxPriceCount);
 		JFormattedTextField txtMaxPriceCount = new JFormattedTextField(Util.getNumberFormatter());
 		txtMaxPriceCount.setValue(property.maxPriceCount);
 		paneMaxPriceCount.add(txtMaxPriceCount, BorderLayout.CENTER);
@@ -77,13 +91,13 @@ public class StockPropertySetting extends JDialog {
 		paneCommission.add(txtCommission, BorderLayout.CENTER);
 		
 		JPanel panePriceRatio = new JPanel(new BorderLayout());
-		right.add(panePriceRatio);
+		//right.add(panePriceRatio);
 		JFormattedTextField txtPriceRatio = new JFormattedTextField(Util.getNumberFormatter());
 		txtPriceRatio.setValue(property.priceRatio);
 		panePriceRatio.add(txtPriceRatio, BorderLayout.CENTER);
 		
 		JPanel panePriceUpdateInterval = new JPanel(new BorderLayout());
-		right.add(panePriceUpdateInterval);
+		//right.add(panePriceUpdateInterval);
 		JFormattedTextField txtTimePriceUpdateInterval = new JFormattedTextField(Util.getNumberFormatter());
 		txtTimePriceUpdateInterval.setValue(property.timeUpdatePriceInterval / (1000*3600*24));
 		txtTimePriceUpdateInterval.setEditable(false);
@@ -95,9 +109,9 @@ public class StockPropertySetting extends JDialog {
 		JPanel paneMoreProperties = new JPanel(new BorderLayout());
 		body.add(paneMoreProperties, BorderLayout.CENTER);
 		//
-		paneMoreProperties.add(new JLabel("More properties (,): "), BorderLayout.WEST);
+		paneMoreProperties.add(new JLabel("More (,): "), BorderLayout.WEST);
 		//
-		JTextArea txtMoreProperties = new JTextArea();
+		txtMoreProperties = new JTextArea();
 		txtMoreProperties.setLineWrap(true);
 		txtMoreProperties.setToolTipText("Pairs \"key=value\" are separated by a comma or a new line character");
 		txtMoreProperties.setText(property.getMorePropertiesText());
@@ -139,11 +153,124 @@ public class StockPropertySetting extends JDialog {
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				output = null;
 				dispose();
 			}
 		});
 		footer.add(cancel);
 		
+	}
+	
+	
+	private JMenuBar createMenuBar() {
+		JMenuBar mnBar = new JMenuBar();
+		
+		JMenu mnTool = new JMenu("Tool");
+		mnTool.setMnemonic('t');
+		mnBar.add(mnTool);
+
+		JMenuItem mniSwitch = new JMenuItem(
+			new AbstractAction("Set/clear dividend") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setDividend();
+				}
+			});
+		mniSwitch.setMnemonic('d');
+		mniSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniSwitch);
+		
+		return mnBar;
+	}
+
+	
+	private void setDividend() {
+		String moreText = txtMoreProperties.getText();
+		if (moreText == null) moreText = "";
+		StockProperty property = new StockProperty();
+		property.parseText(moreText);
+
+		JDialog dlgDividend = new JDialog(Util.getDialogForComponent(this), "Set dividend", true);
+		dlgDividend.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		dlgDividend.setSize(250, 200);
+		dlgDividend.setLocationRelativeTo(Util.getDialogForComponent(this));
+		
+		dlgDividend.setLayout(new BorderLayout());
+
+		JPanel header = new JPanel(new BorderLayout());
+		dlgDividend.add(header, BorderLayout.NORTH);
+
+		JPanel left = new JPanel(new GridLayout(0, 1));
+		header.add(left, BorderLayout.WEST);
+		
+		left.add(new JLabel("Value: "));
+		left.add(new JLabel("Date: "));
+
+		JPanel right = new JPanel(new GridLayout(0, 1));
+		header.add(right, BorderLayout.CENTER);
+		
+		JPanel paneValue = new JPanel(new BorderLayout());
+		right.add(paneValue);
+		JFormattedTextField txtValue = new JFormattedTextField(Util.getNumberFormatter());
+		txtValue.setValue(property.getDividend());
+		txtValue.setToolTipText("Setting value 0 to clear dividend");
+		paneValue.add(txtValue, BorderLayout.CENTER);
+		
+		JPanel paneDate = new JPanel(new BorderLayout());
+		right.add(paneDate);
+		JFormattedTextField txtDate = new JFormattedTextField(Util.getDateFormatter());
+		long dividendTime = property.getDividendTime();
+		txtDate.setValue(dividendTime > 0 ? new Date(dividendTime) : new Date());
+		paneDate.add(txtDate, BorderLayout.CENTER);
+		//
+		JButton btnDate = new JButton("Now");
+		btnDate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtDate.setValue(new Date());;
+			}
+		});
+		paneDate.add(btnDate, BorderLayout.EAST);
+
+		JPanel footer = new JPanel();
+		dlgDividend.add(footer, BorderLayout.SOUTH);
+		
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double value = txtValue.getValue() instanceof Number ? ((Number)txtValue.getValue()).doubleValue() : 0;
+				Date date = txtDate.getValue() instanceof Date ? (Date)txtDate.getValue() : null;
+				
+				String moreText = txtMoreProperties.getText();
+				if (moreText == null) moreText = "";
+				StockProperty property = new StockProperty();
+				property.parseText(moreText);
+				if (value > 0 && date != null)
+					property.setDividend(value, date.getTime());
+				else
+					property.setDividend(0, 0);
+					
+				txtMoreProperties.setText(property.getMorePropertiesText());
+				
+				dlgDividend.dispose();
+			}
+		});
+		footer.add(ok);
+		
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dlgDividend.dispose();
+			}
+		});
+		footer.add(cancel);
+		
+		dlgDividend.setVisible(true);
 	}
 	
 	

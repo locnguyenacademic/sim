@@ -31,7 +31,7 @@ public class PriceImpl implements Price {
 	private double priceRatio = StockProperty.PRICE_RATIO;
 	
 	
-	protected long time = System.currentTimeMillis();
+	protected long timePoint = System.currentTimeMillis();
 	
 	
 	protected Serializable tag = null;
@@ -42,11 +42,11 @@ public class PriceImpl implements Price {
 	}
 	
 	
-	public PriceImpl(double price, double lowPrice, double highPrice, long time) {
+	public PriceImpl(double price, double lowPrice, double highPrice, long timePoint) {
 		this.price = price;
 		this.lowPrice = lowPrice;
 		this.highPrice = highPrice;
-		this.time = time;
+		this.timePoint = timePoint;
 	}
 	
 	
@@ -100,19 +100,19 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public long getTime() {
-		return time;
+		return timePoint;
 	}
 	
 	
 	@Override
-	public void setTime(long time) {
-		this.time = time;
+	public void setTime(long timePoint) {
+		this.timePoint = timePoint;
 	}
 	
 	
 	@Override
 	public Date getDate() {
-		return new Date(time);
+		return new Date(timePoint);
 	}
 
 
@@ -130,7 +130,7 @@ public class PriceImpl implements Price {
 
 	@Override
 	public boolean isValid() {
-		return price >= lowPrice && price <= highPrice && time >= 0;
+		return price >= lowPrice && price <= highPrice && timePoint >= 0;
 	}
 
 
