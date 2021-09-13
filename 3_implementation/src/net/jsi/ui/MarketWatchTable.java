@@ -84,15 +84,29 @@ public class MarketWatchTable extends MarketTable {
 		if (ret) update();
 	}
 
+
+	@Override
+	protected MarketImpl getPlaceMarket() {
+		MarketImpl placeMarket = super.getPlaceMarket();
+		if (placeMarket != null) return placeMarket;
+		
+		MarketImpl m = m();
+		if (m == null) return null;
+		Universe u = m.getNearestUniverse();
+		if (u == null) return null;
+		MarketImpl dualMarket = u.c(m.getDualMarket());
+		return dualMarket != null ? dualMarket.getPlaceMarket() : null;
+	}
+	
 	
 	private boolean place0(Stock stock) {
 		if (stock == null) stock = getSelectedStock();
 		if (stock == null) return false;
-		MarketImpl m = m();
-		if (m == null) return false;
-		MarketImpl placeMarket = m.getPlaceMarket();
+		MarketImpl placeMarket = getPlaceMarket();
 		if (placeMarket == null) return false;
 		
+		MarketImpl m = m();
+		if (m == null) return false;
 		Price price = (Price)stock.getPrice().clone();
 		double volume = stock.getVolume(m.getTimeViewInterval(), false);
 		if (price == null || volume == 0) return false;
@@ -182,15 +196,16 @@ class MarketWatchPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketWatchPanel(Market market, boolean forStock, MarketListener listener) {
-		super(market, forStock, listener);
-		btnResetLossesProfits.setVisible(true);
+	public MarketWatchPanel(Market market, boolean forStock, MarketListener superListener) {
+		super(market, forStock, superListener);
+		btnReestimateLossesProfits.setVisible(true);
+		btnReestimateUnitBiases.setVisible(true);
 	}
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
-		return new MarketWatchTable(market, forStock, listener);
+	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketWatchTable(market, forStock, superListener);
 	}
 
 
@@ -204,21 +219,16 @@ class MarketWatchDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketWatchDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
-		super(market, forStock, listener, parent);
+	public MarketWatchDialog(Market market, boolean forStock, MarketListener superListener, Component parent) {
+		super(market, forStock, superListener, parent);
 		setSize(650, 450);
-
-		btnOK.setText("Close");
-		btnCancel.setVisible(false);
+		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener listener) {
-		MarketPanel mp = new MarketWatchPanel(market, forStock, listener);
-		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
-			mp.getMarketTable().getModel2().addMarketListener(listener);
-		return mp;
+	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketWatchPanel(market, forStock, superListener);
 	}
 
 

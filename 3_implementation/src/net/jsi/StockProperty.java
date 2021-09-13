@@ -110,7 +110,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public static long TIME_UPDATE_PRICE_INTERVAL = 1;
 
 
-	public static long TIME_VIEW_INTERVAL = 1000*3600*24*10;
+	public static long TIME_VIEW_INTERVAL = 1000*3600*24*30;
 
 
 	public static long TIME_VALID_INTERVAL = 0;

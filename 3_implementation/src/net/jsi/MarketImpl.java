@@ -594,9 +594,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	protected Map<String, List<EstimateStock>> retrieveStockEstimators() {
+	protected Map<String, List<EstimateStock>> retrieveStockEstimators(long timeInterval) {
 		Map<String, List<EstimateStock>> estimators = Util.newMap(0);
-		long timeInterval = getTimeViewInterval();
 		for (int i = 0; i < size(); i++) {
 			StockGroup group = get(i);
 			if (group.isCommitted()) continue;
@@ -609,9 +608,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public void resetAllStopLossesTakeProfits() {
-		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators();
-		List<Stock> stocks = getStocks(getTimeViewInterval());
+	public void resetAllStopLossesTakeProfits(long timeInterval) {
+		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators(timeInterval);
+		List<Stock> stocks = getStocks(timeInterval);
 		for (Stock stock : stocks) {
 			EstimateStock es = lookup(estimators, stock);
 			if (es == null) continue;
@@ -638,9 +637,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public void resetAllUnitBiases() {
-		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators();
-		List<Stock> stocks = getStocks(getTimeViewInterval());
+	public void resetAllUnitBiases(long timeInterval) {
+		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators(timeInterval);
+		List<Stock> stocks = getStocks(timeInterval);
 		for (Stock stock : stocks) {
 			EstimateStock es = lookup(estimators, stock);
 			if (es == null) continue;

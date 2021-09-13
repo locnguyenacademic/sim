@@ -405,7 +405,7 @@ class RecTableModel extends DefaultTableModel {
 		InvestBy investBy = new InvestBy(code, buy, invests);
 		row.add(investBy);
 		row.add(code);
-		double leverage = info.getLeverage() == 0 ? info.getLeverage() : 1.0/info.getLeverage();
+		double leverage = info.getLeverage() != 0 ? 1.0/info.getLeverage() : 0;
 		row.add(leverage);
 		row.add(info.getLastPrice().get());
 		row.add(estimator.estimateUnitBias(timeInterval));
@@ -455,6 +455,15 @@ class RecTableModel extends DefaultTableModel {
 		columns.add("2.Take profit (large)");
 		
 		return columns;
+	}
+
+
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		if (columnIndex == 0 || columnIndex == 1)
+			return super.getColumnClass(columnIndex);
+		else
+			return Double.class;
 	}
 
 
@@ -595,12 +604,10 @@ class RecPanel extends JPanel implements MarketListener {
 	
 	public RecPanel(Market market, long timeInterval) {
 		this.timeInterval = timeInterval;
-		tblRec = new RecTable(market, timeInterval);
+		tblRec = createRecTable(market, timeInterval);
 		tblRec.getModel2().addMarketListener(this);
 
-		
 		setLayout(new BorderLayout());
-		
 		
 		JPanel header = new JPanel(new BorderLayout());
 		add(header, BorderLayout.NORTH);
@@ -614,12 +621,10 @@ class RecPanel extends JPanel implements MarketListener {
 			}
 		});
 		
-		
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		body.add(new JScrollPane(tblRec), BorderLayout.CENTER);
 
-		
 		JPanel footer = new JPanel(new BorderLayout());
 		add(footer, BorderLayout.SOUTH);
 		
@@ -649,6 +654,11 @@ class RecPanel extends JPanel implements MarketListener {
 	}
 
 
+	protected RecTable createRecTable(Market market, long timeInterval) {
+		return new RecTable(market, timeInterval);
+	}
+	
+	
 }
 
 
@@ -659,7 +669,7 @@ class RecDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public RecDialog(Market market, Component parent) {
+	public RecDialog(Market market, long timeInterval, Component parent) {
 		super(Util.getDialogForComponent(parent), "Recommended stocks", true);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -671,7 +681,7 @@ class RecDialog extends JDialog {
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
-		RecPanel mp = new RecPanel(market, market.getTimeViewInterval());
+		RecPanel mp = new RecPanel(market, timeInterval);
 		body.add(mp, BorderLayout.CENTER);
 		
 		JPanel footer = new JPanel();
@@ -687,6 +697,11 @@ class RecDialog extends JDialog {
 		});
 		footer.add(btnClose);
 		
+	}
+	
+	
+	protected RecPanel createRecPanel(Market market, long timeInterval) {
+		return new RecPanel(market, timeInterval);
 	}
 	
 	

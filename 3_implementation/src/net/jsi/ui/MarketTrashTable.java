@@ -245,11 +245,11 @@ class MarketTrashPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTrashPanel(Market market, boolean forStock, MarketListener listener) {
-		super(market, forStock, listener);
+	public MarketTrashPanel(Market market, boolean forStock, MarketListener superListener) {
+		super(market, forStock, superListener);
 		btnTake.setVisible(false);
-		btnResetLossesProfits.setVisible(false);
-		btnResetUnitBiases.setVisible(false);
+		btnReestimateLossesProfits.setVisible(false);
+		btnReestimateUnitBiases.setVisible(false);
 		
 		ActionListener[] als = btnSummary.getActionListeners();
 		for (ActionListener al : als) {
@@ -280,8 +280,8 @@ class MarketTrashPanel extends MarketPanel {
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
-		return new MarketTrashTable(market, forStock, listener);
+	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketTrashTable(market, forStock, superListener);
 	}
 
 
@@ -295,22 +295,16 @@ class MarketTrashDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketTrashDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
-		super(market, forStock, listener, parent);
-		btnOK.setText("Close");
-		btnCancel.setVisible(false);
+	public MarketTrashDialog(Market market, boolean forStock, MarketListener superListener, Component parent) {
+		super(market, forStock, superListener, parent);
+		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener listener) {
-		MarketPanel mp = new MarketTrashPanel(market, forStock, listener);
-		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
-			mp.getMarketTable().getModel2().addMarketListener(listener);
-		return mp;
+	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketTrashPanel(market, forStock, superListener);
 	}
 
 
-	
-	
 }

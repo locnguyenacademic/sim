@@ -364,8 +364,8 @@ class MarketPlacePanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketPlacePanel(Market market, boolean forStock, MarketListener listener) {
-		super(market, forStock, listener);
+	public MarketPlacePanel(Market market, boolean forStock, MarketListener superListener) {
+		super(market, forStock, superListener);
 		
 		MarketPlacePanel thisPanel = this;
 		ActionListener[] als = btnSummary.getActionListeners();
@@ -389,8 +389,8 @@ class MarketPlacePanel extends MarketPanel {
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener listener) {
-		return  new MarketPlaceTable(market, forStock, listener);
+	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketPlaceTable(market, forStock, superListener);
 	}
 
 
@@ -404,19 +404,15 @@ class MarketPlaceDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketPlaceDialog(Market market, boolean forStock, MarketListener listener, Component parent) {
-		super(market, forStock, listener, parent);
-		btnOK.setText("Close");
-		btnCancel.setVisible(false);
+	public MarketPlaceDialog(Market market, boolean forStock, MarketListener superListener, Component parent) {
+		super(market, forStock, superListener, parent);
+		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener listener) {
-		MarketPanel mp = new MarketPlacePanel(market, forStock, listener);
-		if (mp.getMarketTable() != null && listener != null && StockProperty.RUNTIME_CASCADE)
-			mp.getMarketTable().getModel2().addMarketListener(listener);
-		return mp;
+	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener superListener) {
+		return new MarketPlacePanel(market, forStock, superListener);
 	}
 
 
