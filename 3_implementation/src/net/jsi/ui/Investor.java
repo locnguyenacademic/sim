@@ -81,13 +81,20 @@ public class Investor extends JFrame implements MarketListener {
 	protected JLabel lblTotalROI;
 
 	
+	protected JLabel lblTotalSurplus;
+
+	
 	protected JLabel lblTotalBias;
 
 	
 	protected JLabel lblTotalOscill;
 
 	
+	protected JLabel lblTotalInvest;
+
+	
 	protected File curDir = null;
+	
 	
 	public Investor(Universe universe) {
 		super("JSI - Stock/forex investment manager");
@@ -131,13 +138,28 @@ public class Investor extends JFrame implements MarketListener {
 		JPanel footerRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		footer.add(footerRow, BorderLayout.NORTH);
 		
-		footerRow.add(lblTotalProfit = new JLabel());
+		lblTotalProfit = new JLabel();
+		footerRow.add(lblTotalProfit);
 		footerRow.add(new JLabel(" "));
-		footerRow.add(lblTotalROI = new JLabel());
+		
+		lblTotalROI = new JLabel();
+		footerRow.add(lblTotalROI);
 		footerRow.add(new JLabel(" "));
-		footerRow.add(lblTotalBias = new JLabel());
+		
+		lblTotalSurplus = new JLabel();
+		footerRow.add(lblTotalSurplus);
 		footerRow.add(new JLabel(" "));
-		footerRow.add(lblTotalOscill = new JLabel());
+
+		lblTotalBias = new JLabel();
+		//footerRow.add(lblTotalBias);
+		//footerRow.add(new JLabel(" "));
+		
+		lblTotalOscill = new JLabel();
+		//footerRow.add(lblTotalOscill);
+		//footerRow.add(new JLabel(" "));
+
+		lblTotalInvest = new JLabel();
+		footerRow.add(lblTotalInvest);
 
 		update();
 	}
@@ -145,16 +167,21 @@ public class Investor extends JFrame implements MarketListener {
 	
 	private void update() {
 		long timeViewInterval = universe.getTimeViewInterval();
+		double balance = universe.getBalance(timeViewInterval);
 		double profit = universe.getProfit(timeViewInterval);
 		double roi = universe.getROI(timeViewInterval);
-		double lRoi = universe.getROIByLeverage(timeViewInterval);
-		double totalBias = universe.calcTotalBias(timeViewInterval);
-		double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
+		//double lRoi = universe.getROIByLeverage(timeViewInterval);
+		double surplus = balance != 0 ? profit / balance : 0;
+		//double totalBias = universe.calcTotalBias(timeViewInterval);
+		//double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
+		double totalInvest = universe.calcInvestAmount(timeViewInterval);
 		
 		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
-		lblTotalROI.setText("ROI: " + Util.format(roi*100) + "% / " + Util.format(lRoi*100) + "%");
-		lblTotalBias.setText("BIAS: " + Util.format(totalBias));
-		lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
+		lblTotalROI.setText("LEV.ROI: " + Util.format(roi*100) + "%");
+		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100) + "%");
+		//lblTotalBias.setText("BIAS: " + Util.format(totalBias));
+		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
+		lblTotalInvest.setText("HEDGE: " + Util.format(totalInvest));
 	}
 	
 	

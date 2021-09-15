@@ -1845,7 +1845,7 @@ class MarketPanel extends JPanel implements MarketListener {
 		double profit = market.getProfit(timeViewInterval);
 		double roi = market.getROI(timeViewInterval);
 		double lRoi = market.getROIByLeverage(timeViewInterval);
-		double surplus = profit / balance;
+		double surplus = balance != 0 ? profit / balance : 0;
 		double bias = market.calcTotalBias(timeViewInterval);
 		double oscill = market.calcTotalPriceOscill(timeViewInterval);
 		double oscillRatio = market.getPriceOscillRatio(timeViewInterval);
