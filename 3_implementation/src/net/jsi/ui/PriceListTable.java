@@ -7,8 +7,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
@@ -18,12 +20,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,6 +36,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.TableModelEvent;
@@ -95,6 +101,7 @@ public class PriceListTable extends JTable {
 		});
 
 		
+		getTableHeader().setReorderingAllowed(false);
 		setDefaultRenderer(Date.class, dateCellRenderer);
 
 		update(code);
@@ -756,8 +763,10 @@ class PriceList extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(600, 400);
 		setLocationRelativeTo(Util.getDialogForComponent(parent));
-		setLayout(new BorderLayout());
 		
+	    setJMenuBar(createMenuBar());
+
+		setLayout(new BorderLayout());
 		
 		JPanel header = new JPanel(new BorderLayout());
 		add(header, BorderLayout.NORTH);
@@ -777,7 +786,6 @@ class PriceList extends JDialog {
 		});
 		cmbCode.setEnabled(!selectMode);
 		header.add(cmbCode, BorderLayout.CENTER);
-		
 		
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
@@ -820,7 +828,6 @@ class PriceList extends JDialog {
 
 		body.add(new JScrollPane(tblPriceList), BorderLayout.CENTER);
 		
-		
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
@@ -833,12 +840,13 @@ class PriceList extends JDialog {
 		});
 		footer.add(btnOK);
 		
+		PriceList thisPriceList = this;
 		btnApply = new JButton("Apply");
 		btnApply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				boolean applied = apply();
-				if (applied) JOptionPane.showMessageDialog(null, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
+				if (applied) JOptionPane.showMessageDialog(thisPriceList, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		if (editMode) footer.add(btnApply);
@@ -866,6 +874,56 @@ class PriceList extends JDialog {
 	}
 	
 	
+	private JMenuBar createMenuBar() {
+		JMenuBar mnBar = new JMenuBar();
+		
+		JMenu mnTool = new JMenu("Tool");
+		mnTool.setMnemonic('t');
+		mnBar.add(mnTool);
+
+		PriceList thisPriceList = this;
+		JMenuItem mniFactor = new JMenuItem(
+			new AbstractAction("Set price factor") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int answer= JOptionPane.showConfirmDialog(thisPriceList, "Are you sure to set price factor?", "Factor confirmation", JOptionPane.YES_NO_OPTION);
+					if (answer == JOptionPane.YES_OPTION) setFactor();
+				}
+			});
+		mniFactor.setMnemonic('f');
+		mniFactor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniFactor);
+		
+		return mnBar;
+	}
+	
+	
+	private void setFactor() {
+		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		if (code == null) return;
+		
+		String factorText = JOptionPane.showInputDialog(this, "Enter price factor", "" + StockProperty.PRICE_FACTOR);
+		if (factorText == null) return;
+
+		try {
+			double factor = Double.parseDouble(factorText);
+			if (factor > 0 && factor != 1) {
+				StockInfo info = universe.getStore().get(code);
+				if (info == null) return;
+				
+				List<Price> prices = info.getPricePool().getInternals();
+				for (Price price : prices) price.applyFactor(factor);
+				
+				update(null, true);
+				applied = true;
+			}
+		}
+		catch (Exception e) {}
+	}
+
+	
 	private void ok() {
 		apply();
 		
@@ -888,7 +946,9 @@ class PriceList extends JDialog {
 				btnRemoveCode.setVisible(si == null || si.getPriceCount() == 0);
 			}
 		}
-		return this.applied || applied;
+		this.applied = this.applied || applied;
+		
+		return applied;
 	}
 	
 	
@@ -1019,8 +1079,6 @@ class PriceList extends JDialog {
 			int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION) apply();
 		}
-		
-		tblPriceList.update();
 		
 		super.dispose();
 	}
@@ -1255,6 +1313,7 @@ class PriceListPartialTable extends JTable {
 		});
 
 		
+		getTableHeader().setReorderingAllowed(false);
 		setDefaultRenderer(Date.class, dateCellRenderer);
 //		setDefaultEditor(Date.class, dateCellEditor);
 
@@ -2008,7 +2067,7 @@ class PriceListPartial extends JDialog {
 	protected Price output = null;
 	
 	
-	protected boolean pressOK = false;
+	protected boolean applied = false;
 	
 	
 	protected boolean editMode = false;
@@ -2018,7 +2077,10 @@ class PriceListPartial extends JDialog {
 	
 	
 	protected Price selectPrice = null;
-
+	
+	
+	protected boolean pressOK = false;
+	
 	
 	public PriceListPartial(Market market, Stock stock, long timeInterval, boolean editMode, boolean selectMode, Component parent) {
 		super(Util.getDialogForComponent(parent), "Price list", true);
@@ -2070,12 +2132,13 @@ class PriceListPartial extends JDialog {
 		});
 		footer.add(ok);
 		
+		PriceListPartial thisPriceList = this;
 		JButton apply = new JButton("Apply");
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				boolean applied = apply();
-				if (applied) JOptionPane.showMessageDialog(null, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
+				if (applied) JOptionPane.showMessageDialog(thisPriceList, "Successful applying", "Successful applying", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		if (editMode) footer.add(apply);
@@ -2110,7 +2173,6 @@ class PriceListPartial extends JDialog {
 		if (output == null) return;
 		
 		tblPriceList.addPrice(output);
-		//if (ret) JOptionPane.showMessageDialog(this, "Successful to add price", "Successfull adding", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	
@@ -2126,12 +2188,19 @@ class PriceListPartial extends JDialog {
 	
 	
 	private boolean apply() {
-		if (editMode)
-			return tblPriceList.apply();
-		else
-			return false;
+		if (!editMode) return false;
+		
+		boolean applied = tblPriceList.apply();
+		this.applied = this.applied || applied;
+		
+		return applied;
 	}
 	
+	
+	public boolean isApplied() {
+		return this.applied;
+	}
+
 	
 	public boolean isPressOK() {
 		return pressOK;
@@ -2143,7 +2212,7 @@ class PriceListPartial extends JDialog {
 		if (editMode) {
 			if (tblPriceList.isModified() && editMode) {
 				int ret = JOptionPane.showConfirmDialog(this, "Would you like to apply some changes into price list", "Apply request", JOptionPane.YES_NO_OPTION);
-				if (ret == JOptionPane.YES_OPTION) tblPriceList.apply();
+				if (ret == JOptionPane.YES_OPTION) apply();
 			}
 		}
 		

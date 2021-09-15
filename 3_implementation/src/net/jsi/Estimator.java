@@ -92,6 +92,9 @@ public interface Estimator extends Serializable, Cloneable {
 	double estimatePrice(long timeInterval);
 
 	
+	double estimatePriceMean(long timeInterval);
+
+		
 	double estimateStopLoss(long timeInterval);
 
 	

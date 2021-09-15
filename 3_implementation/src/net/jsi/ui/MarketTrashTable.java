@@ -12,8 +12,6 @@ import net.jsi.EstimateStock;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Stock;
-import net.jsi.StockGroup;
-import net.jsi.StockImpl;
 import net.jsi.StockProperty;
 import net.jsi.Util;
 
@@ -23,17 +21,17 @@ public class MarketTrashTable extends MarketTable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTrashTable(Market market, boolean forStock, MarketListener listener) {
-		super(market, forStock, listener);
+	public MarketTrashTable(Market market, boolean atomic, MarketListener listener) {
+		super(market, atomic, listener);
 	}
 
 
 	@Override
 	protected void view(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
-		if (stock == null && getModel2().isForStock()) return;
+		if (stock == null && getModel2().isAtomic()) return;
 		
-		new StockSummary(getMarket(), stock.code(), stock.isBuy(), getModel2().isForStock() ? stock : null, this) {
+		new StockDescription(getMarket(), stock.code(), stock.isBuy(), getModel2().isAtomic() ? stock : null, this) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -45,65 +43,44 @@ public class MarketTrashTable extends MarketTable {
 	}
 
 	
-	private boolean recover0(Stock stock) {
-		if (stock == null) return false;
-		MarketImpl m = m(); if (m == null) return false;
-		StockImpl s = m.c(stock); if (s == null) return false;
-		MarketImpl dualMarket = m.getDualMarket() instanceof MarketImpl ? (MarketImpl)m.getDualMarket() : null;
-		if (dualMarket == null) return false;
-		
-		double volume = stock.getVolume(m.getTimeViewInterval(), true);
-		Stock added = dualMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-		if (added == null)
-			return false;
-		else {
-			added.setCommitted(stock.isCommitted());
-			try {
-				dualMarket.c(added).setStopLoss(s.getStopLoss());
-				dualMarket.c(added).setTakeProfit(s.getTakeProfit());
-			} catch (Exception e) {}
-		}
-
-		StockGroup group = m.get(stock.code(), stock.isBuy());
-		if (group == null) return false;
-		group.remove(stock);
-		if (group.size() == 0) m.remove(stock.code(), stock.isBuy());
-		return true;
+	private void recover() {
+		doTasksOnSelected(new Task() {
+			@Override
+			public boolean doOne(Stock stock) {
+				return recover0(stock);
+			}
+		}, true);
 	}
 	
 	
-	private void recover() {
-		List<Stock> stocks = getSelectedStocks();
-		boolean ret = false;
-		for (Stock stock : stocks) {
-			if (stock == null)
-				continue;
-			else if (stock instanceof StockGroup) {
-				StockGroup group = (StockGroup)stock;
-				List<Stock> rmStocks = Util.newList(group.size());
-				for (int i = 0; i < group.size(); i++) rmStocks.add(group.get(i));
-				for (Stock rmStock : rmStocks) {
-					boolean ret0 = recover0(rmStock);
-					ret = ret || ret0;
-				}
-			}
-			else {
-				boolean ret0 = recover0(stock);
-				ret = ret || ret0;
-			}
-		}
-		
-		if (ret) update();
+	private boolean recover0(Stock stock) {
+		MarketImpl m = m(); if (m == null) return false;
+		MarketImpl dualMarket = m.getDualMarket() instanceof MarketImpl ? (MarketImpl)m.getDualMarket() : null;
+		return MarketImpl.recover(stock, m, dualMarket);
 	}
 	
 	
 	@Override
+	protected MarketSummary createMarketSummary() {
+		return new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? this : null, this) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected MarketTable createMarketTable(Market market, MarketListener listener) {
+				return new MarketTrashTable(market, false, listener);
+			}
+			
+		};
+	}
+
+
+	@Override
 	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
-		MarketTable tblMarket = this;
 
-		if (!getModel2().isForStock()) {
+		if (!getModel2().isAtomic()) {
 			if (stock != null) {
 				JMenuItem miView = new JMenuItem("View");
 				miView.addActionListener( 
@@ -130,7 +107,7 @@ public class MarketTrashTable extends MarketTable {
 					new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							delete();
+							deleteWithConfirm();
 						}
 					});
 				ctxMenu.add(miDelete);
@@ -179,22 +156,22 @@ public class MarketTrashTable extends MarketTable {
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						delete();
+						deleteWithConfirm();
 					}
 				});
 			ctxMenu.add(miDelete);
 
 			ctxMenu.addSeparator();
 			
-			JMenuItem miDetailedSummary = new JMenuItem("Summary");
-			miDetailedSummary.addActionListener( 
+			JMenuItem miDesc = new JMenuItem("Description");
+			miDesc.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						summary(stock);
+						description(stock);
 					}
 				});
-			ctxMenu.add(miDetailedSummary);
+			ctxMenu.add(miDesc);
 		}
 		
 		JMenuItem miSummary = new JMenuItem("Market summary");
@@ -202,20 +179,7 @@ public class MarketTrashTable extends MarketTable {
 			new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket) {
-
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						protected MarketTable createMarketTable(Market market, MarketListener listener) {
-							return new MarketTrashTable(market, false, listener);
-						}
-						
-					};
-					
-					ms.setVisible(true);
-					
-					if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
+					marketSummary();
 				}
 			});
 		ctxMenu.add(miSummary);
@@ -245,8 +209,8 @@ class MarketTrashPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTrashPanel(Market market, boolean forStock, MarketListener superListener) {
-		super(market, forStock, superListener);
+	public MarketTrashPanel(Market market, boolean atomic, MarketListener superListener) {
+		super(market, atomic, superListener);
 		btnTake.setVisible(false);
 		btnReestimateLossesProfits.setVisible(false);
 		btnReestimateUnitBiases.setVisible(false);
@@ -255,24 +219,10 @@ class MarketTrashPanel extends MarketPanel {
 		for (ActionListener al : als) {
 			btnSummary.removeActionListener(al);
 		}
-		MarketTrashPanel thisPanel = this;
 		btnSummary.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MarketSummary ms = new MarketSummary(getMarket(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisPanel) {
-
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					protected MarketTable createMarketTable(Market market, MarketListener listener) {
-						return new MarketTrashTable(market, false, listener);
-					}
-					
-				};
-				
-				ms.setVisible(true);
-				if (!StockProperty.RUNTIME_CASCADE) tblMarket.update();
+				tblMarket.marketSummary();
 			}
 		});
 	
@@ -280,8 +230,8 @@ class MarketTrashPanel extends MarketPanel {
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean forStock, MarketListener superListener) {
-		return new MarketTrashTable(market, forStock, superListener);
+	protected MarketTable createMarketTable(Market market, boolean atomic, MarketListener superListener) {
+		return new MarketTrashTable(market, atomic, superListener);
 	}
 
 
@@ -295,15 +245,15 @@ class MarketTrashDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketTrashDialog(Market market, boolean forStock, MarketListener superListener, Component parent) {
-		super(market, forStock, superListener, parent);
+	public MarketTrashDialog(Market market, boolean atomic, MarketListener superListener, Component parent) {
+		super(market, atomic, superListener, parent);
 		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean forStock, MarketListener superListener) {
-		return new MarketTrashPanel(market, forStock, superListener);
+	protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
+		return new MarketTrashPanel(market, atomic, superListener);
 	}
 
 

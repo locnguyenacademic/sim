@@ -56,10 +56,16 @@ public abstract class MarketAbstract implements Market {
 
 	@Override
 	public double calcInvestAmount(long timeInterval) {
+		double oscill = calcTotalPriceOscill(timeInterval);
+		return getFreeMargin(timeInterval) - Math.max(calcTotalBias(timeInterval), Math.abs(oscill));
+	}
+
+
+	protected double calcInvestAmountRisky(long timeInterval) {
 		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
 	}
 
-	
+
 	@Override
 	public String getName() {
 		return name;

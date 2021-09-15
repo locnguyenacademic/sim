@@ -58,7 +58,6 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	
 	protected StockInfo set(String code, StockInfo si) {
 		if (code == null || si == null)
 			return null;
@@ -98,17 +97,6 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 
 
-	protected static PricePool getPricePool(String code) {
-		if (pricePools.containsKey(code))
-			return pricePools.get(code);
-		else {
-			PricePool pricePool = new PricePool(code);
-			pricePools.put(code, pricePool);
-			return pricePool;
-		}
-	}
-	
-	
 	public boolean addPrice(String code, Price price) {
 		StockInfo si = getCreate(code);
 		if (si != null)
@@ -126,6 +114,17 @@ public class StockInfoStore implements Serializable, Cloneable {
 			return false;
 	}
 
+	
+	protected static PricePool getPricePool(String code) {
+		if (pricePools.containsKey(code))
+			return pricePools.get(code);
+		else {
+			PricePool pricePool = new PricePool(code);
+			pricePools.put(code, pricePool);
+			return pricePool;
+		}
+	}
+	
 	
 	protected static PricePool getPlacePricePool(String code) {
 		if (placePricePools.containsKey(code))

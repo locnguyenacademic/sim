@@ -23,6 +23,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected Set<String> defaultStockCodes = Util.newSet(0);
 	
 	
+	protected Set<String> defaultCategories = Util.newSet(0);
+
+	
 	protected StockInfoStore store = new StockInfoStore();
 	
 	
@@ -52,6 +55,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	
 	public UniverseAbstract() {
 		addDefaultStockCodes(Util.newSet(0));
+		addDefaultCategories(Util.newSet(0));
 	}
 	
 	
@@ -103,6 +107,29 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		}
 		
 		return biasSum;
+	}
+
+
+	@Override
+	public double calcTotalPriceOscill(long timeInterval) {
+		double oscillSum = 0;
+		for (Market market : markets) {
+			oscillSum += market.calcTotalPriceOscill(timeInterval);
+		}
+		
+		return oscillSum;
+	}
+
+
+	@Override
+	public double getPriceOscillRatio(long timeInterval) {
+		if (markets.size() == 0) return 0;
+		double oscillRatio = 0;
+		for (Market market : markets) {
+			oscillRatio += market.getPriceOscillRatio(timeInterval);
+		}
+		
+		return oscillRatio / markets.size();
 	}
 
 
@@ -285,6 +312,30 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
+	public List<String> getDefaultCategories() {
+		return Util.sort(defaultCategories);
+	}
+
+
+	@Override
+	public void addDefaultCategories(Collection<String> defaultCategories) {
+		this.defaultCategories.clear();
+		
+		this.defaultCategories.add("crypto");
+		this.defaultCategories.add("energy");
+		this.defaultCategories.add("forex");
+		this.defaultCategories.add("index");
+		this.defaultCategories.add("mbc");
+		this.defaultCategories.add("stock");
+		this.defaultCategories.add(StockProperty.CATEGORY_UNDEFINED);
+		
+		for (String category : defaultCategories) {
+			if (category != null && !category.isEmpty()) this.defaultCategories.add(category);
+		}
+	}
+
+
+	@Override
 	protected void reset() {
 		super.reset();
 		this.markets.clear();
@@ -386,6 +437,12 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			MarketImpl m = c(market);
 			if (m != null) m.setTimeValidInterval(timeValidInterval);
 		}
+	}
+
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 

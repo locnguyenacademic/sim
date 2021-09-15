@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,6 +26,7 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import net.jsi.StockProperty;
+import net.jsi.Universe;
 import net.jsi.Util;
 
 public class StockPropertySetting extends JDialog {
@@ -169,7 +171,7 @@ public class StockPropertySetting extends JDialog {
 		mnTool.setMnemonic('t');
 		mnBar.add(mnTool);
 
-		JMenuItem mniSwitch = new JMenuItem(
+		JMenuItem mniDividend = new JMenuItem(
 			new AbstractAction("Set/clear dividend") {
 				private static final long serialVersionUID = 1L;
 
@@ -178,10 +180,23 @@ public class StockPropertySetting extends JDialog {
 					setDividend();
 				}
 			});
-		mniSwitch.setMnemonic('d');
-		mniSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
-		mnTool.add(mniSwitch);
+		mniDividend.setMnemonic('d');
+		mniDividend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniDividend);
 		
+		JMenuItem mniCategory = new JMenuItem(
+			new AbstractAction("Set group") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setCategory();
+				}
+			});
+		mniCategory.setMnemonic('g');
+		mniCategory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniCategory);
+			
 		return mnBar;
 	}
 
@@ -271,6 +286,34 @@ public class StockPropertySetting extends JDialog {
 		footer.add(cancel);
 		
 		dlgDividend.setVisible(true);
+	}
+	
+	
+	private void setCategory() {
+		String moreText = txtMoreProperties.getText();
+		if (moreText == null) moreText = "";
+		StockProperty property = new StockProperty();
+		property.parseText(moreText);
+
+		Universe u = StockProperty.g;
+		String category = null;
+		if (u != null) {
+			String[] categories = u.getDefaultCategories().toArray(new String[] {});
+			category = (String)JOptionPane.showInputDialog(this, "Select group name", "Setting group", JOptionPane.PLAIN_MESSAGE, null,
+					categories, property.getCategory());
+		}
+		else {
+			category = JOptionPane.showInputDialog(this, "Enter group name", property.getCategory());
+			category = category != null ? category.trim() : null;
+		}
+		if (category == null) return;
+		
+		if (category.isEmpty())
+			property.setCategory(null);
+		else
+			property.setCategory(category);
+		
+		txtMoreProperties.setText(property.getMorePropertiesText());
 	}
 	
 	

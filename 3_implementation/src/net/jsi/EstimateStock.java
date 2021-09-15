@@ -13,6 +13,9 @@ public class EstimateStock implements Serializable, Cloneable {
 	public Stock stock = null;
 	
 	
+	//public double ratio = 0;
+	
+	
 	public double estimatedStopLoss = 0;
 	
 	
@@ -25,8 +28,14 @@ public class EstimateStock implements Serializable, Cloneable {
 	public double estimatedPrice = 0;
 	
 	
+	public double estimatedPriceMean = 0;
+	
+	
 	public double estimatedUnitBias = StockProperty.UNIT_BIAS;
 	
+	
+	public double estimatedUnitBiasFromData = StockProperty.UNIT_BIAS;
+
 	
 	public EstimateStock(Stock stock) {
 		this.stock = stock;

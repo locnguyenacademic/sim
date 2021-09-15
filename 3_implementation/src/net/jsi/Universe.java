@@ -47,6 +47,12 @@ public interface Universe extends Market, Serializable, Cloneable {
 	void addDefaultStockCodes(Collection<String> defaultStockCodes);
 
 	
+	List<String> getDefaultCategories();
+
+	
+	void addDefaultCategories(Collection<String> defaultCategories);
+
+	
 	Market newMarket(String name, double leverage, double unitBias);
 
 

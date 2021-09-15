@@ -64,6 +64,9 @@ public interface Price extends Serializable, Cloneable {
 	boolean checkRefEquals(Price price);
 	
 	
+	void applyFactor(double factor);
+	
+	
 	Object clone();
 	
 	

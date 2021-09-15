@@ -20,7 +20,10 @@ public class StockProperty implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public static final String VERSION = "1.0 build 2021.09.13";
+	private final static String PAIR_SEP = ":";
+	
+
+	public static final String VERSION = "1.0 build 2021.09.15";
 			
 	
 	public static Universe g = null;
@@ -95,7 +98,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String DIVIDEND_FIELD = "dvd";
 
 	
-	public final static String DIVIDEND_TIMEPOINT_FIELD = "dvd.d";
+	public final static String CATEGORY_FIELD = "grp";
 
 	
 	public static int MAX_PRICE_COUNT = 0;
@@ -122,6 +125,9 @@ public class StockProperty implements Serializable, Cloneable {
 	public static double PRICE_RATIO = 1;
 	
 	
+	public static double PRICE_FACTOR = 1;
+
+	
 	public static boolean NULL_DIALOG = false;
 	
 	
@@ -133,6 +139,9 @@ public class StockProperty implements Serializable, Cloneable {
 
 
 	public static boolean LOOKUP_WHEN_READ_PRICES = true;
+	
+	
+	public static String CATEGORY_UNDEFINED = "undefined";
 	
 	
 	public int maxPriceCount = MAX_PRICE_COUNT;
@@ -198,6 +207,7 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private long getMoreLongValue(String field) {
 		if (!moreProperties.containsKey(field)) return 0;
 		long value = 0;
@@ -207,6 +217,22 @@ public class StockProperty implements Serializable, Cloneable {
 				value = ((Number)v).longValue();
 			else
 				value = Long.parseLong(moreProperties.get(field).toString());
+		} catch (Exception e) {}
+		
+		return value;
+	}
+
+	
+	@SuppressWarnings("unused")
+	private long getMoreIntValue(String field) {
+		if (!moreProperties.containsKey(field)) return 0;
+		int value = 0;
+		try {
+			Object v = moreProperties.get(field);
+			if (v instanceof Number)
+				value = ((Number)v).intValue();
+			else
+				value = Integer.parseInt(moreProperties.get(field).toString());
 		} catch (Exception e) {}
 		
 		return value;
@@ -239,24 +265,52 @@ public class StockProperty implements Serializable, Cloneable {
 
 	
 	public double getDividend() {
-		return getMoreRealValue(DIVIDEND_FIELD);
+		if (!moreProperties.containsKey(DIVIDEND_FIELD)) return 0;
+		String text = moreProperties.get(DIVIDEND_FIELD).toString();
+		String[] pair = text.split(PAIR_SEP);
+		if (pair == null || pair.length < 2) return 0;
+		try {
+			return Double.parseDouble(pair[0]);
+		}
+		catch (Exception e) {}
+		return 0;
 	}
 	
 	
 	public long getDividendTime() {
-		return getMoreLongValue(DIVIDEND_TIMEPOINT_FIELD);
+		if (!moreProperties.containsKey(DIVIDEND_FIELD)) return 0;
+		String text = moreProperties.get(DIVIDEND_FIELD).toString();
+		String[] pair = text.split(PAIR_SEP);
+		if (pair == null || pair.length < 2) return 0;
+		try {
+			return Long.parseLong(pair[1]);
+		}
+		catch (Exception e) {}
+		return 0;
 	}
 	
 	
 	public void setDividend(double value, long timePoint) {
-		if (value > 0 && timePoint > 0) {
-			moreProperties.put(DIVIDEND_FIELD, value);
-			moreProperties.put(DIVIDEND_TIMEPOINT_FIELD, timePoint);
-		}
-		else {
+		if (value > 0 && timePoint > 0)
+			moreProperties.put(DIVIDEND_FIELD, Util.format(value) + ":" + timePoint);
+		else
 			moreProperties.remove(DIVIDEND_FIELD);
-			moreProperties.remove(DIVIDEND_TIMEPOINT_FIELD);
-		}
+	}
+	
+	
+	public String getCategory() {
+		if (moreProperties.containsKey(CATEGORY_FIELD))
+			return (String)moreProperties.get(CATEGORY_FIELD);
+		else
+			return CATEGORY_UNDEFINED;
+	}
+	
+	
+	public void setCategory(String category) {
+		if (category == null || category.isEmpty())
+			moreProperties.remove(CATEGORY_FIELD);
+		else
+			moreProperties.put(CATEGORY_FIELD, category);
 	}
 	
 	

@@ -29,7 +29,7 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected String code() {
+	public String code() {
 		return pricePool.code();
 	}
 	
@@ -136,8 +136,14 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 	
-	protected StockProperty getProperty() {
+	public StockProperty getProperty() {
 		return property;
+	}
+
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 

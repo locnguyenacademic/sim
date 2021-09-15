@@ -50,13 +50,13 @@ public final class Util {
 	/**
 	 * Default Java regular expression for splitting a sentence into many words (tokens), including space.
 	 */
-	public final static String DEFAULT_SEP         = "[[\\s][::][\\|][,][;]]";
+	public final static String DEFAULT_SEP         = "[[\\s][,]]";
 
 	
 	/**
 	 * Default Java regular expression for splitting a sentence into many words (tokens), not including white space.
 	 */
-	public final static String NOSPACE_DEFAULT_SEP = "[[::][\\|][,][;]]";
+	public final static String NOSPACE_DEFAULT_SEP = "[[,]]";
 
 	
 	/**

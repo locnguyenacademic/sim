@@ -31,10 +31,10 @@ public class PriceImpl implements Price {
 	private double priceRatio = StockProperty.PRICE_RATIO;
 	
 	
-	protected long timePoint = System.currentTimeMillis();
+	private long timePoint = System.currentTimeMillis();
 	
 	
-	protected Serializable tag = null;
+	private Serializable tag = null;
 	
 	
 	public PriceImpl() {
@@ -170,6 +170,15 @@ public class PriceImpl implements Price {
 			return this == ((TakenPrice)price).getPrice();
 		else
 			return this == price;
+	}
+
+
+	@Override
+	public void applyFactor(double factor) {
+		price = price*factor;
+		lowPrice = lowPrice*factor;
+		highPrice = highPrice*factor;
+		altPrice = altPrice*factor;
 	}
 
 

@@ -111,9 +111,15 @@ public class PricePool implements Serializable, Cloneable {
 
 	
 	protected Price getPriceWithin(long timeInterval) {
-		Price lastPrice = getLast();
-		if (lastPrice == null) return null;
-		
+		return getPriceWithin(prices, timeInterval);
+	}
+
+	
+	protected static Price getPriceWithin(List<Price> prices, long timeInterval) {
+		if (prices == null || prices.size() == 0) return null;
+		if (timeInterval <= 0) return prices.get(0);
+
+		Price lastPrice = prices.get(prices.size() - 1);
 		int n = prices.size();
 		Price found = null;
 		for (int i = n - 1; i >= 0 ; i--) {
@@ -210,12 +216,12 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	protected double getUnitBias() {
+	public double getUnitBias() {
 		return unitBias;
 	}
 	
 	
-	protected boolean setUnitBias(double unitBias) {
+	public boolean setUnitBias(double unitBias) {
 		if (Double.isNaN(unitBias)) return false; 
 		this.unitBias = unitBias;
 		return true;
@@ -300,6 +306,12 @@ public class PricePool implements Serializable, Cloneable {
 			}
 		}
 		
+	}
+
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 	

@@ -30,6 +30,7 @@ import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -43,6 +44,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -53,6 +55,9 @@ import javax.swing.KeyStroke;
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
+import net.jsi.Price;
+import net.jsi.StockInfo;
+import net.jsi.StockInfoStore;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
@@ -77,6 +82,9 @@ public class Investor extends JFrame implements MarketListener {
 
 	
 	protected JLabel lblTotalBias;
+
+	
+	protected JLabel lblTotalOscill;
 
 	
 	protected File curDir = null;
@@ -128,6 +136,8 @@ public class Investor extends JFrame implements MarketListener {
 		footerRow.add(lblTotalROI = new JLabel());
 		footerRow.add(new JLabel(" "));
 		footerRow.add(lblTotalBias = new JLabel());
+		footerRow.add(new JLabel(" "));
+		footerRow.add(lblTotalOscill = new JLabel());
 
 		update();
 	}
@@ -139,10 +149,12 @@ public class Investor extends JFrame implements MarketListener {
 		double roi = universe.getROI(timeViewInterval);
 		double lRoi = universe.getROIByLeverage(timeViewInterval);
 		double totalBias = universe.calcTotalBias(timeViewInterval);
+		double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
 		
 		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
 		lblTotalROI.setText("ROI: " + Util.format(roi*100) + "% / " + Util.format(lRoi*100) + "%");
 		lblTotalBias.setText("BIAS: " + Util.format(totalBias));
+		lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
 	}
 	
 	
@@ -379,20 +391,20 @@ public class Investor extends JFrame implements MarketListener {
 		mniRecommend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
 		mnTool.add(mniRecommend);
 		
-		mnTool.addSeparator();
-		
-		JMenuItem mniOption = new JMenuItem(
-			new AbstractAction("Option") {
+		JMenuItem mniViewTimeWindow = new JMenuItem(
+			new AbstractAction("View time window") {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (getSelectedMarket() != null) new Option().setVisible(true);
+					viewTimeWindow();
 				}
 			});
-		mniOption.setMnemonic('o');
-		mnTool.add(mniOption);
+		mniViewTimeWindow.setMnemonic('v');
+		mnTool.add(mniViewTimeWindow);
 
+		mnTool.addSeparator();
+		
 		JMenuItem mniResetAllLossesProfits = new JMenuItem(
 			new AbstractAction("Reset all losses / profits") {
 				private static final long serialVersionUID = 1L;
@@ -428,8 +440,22 @@ public class Investor extends JFrame implements MarketListener {
 			});
 		mniSortAllCodes.setMnemonic('s');
 		mnTool.add(mniSortAllCodes);
-					
 
+		mnTool.addSeparator();
+		
+		JMenuItem mniOption = new JMenuItem(
+			new AbstractAction("Option") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (getSelectedMarket() != null) new Option().setVisible(true);
+				}
+			});
+		mniOption.setMnemonic('o');
+		mnTool.add(mniOption);
+
+		
 		JMenu mnHelp = new JMenu("Help");
 		mnHelp.setMnemonic('h');
 		mnBar.add(mnHelp);
@@ -818,6 +844,70 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
+	private void viewTimeWindow() {
+		long timeInterval = enterTimeInterval();
+		if (timeInterval < 0) {
+			JOptionPane.showMessageDialog(this, "Invalid time interval", "Invalid time interval", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		MarketImpl market = getSelectedMarket();
+		long recoveredTimeViewInterval = market.getTimeViewInterval();
+		
+		market.setTimeViewInterval(timeInterval);
+		MarketDialog md = new MarketDialog(market, true, null, this) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
+				MarketPanel mp = new MarketPanel(market, atomic, superListener) {
+
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected JPopupMenu createContextMenu() {
+						JPopupMenu ctxMenu = super.createContextMenu();
+						
+						JMenuItem trash = new JMenuItem("Trash");
+						trash.addActionListener( 
+							new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									trash();
+								}
+							});
+						ctxMenu.add(trash);
+
+						return ctxMenu;
+					}
+					
+					private void trash() {
+						MarketTrashDialog dlgMarket = new MarketTrashDialog(tblMarket.getTrashMarket(), true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket);
+						dlgMarket.setTitle("Stocks trash for market " + tblMarket.getMarket().getName());
+						dlgMarket.setVisible(true);
+						
+						if (dlgMarket.isPressOK())
+							tblMarket.update();
+						else {
+							int answer= JOptionPane.showConfirmDialog(tblMarket, "Would you like to to refresh stocks?", "Refresh confirmation", JOptionPane.YES_NO_OPTION);
+							if (answer == JOptionPane.YES_OPTION) tblMarket.update();
+						}
+					}
+					
+				};
+				mp.enableContext = true;
+				return mp;
+			}
+			
+		};
+		md.setVisible(true);
+		
+		market.setTimeViewInterval(recoveredTimeViewInterval);
+		getSelectedMarketPanel().getMarketTable().update();
+	}
+
+	
 	private void resetAllStopLossesTakeProfits() {
 		int answer= JOptionPane.showConfirmDialog(this, "Be careful to reset all stop losses and take profits.\nAre you sure to reset them?", "Reset confirmation", JOptionPane.YES_NO_OPTION);
 		if (answer != JOptionPane.YES_OPTION) return;
@@ -910,6 +1000,8 @@ public class Investor extends JFrame implements MarketListener {
 		
 		protected JButton btnMarginFee;
 		
+		protected JFormattedTextField txtPriceFactor;
+
 		protected JFormattedTextField txtDayViewInterval;
 		
 		protected JFormattedTextField txtDayValidInterval;
@@ -935,7 +1027,7 @@ public class Investor extends JFrame implements MarketListener {
 			setTitle("Option for market \"" + m.getName() + "\"");
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setSize(400, 380);
+			setSize(400, 420);
 			setLocationRelativeTo(getInvestor());
 			setLayout(new BorderLayout());
 			
@@ -949,6 +1041,7 @@ public class Investor extends JFrame implements MarketListener {
 			left.add(new JLabel("Balance (basic): "));
 			left.add(new JLabel("Balance bias: "));
 			left.add(new JLabel("Margin fee: "));
+			left.add(new JLabel("Price factor: "));
 			left.add(new JLabel("View interval (days): "));
 			left.add(new JLabel("Valid interval (days): "));
 			left.add(new JLabel("Start date: "));
@@ -1007,6 +1100,13 @@ public class Investor extends JFrame implements MarketListener {
 			});
 			paneMarginFee.add(btnMarginFee, BorderLayout.EAST);
 			
+			JPanel panePriceFactor = new JPanel(new BorderLayout());
+			right.add(panePriceFactor);
+			txtPriceFactor = new JFormattedTextField(Util.getNumberFormatter());
+			txtPriceFactor.setToolTipText("Be careful to set this option different from 1");
+			txtPriceFactor.setValue(StockProperty.PRICE_FACTOR);
+			panePriceFactor.add(txtPriceFactor, BorderLayout.CENTER);
+
 			JPanel paneDayViewInterval = new JPanel(new BorderLayout());
 			right.add(paneDayViewInterval);
 			txtDayViewInterval = new JFormattedTextField(Util.getNumberFormatter());
@@ -1145,9 +1245,19 @@ public class Investor extends JFrame implements MarketListener {
 			
 			Universe u = u();
 			if (u != null) u.addDefaultStockCodes(codes);
+
+			double priceFactor = txtPriceFactor.getValue() instanceof Number ? ((Number)txtPriceFactor.getValue()).doubleValue() : 0;
+			if (priceFactor > 0 && priceFactor != 1) {
+				StockInfoStore store = universe.getStore();
+				Set<String> allCodes = store.codes();
+				for (String code : allCodes) {
+					StockInfo info = store.get(code);
+					List<Price> prices = info.getPricePool().getInternals();
+					for (Price price : prices) price.applyFactor(priceFactor);
+				}
+			}
 			
 			getSelectedMarketPanel().getMarketTable().update();
-			//getInvestor().update();
 			
 			dispose();
 		}

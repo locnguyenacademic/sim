@@ -171,6 +171,12 @@ public class TakenPrice implements Price {
 	
 	
 	@Override
+	public void applyFactor(double factor) {
+		price.applyFactor(factor);
+	}
+
+
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();

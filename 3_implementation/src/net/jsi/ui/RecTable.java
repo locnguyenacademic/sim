@@ -37,9 +37,9 @@ import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Price;
 import net.jsi.PricePool;
+import net.jsi.PricePool.TakenStockPrice;
 import net.jsi.Stock;
 import net.jsi.StockImpl;
-import net.jsi.PricePool.TakenStockPrice;
 import net.jsi.StockInfo;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
@@ -57,6 +57,7 @@ public class RecTable extends JTable {
 
 		setAutoCreateRowSorter(true);
 		setAutoResizeMode(AUTO_RESIZE_OFF);
+		getTableHeader().setReorderingAllowed(false);
 		
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -279,6 +280,17 @@ class RecTableModel extends DefaultTableModel {
     }
 
     
+	protected double getInvestedVolume() {
+		double volumeSum = 0;
+		for (int row = 0; row < getRowCount(); row++) {
+			InvestBy invest = getInvestAt(row);
+			volumeSum += invest.invests[0].volume + invest.invests[1].volume;
+		}
+		
+		return volumeSum;
+	}
+
+	
     protected double getUnitBias(String code, long timeInterval) {
 		if (unitBiases.containsKey(code))
 			return unitBiases.get(code);
@@ -294,11 +306,12 @@ class RecTableModel extends DefaultTableModel {
 	}
 	
 	
-	protected double getUnitBiasSum() {
+	protected double getBiasSum() {
 		double biasSum = 0;
 		for (int row = 0; row < getRowCount(); row++) {
 			InvestBy invest = getInvestAt(row);
-			if (unitBiases.containsKey(invest.code)) biasSum += unitBiases.get(invest.code);
+			if (unitBiases.containsKey(invest.code))
+				biasSum += unitBiases.get(invest.code) * (invest.invests[0].volume + invest.invests[1].volume);
 		}
 		
 		return biasSum;
@@ -359,6 +372,18 @@ class RecTableModel extends DefaultTableModel {
 			if (row != null) data.add(row);
 		}
 		
+		for (int row = 0; row < data.size(); row++) {
+			try {
+				MarketTableModel.Percentage percent = (MarketTableModel.Percentage)data.get(row).get(3);
+				double margin1 = (Double)data.get(row).get(9);
+				double margin2 = (Double)data.get(row).get(14);
+				percent.v = (margin1 + margin2) / investAmount;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		setDataVector(data, toColumns());
 		
 		fireMarketEvent(new MarketEvent(this));
@@ -392,10 +417,20 @@ class RecTableModel extends DefaultTableModel {
 	}
 	
 	
+	private String getCategory(String code) {
+		StockInfo si = m().getStore().get(code);
+		if (si == null)
+			return StockProperty.CATEGORY_UNDEFINED;
+		else
+			return si.getProperty().getCategory();
+	}
+	
+	
 	private Vector<Object> toRow(String code, long timeInterval) {
 		Vector<Object> row = Util.newVector(0);
 		StockInfo info = market.getStore().get(code);
 		if (info == null || info.getPriceCount() == 0) return null;
+		
 		Estimator estimator = createEstimator(code, timeInterval);
 		if (estimator == null) return null;
 		Estimator.Invest[] invests = estimator.estimateDualInvest(timeInterval);
@@ -405,6 +440,8 @@ class RecTableModel extends DefaultTableModel {
 		InvestBy investBy = new InvestBy(code, buy, invests);
 		row.add(investBy);
 		row.add(code);
+		row.add(getCategory(code));
+		row.add(new MarketTableModel.Percentage(0));
 		double leverage = info.getLeverage() != 0 ? 1.0/info.getLeverage() : 0;
 		row.add(leverage);
 		row.add(info.getLastPrice().get());
@@ -437,6 +474,8 @@ class RecTableModel extends DefaultTableModel {
 		
 		columns.add("");
 		columns.add("Code");
+		columns.add("Group");
+		columns.add("Percent");
 		columns.add("Leverage");
 		columns.add("Price (current)");
 		columns.add("Unit bias (est.)");
@@ -460,8 +499,10 @@ class RecTableModel extends DefaultTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (columnIndex == 0 || columnIndex == 1)
+		if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2)
 			return super.getColumnClass(columnIndex);
+		else if (columnIndex == 3)
+			return MarketTableModel.Percentage.class;
 		else
 			return Double.class;
 	}
@@ -642,9 +683,10 @@ class RecPanel extends JPanel implements MarketListener {
 	
 	
 	protected void update() {
-		lblEstInvest.setText("Est. invest: " + Util.format(tblRec.getModel2().getInvestAmount()));
-		lblInvest.setText("Invested: " + Util.format(tblRec.getModel2().getInvestedAmount()));
-		lblBias.setText("Bias: " + Util.format(tblRec.getModel2().getUnitBiasSum()));
+		RecTableModel m = tblRec.getModel2();
+		lblEstInvest.setText("Est. invest: " + Util.format(m.getInvestAmount()));
+		lblInvest.setText("Invested: " + Util.format(m.getInvestedAmount()) + " (" + Util.format(m.getInvestedVolume()) + ") / " + Util.format(m.investedAmount/m.investAmount*100) + "%");
+		lblBias.setText("Bias: " + Util.format(m.getBiasSum()));
 	}
 	
 	

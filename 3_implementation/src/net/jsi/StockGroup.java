@@ -143,13 +143,13 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
-	public double calcTotalBias(long timeInterval) {
-		return estimateUnitBias(timeInterval) * getVolume(timeInterval, false);
+	public double calcInvestAmount(long timeInterval) {
+		double oscill = calcTotalPriceOscill(timeInterval);
+		return getFreeMargin(timeInterval) - Math.max(calcTotalBias(timeInterval), Math.abs(oscill));
 	}
 
 
-	@Override
-	public double calcInvestAmount(long timeInterval) {
+	protected double calcInvestAmountRisky(long timeInterval) {
 		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
 	}
 

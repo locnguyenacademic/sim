@@ -46,6 +46,12 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getProfit(long timeInterval);
 
 		
+	double getPriceOscill(long timeInterval);
+	
+	
+	double getPriceOscillRatio(long timeInterval);
+
+	
 	boolean isCommitted();
 	
 	
@@ -86,6 +92,9 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 
 		
 	long getDividendTimePoint(long timeInterval);
+	
+	
+	String getCategory();
 
 		
 	StockInfoStore getStore();

@@ -2,16 +2,12 @@ package net.jsi.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,11 +23,10 @@ import net.jsi.QueryEstimator;
 import net.jsi.Stock;
 import net.jsi.StockGroup;
 import net.jsi.StockImpl;
-import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.Util;
 
-public abstract class StockSummary extends JDialog {
+public abstract class StockDescription extends JDialog {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -40,8 +35,8 @@ public abstract class StockSummary extends JDialog {
 	protected Market market = null;
 	
 	
-	public StockSummary(Market market, String code, boolean buy, Stock stock, Component component) {
-		super(Util.getDialogForComponent(component), stock != null ? "Stock summary" : "Stock group summary", true);
+	public StockDescription(Market market, String code, boolean buy, Stock stock, Component component) {
+		super(Util.getDialogForComponent(component), stock != null ? "Stock description" : "Stock group description", true);
 		this.market = market;
 		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -105,8 +100,8 @@ public abstract class StockSummary extends JDialog {
 				info.append("Dividend: " + Util.format(dividend) + "\n");
 				info.append("Dividend date: " + Util.format(new Date(group.getDividendTimePoint(timeViewInterval))) + "\n");
 			}
-			info.append("Price oscillate (nearest): " + Util.format(group.getPriceOscillWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))) + "\n");
-			info.append("Price oscillate ratio (nearest): " + Util.format(group.getPriceOscillRatioWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))*100) + "%\n");
+			info.append("Oscillate ratio: " + Util.format(group.getPriceOscillRatio(timeViewInterval)*100) + "%\n");
+			info.append("Oscillate total: " + Util.format(group.calcTotalPriceOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(group.getUnitBias()) + "\n");
 			
 			info.append("\n");
@@ -115,6 +110,7 @@ public abstract class StockSummary extends JDialog {
 			info.append("Estimated price: " + Util.format(estimator.estimatePrice(timeViewInterval)) + "\n");
 			info.append("Estimated low price: " + Util.format(estimator.estimateLowPrice(timeViewInterval)) + "\n");
 			info.append("Estimated high price: " + Util.format(estimator.estimateHighPrice(timeViewInterval)) + "\n");
+			info.append("Estimated price mean: " + Util.format(estimator.estimatePriceMean(timeViewInterval)) + "\n");
 	
 			info.append("\n");
 			if (group.getLeverage() != 0) {
@@ -181,8 +177,8 @@ public abstract class StockSummary extends JDialog {
 			if (committedTime > 0) {
 				info.append("Committed date: " + Util.format(new Date(committedTime)) + "\n");
 			}
-			info.append("Price oscillate (nearest): " + Util.format(s.getPriceOscillWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))) + "\n");
-			info.append("Price oscillate ratio (nearest): " + Util.format(s.getPriceOscillRatioWithin((long)(timeViewInterval/StockProperty.TIME_VIEW_PERIOD_RATIO))*100) + "%\n");
+			info.append("Oscillate ratio: " + Util.format(s.getPriceOscillRatio(timeViewInterval)*100) + "%\n");
+			info.append("Oscillate: " + Util.format(s.getPriceOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");
 			
 			info.append("\n");
@@ -190,6 +186,7 @@ public abstract class StockSummary extends JDialog {
 			info.append("Estimated price: " + Util.format(estimator.estimatePrice(timeViewInterval)) + "\n");
 			info.append("Estimated low price: " + Util.format(estimator.estimateLowPrice(timeViewInterval)) + "\n");
 			info.append("Estimated high price: " + Util.format(estimator.estimateHighPrice(timeViewInterval)) + "\n");
+			info.append("Estimated price mean: " + Util.format(estimator.estimatePriceMean(timeViewInterval)) + "\n");
 			//
 			if (estimateStocks == null || estimateStocks.size() == 0) {
 				info.append("Estimated stop loss: " + Util.format(estimator.estimateStopLoss(timeViewInterval)) + "\n");
@@ -218,79 +215,3 @@ public abstract class StockSummary extends JDialog {
 
 
 
-class MarketSummary extends JDialog {
-
-	
-	private static final long serialVersionUID = 1L;
-
-	
-	protected Market market = null;
-	
-	
-	protected MarketTable tblMarket = null;
-	
-	
-	protected JCheckBox chkShowCommit = null;
-	
-	
-	protected JButton btnOK = null;
-	
-	
-	public MarketSummary(Market market, MarketListener listener, Component component) {
-		super(Util.getDialogForComponent(component), "Market summary", true);
-		this.market = market;
-		
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setSize(600, 400);
-		setLocationRelativeTo(Util.getDialogForComponent(component));
-		setLayout(new BorderLayout());
-		
-		
-		JPanel body = new JPanel(new BorderLayout());
-		add(body, BorderLayout.CENTER);
-		
-		tblMarket = createMarketTable(market, listener);
-		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
-		
-		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		body.add(paneMarket, BorderLayout.SOUTH);
-		
-		chkShowCommit = new JCheckBox("Show/hide commit");
-		chkShowCommit.setSelected(tblMarket.isShowCommit());
-		chkShowCommit.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (tblMarket.isShowCommit() != chkShowCommit.isSelected()) {
-					tblMarket.setShowCommit(chkShowCommit.isSelected());
-					tblMarket.update();
-				}
-			}
-		});
-		paneMarket.add(chkShowCommit);
-
-		
-		JPanel footer = new JPanel();
-		add(footer, BorderLayout.SOUTH);
-		
-		btnOK = new JButton("Close");
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		footer.add(btnOK);
-	}
-	
-	
-	public MarketTable getMarketTable() {
-		return tblMarket;
-	}
-	
-	
-	protected MarketTable createMarketTable(Market market, MarketListener listener) {
-		return new MarketTable(market, false, listener);
-	}
-	
-	
-}

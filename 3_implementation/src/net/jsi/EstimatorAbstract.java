@@ -22,6 +22,27 @@ public abstract class EstimatorAbstract implements Estimator {
 	}
 
 
+	private double getROIAdjusted(long timeInterval) {
+		double roi = getROI(timeInterval);;
+		
+		List<Price> prices = getPrices(timeInterval);
+		Price price = PricePool.getPriceWithin(prices, timeInterval);
+		if (price == null) return roi;
+		
+		Price lastPrice = prices.get(prices.size() -  1);
+		double oscill = (lastPrice.get() - price.get()) / price.get();
+		if (roi != 0)
+			return (roi + oscill) / 2;
+		else {
+			double takenValue = getAverageTakenPrice(timeInterval);
+			if (takenValue == 0)
+				return oscill;
+			else
+				return oscill / 2;
+		}
+	}
+	
+	
 	@Override
 	public double estimateUnitBias(long timeInterval) {
 		return Math.max(estimateUnitBiasFromData(timeInterval), getUnitBias());
@@ -39,6 +60,25 @@ public abstract class EstimatorAbstract implements Estimator {
 
 
 	public static double estimateUnitBiasFromData(List<Price> prices) {
+		if (prices.size() == 0) return 0;
+		
+		double mean = 0;
+		for (Price price : prices) mean += price.get();
+		mean = mean / prices.size();
+		
+		double bias = 0;
+		for (Price price : prices) {
+			double d = price.get() - mean;
+			bias += d*d;
+		}
+		
+		return Math.sqrt(bias / prices.size());
+	}
+
+	
+	@SuppressWarnings("unused")
+	@Deprecated
+	private static double estimateUnitBiasFromData0(List<Price> prices) {
 		if (prices.size() == 0) return 0;
 		
 		double mean1 = 0;
@@ -63,6 +103,31 @@ public abstract class EstimatorAbstract implements Estimator {
 		bias2 = Math.sqrt(bias2 / prices.size());
 		
 		return (bias1 + bias2) / 2;
+	}
+
+	
+	public static double estimatePriceMeanFromData(List<Price> prices) {
+		if (prices.size() == 0) return 0;
+		
+		double mean = 0;
+		for (Price price : prices) mean += price.get();
+		return mean / prices.size();
+	}
+
+	
+	@SuppressWarnings("unused")
+	@Deprecated
+	private static double estimatePriceMeanFromData0(List<Price> prices) {
+		if (prices.size() == 0) return 0;
+		
+		double mean1 = 0;
+		double mean2 = 0;
+		for (Price price : prices) {
+			mean1 += price.get();
+			mean2 += (price.getHigh() - price.getLow())/2.0;
+		}
+		
+		return (mean1 + mean2) / (2*prices.size());
 	}
 
 	
@@ -116,7 +181,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	public double estimateLowPrice(long timeInterval) {
 		double price = getPrice().get();;
 		double lowPrice = price;
-		double roi = getROI(timeInterval);
+		double roi = getROIAdjusted(timeInterval);
 		double unitBias = estimateUnitBias(timeInterval);
 		lowPrice -= Math.max(unitBias, roi < 0 ? -price*roi : 0);
 		
@@ -128,7 +193,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	public double estimateHighPrice(long timeInterval) {
 		double price = getPrice().get();
 		double highPrice = price;
-		double roi = getROI(timeInterval);
+		double roi = getROIAdjusted(timeInterval);
 		double unitBias = estimateUnitBias(timeInterval);
 		highPrice += Math.max(unitBias, roi > 0 ? price*roi : 0);
 		
@@ -136,12 +201,12 @@ public abstract class EstimatorAbstract implements Estimator {
 	}
 
 	
-	private double estimateBiasAtCurrentPrice(long timeInterval) {
+	private double estimateUnitBiasAtCurrentPrice(long timeInterval) {
 		Price p = getPrice();
 		if (p == null) return 0;
 
 		double price = p.get();
-		double roi = getROI(timeInterval);
+		double roi = getROIAdjusted(timeInterval);
 		double estimateUnitBias = estimateUnitBias(timeInterval);
 		double lowPrice = estimateLowPrice(timeInterval);
 		double highPrice = estimateHighPrice(timeInterval);
@@ -172,20 +237,26 @@ public abstract class EstimatorAbstract implements Estimator {
 		if (p == null) return 0;
 
 		double price = p.get();
-		double bias = estimateBiasAtCurrentPrice(timeInterval);
-		double roi = getROI(timeInterval);
+		double bias = estimateUnitBiasAtCurrentPrice(timeInterval);
+		double roi = getROIAdjusted(timeInterval);
 		double newPrice = roi > 0 ? price + Math.min(bias, price*roi) : price - Math.min(bias, -price*roi); 
 
 		return Math.max(Math.min(newPrice, estimateHighPrice(timeInterval)), estimateLowPrice(timeInterval));
 	}
 
 
+	public double estimatePriceMean(long timeInterval) {
+		List<Price> prices = getPrices(timeInterval);
+		return estimatePriceMeanFromData(prices);
+	}
+	
+	
 	@Override
 	public double estimateStopLoss(long timeInterval) {
 		Price p = getPrice();
 		if (p == null) return 0;
 		double price = p.get();
-		double bias = estimateBiasAtCurrentPrice(timeInterval);
+		double bias = estimateUnitBiasAtCurrentPrice(timeInterval);
 		double takenPrice = getAverageTakenPrice(timeInterval);
 		double leverage = getLeverage();
 		if (leverage == 0)
@@ -214,7 +285,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		Price p = getPrice();
 		if (p == null) return 0;
 		double price = p.get();
-		double bias = estimateBiasAtCurrentPrice(timeInterval);
+		double bias = estimateUnitBiasAtCurrentPrice(timeInterval);
 		double takenPrice = getAverageTakenPrice(timeInterval);
 		double leverage = getLeverage();
 		if (leverage == 0)
@@ -250,8 +321,11 @@ public abstract class EstimatorAbstract implements Estimator {
 			double stopLoss = estimator.estimateStopLoss(timeInterval);
 			double takeProfit = estimator.estimateTakeProfit(timeInterval);
 			EstimateStock es = new EstimateStock(stock, stopLoss, takeProfit, false);
+			//es.ratio = estimator.getROI(timeInterval) / estimator.getPositiveROISum(timeInterval);
 			es.estimatedPrice = estimator.estimatePrice(timeInterval);
+			es.estimatedPriceMean = estimator.estimatePriceMean(timeInterval);
 			es.estimatedUnitBias = estimator.estimateUnitBias(timeInterval);
+			es.estimatedUnitBiasFromData = estimator.estimateUnitBiasFromData(timeInterval);
 			estimateStocks.add(es);
 		}
 		Collections.sort(estimateStocks, new Comparator<EstimateStock>() {
@@ -326,7 +400,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		if (p == null || getLeverage() == 0) return 0;
 		
 		double price = p.get();
-		double roi = getROI(timeInterval);
+		double roi = getROI(timeInterval); //This ROI is only used to calculate the investment ratio.
 		if (roi <= 0 || roi > refGlobalPositiveROISum || refGlobalPositiveROISum <= 0 || refGlobalInvestAmount <= 0)
 			return 0;
 		
@@ -335,10 +409,10 @@ public abstract class EstimatorAbstract implements Estimator {
 		double takenVolume = takenAmount / price0;
 		if (takenVolume == 0) return 0;
 		
-		double bias = estimateBiasAtCurrentPrice(timeInterval);
+		double bias = estimateUnitBiasAtCurrentPrice(timeInterval);
 		int found = 0;
 		for (int i = 1; i <= takenVolume; i++) {
-			if (price0 + i*bias > takenAmount) {
+			if (i * (price0 + bias) > takenAmount) {
 				found = i - 1;
 				break;
 			}
@@ -380,7 +454,7 @@ public abstract class EstimatorAbstract implements Estimator {
 
 		double stopLoss = estimateStopLoss(timeInterval);
 		double takeProfit = estimateTakeProfit(timeInterval);
-		double unitBias = estimateBiasAtCurrentPrice(timeInterval);
+		double unitBias = estimateUnitBiasAtCurrentPrice(timeInterval);
 		double nextTakeProfit = Math.min(isBuy() ? takeProfit + unitBias : takeProfit - unitBias, isBuy() ? getHighestPrice(timeInterval) : getLowestPrice(timeInterval));
 
 		double nearEstimatedPrice = estimatePrice((long)(timeInterval/StockProperty.TIME_VIEW_PERIOD_RATIO));

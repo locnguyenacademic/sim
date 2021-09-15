@@ -142,7 +142,13 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public double getPriceOscillWithin(long timeInterval) {
+	public double calcTotalBias(long timeInterval) {
+		return estimateUnitBias(timeInterval) * getVolume(timeInterval, false);
+	}
+	
+	
+	@Override
+	public double getPriceOscill(long timeInterval) {
 		Price price = info.getPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
@@ -151,12 +157,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public double getPriceOscillRatioWithin(long timeInterval) {
+	@Override
+	public double getPriceOscillRatio(long timeInterval) {
 		Price price = info.getPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
 		else
 			return (getPrice().get() - price.get()) / price.get();
+	}
+
+	
+	public double calcTotalPriceOscill(long timeInterval) {
+		return getPriceOscill(timeInterval) * getVolume(timeInterval, false);
 	}
 
 	
@@ -234,6 +246,12 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
+	@Override
+	public String getCategory() {
+		return getProperty().getCategory();
+	}
+
+
 	public abstract StockGroup getGroup();
 	
 	

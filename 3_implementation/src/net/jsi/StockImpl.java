@@ -15,7 +15,7 @@ public class StockImpl extends StockAbstract {
 	private static final long serialVersionUID = 1L;
 
 	
-	protected double volume = 0;
+	private double volume = 0;
 	
 	
 	private TakenPrice takenPrice = null;
@@ -24,10 +24,10 @@ public class StockImpl extends StockAbstract {
 	private Commit commit = new Commit(false, 0);
 	
 	
-	protected double stopLoss = 0;
+	private double stopLoss = 0;
 	
 	
-	protected double takeProfit = 0;
+	private double takeProfit = 0;
 
 	
 	public StockImpl(String code, double volume, boolean buy) {
