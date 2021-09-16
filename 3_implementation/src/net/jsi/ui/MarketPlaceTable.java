@@ -23,14 +23,14 @@ public class MarketPlaceTable extends MarketTable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketPlaceTable(Market market, boolean atomic, MarketListener listener) {
-		super(market, atomic, listener);
+	public MarketPlaceTable(Market market, boolean group, MarketListener listener) {
+		super(market, group, listener);
 	}
 
 
 	@Override
-	protected MarketTableModel createModel(Market market, boolean atomic) {
-		return new MarketTableModel(market, atomic) {
+	protected MarketTableModel createModel(Market market, boolean group) {
+		return new MarketTableModel(market, group) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -167,7 +167,7 @@ public class MarketPlaceTable extends MarketTable {
 
 			@Override
 			protected MarketTable createMarketTable(Market market, MarketListener listener) {
-				return new MarketPlaceTable(market, false, listener);
+				return new MarketPlaceTable(market, true, listener);
 			}
 		};
 	}
@@ -178,7 +178,7 @@ public class MarketPlaceTable extends MarketTable {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
 
-		if (!getModel2().isAtomic()) {
+		if (getModel2().isGroup()) {
 			if (stock != null) {
 				JMenuItem miView = new JMenuItem("View");
 				miView.addActionListener( 
@@ -386,8 +386,8 @@ class MarketPlacePanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketPlacePanel(Market market, boolean atomic, MarketListener superListener) {
-		super(market, atomic, superListener);
+	public MarketPlacePanel(Market market, boolean group, MarketListener superListener) {
+		super(market, group, superListener);
 		
 		ActionListener[] als = btnSummary.getActionListeners();
 		for (ActionListener al : als) btnSummary.removeActionListener(al);
@@ -401,8 +401,8 @@ class MarketPlacePanel extends MarketPanel {
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketPlaceTable(market, atomic, superListener);
+	protected MarketTable createMarketTable(Market market, boolean group, MarketListener superListener) {
+		return new MarketPlaceTable(market, group, superListener);
 	}
 
 
@@ -416,15 +416,15 @@ class MarketPlaceDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketPlaceDialog(Market market, boolean atomic, MarketListener superListener, Component parent) {
-		super(market, atomic, superListener, parent);
+	public MarketPlaceDialog(Market market, boolean group, MarketListener superListener, Component parent) {
+		super(market, group, superListener, parent);
 		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketPlacePanel(market, atomic, superListener);
+	protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+		return new MarketPlacePanel(market, group, superListener);
 	}
 
 

@@ -75,9 +75,9 @@ public class MarketTable extends JTable implements MarketListener {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTable(Market market, boolean atomic, MarketListener listener) {
+	public MarketTable(Market market, boolean group, MarketListener listener) {
 		super();
-		setModel(createModel(market, atomic));
+		setModel(createModel(market, group));
 		if (listener != null) getModel2().addMarketListener(listener);
 
 		setAutoCreateRowSorter(true);
@@ -121,8 +121,8 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 	
-	protected MarketTableModel createModel(Market market, boolean atomic) {
-		return new MarketTableModel(market, atomic);
+	protected MarketTableModel createModel(Market market, boolean group) {
+		return new MarketTableModel(market, group);
 	}
 	
 	
@@ -422,7 +422,7 @@ public class MarketTable extends JTable implements MarketListener {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
 
-		if (!getModel2().isAtomic()) {
+		if (getModel2().isGroup()) {
 			if (stock != null) {
 				JMenuItem miView = new JMenuItem("View");
 				miView.addActionListener( 
@@ -818,7 +818,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	protected Market market = null;
 	
 	
-	protected boolean atomic = true;
+	protected boolean group = false;
 	
 	
 	protected Map<String, List<EstimateStock>> estimators = Util.newMap(0);
@@ -830,9 +830,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
     protected boolean showCommit = false;
 
     
-    public MarketTableModel(Market market, boolean atomic) {
+    public MarketTableModel(Market market, boolean group) {
 		this.market = market;
-		this.atomic = atomic;
+		this.group = group;
 		
 		this.addTableModelListener(this);
 	}
@@ -849,8 +849,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	public boolean isAtomic() {
-		return atomic;
+	public boolean isGroup() {
+		return group;
 	}
 	
 	
@@ -889,7 +889,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		
 		long timeInterval = market.getTimeViewInterval();
 		estimators.clear();
-		if (!isAtomic()) {
+		if (isGroup()) {
 			MarketImpl m = m();
 			if (m != null) {
 				List<StockGroup> groups = m.getGroups(timeInterval);
@@ -938,7 +938,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			stock.setStopLoss(es.estimatedStopLoss);
 			stock.setTakeProfit(es.estimatedTakeProfit);
 			
-			if (isAtomic()) {
+			if (!isGroup()) {
 				Pair value = new Pair(es.estimatedStopLoss, es.estimatedTakeProfit);
 				setValueAt(value, row, 7);
 			}
@@ -954,7 +954,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 
 			stock.setUnitBias(es.estimatedUnitBiasFromData);
 			
-			if (isAtomic()) setValueAt(new Pair(es.estimatedUnitBiasFromData, es.estimatedUnitBiasFromData), row, 15);
+			if (!isGroup()) setValueAt(new Pair(es.estimatedUnitBiasFromData, es.estimatedUnitBiasFromData), row, 15);
 		}
 	}
 	
@@ -1259,7 +1259,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	protected Vector<String> toColumns() {
 		Vector<String> columns = Util.newVector(0);
 		
-		if (!isAtomic()) {
+		if (isGroup()) {
 			columns.add("Code");
 			columns.add("Buy");
 			columns.add("Leverage");
@@ -1308,7 +1308,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		
-		if (!isAtomic()) {
+		if (isGroup()) {
 			if (columnIndex ==  0 || columnIndex ==  15 || columnIndex ==  getColumnCount() - 1)
 				return super.getColumnClass(columnIndex);
 			else if (columnIndex == 1)
@@ -1469,8 +1469,8 @@ class MarketPanel extends JPanel implements MarketListener {
 	protected boolean enableContext = false;
 	
 	
-	public MarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		tblMarket = createMarketTable(market, atomic, this);
+	public MarketPanel(Market market, boolean group, MarketListener superListener) {
+		tblMarket = createMarketTable(market, group, this);
 		if (superListener != null) tblMarket.getModel2().addMarketListener(superListener);
 		
 		setLayout(new BorderLayout());
@@ -1718,7 +1718,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void watchStocks() {
-		MarketWatchDialog dlgMarket = new MarketWatchDialog(tblMarket.getWatchMarket(), tblMarket.getModel2().isAtomic(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketWatchDialog dlgMarket = new MarketWatchDialog(tblMarket.getWatchMarket(), tblMarket.getModel2().isGroup(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
@@ -1732,7 +1732,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void placeStocks() {
-		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), tblMarket.getModel2().isAtomic(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), tblMarket.getModel2().isGroup(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
@@ -1760,9 +1760,9 @@ class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	protected MarketTable createMarketTable(Market market, boolean atomic, MarketListener listener) {
+	protected MarketTable createMarketTable(Market market, boolean group, MarketListener listener) {
 		MarketPanel thisPanel = this;
-		return new MarketTable(market, atomic, listener) {
+		return new MarketTable(market, group, listener) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -2081,7 +2081,7 @@ class MarketDialog extends JDialog {
 	private boolean isPressOK = false;
 	
 	
-	public MarketDialog(Market market, boolean atomic, MarketListener superListener, Component parent) {
+	public MarketDialog(Market market, boolean group, MarketListener superListener, Component parent) {
 		super(Util.getDialogForComponent(parent), "Market " + market.getName(), true);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -2101,7 +2101,7 @@ class MarketDialog extends JDialog {
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
-		MarketPanel mp = createMarketPanel(market, atomic, superListener);
+		MarketPanel mp = createMarketPanel(market, group, superListener);
 		body.add(mp, BorderLayout.CENTER);
 		
 		JPanel footer = new JPanel();
@@ -2135,8 +2135,8 @@ class MarketDialog extends JDialog {
 	}
 	
 	
-	protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketPanel(market, atomic, superListener);
+	protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+		return new MarketPanel(market, group, superListener);
 	}
 	
 	
@@ -2234,7 +2234,7 @@ class MarketSummary extends JDialog {
 	
 	
 	protected MarketTable createMarketTable(Market market, MarketListener listener) {
-		return new MarketTable(market, false, listener);
+		return new MarketTable(market, true, listener);
 	}
 	
 	

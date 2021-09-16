@@ -21,17 +21,17 @@ public class MarketTrashTable extends MarketTable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTrashTable(Market market, boolean atomic, MarketListener listener) {
-		super(market, atomic, listener);
+	public MarketTrashTable(Market market, boolean group, MarketListener listener) {
+		super(market, group, listener);
 	}
 
 
 	@Override
 	protected void view(Stock stock) {
 		stock = stock != null ? stock : getSelectedStock();
-		if (stock == null && getModel2().isAtomic()) return;
+		if (stock == null && !getModel2().isGroup()) return;
 		
-		new StockDescription(getMarket(), stock.code(), stock.isBuy(), getModel2().isAtomic() ? stock : null, this) {
+		new StockDescription(getMarket(), stock.code(), stock.isBuy(), getModel2().isGroup() ? null : stock, this) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -68,7 +68,7 @@ public class MarketTrashTable extends MarketTable {
 
 			@Override
 			protected MarketTable createMarketTable(Market market, MarketListener listener) {
-				return new MarketTrashTable(market, false, listener);
+				return new MarketTrashTable(market, true, listener);
 			}
 			
 		};
@@ -80,7 +80,7 @@ public class MarketTrashTable extends MarketTable {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
 
-		if (!getModel2().isAtomic()) {
+		if (getModel2().isGroup()) {
 			if (stock != null) {
 				JMenuItem miView = new JMenuItem("View");
 				miView.addActionListener( 
@@ -209,8 +209,8 @@ class MarketTrashPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketTrashPanel(Market market, boolean atomic, MarketListener superListener) {
-		super(market, atomic, superListener);
+	public MarketTrashPanel(Market market, boolean group, MarketListener superListener) {
+		super(market, group, superListener);
 		btnTake.setVisible(false);
 		btnReestimateLossesProfits.setVisible(false);
 		btnReestimateUnitBiases.setVisible(false);
@@ -230,8 +230,8 @@ class MarketTrashPanel extends MarketPanel {
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketTrashTable(market, atomic, superListener);
+	protected MarketTable createMarketTable(Market market, boolean group, MarketListener superListener) {
+		return new MarketTrashTable(market, group, superListener);
 	}
 
 
@@ -245,15 +245,15 @@ class MarketTrashDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketTrashDialog(Market market, boolean atomic, MarketListener superListener, Component parent) {
-		super(market, atomic, superListener, parent);
+	public MarketTrashDialog(Market market, boolean group, MarketListener superListener, Component parent) {
+		super(market, group, superListener, parent);
 		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketTrashPanel(market, atomic, superListener);
+	protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+		return new MarketTrashPanel(market, group, superListener);
 	}
 
 

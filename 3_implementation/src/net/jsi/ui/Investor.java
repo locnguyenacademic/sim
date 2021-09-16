@@ -258,7 +258,7 @@ public class Investor extends JFrame implements MarketListener {
 				if (selectedWatchMarket == null) return;
 				
 				MarketTable tblMarket = getSelectedMarketTable();
-				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedWatchMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedWatchMarket, false, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
@@ -284,7 +284,7 @@ public class Investor extends JFrame implements MarketListener {
 				if (selectedPlaceMarket == null) return;
 				
 				MarketTable tblMarket = getSelectedMarketTable();
-				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedPlaceMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedPlaceMarket, false, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
@@ -323,7 +323,7 @@ public class Investor extends JFrame implements MarketListener {
 				if (selectedTrashMarket == null) return;
 				
 				MarketTable tblMarket = getSelectedMarketTable();
-				MarketTrashDialog dlgMarket = new MarketTrashDialog(selectedTrashMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketTrashDialog dlgMarket = new MarketTrashDialog(selectedTrashMarket, false, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Stocks trash for market " +selectedTrashMarket.getName());
 				dlgMarket.setVisible(true);
 				
@@ -643,7 +643,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private MarketPanel createMarketPanel(Market market) {
-		MarketPanel mp = new MarketPanel(market, true, this) {
+		MarketPanel mp = new MarketPanel(market, false, this) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -909,13 +909,13 @@ public class Investor extends JFrame implements MarketListener {
 		long recoveredTimeViewInterval = market.getTimeViewInterval();
 		
 		market.setTimeViewInterval(timeInterval);
-		MarketDialog md = new MarketDialog(market, true, null, this) {
+		MarketDialog md = new MarketDialog(market, false, null, this) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
-				MarketPanel mp = new MarketPanel(market, atomic, superListener) {
+			protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+				MarketPanel mp = new MarketPanel(market, group, superListener) {
 
 					private static final long serialVersionUID = 1L;
 
@@ -937,7 +937,7 @@ public class Investor extends JFrame implements MarketListener {
 					}
 					
 					private void trash() {
-						MarketTrashDialog dlgMarket = new MarketTrashDialog(tblMarket.getTrashMarket(), true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket);
+						MarketTrashDialog dlgMarket = new MarketTrashDialog(tblMarket.getTrashMarket(), false, StockProperty.RUNTIME_CASCADE ? tblMarket : null, tblMarket);
 						dlgMarket.setTitle("Stocks trash for market " + tblMarket.getMarket().getName());
 						dlgMarket.setVisible(true);
 						

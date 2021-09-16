@@ -20,8 +20,8 @@ public class MarketWatchTable extends MarketTable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketWatchTable(Market market, boolean atomic, MarketListener listener) {
-		super(market, atomic, listener);
+	public MarketWatchTable(Market market, boolean group, MarketListener listener) {
+		super(market, group, listener);
 	}
 
 
@@ -137,16 +137,16 @@ class MarketWatchPanel extends MarketPanel {
 	private static final long serialVersionUID = 1L;
 
 	
-	public MarketWatchPanel(Market market, boolean atomic, MarketListener superListener) {
-		super(market, atomic, superListener);
+	public MarketWatchPanel(Market market, boolean group, MarketListener superListener) {
+		super(market, group, superListener);
 		btnReestimateLossesProfits.setVisible(true);
 		btnReestimateUnitBiases.setVisible(true);
 	}
 
 
 	@Override
-	protected MarketTable createMarketTable(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketWatchTable(market, atomic, superListener);
+	protected MarketTable createMarketTable(Market market, boolean group, MarketListener superListener) {
+		return new MarketWatchTable(market, group, superListener);
 	}
 
 
@@ -160,15 +160,15 @@ class MarketWatchDialog extends MarketDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public MarketWatchDialog(Market market, boolean atomic, MarketListener superListener, Component parent) {
-		super(market, atomic, superListener, parent);
+	public MarketWatchDialog(Market market, boolean group, MarketListener superListener, Component parent) {
+		super(market, group, superListener, parent);
 		btnCancel.setText("Close");
 	}
 
 
 	@Override
-	protected MarketPanel createMarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		return new MarketWatchPanel(market, atomic, superListener);
+	protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+		return new MarketWatchPanel(market, group, superListener);
 	}
 
 
