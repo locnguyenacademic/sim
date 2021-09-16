@@ -185,6 +185,7 @@ public class PriceListTable extends JTable {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -208,6 +209,12 @@ public class PriceListTable extends JTable {
 		txtHighPrice.setValue(input.getHigh());
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		
+		JPanel paneAltPrice = new JPanel(new BorderLayout());
+		right.add(paneAltPrice);
+		JFormattedTextField txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtAltPrice.setValue(input.getAlt());
+		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
+
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
 		JFormattedTextField txtLastDate = new JFormattedTextField(Util.getDateFormatter());
@@ -247,6 +254,9 @@ public class PriceListTable extends JTable {
 				
 				if (price < lowPrice || price > highPrice) check = check && false;
 				
+				double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
+				if (altPrice < lowPrice || altPrice > highPrice) altPrice = 0;
+
 				Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 				if (lastDate == null) check = check && false;
 				
@@ -257,6 +267,7 @@ public class PriceListTable extends JTable {
 				}
 				
 				Price newPrice = u().newPrice(price, lowPrice, highPrice, lastDate.getTime());
+				newPrice.setAlt(altPrice);
 				int selectedRow = getSelectedRow();
 				if (newPrice != null && selectedRow >= 0) {
 					getModel2().setValueAt(newPrice, selectedRow);
@@ -547,7 +558,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 
 	
 	protected boolean isSelectAsTakenPrice(int row) {
-		return (boolean)getValueAt(row, 5);
+		return (boolean)getValueAt(row, 6);
 	}
 	
 	
@@ -574,6 +585,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		setValueAt(price.get(), row, 2);
 		setValueAt(price.getLow(), row, 3);
 		setValueAt(price.getHigh(), row, 4);
+		setValueAt(price.getAlt(), row, 5);
 	}
 	
 	
@@ -613,7 +625,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if (column != 0 && column != 1 && column != 5 && editable)
+		if (column != 0 && column != 1 && column != 6 && editable)
 			return super.isCellEditable(row, column);
 		else
 			return false;
@@ -647,14 +659,19 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		Object price = getValueAt(row, 2);
 		Object lowPrice = getValueAt(row, 3);
 		Object highPrice = getValueAt(row, 4);
+		Object altPrice = getValueAt(row, 5);
 		if (date != null && date instanceof Date &&
 			price != null && price instanceof Number &&
 			lowPrice != null && lowPrice instanceof Number &&
-			highPrice != null && highPrice instanceof Number)
-			return universe.newPrice(((Number)price).doubleValue(), 
+			highPrice != null && highPrice instanceof Number) {
+			
+			Price p = universe.newPrice(((Number)price).doubleValue(), 
 					((Number)lowPrice).doubleValue(), 
 					((Number)highPrice).doubleValue(),
 					((Date)date).getTime());
+			if (altPrice != null && altPrice instanceof Number) p.setAlt(((Number)altPrice).doubleValue());
+			return p;
+		}
 		else
 			return null;
 	}
@@ -674,6 +691,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		row.add(price.get());
 		row.add(price.getLow());
 		row.add(price.getHigh());
+		row.add(price.getAlt());
 		row.add(isSelectAsTakenPrice(price));
 		
 		return row;
@@ -691,6 +709,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		columns.add("Price");
 		columns.add("Low price");
 		columns.add("High price");
+		columns.add("Alt price");
 		columns.add("Taken");
 		
 		return columns;
@@ -1386,6 +1405,7 @@ class PriceListPartialTable extends JTable {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Alt price : "));
 		left.add(new JLabel("Last date: "));
 
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -1439,6 +1459,22 @@ class PriceListPartialTable extends JTable {
 		});
 		paneHighPrice.add(btnHighPrice, BorderLayout.EAST);
 		
+		JPanel paneAltPrice = new JPanel(new BorderLayout());
+		right.add(paneAltPrice);
+		JFormattedTextField txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
+		txtAltPrice.setValue(input.getAlt());
+		panePrice.add(txtAltPrice, BorderLayout.CENTER);
+		//
+		JButton btnAltPrice = new JButton("Estimate");
+		btnAltPrice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Estimator estimator = getEstimator();
+				if (estimator != null)  txtAltPrice.setValue(estimator.estimatePrice(getModel2().m().getTimeViewInterval()));
+			}
+		});
+		paneAltPrice.add(btnAltPrice, BorderLayout.EAST);
+
 		JPanel paneLastDate = new JPanel(new BorderLayout());
 		right.add(paneLastDate);
 		JFormattedTextField txtLastDate = new JFormattedTextField(Util.getDateFormatter());
@@ -1478,9 +1514,12 @@ class PriceListPartialTable extends JTable {
 				
 				if (price < lowPrice || price > highPrice) check = check && false;
 				
+				double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
+				if (altPrice < lowPrice || altPrice > highPrice) altPrice = 0;
+
 				Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 				StockAbstract s = getModel2().getStock();
-				if (lastDate == null || s == null /*|| !s.checkPriceTimePoint(lastDate.getTime())*/)
+				if (lastDate == null || s == null)
 					check = check && false;
 				
 				if (!check) {
@@ -1490,6 +1529,7 @@ class PriceListPartialTable extends JTable {
 				}
 				
 				Price newPrice = getModel2().m().newPrice(price, lowPrice, highPrice, lastDate.getTime());
+				newPrice.setAlt(altPrice);
 				int selectedRow = getSelectedRow();
 				if (newPrice != null && selectedRow >= 0) {
 					getModel2().setValueAt(newPrice, selectedRow);
@@ -1877,7 +1917,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	
 	
 	protected boolean isSelectAsTakenPrice(int row) {
-		return (boolean)getValueAt(row, 5);
+		return (boolean)getValueAt(row, 6);
 	}
 	
 	
@@ -1912,6 +1952,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		setValueAt(price.get(), row, 2);
 		setValueAt(price.getLow(), row, 3);
 		setValueAt(price.getHigh(), row, 4);
+		setValueAt(price.getAlt(), row, 5);
 	}
 	
 	
@@ -1951,7 +1992,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		if (editable && column != 0 && column != 1 && column != 5)
+		if (editable && column != 0 && column != 1 && column != 6)
 			return super.isCellEditable(row, column);
 		else
 			return false;
@@ -1985,14 +2026,18 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		Object price = getValueAt(row, 2);
 		Object lowPrice = getValueAt(row, 3);
 		Object highPrice = getValueAt(row, 4);
+		Object altPrice = getValueAt(row, 5);
 		if (date != null && date instanceof Date &&
 			price != null && price instanceof Number &&
 			lowPrice != null && lowPrice instanceof Number &&
-			highPrice != null && highPrice instanceof Number)
-			return m().newPrice(((Number)price).doubleValue(), 
+			highPrice != null && highPrice instanceof Number) {
+			Price p = m().newPrice(((Number)price).doubleValue(), 
 					((Number)lowPrice).doubleValue(), 
 					((Number)highPrice).doubleValue(),
 					((Date)date).getTime());
+			if (altPrice != null && altPrice instanceof Number) p.setAlt(((Number)altPrice).doubleValue());
+			return p;
+		}
 		else
 			return null;
 	}
@@ -2028,6 +2073,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		row.add(price.get());
 		row.add(price.getLow());
 		row.add(price.getHigh());
+		row.add(price.getAlt());
 		row.add(isSelectAsTakenPrice(price));
 		
 		return row;
@@ -2045,6 +2091,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		columns.add("Price");
 		columns.add("Low price");
 		columns.add("High price");
+		columns.add("Alt price");
 		columns.add("Taken");
 		
 		return columns;
@@ -2284,7 +2331,7 @@ class NewPrice extends JDialog {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
-		//left.add(new JLabel("Alt price: "));
+		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Date: "));
 
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -2314,7 +2361,7 @@ class NewPrice extends JDialog {
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		
 		JPanel paneAltPrice = new JPanel(new BorderLayout());
-		//right.add(paneAltPrice);
+		right.add(paneAltPrice);
 		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtAltPrice.setValue(input.getAlt());
 		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
@@ -2384,9 +2431,13 @@ class NewPrice extends JDialog {
 		output.set(((Number)txtPrice.getValue()).doubleValue());
 		output.setLow(((Number) txtLowPrice.getValue()).doubleValue());
 		output.setHigh(((Number) txtHighPrice.getValue()).doubleValue());
-		output.setAlt(((Number) txtAltPrice.getValue()).doubleValue());
-		output.setTime(((Date)txtLastDate.getValue()).getTime());
 		
+		double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
+		if (altPrice < output.getLow() || altPrice > output.getHigh()) altPrice = 0;
+		output.setAlt(((Number) txtAltPrice.getValue()).doubleValue());
+
+		output.setTime(((Date)txtLastDate.getValue()).getTime());
+
 		newCode = txtCode.getText();
 		newCode = newCode != null ? newCode.trim() : "";
 		newCode = newCode.isEmpty() ? null : newCode;

@@ -2308,7 +2308,7 @@ class AddPrice extends JDialog {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price (*): "));
 		left.add(new JLabel("High price (*): "));
-		//left.add(new JLabel("Alt price: "));
+		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 
 		JPanel right = new JPanel(new GridLayout(0, 1));
@@ -2363,7 +2363,7 @@ class AddPrice extends JDialog {
 		paneHighPrice.add(btnHighPrice, BorderLayout.EAST);
 		
 		JPanel paneAltPrice = new JPanel(new BorderLayout());
-		//right.add(paneAltPrice);
+		right.add(paneAltPrice);
 		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtAltPrice.setValue(input.getPrice().getAlt());
 		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
@@ -2372,7 +2372,8 @@ class AddPrice extends JDialog {
 		btnAltPrice.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				Estimator estimator = getEstimator();
+				if (estimator != null)  txtAltPrice.setValue(estimator.estimatePrice(market.getTimeViewInterval()));
 			}
 		});
 		paneAltPrice.add(btnAltPrice, BorderLayout.EAST);
@@ -2484,6 +2485,10 @@ class AddPrice extends JDialog {
 				((Number) txtLowPrice.getValue()).doubleValue(),
 				((Number) txtHighPrice.getValue()).doubleValue(),
 				lastTime);
+		
+		double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
+		if (altPrice < price.getLow() || altPrice > price.getHigh()) altPrice = 0;
+		price.setAlt(altPrice);
 		
 		if (!input.setPrice(price)) return;
 

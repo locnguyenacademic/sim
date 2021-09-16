@@ -189,7 +189,7 @@ public class StockTaker extends JDialog {
 		left.add(new JLabel("Price (*): "));
 		left.add(new JLabel("Low price: "));
 		left.add(new JLabel("High price: "));
-		//left.add(new JLabel("Alt price: "));
+		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 		left.add(new JLabel("Unit bias: "));
 		left.add(new JLabel("Stop loss: "));
@@ -336,7 +336,7 @@ public class StockTaker extends JDialog {
 		paneHighPrice.add(btnHighPrice, BorderLayout.EAST);
 		
 		JPanel paneAltPrice = new JPanel(new BorderLayout());
-		//right.add(paneAltPrice);
+		right.add(paneAltPrice);
 		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtAltPrice.setValue(update ? input.getPrice().getAlt() : 1.0);
 		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
@@ -345,7 +345,8 @@ public class StockTaker extends JDialog {
 		btnAltPrice.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				Estimator estimator = getEstimator();
+				if (estimator != null)  txtAltPrice.setValue(estimator.estimatePrice(market.getTimeViewInterval()));
 			}
 		});
 		paneAltPrice.add(btnAltPrice, BorderLayout.EAST);
@@ -405,7 +406,7 @@ public class StockTaker extends JDialog {
 		paneUnitBias.add(btnUnitBias, BorderLayout.EAST);
 		//
 		txtUnitBias = new JFormattedTextField(Util.getNumberFormatter());
-		txtUnitBias.setValue(0);
+		txtUnitBias.setValue(market != null ? market.getUnitBias() : StockProperty.UNIT_BIAS);
 		txtUnitBias.setEditable(false);
 		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
 		//
@@ -660,6 +661,7 @@ public class StockTaker extends JDialog {
 			txtPrice.setValue(s.getPrice().get());
 			txtLowPrice.setValue(s.getPrice().getLow());
 			txtHighPrice.setValue(s.getPrice().getHigh());
+			txtAltPrice.setValue(s.getPrice().getAlt());
 			
 			txtStopLoss.setValue(s.getStopLoss());
 			txtTakeProfit.setValue(s.getTakeProfit());
@@ -692,6 +694,7 @@ public class StockTaker extends JDialog {
 			txtPrice.setValue(group != null ? group.getPrice().get() : 1.0);
 			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1.0);
 			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1.0);
+			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 1.0);
 			
 			txtStopLoss.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getStopLoss() : 0);
 			txtTakeProfit.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getTakeProfit() : 0);
@@ -718,6 +721,7 @@ public class StockTaker extends JDialog {
 		txtPrice.setValue(price.get());
 		txtLowPrice.setValue(price.getLow());
 		txtHighPrice.setValue(price.getHigh());
+		txtAltPrice.setValue(price.getAlt());
 		txtLastDate.setValue(new Date(price.getTime()));
 
 		StockImpl s = m().c(input);
@@ -827,6 +831,9 @@ public class StockTaker extends JDialog {
 				((Number) txtLowPrice.getValue()).doubleValue(),
 				((Number) txtHighPrice.getValue()).doubleValue(),
 				lastTime);
+		double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
+		if (altPrice < price.getLow() || altPrice > price.getHigh()) altPrice = 0;
+		price.setAlt(altPrice);
 		
 		double leverage = Double.NaN;
 		if (chkLeverage.isSelected()) {
@@ -871,6 +878,7 @@ public class StockTaker extends JDialog {
 			s.getPrice().set(price.get());
 			s.getPrice().setLow(price.getLow());
 			s.getPrice().setHigh(price.getHigh());
+			s.getPrice().setAlt(price.getAlt());
 			s.setStopLoss(((Number)txtStopLoss.getValue()).doubleValue());
 			s.setTakeProfit(((Number)txtTakeProfit.getValue()).doubleValue());
 			if (chkUnitBias.isSelected()) group.setUnitBias(((Number)txtUnitBias.getValue()).doubleValue());
@@ -1154,7 +1162,7 @@ class StockSelector extends JDialog {
 		paneUnitBias.add(btnUnitBias, BorderLayout.EAST);
 		//
 		txtUnitBias = new JFormattedTextField(Util.getNumberFormatter());
-		txtUnitBias.setValue(0);
+		txtUnitBias.setValue(market != null ? market.getUnitBias() : StockProperty.UNIT_BIAS);
 		txtUnitBias.setEditable(false);
 		paneUnitBias.add(txtUnitBias, BorderLayout.CENTER);
 		//
@@ -1386,6 +1394,7 @@ class StockSelector extends JDialog {
 			
 			txtLowPrice.setValue(takenPrice.getLow());
 			txtHighPrice.setValue(takenPrice.getHigh());
+			txtAltPrice.setValue(takenPrice.getAlt());
 			
 			txtStopLoss.setValue(s.getStopLoss());
 			txtTakeProfit.setValue(s.getTakeProfit());
@@ -1413,6 +1422,7 @@ class StockSelector extends JDialog {
 			
 			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1.0);
 			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1.0);
+			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 1.0);
 			
 			txtStopLoss.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getStopLoss() : 0);
 			txtTakeProfit.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getTakeProfit() : 0);
@@ -1446,6 +1456,7 @@ class StockSelector extends JDialog {
 			
 			txtLowPrice.setValue(output.getLow());
 			txtHighPrice.setValue(output.getHigh());
+			txtAltPrice.setValue(output.getAlt());
 		}
 	}
 	
