@@ -52,8 +52,9 @@ public class RecTable extends JTable {
 	private static final long serialVersionUID = 1L;
 
 	
-	public RecTable(Market market, long timeInterval) {
+	public RecTable(Market market, long timeInterval, MarketListener listener) {
 		setModel(new RecTableModel(market));
+		getModel2().addMarketListener(listener);
 
 		setAutoCreateRowSorter(true);
 		setAutoResizeMode(AUTO_RESIZE_OFF);
@@ -121,7 +122,7 @@ public class RecTable extends JTable {
 			if (m == null)
 				return;
 			else {
-				m.applyPlace();
+				m.apply();
 				update();
 				JOptionPane.showMessageDialog(Util.getDialogForComponent(this), "Place recommended stocks successfully", "Successful placing", JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -643,10 +644,10 @@ class RecPanel extends JPanel implements MarketListener {
 	protected long timeInterval = StockProperty.TIME_VIEW_INTERVAL;
 
 	
-	public RecPanel(Market market, long timeInterval) {
+	public RecPanel(Market market, long timeInterval, MarketListener superListener) {
 		this.timeInterval = timeInterval;
-		tblRec = createRecTable(market, timeInterval);
-		tblRec.getModel2().addMarketListener(this);
+		tblRec = createRecTable(market, timeInterval, this);
+		if (superListener != null) tblRec.getModel2().addMarketListener(superListener);
 
 		setLayout(new BorderLayout());
 		
@@ -684,7 +685,7 @@ class RecPanel extends JPanel implements MarketListener {
 	
 	protected void update() {
 		RecTableModel m = tblRec.getModel2();
-		lblEstInvest.setText("Est. invest: " + Util.format(m.getInvestAmount()));
+		lblEstInvest.setText("INVEST: " + Util.format(m.getInvestAmount()));
 		lblInvest.setText("Invested: " + Util.format(m.getInvestedAmount()) + " (" + Util.format(m.getInvestedVolume()) + ") / " + Util.format(m.investedAmount/m.investAmount*100) + "%");
 		lblBias.setText("Bias: " + Util.format(m.getBiasSum()));
 	}
@@ -696,8 +697,8 @@ class RecPanel extends JPanel implements MarketListener {
 	}
 
 
-	protected RecTable createRecTable(Market market, long timeInterval) {
-		return new RecTable(market, timeInterval);
+	protected RecTable createRecTable(Market market, long timeInterval, MarketListener listener) {
+		return new RecTable(market, timeInterval, listener);
 	}
 	
 	
@@ -711,7 +712,16 @@ class RecDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
-	public RecDialog(Market market, long timeInterval, Component parent) {
+	protected JButton btnOK;
+	
+	
+	protected JButton btnCancel;
+	
+	
+	protected boolean isPressOK = false;
+	
+	
+	public RecDialog(Market market, long timeInterval, MarketListener superListener, Component parent) {
 		super(Util.getDialogForComponent(parent), "Recommended stocks", true);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -723,27 +733,43 @@ class RecDialog extends JDialog {
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
-		RecPanel mp = new RecPanel(market, timeInterval);
+		RecPanel mp = createRecPanel(market, timeInterval, superListener);
 		body.add(mp, BorderLayout.CENTER);
 		
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);
 		
-		JButton btnClose = new JButton("Close");
-		btnClose.addActionListener(new ActionListener() {
+		btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isPressOK = true;
+				dispose();
+			}
+		});
+		footer.add(btnOK);
+
+		btnCancel = new JButton("Close");
+		btnCancel.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		footer.add(btnClose);
+		footer.add(btnCancel);
 		
 	}
 	
 	
-	protected RecPanel createRecPanel(Market market, long timeInterval) {
-		return new RecPanel(market, timeInterval);
+	protected RecPanel createRecPanel(Market market, long timeInterval, MarketListener superListener) {
+		return new RecPanel(market, timeInterval, superListener);
+	}
+	
+	
+	public boolean isPressOK() {
+		return isPressOK;
 	}
 	
 	

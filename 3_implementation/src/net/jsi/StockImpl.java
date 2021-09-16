@@ -273,8 +273,8 @@ public class StockImpl extends StockAbstract {
 		long lastTimePoint = getPrice().getTime();
 		if (isCommitted()) lastTimePoint = getCommittedTimePoint();
 		if (dividendTimePoint > lastTimePoint)
-			return 0;
-		else if (timeInterval > 0 && lastTimePoint - dividendTimePoint > timeInterval)
+			return property.getDividend() * volume;
+		if (timeInterval > 0 && lastTimePoint - dividendTimePoint > timeInterval)
 			return 0;
 		else
 			return property.getDividend() * volume;

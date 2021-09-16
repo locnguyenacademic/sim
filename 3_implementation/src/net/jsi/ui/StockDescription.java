@@ -93,13 +93,13 @@ public abstract class StockDescription extends JDialog {
 			info.append("Taken value: " + Util.format(group.getTakenValue(timeViewInterval)) + "\n");
 			info.append("Margin: " + Util.format(group.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(group.getProfit(timeViewInterval)) + "\n");
-			info.append("ROI: " + Util.format(group.getROI(timeViewInterval)*100) + "%\n");
-			info.append("ROI (leverage): " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
 			double dividend = group.getDividend(timeViewInterval);
 			if (dividend > 0) {
 				info.append("Dividend: " + Util.format(dividend) + "\n");
 				info.append("Dividend date: " + Util.format(new Date(group.getDividendTimePoint(timeViewInterval))) + "\n");
 			}
+			info.append("ROI (leverage): " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("ROI: " + Util.format(group.getROI(timeViewInterval)*100) + "%\n");
 			info.append("Oscillate ratio: " + Util.format(group.getPriceOscillRatio(timeViewInterval)*100) + "%\n");
 			info.append("Oscillate total: " + Util.format(group.calcTotalPriceOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(group.getUnitBias()) + "\n");
@@ -166,8 +166,6 @@ public abstract class StockDescription extends JDialog {
 			info.append("Take profit: " + Util.format(s.getTakeProfit()) + "\n");
 			info.append("Margin: " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(stock.getProfit(timeViewInterval)) + "\n");
-			info.append("ROI: " + Util.format(stock.getROI(timeViewInterval)*100) + "%\n");
-			info.append("ROI (leverage): " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
 			double dividend = stock.getDividend(timeViewInterval);
 			if (dividend > 0) {
 				info.append("Dividend: " + Util.format(dividend) + "\n");
@@ -177,6 +175,8 @@ public abstract class StockDescription extends JDialog {
 			if (committedTime > 0) {
 				info.append("Committed date: " + Util.format(new Date(committedTime)) + "\n");
 			}
+			info.append("ROI (leverage): " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
+			info.append("ROI: " + Util.format(stock.getROI(timeViewInterval)*100) + "%\n");
 			info.append("Oscillate ratio: " + Util.format(s.getPriceOscillRatio(timeViewInterval)*100) + "%\n");
 			info.append("Oscillate: " + Util.format(s.getPriceOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");

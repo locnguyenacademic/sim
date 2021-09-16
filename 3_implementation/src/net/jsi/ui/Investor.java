@@ -51,6 +51,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
@@ -96,6 +98,9 @@ public class Investor extends JFrame implements MarketListener {
 	protected File curDir = null;
 	
 	
+	protected MarketPanel curMarketPanel = null;
+	
+	
 	public Investor(Universe universe) {
 		super("JSI - Stock/forex investment manager");
 		this.universe = universe;
@@ -132,6 +137,13 @@ public class Investor extends JFrame implements MarketListener {
 			body.add(market.getName(), mp);
 		}
 		
+		body.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				onTabChanged();
+			}
+		});
+		
 		JPanel footer = new JPanel(new BorderLayout());
 		add(footer, BorderLayout.SOUTH);
 		
@@ -142,14 +154,14 @@ public class Investor extends JFrame implements MarketListener {
 		footerRow.add(lblTotalProfit);
 		footerRow.add(new JLabel(" "));
 		
-		lblTotalROI = new JLabel();
-		footerRow.add(lblTotalROI);
-		footerRow.add(new JLabel(" "));
-		
 		lblTotalSurplus = new JLabel();
 		footerRow.add(lblTotalSurplus);
 		footerRow.add(new JLabel(" "));
 
+		lblTotalROI = new JLabel();
+		footerRow.add(lblTotalROI);
+		footerRow.add(new JLabel(" "));
+		
 		lblTotalBias = new JLabel();
 		//footerRow.add(lblTotalBias);
 		//footerRow.add(new JLabel(" "));
@@ -161,7 +173,7 @@ public class Investor extends JFrame implements MarketListener {
 		lblTotalInvest = new JLabel();
 		footerRow.add(lblTotalInvest);
 
-		update();
+		//update();
 	}
 	
 	
@@ -169,19 +181,22 @@ public class Investor extends JFrame implements MarketListener {
 		long timeViewInterval = universe.getTimeViewInterval();
 		double balance = universe.getBalance(timeViewInterval);
 		double profit = universe.getProfit(timeViewInterval);
-		double roi = universe.getROI(timeViewInterval);
-		//double lRoi = universe.getROIByLeverage(timeViewInterval);
 		double surplus = balance != 0 ? profit / balance : 0;
+		//double roi = universe.getROI(timeViewInterval);
+		double lRoi = universe.getROIByLeverage(timeViewInterval);
 		//double totalBias = universe.calcTotalBias(timeViewInterval);
 		//double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
 		double totalInvest = universe.calcInvestAmount(timeViewInterval);
 		
 		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
-		lblTotalROI.setText("LEV.ROI: " + Util.format(roi*100) + "%");
 		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100) + "%");
+		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100) + "%");
 		//lblTotalBias.setText("BIAS: " + Util.format(totalBias));
 		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
 		lblTotalInvest.setText("HEDGE: " + Util.format(totalInvest));
+		
+		curMarketPanel = getSelectedMarketPanel();
+		System.out.println("Current market updated: " + curMarketPanel.getMarket().getName());
 	}
 	
 	
@@ -239,20 +254,19 @@ public class Investor extends JFrame implements MarketListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedWatchMarket();
-				if (selectedMarket == null) return;
+				Market selectedWatchMarket = getSelectedWatchMarket();
+				if (selectedWatchMarket == null) return;
 				
-				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketTable tblMarket = getSelectedMarketTable();
+				MarketWatchDialog dlgMarket = new MarketWatchDialog(selectedWatchMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Watch stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
 				if (dlgMarket.isPressOK())
-					tblMarket.applyPlace();
+					tblMarket.apply();
 				else {
-					int answer= JOptionPane.showConfirmDialog(thisInvestor, "Would you like to to apply placing?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
-					if (answer == JOptionPane.YES_OPTION) tblMarket.applyPlace();
+					int answer= JOptionPane.showConfirmDialog(thisInvestor, "Would you like to to apply changes?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
+					if (answer == JOptionPane.YES_OPTION) tblMarket.apply();
 				}
 			}
 		});
@@ -266,43 +280,38 @@ public class Investor extends JFrame implements MarketListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedPlaceMarket();
-				if (selectedMarket == null) return;
+				Market selectedPlaceMarket = getSelectedPlaceMarket();
+				if (selectedPlaceMarket == null) return;
 				
-				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				MarketTable tblMarket = getSelectedMarketTable();
+				MarketPlaceDialog dlgMarket = new MarketPlaceDialog(selectedPlaceMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 				dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 				dlgMarket.setVisible(true);
 				
 				if (dlgMarket.isPressOK())
-					tblMarket.applyPlace();
+					tblMarket.apply();
 				else {
-					int answer= JOptionPane.showConfirmDialog(thisInvestor, "Would you like to to apply placing?", "Applaying confirmation", JOptionPane.YES_NO_OPTION);
-					if (answer == JOptionPane.YES_OPTION) tblMarket.applyPlace();
+					int answer= JOptionPane.showConfirmDialog(thisInvestor, "Would you like to to apply changes?", "Applaying confirmation", JOptionPane.YES_NO_OPTION);
+					if (answer == JOptionPane.YES_OPTION) tblMarket.apply();
 				}
 			}
 		});
 		mniPlaceMarket.setMnemonic('p');
 		mnFile.add(mniPlaceMarket);
 
-		JMenuItem mniApplyPlaceMarket = new JMenuItem(
-		new AbstractAction("Apply placing") {
+		JMenuItem mniApplyMarket = new JMenuItem(
+		new AbstractAction("Apply (changes, placing)") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedWatchMarket();
-				if (selectedMarket != null) {
-					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-					tblMarket.applyPlace();
-				}
+				Market selectedWatchMarket = getSelectedWatchMarket();
+				if (selectedWatchMarket != null) getSelectedMarketTable().apply();
 			}
 		});
-		mniApplyPlaceMarket.setMnemonic('a');
-		mniApplyPlaceMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
-		mnFile.add(mniApplyPlaceMarket);
+		mniApplyMarket.setMnemonic('a');
+		mniApplyMarket.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
+		mnFile.add(mniApplyMarket);
 		
 		JMenuItem mniTrashMarket = new JMenuItem(
 		new AbstractAction("Trash") {
@@ -310,13 +319,12 @@ public class Investor extends JFrame implements MarketListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Market selectedMarket = getSelectedTrashMarket();
-				if (selectedMarket == null) return;
+				Market selectedTrashMarket = getSelectedTrashMarket();
+				if (selectedTrashMarket == null) return;
 				
-				MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-				MarketTable tblMarket = selectedMarketPanel.getMarketTable();
-				MarketTrashDialog dlgMarket = new MarketTrashDialog(selectedMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
-				dlgMarket.setTitle("Stocks trash for market " + tblMarket.getMarket().getName());
+				MarketTable tblMarket = getSelectedMarketTable();
+				MarketTrashDialog dlgMarket = new MarketTrashDialog(selectedTrashMarket, true, StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
+				dlgMarket.setTitle("Stocks trash for market " +selectedTrashMarket.getName());
 				dlgMarket.setVisible(true);
 				
 				if (dlgMarket.isPressOK())
@@ -393,11 +401,10 @@ public class Investor extends JFrame implements MarketListener {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MarketPanel selectedMarketPanel = getSelectedMarketPanel();
-					MarketTable tblMarket = selectedMarketPanel.getMarketTable();
 					PriceList pl = new PriceList(universe, null, universe.getTimeViewInterval(), true, false, thisInvestor);
 					pl.setVisible(true);
-					if (pl.isApplied()) tblMarket.applyPlace();
+					
+					if (pl.isApplied()) getSelectedMarketTable().apply();
 				}
 			});
 		mniPriceList.setMnemonic('p');
@@ -410,8 +417,16 @@ public class Investor extends JFrame implements MarketListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					MarketImpl selectedMarket = getSelectedMarket();
-					RecDialog rd = new RecDialog(selectedMarket, selectedMarket.getTimeViewInterval(), thisInvestor);
+					MarketTable tblMarket = getSelectedMarketTable();
+					RecDialog rd = new RecDialog(selectedMarket, selectedMarket.getTimeViewInterval(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, thisInvestor);
 					rd.setVisible(true);
+					
+					if (rd.isPressOK())
+						tblMarket.apply();
+					else {
+						int answer= JOptionPane.showConfirmDialog(thisInvestor, "Would you like to to apply changes?", "Applaying confirmation", JOptionPane.YES_NO_OPTION);
+						if (answer == JOptionPane.YES_OPTION) tblMarket.apply();
+					}
 				}
 			});
 		mniRecommend.setMnemonic('r');
@@ -573,8 +588,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private JToolBar createToolbar() {
-		//JToolBar toolbar = new JToolBar();
-		//return toolbar;
+		//JToolBar toolbar = new JToolBar(); return toolbar;
 		return null;
 	}
 
@@ -610,89 +624,17 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	protected void addMarketPanel() {
-		MarketPanel[] mps = getMarketPanels();
-		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
-		if (marketName == null) return;
+	private void onTabChanged() {
+		MarketPanel selected = getSelectedMarketPanel();
+		if (selected == curMarketPanel) return;
 		
-		marketName = marketName.trim();
-		if (marketName.isEmpty())
-			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
-		else if (getMarketPanel(marketName) != null)
-			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
-		else {
-			MarketPanel mp = addMarketPanel(marketName);
-			if (mp == null)
-				JOptionPane.showMessageDialog(this, "Impossible to add market", "Impossible to add market", JOptionPane.ERROR_MESSAGE);
-		}
+		curMarketPanel = selected;
+		curMarketPanel.getMarketTable().apply();
 	}
 	
 	
-	protected void renameMarketPanel() {
-		MarketImpl selectedMarket = getSelectedMarket();
-		if (selectedMarket == null) return;
-		MarketPanel[] mps = getMarketPanels();
-		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
-		if (marketName == null) return;
-		
-		marketName = marketName.trim();
-		if (marketName.isEmpty())
-			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
-		else if (getMarketPanel(marketName) != null)
-			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
-		else {
-			selectedMarket.setName(marketName);
-			int index = getSelectedMarketPanelIndex();
-			body.setTitleAt(index, marketName);
-		}
-	}
-
-	
-	protected MarketPanel addMarketPanel(String marketName) {
-		if (marketName == null || marketName.isEmpty()) return null;
-		if (getMarketPanel(marketName) != null) return null;
-		
-		MarketPanel mp = createMarketPanel(marketName, StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
-		if (mp == null) return null;
-		body.add(mp.getMarket().getName(), mp);
-		
-		update();
-		
-		return mp;
-	}
-	
-	
-	private MarketPanel addMarketPanel(File file) {
-		if (file == null || !file.exists()) return null;
-		String fileName = file.getName();
-		if (fileName == null || fileName.isEmpty()) return null;
-		
-		String marketName = null;
-		int index = fileName.lastIndexOf(".");
-		if (index < 0)
-			marketName = fileName;
-		else
-			marketName = fileName.substring(0, index);
-		if (marketName == null | marketName.isEmpty()) return null;
-		
-		MarketPanel mp = createMarketPanel(marketName, StockProperty.LEVERAGE, StockProperty.UNIT_BIAS);
-		if (mp == null) return null;
-		boolean ret = mp.open(file);
-		if (!ret) return null;
-		
-		marketName = mp.getMarket().getName();
-		if (getMarketPanel(marketName) != null) return null;
-		mp.getMarketTable().getModel2().addMarketListener(this);
-		body.add(marketName, mp);
-		
-		update();
-		
-		return mp;
-	}
-
-		
-	private MarketPanel createMarketPanel(String name, double leverage, double unitBias) {
-		Market market = universe.newMarket(name, leverage, unitBias);
+	private MarketPanel createMarketPanel(String name) {
+		Market market = universe.newMarket(name, universe.getLeverage(), universe.getUnitBias());
 		if (!universe.add(market))
 			return null;
 		else
@@ -717,6 +659,82 @@ public class Investor extends JFrame implements MarketListener {
 		return mp;
 	}
 	
+	
+	protected void addMarketPanel() {
+		MarketPanel[] mps = getMarketPanels();
+		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
+		if (marketName == null) return;
+		
+		marketName = marketName.trim();
+		if (marketName.isEmpty())
+			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
+		else if (getMarketPanel(marketName) != null)
+			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
+		else {
+			MarketPanel mp = addMarketPanel(marketName);
+			if (mp == null)
+				JOptionPane.showMessageDialog(this, "Impossible to add market", "Impossible to add market", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	
+	protected MarketPanel addMarketPanel(String marketName) {
+		if (marketName == null || marketName.isEmpty()) return null;
+		if (getMarketPanel(marketName) != null) return null;
+		
+		MarketPanel mp = createMarketPanel(marketName);
+		if (mp == null) return null;
+		body.add(mp.getMarket().getName(), mp);
+		
+		return mp;
+	}
+	
+	
+	private MarketPanel addMarketPanel(File file) {
+		if (file == null || !file.exists()) return null;
+		String fileName = file.getName();
+		if (fileName == null || fileName.isEmpty()) return null;
+		
+		String marketName = null;
+		int index = fileName.lastIndexOf(".");
+		if (index < 0)
+			marketName = fileName;
+		else
+			marketName = fileName.substring(0, index);
+		if (marketName == null | marketName.isEmpty()) return null;
+		
+		MarketPanel mp = createMarketPanel(marketName);
+		if (mp == null) return null;
+		boolean ret = mp.open(file);
+		if (!ret) return null;
+		
+		marketName = mp.getMarket().getName();
+		if (getMarketPanel(marketName) != null) return null;
+		body.add(marketName, mp);
+		
+		return mp;
+	}
+
+		
+	protected void renameMarketPanel() {
+		MarketImpl selectedMarket = getSelectedMarket();
+		if (selectedMarket == null) return;
+		MarketPanel[] mps = getMarketPanels();
+		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
+		if (marketName == null) return;
+		
+		marketName = marketName.trim();
+		if (marketName.isEmpty())
+			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
+		else if (getMarketPanel(marketName) != null)
+			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
+		else {
+			selectedMarket.setName(marketName);
+			int index = getSelectedMarketPanelIndex();
+			body.setTitleAt(index, marketName);
+		}
+	}
+
 	
 	private void removeSelectedMarketPanel() {
 		MarketPanel[] mps = getMarketPanels();
@@ -747,15 +765,6 @@ public class Investor extends JFrame implements MarketListener {
 		update();
 	}
 
-	
-	private MarketPanel getSelectedMarketPanel() {
-		Component comp = body.getSelectedComponent();
-		if ((comp != null) && (comp instanceof MarketPanel))
-			return (MarketPanel)comp;
-		return
-			null;
-	}
-	
 	
 	private MarketPanel[] getMarketPanels() {
 		int n = body.getTabCount();
@@ -791,6 +800,24 @@ public class Investor extends JFrame implements MarketListener {
 		}
 		
 		return null;
+	}
+	
+	
+	private MarketPanel getSelectedMarketPanel() {
+		Component comp = body.getSelectedComponent();
+		if ((comp != null) && (comp instanceof MarketPanel))
+			return (MarketPanel)comp;
+		return
+			null;
+	}
+	
+	
+	private MarketTable getSelectedMarketTable() {
+		MarketPanel mp = getSelectedMarketPanel();
+		if (mp == null)
+			return null;
+		else
+			return mp.getMarketTable();
 	}
 	
 	
@@ -830,7 +857,7 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
-	protected MarketImpl[] getMarkets() {
+	private MarketImpl[] getMarkets() {
 		MarketPanel[] mps = getMarketPanels();
 		MarketImpl[] ms = new MarketImpl[mps.length];
 		for (int i = 0; i < mps.length; i++) ms[i] = universe.c(mps[i].getMarket());
@@ -931,7 +958,7 @@ public class Investor extends JFrame implements MarketListener {
 		md.setVisible(true);
 		
 		market.setTimeViewInterval(recoveredTimeViewInterval);
-		getSelectedMarketPanel().getMarketTable().update();
+		getSelectedMarketTable().update();
 	}
 
 	
@@ -956,9 +983,9 @@ public class Investor extends JFrame implements MarketListener {
 			if (placeMarket != null) placeMarket.resetAllStopLossesTakeProfits(timeInterval);
 			MarketImpl trashMarket = market.getTrashMarket();
 			if (trashMarket != null) trashMarket.resetAllStopLossesTakeProfits(timeInterval);
-
-			mp.getMarketTable().update();
 		}
+		
+		getSelectedMarketTable().update();
 	}
 	
 	
@@ -983,9 +1010,9 @@ public class Investor extends JFrame implements MarketListener {
 			if (placeMarket != null) placeMarket.resetAllUnitBiases(timeInterval);
 			MarketImpl trashMarket = market.getTrashMarket();
 			if (trashMarket != null) trashMarket.resetAllUnitBiases(timeInterval);
-
-			mp.getMarketTable().update();
 		}
+		
+		getSelectedMarketTable().update();
 	}
 	
 	
@@ -1002,9 +1029,9 @@ public class Investor extends JFrame implements MarketListener {
 			if (placeMarket != null) placeMarket.sortByCode();
 			MarketImpl trashMarket = market.getTrashMarket();
 			if (trashMarket != null) trashMarket.sortByCode();
-
-			mp.getMarketTable().update();
 		}
+		
+		getSelectedMarketTable().update();
 	}
 
 	
@@ -1057,7 +1084,6 @@ public class Investor extends JFrame implements MarketListener {
 			setSize(400, 420);
 			setLocationRelativeTo(getInvestor());
 			setLayout(new BorderLayout());
-			
 			
 			JPanel header = new JPanel(new BorderLayout());
 			add(header, BorderLayout.NORTH);
@@ -1203,7 +1229,6 @@ public class Investor extends JFrame implements MarketListener {
 			});
 			paneCurDir.add(btnCurDir, BorderLayout.EAST);
 
-			
 			JPanel body = new JPanel(new BorderLayout());
 			add(body, BorderLayout.CENTER);
 			JPanel paneDefaultStockCodes = new JPanel(new BorderLayout());
@@ -1284,7 +1309,7 @@ public class Investor extends JFrame implements MarketListener {
 				}
 			}
 			
-			getSelectedMarketPanel().getMarketTable().update();
+			getSelectedMarketTable().update();
 			
 			dispose();
 		}

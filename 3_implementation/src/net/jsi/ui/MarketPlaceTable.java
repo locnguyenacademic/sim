@@ -42,7 +42,7 @@ public class MarketPlaceTable extends MarketTable {
 
 				row.add(stock);
 				row.add(stock.isBuy());
-				row.add(stock.getLeverage());
+				row.add(stock.getLeverage() != 0 ? 1/stock.getLeverage() : 0);
 				row.add(stock.getVolume(timeViewInterval, !(stock instanceof StockGroup)));
 				
 				if (stock instanceof StockGroup)

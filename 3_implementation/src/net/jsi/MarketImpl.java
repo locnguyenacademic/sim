@@ -805,12 +805,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 
-	public boolean applyPlace() {
-		return applyPlace(this, getTimeViewInterval());
+	public boolean apply() {
+		return place(this, getTimeViewInterval());
 	}
 	
 	
-	public static boolean applyPlace(MarketImpl market, long timeValidInterval) {
+	public static boolean place(MarketImpl market, long timeValidInterval) {
 		boolean ret = false;
 		if (market == null) return ret;
 		
@@ -1126,7 +1126,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			
 			setTimeViewInterval(timeViewInterval);
 			setTimeValidInterval(timeValidInterval);
-			applyPlace();
+			apply();
 			
 			return true;
 		}

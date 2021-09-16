@@ -149,7 +149,8 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
-	protected double calcInvestAmountRisky(long timeInterval) {
+	@Override
+	public double calcInvestAmountRisky(long timeInterval) {
 		return getFreeMargin(timeInterval) - calcTotalBias(timeInterval);
 	}
 

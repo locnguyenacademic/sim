@@ -30,15 +30,15 @@ public abstract class EstimatorAbstract implements Estimator {
 		if (price == null) return roi;
 		
 		Price lastPrice = prices.get(prices.size() -  1);
-		double oscill = (lastPrice.get() - price.get()) / price.get();
+		double oscillRatio = (lastPrice.get() - price.get()) / price.get();
 		if (roi != 0)
-			return (roi + oscill) / 2;
+			return (roi + oscillRatio) / 2;
 		else {
 			double takenValue = getAverageTakenPrice(timeInterval);
 			if (takenValue == 0)
-				return oscill;
+				return oscillRatio;
 			else
-				return oscill / 2;
+				return oscillRatio / 2;
 		}
 	}
 	

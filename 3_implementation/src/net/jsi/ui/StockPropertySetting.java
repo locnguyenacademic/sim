@@ -167,8 +167,8 @@ public class StockPropertySetting extends JDialog {
 	private JMenuBar createMenuBar() {
 		JMenuBar mnBar = new JMenuBar();
 		
-		JMenu mnTool = new JMenu("Tool");
-		mnTool.setMnemonic('t');
+		JMenu mnTool = new JMenu("Set");
+		mnTool.setMnemonic('s');
 		mnBar.add(mnTool);
 
 		JMenuItem mniDividend = new JMenuItem(

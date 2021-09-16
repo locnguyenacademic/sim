@@ -78,6 +78,7 @@ public class MarketTable extends JTable implements MarketListener {
 	public MarketTable(Market market, boolean atomic, MarketListener listener) {
 		super();
 		setModel(createModel(market, atomic));
+		if (listener != null) getModel2().addMarketListener(listener);
 
 		setAutoCreateRowSorter(true);
 		setAutoResizeMode(AUTO_RESIZE_OFF);
@@ -117,7 +118,6 @@ public class MarketTable extends JTable implements MarketListener {
 
 		update();
 		
-		if (listener != null) getModel2().addMarketListener(listener);
 	}
 
 	
@@ -798,8 +798,8 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	public boolean applyPlace() {
-		boolean applied = getModel2().applyPlace();
+	public boolean apply() {
+		boolean applied = getModel2().apply();
 		init();
 		return applied;
 	}
@@ -954,15 +954,15 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 
 			stock.setUnitBias(es.estimatedUnitBiasFromData);
 			
-			if (isAtomic()) setValueAt(new Pair(es.estimatedUnitBiasFromData, es.estimatedUnitBiasFromData), row, 14);
+			if (isAtomic()) setValueAt(new Pair(es.estimatedUnitBiasFromData, es.estimatedUnitBiasFromData), row, 15);
 		}
 	}
 	
 	
-	protected boolean applyPlace() {
+	protected boolean apply() {
 		MarketImpl m = m();
 		if (m != null) {
-			boolean ret = m.applyPlace();
+			boolean ret = m.apply();
 			update();
 			return ret;
 		}
@@ -1046,6 +1046,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
+	@Deprecated
 	private class PairPercentage extends Pair {
 
 		private static final long serialVersionUID = 1L;
@@ -1068,6 +1069,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
 	@SuppressWarnings("unused")
+	@Deprecated
 	private class PairPercentageSemi extends PairPercentage {
 
 		private static final long serialVersionUID = 1L;
@@ -1156,7 +1158,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 
 		@Override
 		public String toString() {
-			return Util.format(new Date(time));
+			return time != 0 ? Util.format(new Date(time)) : "";
 		}
 		
 	}
@@ -1177,7 +1179,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.getTakenValue(timeViewInterval));
 			row.add(group.getMargin(timeViewInterval));
 			row.add(group.getProfit(timeViewInterval));
-			row.add(new PairPercentage(group.getROI(timeViewInterval), group.getROIByLeverage(timeViewInterval)));
+			row.add(new Percentage(group.getROIByLeverage(timeViewInterval)));
+			row.add(new Percentage(group.getROI(timeViewInterval)));
 			row.add(new Percentage(group.getPriceOscillRatio(timeViewInterval)));
 			row.add(group.calcTotalPriceOscill(timeViewInterval));
 			row.add(group.calcTotalBias(timeViewInterval));
@@ -1201,6 +1204,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			}
 			row.add(tv);
 			
+			row.add(stock.getDividend(timeViewInterval));
+			row.add(new Time(stock.getDividendTimePoint(timeViewInterval)));
+
 			row.add(stock.getCategory());
 			row.add(null);
 		}
@@ -1226,7 +1232,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(stock.getProfit(timeViewInterval));
 			row.add(stock.isCommitted());
 			
-			row.add(new PairPercentage(stock.getROI(timeViewInterval), stock.getROIByLeverage(timeViewInterval)));
+			row.add(new Percentage(stock.getROIByLeverage(timeViewInterval)));
+			row.add(new Percentage(stock.getROI(timeViewInterval)));
 			row.add(new Percentage(stock.getPriceOscillRatio(timeViewInterval)));
 			row.add(stock.getPriceOscill(timeViewInterval));
 			row.add(found != null ? new Pair(found.estimatedUnitBias, stock.getUnitBias()) : new Pair(stock.getUnitBias(), stock.getUnitBias()));
@@ -1260,11 +1267,14 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Taken value");
 			columns.add("Margin");
 			columns.add("Profit");
-			columns.add("ROI / leverage ROI");
+			columns.add("Leverage ROI");
+			columns.add("ROI");
 			columns.add("Oscillate ratio");
 			columns.add("Oscillate");
 			columns.add("Est. bias");
 			columns.add("Rec. volume / amount / total amount");
+			columns.add("Dividend");
+			columns.add("Dividend date");
 			columns.add("Group");
 			columns.add("");
 		}
@@ -1280,7 +1290,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Margin");
 			columns.add("Profit");
 			columns.add("Committed");
-			columns.add("ROI / leverage ROI");
+			columns.add("Leverage ROI");
+			columns.add("ROI");
 			columns.add("Oscillate ratio");
 			columns.add("Oscillate");
 			columns.add("Unit bias (est. / setting)");
@@ -1298,33 +1309,31 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	public Class<?> getColumnClass(int columnIndex) {
 		
 		if (!isAtomic()) {
-			if (columnIndex == 1)
-				return Boolean.class;
-			else if (columnIndex ==  0 || columnIndex ==  12 || columnIndex ==  getColumnCount() - 1)
+			if (columnIndex ==  0 || columnIndex ==  15 || columnIndex ==  getColumnCount() - 1)
 				return super.getColumnClass(columnIndex);
-			else if (columnIndex == 7)
-				return PairPercentage.class;
-			else if (columnIndex == 8)
+			else if (columnIndex == 1)
+				return Boolean.class;
+			else if (columnIndex == 7 || columnIndex == 8 || columnIndex == 9)
 				return Percentage.class;
-			else if (columnIndex == 11)
+			else if (columnIndex == 12)
 				return Triple.class;
+			else if (columnIndex == 14)
+				return Time.class;
 			else
 				return Double.class;
 		}
 		else {
-			if (columnIndex == 1 || columnIndex == 10)
+			if (columnIndex ==  0 || columnIndex ==  18 || columnIndex ==  getColumnCount() - 1)
+				return super.getColumnClass(columnIndex);
+			else if (columnIndex == 1 || columnIndex == 10)
 				return Boolean.class;
 			else if (columnIndex ==  2)
 				return Time.class;
-			else if (columnIndex ==  0 || columnIndex ==  17 || columnIndex ==  getColumnCount() - 1)
-				return super.getColumnClass(columnIndex);
-			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 14 || columnIndex == 16)
+			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 15 || columnIndex == 17)
 				return Pair.class;
-			else if (columnIndex == 11)
-				return PairPercentage.class;
-			else if (columnIndex == 12)
+			else if (columnIndex == 11 || columnIndex == 12 || columnIndex == 13)
 				return Percentage.class;
-			else if (columnIndex == 15)
+			else if (columnIndex == 16)
 				return Triple.class;
 			else
 				return Double.class;
@@ -1461,8 +1470,9 @@ class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	public MarketPanel(Market market, boolean atomic, MarketListener superListener) {
-		tblMarket = createMarketTable(market, atomic, superListener);
-		tblMarket.getModel2().addMarketListener(this);
+		tblMarket = createMarketTable(market, atomic, this);
+		if (superListener != null) tblMarket.getModel2().addMarketListener(superListener);
+		
 		setLayout(new BorderLayout());
 		
 		MarketPanel thisPanel = this;
@@ -1602,13 +1612,13 @@ class MarketPanel extends JPanel implements MarketListener {
 
 		footerRow21.add(lblProfit = new JLabel());
 		footerRow21.add(new JLabel(" "));
-		footerRow21.add(lblROI = new JLabel());
-		footerRow21.add(new JLabel(" "));
 		footerRow21.add(lblSurplus = new JLabel());
 		footerRow21.add(new JLabel(" "));
-		footerRow21.add(lblBias = new JLabel());
+		footerRow21.add(lblROI = new JLabel());
 		footerRow21.add(new JLabel(" "));
 		footerRow21.add(lblOscill = new JLabel());
+		footerRow21.add(new JLabel(" "));
+		footerRow21.add(lblBias = new JLabel());
 		
 		JPanel footerRow22 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		footerRow2.add(footerRow22, BorderLayout.SOUTH);
@@ -1636,6 +1646,45 @@ class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
+	protected void update() {
+		Market market = getMarket();
+		MarketImpl m = tblMarket.m();
+
+		long timeViewInterval = market.getTimeViewInterval();
+		double balance = market.getBalance(timeViewInterval);
+		double margin = market.getMargin(timeViewInterval);
+		double freeMargin = market.getFreeMargin(timeViewInterval);
+		double equity = margin + freeMargin;
+		double profit = market.getProfit(timeViewInterval);
+		double surplus = balance != 0 ? profit / balance : 0;
+		//double roi = market.getROI(timeViewInterval);
+		double lRoi = market.getROIByLeverage(timeViewInterval);
+		//double oscillRatio = market.getPriceOscillRatio(timeViewInterval);
+		double oscill = market.calcTotalPriceOscill(timeViewInterval);
+		double bias = market.calcTotalBias(timeViewInterval);
+		double invest = market.calcInvestAmount(timeViewInterval);
+		double investRisky = market.calcInvestAmountRisky(timeViewInterval);
+		
+		if (m != null) {
+			int days = (int) (m.getTimeViewInterval() / (1000*3600*24));
+			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()) + " last " + days + " days");
+		}
+		
+		lblBalance.setText("Balance: " + Util.format(balance));
+		lblEquity.setText("Equity: " + Util.format(equity));
+		lblMargin.setText("Margin: " + Util.format(margin));
+		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin));
+		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100) + "%");
+		
+		lblProfit.setText("Profit: " + Util.format(profit));
+		lblSurplus.setText("Sur: " + Util.format(surplus*100) + "%");
+		lblROI.setText("Lev.ROI: " + Util.format(lRoi*100) + "%");
+		lblOscill.setText("Oscill: " + Util.format(oscill));
+		lblBias.setText("Bias: " + Util.format(bias));
+		lblEstInvest.setText("INVEST: " + Util.format(invest) + " / " + Util.format(investRisky));
+	}
+
+
 	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		
@@ -1674,10 +1723,10 @@ class MarketPanel extends JPanel implements MarketListener {
 		dlgMarket.setVisible(true);
 		
 		if (dlgMarket.isPressOK())
-			tblMarket.applyPlace();
+			tblMarket.apply();
 		else {
-			int answer= JOptionPane.showConfirmDialog(this, "Would you like to to apply placing?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
-			if (answer == JOptionPane.YES_OPTION) tblMarket.applyPlace();
+			int answer= JOptionPane.showConfirmDialog(this, "Would you like to to apply changes?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
+			if (answer == JOptionPane.YES_OPTION) tblMarket.apply();
 		}
 	}
 	
@@ -1688,10 +1737,10 @@ class MarketPanel extends JPanel implements MarketListener {
 		dlgMarket.setVisible(true);
 		
 		if (dlgMarket.isPressOK())
-			tblMarket.applyPlace();
+			tblMarket.apply();
 		else {
-			int answer= JOptionPane.showConfirmDialog(this, "Would you like to to apply placing?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
-			if (answer == JOptionPane.YES_OPTION) tblMarket.applyPlace();
+			int answer= JOptionPane.showConfirmDialog(this, "Would you like to to apply changes?", "Applying confirmation", JOptionPane.YES_NO_OPTION);
+			if (answer == JOptionPane.YES_OPTION) tblMarket.apply();
 		}
 	}
 
@@ -1833,44 +1882,6 @@ class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	protected void update() {
-		Market market = getMarket();
-		MarketImpl m = tblMarket.m();
-
-		long timeViewInterval = market.getTimeViewInterval();
-		double balance = market.getBalance(timeViewInterval);
-		double margin = market.getMargin(timeViewInterval);
-		double freeMargin = market.getFreeMargin(timeViewInterval);
-		double equity = margin + freeMargin;
-		double profit = market.getProfit(timeViewInterval);
-		double roi = market.getROI(timeViewInterval);
-		double lRoi = market.getROIByLeverage(timeViewInterval);
-		double surplus = balance != 0 ? profit / balance : 0;
-		double bias = market.calcTotalBias(timeViewInterval);
-		double oscill = market.calcTotalPriceOscill(timeViewInterval);
-		double oscillRatio = market.getPriceOscillRatio(timeViewInterval);
-		double estInvest = market.calcInvestAmount(timeViewInterval);
-		
-		if (m != null) {
-			int days = (int) (m.getTimeViewInterval() / (1000*3600*24));
-			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()) + " in last " + days + " days");
-		}
-		
-		lblBalance.setText("Balance: " + Util.format(balance));
-		lblEquity.setText("Equity: " + Util.format(equity));
-		lblMargin.setText("Margin: " + Util.format(margin));
-		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin));
-		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100) + "%");
-		
-		lblProfit.setText("Profit: " + Util.format(profit));
-		lblROI.setText("ROI: " + Util.format(roi*100) + "% / " + Util.format(lRoi*100) + "%");
-		lblSurplus.setText("Sur: " + Util.format(surplus*100) + "%");
-		lblBias.setText("Bias: " + Util.format(bias));
-		lblOscill.setText("Oscill: " + Util.format(oscill) + " / " + Util.format(oscillRatio*100) + "%");
-		lblEstInvest.setText("Est. INVEST: " + Util.format(estInvest));
-	}
-
-
 	@Override
 	public void notify(MarketEvent evt) {
 		update();
@@ -1920,10 +1931,10 @@ class MarketPanel extends JPanel implements MarketListener {
         
         File file = fc.getSelectedFile();
         FileFilter filter = fc.getFileFilter();
-        if (filter.getDescription().compareToIgnoreCase(StockProperty.JSI_DESC) == 0) {
+        if (filter.getDescription().compareToIgnoreCase(StockProperty.JSI_EXT) == 0) {
         	int index = file.getName().indexOf(".");
         	if (index < 0)
-        		file = new File(file.getAbsolutePath().concat("." + StockProperty.JSI_DESC));
+        		file = new File(file.getAbsolutePath().concat("." + StockProperty.JSI_EXT));
         }
 
         boolean ret = save(file);
@@ -1970,7 +1981,7 @@ class MarketPanel extends JPanel implements MarketListener {
 		Universe u = getMarket().getNearestUniverse();
 		if (u != null) {
 			MarketImpl m = u.c(getMarket());
-			if (m != null) m.applyPlace();
+			if (m != null) m.apply();
 		}
 		
 		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -2476,7 +2487,7 @@ class AddPrice extends JDialog {
 		
 		if (!input.setPrice(price)) return;
 
-		m.applyPlace();
+		m.apply();
 		
 		output = input;
 		

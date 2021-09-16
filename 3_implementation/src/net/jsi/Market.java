@@ -46,6 +46,9 @@ public interface Market extends Serializable, Cloneable {
 	double calcInvestAmount(long timeInterval);
 
 		
+	double calcInvestAmountRisky(long timeInterval);
+
+		
 	String getName();
 	
 	
