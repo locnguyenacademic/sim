@@ -89,8 +89,12 @@ public abstract class StockDescription extends JDialog {
 		if (stock == null || estimateStocks == null || estimateStocks.size() == 0) {
 			info.append("Leverage: " + (group.getLeverage() != 0 ? Util.format(1.0 / group.getLeverage()) : "Infinity") + "\n");
 			info.append("Volume: " + Util.format(group.getVolume(timeViewInterval, true)) + "\n");
-			info.append("Price (unit): " + Util.format(group.getPrice().get()) + "\n");
 			info.append("Taken value: " + Util.format(group.getTakenValue(timeViewInterval)) + "\n");
+			info.append("Price: " + Util.format(group.getPrice().get()) + "\n");
+			info.append("Low price: " + Util.format(group.getPrice().getLow()) + "\n");
+			info.append("High price: " + Util.format(group.getPrice().getHigh()) + "\n");
+			if (group.getPrice().getAlt() > 0)
+				info.append("Alternative price (often open price): " + Util.format(group.getPrice().getAlt()) + "\n");
 			info.append("Margin: " + Util.format(group.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(group.getProfit(timeViewInterval)) + "\n");
 			double dividend = group.getDividend(timeViewInterval);
@@ -162,6 +166,8 @@ public abstract class StockDescription extends JDialog {
 			info.append("Price: " + Util.format(stock.getPrice().get()) + "\n");
 			info.append("Low price: " + Util.format(stock.getPrice().getLow()) + "\n");
 			info.append("High price: " + Util.format(stock.getPrice().getHigh()) + "\n");
+			if (stock.getPrice().getAlt() > 0)
+				info.append("Alternative price (often open price): " + Util.format(stock.getPrice().getAlt()) + "\n");
 			info.append("Stop loss: " + Util.format(s.getStopLoss()) + "\n");
 			info.append("Take profit: " + Util.format(s.getTakeProfit()) + "\n");
 			info.append("Margin: " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
