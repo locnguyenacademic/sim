@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -388,6 +389,27 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	protected boolean resetUnitBiasByTimeFrame() {
+		int selectedRow = getSelectedRow();
+		if (selectedRow < 0) return false;
+		
+		Stock stock = getModel2().getStock(selectedRow);
+		String tfUnitBiasText = JOptionPane.showInputDialog(this, "Enter time frame unit bias", stock.getUnitBias());
+		double tfUnitBias = Double.NaN;
+		try {
+			tfUnitBias = Double.parseDouble(tfUnitBiasText);
+		}
+		catch (Exception e) {}
+		if (Double.isNaN(tfUnitBias) || tfUnitBias < 0) {
+			JOptionPane.showMessageDialog(this, "Invalid time frame unit bias", "Invalid unit bias", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		
+		return getModel2().resetUnitBiasByTimeFrame(selectedRow, tfUnitBias);
+		
+	}
+	
+	
 	protected void properties(Stock stock) {
 		StockPropertySetting setting = new StockPropertySetting(stock.getProperty(), this);
 		setting.setVisible(true);
@@ -588,6 +610,18 @@ public class MarketTable extends JTable implements MarketListener {
 					}
 				});
 			ctxMenu.add(miSettings);
+
+			JMenuItem mniResetUnitBiasesTimeFrame = new JMenuItem(
+				new AbstractAction("Reset T-frame bias") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JOptionPane.showMessageDialog(null, "This function not implemented yet");
+						//resetUnitBiasByTimeFrame();
+					}
+				});
+			ctxMenu.add(mniResetUnitBiasesTimeFrame);
 
 			JMenuItem miProperties = new JMenuItem("Properties");
 			miProperties.addActionListener( 
@@ -821,7 +855,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	protected boolean group = false;
 	
 	
-	protected Map<String, List<EstimateStock>> estimators = Util.newMap(0);
+	protected Map<String, Estimator> estimators = Util.newMap(0);
+
+	
+	protected Map<String, List<EstimateStock>> stockEstimators = Util.newMap(0);
 	
 	
     protected EventListenerList listenerList = new EventListenerList();
@@ -856,8 +893,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	public List<EstimateStock> getEstimateStocks(String code, boolean buy) {
 		String key = keyOf(code, buy);
-		if (estimators.containsKey(key))
-			return estimators.get(key);
+		if (stockEstimators.containsKey(key))
+			return stockEstimators.get(key);
 		else
 			return Util.newList(0);
 	}
@@ -872,6 +909,15 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 
+	protected Estimator getEstimator(int row) {
+		Object v = getValueAt(row, getColumnCount() - 1);
+		if (v != null && v instanceof Estimator)
+			return (Estimator)v;
+		else
+			return null;
+	}
+
+	
 	protected Stock getStock(int row) {
 		return (Stock)getValueAt(row, 0);
 	}
@@ -884,37 +930,38 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	public void update() {
 		setDataVector(new Object[][] {}, new Object[] {});
+		MarketImpl m = m();
+		
+		Universe u = m != null ? m.getNearestUniverse() : null;
+		QueryEstimator query = u != null ? u.query(market.getName(), market) : m;
+		query = query != null ? query : m;
+		estimators.clear();
+		stockEstimators.clear();
+		long timeInterval = market.getTimeViewInterval();
+		if (m != null) {
+			for (int i = 0; i < m.size(); i++) {
+				StockGroup group = m.get(i);
+				if (group.isCommitted() && !showCommit) continue;
+				
+				String key = keyOf(group.code(), group.isBuy());
+				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
+				estimators.put(key, estimator);
+				
+				List<EstimateStock> estimateStocks = estimator.estimateStocks(group.getStocks(timeInterval), timeInterval);
+				stockEstimators.put(key, estimateStocks);
+			}
+		}
 		
 		Vector<Vector<Object>> data = Util.newVector(0);
-		
-		long timeInterval = market.getTimeViewInterval();
-		estimators.clear();
 		if (isGroup()) {
-			MarketImpl m = m();
-			if (m != null) {
-				List<StockGroup> groups = m.getGroups(timeInterval);
-				for (StockGroup group : groups) {
-					if (group.isCommitted() && !showCommit) continue;
-					Vector<Object> row = toRow(group);
-					if (row != null) data.add(row);
-				}
+			List<StockGroup> groups = m.getGroups(timeInterval);
+			for (StockGroup group : groups) {
+				if (group.isCommitted() && !showCommit) continue;
+				Vector<Object> row = toRow(group);
+				if (row != null) data.add(row);
 			}
 		}
 		else {
-			MarketImpl m = m();
-			Universe u = m != null ? m.getNearestUniverse() : null;
-			if (u != null) {
-				QueryEstimator query = u.query(market.getName(), market);
-				if (query == null) query = m;
-				for (int i = 0; i < m.size(); i++) {
-					StockGroup group = m.get(i);
-					if (group.isCommitted() && !showCommit) continue;
-					Estimator estimator = query.getEstimator(group.code(), group.isBuy());
-					List<EstimateStock> estimateStocks = estimator.estimateStocks(group.getStocks(timeInterval), timeInterval);
-					estimators.put(keyOf(group.code(), group.isBuy()), estimateStocks);
-				}
-			}
-			
 			List<Stock> stocks = market.getStocks(timeInterval);
 			for (Stock stock : stocks) {
 				if (stock.isCommitted() && !showCommit) continue;
@@ -931,33 +978,34 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	protected void resetAllStopLossTakeProfits() {
 		for (int row = 0; row < getRowCount(); row++) {
-			StockImpl stock = m().c(getStock(row));
 			EstimateStock es = getEstimateStock(row);
-			if (stock == null || es == null) continue;
-			
-			stock.setStopLoss(es.estimatedStopLoss);
-			stock.setTakeProfit(es.estimatedTakeProfit);
-			
-			if (!isGroup()) {
-				Pair value = new Pair(es.estimatedStopLoss, es.estimatedTakeProfit);
-				setValueAt(value, row, 7);
-			}
+			if (es != null) setStopLossTakeProfit(row, es.estimatedStopLoss, es.estimatedTakeProfit);
 		}
 	}
 	
 	
 	protected void resetAllUnitBiases() {
 		for (int row = 0; row < getRowCount(); row++) {
-			Stock stock = getStock(row);
 			EstimateStock es = getEstimateStock(row);
-			if (stock == null || es == null) continue;
-
-			stock.setUnitBias(es.estimatedUnitBiasFromData);
-			
-			if (!isGroup()) setValueAt(new Pair(es.estimatedUnitBiasFromData, es.estimatedUnitBiasFromData), row, 15);
+			if (es != null) setUnitBias(row, es.estimatedUnitBiasFromData);
 		}
 	}
 	
+	
+	protected boolean resetUnitBiasByTimeFrame(int row, double tfUnitBias) {
+		Stock stock = getStock(row);
+		if (stock == null) return false;
+		
+		if (isGroup()) {
+			return false;
+		}
+		else {
+			EstimateStock es = getEstimateStock(row);
+			if (es == null) return false;
+			return setUnitBias(row, Math.max(es.estimatedUnitBiasFromData, tfUnitBias));
+		}
+	}
+
 	
 	protected boolean apply() {
 		MarketImpl m = m();
@@ -974,6 +1022,31 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	@Override
 	public void setValueAt(Object aValue, int row, int column) {
 		super.setValueAt(aValue, row, column);
+	}
+
+	
+	private boolean setStopLossTakeProfit(int row, double stopLoss, double takeProfit) {
+		StockImpl stock = m().c(getStock(row)); if (stock == null) return false;
+		if (isGroup())
+			return false;
+		else {
+			stock.setStopLoss(stopLoss);
+			stock.setTakeProfit(takeProfit);
+			setValueAt(new Pair(stopLoss, takeProfit), row, 7);
+			return true;
+		}
+	}
+	
+	
+	private boolean setUnitBias(int row, double estUnitBias) {
+		Stock stock = getStock(row); if (stock == null) return false;
+		if (isGroup())
+			return false;
+		else {
+			stock.setUnitBias(estUnitBias);
+			setValueAt(new Pair(estUnitBias, estUnitBias), row, 15);
+			return true;
+		}
 	}
 
 	
@@ -1010,7 +1083,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 
 	
-	private class Pair implements Serializable, Cloneable, Comparable<Pair> {
+	protected class Pair implements Serializable, Cloneable, Comparable<Pair> {
 		
 		private static final long serialVersionUID = 1L;
 
@@ -1136,7 +1209,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 
 	
-	private class Time implements Serializable, Cloneable, Comparable<Time> {
+	protected class Time implements Serializable, Cloneable, Comparable<Time> {
 		
 		private static final long serialVersionUID = 1L;
 		
@@ -1167,7 +1240,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	protected Vector<Object> toRow(Stock stock) {
 		long timeViewInterval = market.getTimeViewInterval();
 		Vector<Object> row = Util.newVector(0);
-		Universe u = market.getNearestUniverse();
 		
 		if (stock instanceof StockGroup) { 
 			StockGroup group = (StockGroup)stock;
@@ -1186,21 +1258,12 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.calcTotalBias(timeViewInterval));
 			
 			Triple tv = new Triple(Double.NaN, Double.NaN, Double.NaN);
-			if (u != null && u.lookup(market.getName()) >= 0) {
-				QueryEstimator query = u.query(market.getName(), market);
-				if (query == null) query = m();
-				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
-				
-				if (estimator != null) {
-					if (group.getLeverage() != 0) {
-						double volume = estimator.estimateInvestVolume(timeViewInterval);
-						double amount = estimator.estimateInvestAmount(timeViewInterval);
-						double totalAmount = estimator.getInvestAmount(timeViewInterval);
-						tv = new Triple(volume, amount, totalAmount);
-					}
-					else
-						tv = new Triple(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-				}
+			Estimator estimator = estimators.get(keyOf(group.code(), group.isBuy()));
+			if (estimator != null && group.getLeverage() != 0) {
+				double volume = estimator.estimateInvestVolume(timeViewInterval);
+				double amount = estimator.estimateInvestAmount(timeViewInterval);
+				double totalAmount = estimator.getInvestAmount(timeViewInterval);
+				tv = new Triple(volume, amount, totalAmount);
 			}
 			row.add(tv);
 			
@@ -1208,7 +1271,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(new Time(stock.getDividendTimePoint(timeViewInterval)));
 
 			row.add(stock.getCategory());
-			row.add(null);
+			row.add(estimator);
 		}
 		else {
 			StockImpl s = market.c(stock);
@@ -1225,7 +1288,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			
 			Price price = s.getPrice();
 			row.add(price.get());
-			row.add(new Pair(price.getLow(), price.getHigh()));
+			row.add(new Triple(price.getLow(), price.getHigh(), price.getAlt()));
 			row.add(new Pair(stock.getStopLoss(), stock.getTakeProfit()));
 			
 			row.add(stock.getMargin(timeViewInterval));
@@ -1269,35 +1332,35 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			columns.add("Profit");
 			columns.add("Leverage ROI");
 			columns.add("ROI");
-			columns.add("Oscillate ratio");
-			columns.add("Oscillate");
-			columns.add("Est. bias");
+			columns.add("Oscill. ratio");
+			columns.add("Total oscill.");
+			columns.add("Total bias");
 			columns.add("Rec. volume / amount / total amount");
 			columns.add("Dividend");
 			columns.add("Dividend date");
-			columns.add("Group");
+			columns.add("Category");
 			columns.add("");
 		}
 		else {
 			columns.add("Code");
 			columns.add("Buy");
-			columns.add("Date");
+			columns.add("Taken date");
 			columns.add("Volume");
 			columns.add("Taken price");
 			columns.add("Price");
-			columns.add("Low/high prices");
+			columns.add("Low/high/alt prices");
 			columns.add("Stop loss / take profit");
 			columns.add("Margin");
 			columns.add("Profit");
 			columns.add("Committed");
 			columns.add("Leverage ROI");
 			columns.add("ROI");
-			columns.add("Oscillate ratio");
-			columns.add("Oscillate");
+			columns.add("Oscill. ratio");
+			columns.add("Oscill.");
 			columns.add("Unit bias (est. / setting)");
 			columns.add("Est. price / stop loss / take profit");
 			columns.add("Est. price mean / price setting");
-			columns.add("Group");
+			columns.add("Category");
 			columns.add("");
 		}
 		
@@ -1329,12 +1392,12 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return Boolean.class;
 			else if (columnIndex ==  2)
 				return Time.class;
-			else if (columnIndex == 6 || columnIndex == 7 || columnIndex == 15 || columnIndex == 17)
+			else if (columnIndex == 6 || columnIndex == 16)
+				return Triple.class;
+			else if (columnIndex == 7 || columnIndex == 15 || columnIndex == 17)
 				return Pair.class;
 			else if (columnIndex == 11 || columnIndex == 12 || columnIndex == 13)
 				return Percentage.class;
-			else if (columnIndex == 16)
-				return Triple.class;
 			else
 				return Double.class;
 		}

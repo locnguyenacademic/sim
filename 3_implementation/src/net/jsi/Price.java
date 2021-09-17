@@ -37,6 +37,9 @@ public interface Price extends Serializable, Cloneable {
 	void setAlt(double altPrice);
 
 	
+	double getAverage();
+	
+	
 	long getTime();
 	
 	
@@ -49,13 +52,13 @@ public interface Price extends Serializable, Cloneable {
 	boolean isValid();
 	
 	
-	double getPriceRatio();
-	
-	
-	void setPriceRatio(double priceRatio);
+//	double getPriceRatio();
+//	
+//	
+//	void setPriceRatio(double priceRatio);
 
 	
-	Serializable getTag();
+//	Serializable getTag();
 	
 	
 	boolean copy(Price price);

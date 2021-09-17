@@ -669,13 +669,23 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		Map<String, List<EstimateStock>> estimators = retrieveStockEstimators(timeInterval);
 		List<Stock> stocks = getStocks(timeInterval);
 		for (Stock stock : stocks) {
-			EstimateStock es = lookup(estimators, stock);
-			if (es == null) continue;
+			EstimateStock es = lookup(estimators, stock); if (es == null) continue;
 			StockImpl s = c(stock);
 			if (s != null) s.setUnitBias(es.estimatedUnitBiasFromData);
 		}
 	}
 	
+	
+	public boolean resetUnitBiasTimeFrame(String code, boolean buy, double timeFrameUnitBias, long timeInterval) {
+		StockGroup group = get(code, buy);
+		if (group == null) return false;
+		Estimator estimator = getEstimator(code, buy);
+		if (estimator == null) return false;
+		
+		double estUnitBias = estimator.estimateUnitBiasFromData(timeInterval);
+		return group.setUnitBias(Math.max(estUnitBias, timeFrameUnitBias));
+	}
+
 	
 	@Override
 	public double getLeverage() {
@@ -806,11 +816,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 
 	public boolean apply() {
-		return place(this, getTimeViewInterval());
+		return applyPlace(this, getTimeViewInterval());
 	}
 	
 	
-	public static boolean place(MarketImpl market, long timeValidInterval) {
+	public static boolean applyPlace(MarketImpl market, long timeValidInterval) {
 		boolean ret = false;
 		if (market == null) return ret;
 		
@@ -822,6 +832,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			if (placeStock == null) continue;
 			StockGroup placeGroup = placeMarket.get(placeStock.code(), placeStock.isBuy());
 			if (placeGroup == null) continue;
+			double volume = placeStock.getVolume(timeValidInterval, false);
+			if (volume <= 0) continue;
 
 			Price placeTakenPrice = placeStock.getTakenPrice(timeValidInterval);
 			if (placeTakenPrice == null) continue;
@@ -844,9 +856,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			
 			Stock added = market.addStock(placeStock.code(),
 				placeStock.isBuy(),
-				placeStock.getVolume(timeValidInterval, false),
+				volume,
 				lastPrice.getTime());
 			if (added == null) continue;
+			added.setExtraInfo(placeStock);
 
 			placeGroup.remove(stock);
 			if (placeGroup.size() == 0) placeMarket.remove(placeGroup.getName(), placeGroup.isBuy());
@@ -859,21 +872,14 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 
 	public static boolean watch(Stock stock, MarketImpl market, MarketImpl watchMarket) {
-		if (stock == null || market == null || watchMarket == null) return false;
+		if (stock == null || market == null || watchMarket == null || market == watchMarket) return false;
 		StockImpl s = market.c(stock); if (s == null) return false;
 		
 		double volume = stock.getVolume(market.getTimeViewInterval(), true);
 		if (watchMarket != null) {
 			Stock added = watchMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()));
-			if (added == null)
-				return false;
-			else {
-				added.setCommitted(stock.isCommitted());
-				try {
-					watchMarket.c(added).setStopLoss(stock.getStopLoss());
-					watchMarket.c(added).setTakeProfit(stock.getTakeProfit());
-				} catch (Exception e) {}
-			}
+			if (added == null) return false;
+			added.setExtraInfo(stock);
 		}
 
 		return remove(stock, market);
@@ -881,9 +887,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 
 	public static boolean place(Stock stock, MarketImpl market, MarketImpl placeMarket) {
-		if (stock == null || stock instanceof StockGroup || market == null || placeMarket == null) return false;
+		if (stock == null || stock instanceof StockGroup || market == null || placeMarket == null || market == placeMarket) return false;
+		if (stock.isCommitted()) return false;
 		
-		Price price = (Price)stock.getPrice().clone();
+		Price price = null;
+		try {price = (Price)stock.getPrice().clone();} catch (Exception e) {e.printStackTrace();}
+		if (price == null) return false;
+		
 		double volume = stock.getVolume(market.getTimeViewInterval(), false);
 		if (price == null || volume == 0) return false;
 		
@@ -891,17 +901,27 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
 		if (added != null) {
-			added.setCommitted(stock.isCommitted());
-			try {
-				placeMarket.c(added).setStopLoss(stock.getStopLoss());
-				placeMarket.c(added).setTakeProfit(stock.getTakeProfit());
-			} catch (Exception e) {}
-			
+			added.setExtraInfo(stock);
 			return true;
 		}
 		else
 			return false;
+	}
+	
+	
+	public static boolean buy(Stock stock, MarketImpl market, MarketImpl targetMarket) {
+		if (stock == null || market == null || targetMarket == null || market == targetMarket) return false;
+		if (stock.isCommitted()) return false;
+		StockImpl s = market.c(stock); if (s == null) return false;
+		
+		double volume = stock.getVolume(market.getTimeViewInterval(), true);
+		if (targetMarket != null && volume > 0) {
+			Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()));
+			if (added == null) return false;
+			added.setExtraInfo(stock);
+		}
 
+		return MarketImpl.remove(stock, market);
 	}
 	
 	
@@ -929,15 +949,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 		double volume = stock.getVolume(m.getTimeViewInterval(), true);
 		Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-		if (added == null)
-			return false;
-		else {
-			added.setCommitted(stock.isCommitted());
-			try {
-				targetMarket.c(added).setStopLoss(stock.getStopLoss());
-				targetMarket.c(added).setTakeProfit(stock.getTakeProfit());
-			} catch (Exception e) {}
-		}
+		if (added == null) return false;
+		added.setExtraInfo(stock);
 
 		return MarketImpl.remove(stock, m);
 		

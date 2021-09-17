@@ -79,6 +79,9 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	void setBasicInfo(Stock stock);
 	
 	
+	void setExtraInfo(Stock stock);
+
+	
 	StockProperty getProperty();
 	
 	

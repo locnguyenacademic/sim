@@ -11,7 +11,6 @@ import javax.swing.JPopupMenu;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Stock;
-import net.jsi.StockImpl;
 import net.jsi.Universe;
 
 public class MarketWatchTable extends MarketTable {
@@ -38,28 +37,9 @@ public class MarketWatchTable extends MarketTable {
 
 
 	private boolean buy0(Stock stock) {
-		if (stock == null) return false;
-		MarketImpl m = m(); if (m == null) return false;
-		Universe u = m.getNearestUniverse();
-		if (u == null) return false;
-		StockImpl s = m.c(stock); if (s == null) return false;
-		
-		MarketImpl dualMarket = u.c(m.getDualMarket());
-		double volume = stock.getVolume(m.getTimeViewInterval(), true);
-		if (dualMarket != null) {
-			Stock added = dualMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-			if (added == null)
-				return false;
-			else {
-				added.setCommitted(stock.isCommitted());
-				try {
-					dualMarket.c(added).setStopLoss(s.getStopLoss());
-					dualMarket.c(added).setTakeProfit(s.getTakeProfit());
-				} catch (Exception e) {}
-			}
-		}
-
-		return MarketImpl.remove(stock, m);
+		MarketImpl m = m();
+		Universe u = m != null ? m.getNearestUniverse() : null;
+		return MarketImpl.buy(stock, m, u != null ? u.c(m.getDualMarket()) : null);
 	}
 
 	
@@ -86,10 +66,8 @@ public class MarketWatchTable extends MarketTable {
 		if (placeMarket != null) return placeMarket;
 		
 		MarketImpl m = m();
-		if (m == null) return null;
-		Universe u = m.getNearestUniverse();
-		if (u == null) return null;
-		MarketImpl dualMarket = u.c(m.getDualMarket());
+		Universe u = m != null ? m.getNearestUniverse() : null;
+		MarketImpl dualMarket = u != null ? u.c(m.getDualMarket()) : null;
 		return dualMarket != null ? dualMarket.getPlaceMarket() : null;
 	}
 	

@@ -187,8 +187,8 @@ public class StockTaker extends JDialog {
 		if (update) left.add(new JLabel("Taken price: "));
 		if (update) left.add(new JLabel("Taken date: "));
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price: "));
-		left.add(new JLabel("High price: "));
+		left.add(new JLabel("Low price (*): "));
+		left.add(new JLabel("High price (*): "));
 		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 		left.add(new JLabel("Unit bias: "));

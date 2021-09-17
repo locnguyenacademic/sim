@@ -3,7 +3,6 @@ package net.jsi.ui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JMenuItem;
@@ -46,24 +45,30 @@ public class MarketPlaceTable extends MarketTable {
 				row.add(stock.getVolume(timeViewInterval, !(stock instanceof StockGroup)));
 				
 				if (stock instanceof StockGroup)
-					row.add("");
+					row.add(new Time(0));
 				else if (s != null)
-					row.add(Util.format(new Date(s.getTakenTimePoint(timeViewInterval))));
+					row.add(new Time(s.getTakenTimePoint(timeViewInterval)));
 				else
-					row.add("");
+					row.add(new Time(0));
+				
+				if (stock instanceof StockGroup)
+					row.add(((StockGroup)stock).getTakenValue(timeViewInterval));
+				else
+					row.add(stock.getAverageTakenPrice(timeViewInterval));
 				
 				Price price = stock.getPrice();
 				row.add(price.get());
-				row.add(Util.format(price.getLow()) + " / " + Util.format(price.getHigh()));
+				row.add(new Pair(price.getLow(), price.getHigh()));
 				
 				if (stock instanceof StockGroup)
-					row.add("");
+					row.add(new Pair(Double.NaN, Double.NaN));
 				else if (s != null)
-					row.add(Util.format(s.getStopLoss()) + " / " + Util.format(s.getTakeProfit()));
+					row.add(new Pair(s.getStopLoss(), s.getTakeProfit()));
 				else
-					row.add("");
+					row.add(new Pair(Double.NaN, Double.NaN));
 				
 				row.add(stock.getUnitBias());
+				row.add(null);
 
 				return row;
 			}
@@ -76,13 +81,32 @@ public class MarketPlaceTable extends MarketTable {
 				columns.add("Buy");
 				columns.add("Leverage");
 				columns.add("Volume");
-				columns.add("Date");
+				columns.add("Taken date");
+				if (isGroup())
+					columns.add("Taken value");
+				else
+					columns.add("Taken price");
 				columns.add("Price");
 				columns.add("Low/high prices");
 				columns.add("Stop loss / take profit");
-				columns.add("Unit bias");
+				columns.add("Unit bias (setting)");
+				columns.add("");
 
 				return columns;
+			}
+			
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 0 || columnIndex == getColumnCount() - 1)
+					return super.getColumnClass(columnIndex);
+				else if (columnIndex == 1)
+					return Boolean.class;
+				else if (columnIndex == 4)
+					return Time.class;
+				else if (columnIndex == 7 || columnIndex == 8)
+					return Pair.class;
+				else
+					return Double.class;
 			}
 			
 		};

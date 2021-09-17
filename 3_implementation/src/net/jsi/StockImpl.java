@@ -282,6 +282,14 @@ public class StockImpl extends StockAbstract {
 	
 
 	@Override
+	public void setExtraInfo(Stock stock) {
+		setCommitted(stock.isCommitted());
+		setStopLoss(stock.getStopLoss());
+		setTakeProfit(stock.getTakeProfit());
+	}
+
+
+	@Override
 	public StockGroup getGroup() {
 		if (StockProperty.g == null) return null;
 		

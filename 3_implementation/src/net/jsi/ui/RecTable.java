@@ -475,7 +475,7 @@ class RecTableModel extends DefaultTableModel {
 		
 		columns.add("");
 		columns.add("Code");
-		columns.add("Group");
+		columns.add("Category");
 		columns.add("Percent");
 		columns.add("Leverage");
 		columns.add("Price (current)");

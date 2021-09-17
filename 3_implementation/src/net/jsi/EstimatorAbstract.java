@@ -411,8 +411,9 @@ public abstract class EstimatorAbstract implements Estimator {
 		
 		double bias = estimateUnitBiasAtCurrentPrice(timeInterval);
 		int found = 0;
+		double biasedPrice = price0 + bias;
 		for (int i = 1; i <= takenVolume; i++) {
-			if (i * (price0 + bias) > takenAmount) {
+			if (i * biasedPrice > takenAmount) {
 				found = i - 1;
 				break;
 			}

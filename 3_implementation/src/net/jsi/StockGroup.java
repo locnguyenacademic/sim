@@ -458,6 +458,12 @@ public class StockGroup extends StockAbstract implements Market {
 
 
 	@Override
+	public void setExtraInfo(Stock stock) {
+		
+	}
+
+
+	@Override
 	public double getDividend(long timeInterval) {
 		double dividend = 0;
 		for (Stock stock : stocks) {

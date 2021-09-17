@@ -98,7 +98,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public final static String DIVIDEND_FIELD = "dvd";
 
 	
-	public final static String CATEGORY_FIELD = "grp";
+	public final static String CATEGORY_FIELD = "cat";
 
 	
 	public static int MAX_PRICE_COUNT = 0;

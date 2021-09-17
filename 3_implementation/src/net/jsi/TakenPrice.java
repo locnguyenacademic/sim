@@ -7,7 +7,6 @@
  */
 package net.jsi;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class TakenPrice implements Price {
@@ -16,10 +15,10 @@ public class TakenPrice implements Price {
 	private static final long serialVersionUID = 1L;
 
 
-	protected Price price = null;
+	private Price price = null;
 	
 	
-	protected double extra = 0;
+	private double extraPrice = 0;
 	
 	
 	public TakenPrice(Price price) {
@@ -29,13 +28,13 @@ public class TakenPrice implements Price {
 	
 	public TakenPrice(Price price, double extra) {
 		this.price = price;
-		this.extra = extra;
+		this.extraPrice = extra;
 	}
 
 	
 	@Override
 	public double get() {
-		return price.get() + extra;
+		return price.get() + extraPrice;
 	}
 
 	
@@ -46,12 +45,12 @@ public class TakenPrice implements Price {
 
 	
 	public double getExtra() {
-		return extra;
+		return extraPrice;
 	}
 	
 	
 	public void setExtra(double extra) {
-		this.extra = extra;
+		this.extraPrice = extra;
 	}
 	
 	
@@ -92,6 +91,12 @@ public class TakenPrice implements Price {
 
 	
 	@Override
+	public double getAverage() {
+		return price.getAverage();
+	}
+
+
+	@Override
 	public long getTime() {
 		return price.getTime();
 	}
@@ -110,12 +115,6 @@ public class TakenPrice implements Price {
 
 	
 	@Override
-	public Serializable getTag() {
-		return price.getTag();
-	}
-
-
-	@Override
 	public boolean isValid() {
 		return price.isValid();
 	}
@@ -126,31 +125,38 @@ public class TakenPrice implements Price {
 	}
 
 
-	@Override
-	public double getPriceRatio() {
-		return price.getPriceRatio();
-	}
-
-
-	@Override
-	public void setPriceRatio(double priceRatio) {
-		price.setPriceRatio(priceRatio);
-	}
+//	@Override
+//	public Serializable getTag() {
+//		return price.getTag();
+//	}
+//
+//
+//	@Override
+//	public double getPriceRatio() {
+//		return price.getPriceRatio();
+//	}
+//
+//
+//	@Override
+//	public void setPriceRatio(double priceRatio) {
+//		price.setPriceRatio(priceRatio);
+//	}
 
 
 	@Override
 	public boolean copy(Price price) {
 		if (price == null) return false;
-		this.set(price.get());
-		this.setLow(price.getLow());
-		this.setHigh(price.getHigh());
-		this.setAlt(price.getAlt());
-		this.setTime(price.getTime());
-		this.setPriceRatio(price.getPriceRatio());
 		
 		if (price instanceof TakenPrice) {
 			this.price = ((TakenPrice)price).price;
-			this.extra = ((TakenPrice)price).extra;
+			this.extraPrice = ((TakenPrice)price).extraPrice;
+		}
+		else {
+			this.set(price.get());
+			this.setLow(price.getLow());
+			this.setHigh(price.getHigh());
+			this.setAlt(price.getAlt());
+			this.setTime(price.getTime());
 		}
 			
 		return true;
@@ -173,6 +179,7 @@ public class TakenPrice implements Price {
 	@Override
 	public void applyFactor(double factor) {
 		price.applyFactor(factor);
+		extraPrice = extraPrice*factor;
 	}
 
 
@@ -180,10 +187,8 @@ public class TakenPrice implements Price {
 	public Object clone() {
 		try {
 			return super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			return null;
-		}
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		return null;
 	}
 
 

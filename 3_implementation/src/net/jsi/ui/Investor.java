@@ -92,7 +92,7 @@ public class Investor extends JFrame implements MarketListener {
 	protected JLabel lblTotalOscill;
 
 	
-	protected JLabel lblTotalInvest;
+	protected JLabel lblTotalHedge;
 
 	
 	protected File curDir = null;
@@ -170,8 +170,8 @@ public class Investor extends JFrame implements MarketListener {
 		//footerRow.add(lblTotalOscill);
 		//footerRow.add(new JLabel(" "));
 
-		lblTotalInvest = new JLabel();
-		footerRow.add(lblTotalInvest);
+		lblTotalHedge = new JLabel();
+		footerRow.add(lblTotalHedge);
 
 		//update();
 	}
@@ -188,12 +188,14 @@ public class Investor extends JFrame implements MarketListener {
 		//double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
 		double totalInvest = universe.calcInvestAmount(timeViewInterval);
 		
+		profit = profit < 0 ? profit : (totalInvest > profit ? profit : profit - totalInvest);
+		
 		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
 		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100) + "%");
 		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100) + "%");
 		//lblTotalBias.setText("BIAS: " + Util.format(totalBias));
 		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
-		lblTotalInvest.setText("HEDGE: " + Util.format(totalInvest));
+		lblTotalHedge.setText("HEDGE: " + (totalInvest > 0 ? 0 : Util.format(-totalInvest)));
 		
 		curMarketPanel = getSelectedMarketPanel();
 		System.out.println("Current market updated: " + curMarketPanel.getMarket().getName());
@@ -202,6 +204,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	private JMenuBar createMenuBar() {
 		JMenuBar mnBar = new JMenuBar();
+		Component thisInvestor = Util.getDialogForComponent(this);
 		
 		JMenu mnFile = new JMenu("File");
 		mnFile.setMnemonic('f');
@@ -247,7 +250,20 @@ public class Investor extends JFrame implements MarketListener {
 
 		mnFile.addSeparator();
 
-		Component thisInvestor = Util.getDialogForComponent(this);
+		JMenuItem mniReport = new JMenuItem(
+			new AbstractAction("Report") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					report();
+				}
+			});
+		mniReport.setMnemonic('r');
+		mnFile.add(mniReport);
+		
+		mnFile.addSeparator();
+
 		JMenuItem mniWatchMarket = new JMenuItem(
 		new AbstractAction("Watch stocks") {
 			private static final long serialVersionUID = 1L;
@@ -621,6 +637,11 @@ public class Investor extends JFrame implements MarketListener {
 		}
 		else
 			mp.onSave();
+	}
+	
+	
+	private void report() {
+		JOptionPane.showMessageDialog(this, "This function not implemented yet");
 	}
 	
 	

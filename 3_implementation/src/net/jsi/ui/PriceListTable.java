@@ -1463,7 +1463,7 @@ class PriceListPartialTable extends JTable {
 		right.add(paneAltPrice);
 		JFormattedTextField txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
 		txtAltPrice.setValue(input.getAlt());
-		panePrice.add(txtAltPrice, BorderLayout.CENTER);
+		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
 		//
 		JButton btnAltPrice = new JButton("Estimate");
 		btnAltPrice.addActionListener(new ActionListener() {
@@ -2421,20 +2421,23 @@ class NewPrice extends JDialog {
 	
 	
 	private void ok() {
-		output = (Price)input.clone();
+		output = null;
+		try {output = (Price)input.clone();} catch (Exception e) {e.printStackTrace();}
+		if (output == null) return;
+		
 		if (!validateInput() || output == null) {
+			output = null;
 			JOptionPane.showMessageDialog(this, "Invalid input", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
-		output = (Price)input.clone();
 		output.set(((Number)txtPrice.getValue()).doubleValue());
 		output.setLow(((Number) txtLowPrice.getValue()).doubleValue());
 		output.setHigh(((Number) txtHighPrice.getValue()).doubleValue());
 		
 		double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
 		if (altPrice < output.getLow() || altPrice > output.getHigh()) altPrice = 0;
-		output.setAlt(((Number) txtAltPrice.getValue()).doubleValue());
+		output.setAlt(altPrice);
 
 		output.setTime(((Date)txtLastDate.getValue()).getTime());
 

@@ -7,7 +7,6 @@
  */
 package net.jsi;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class PriceImpl implements Price {
@@ -28,13 +27,13 @@ public class PriceImpl implements Price {
 	private double altPrice = 0;
 
 	
-	private double priceRatio = StockProperty.PRICE_RATIO;
-	
-	
 	private long timePoint = System.currentTimeMillis();
 	
 	
-	private Serializable tag = null;
+//	private double priceRatio = StockProperty.PRICE_RATIO;
+//	
+//	
+//	private Serializable tag = null;
 	
 	
 	public PriceImpl() {
@@ -52,7 +51,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double get() {
-		return price*priceRatio;
+		return price;
 	}
 	
 	
@@ -64,7 +63,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double getLow() {
-		return lowPrice*priceRatio;
+		return lowPrice;
 	}
 	
 	
@@ -76,7 +75,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double getHigh() {
-		return highPrice*priceRatio;
+		return highPrice;
 	}
 	
 	
@@ -88,7 +87,7 @@ public class PriceImpl implements Price {
 	
 	@Override
 	public double getAlt() {
-		return altPrice*priceRatio;
+		return altPrice;
 	}
 	
 	
@@ -98,6 +97,14 @@ public class PriceImpl implements Price {
 	}
 	
 	
+	@Override
+	public double getAverage() {
+		double price = get();
+		double alt = getAlt();
+		return alt > 0 ? (price + alt) / 2.0 : price;
+	}
+
+
 	@Override
 	public long getTime() {
 		return timePoint;
@@ -134,32 +141,30 @@ public class PriceImpl implements Price {
 	}
 
 
-	@Override
-	public Serializable getTag() {
-		return tag;
-	}
-
-
-	@Override
-	public double getPriceRatio() {
-		return priceRatio;
-	}
-	
-	
-	@Override
-	public void setPriceRatio(double priceRatio) {
-		this.priceRatio = priceRatio;
-	}
+//	@Override
+//	public Serializable getTag() {
+//		return tag;
+//	}
+//
+//
+//	@Override
+//	public double getPriceRatio() {
+//		return priceRatio;
+//	}
+//	
+//	
+//	@Override
+//	public void setPriceRatio(double priceRatio) {
+//		this.priceRatio = priceRatio;
+//	}
 	
 	
 	@Override
 	public Object clone() {
 		try {
 			return super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			return null;
-		}
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		return null;
 	}
 
 
