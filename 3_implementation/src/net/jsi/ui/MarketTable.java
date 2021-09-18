@@ -49,7 +49,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
@@ -411,7 +410,7 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	
 	protected void properties(Stock stock) {
-		StockPropertySetting setting = new StockPropertySetting(stock.getProperty(), this);
+		StockPropertySetting setting = new StockPropertySetting(stock.code(), stock.getProperty(), this);
 		setting.setVisible(true);
 		StockProperty output = setting.getOutput();
 		if (output != null) {
@@ -861,9 +860,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	protected Map<String, List<EstimateStock>> stockEstimators = Util.newMap(0);
 	
 	
-    protected EventListenerList listenerList = new EventListenerList();
-    
-    
     protected boolean showCommit = false;
 
     
@@ -1049,193 +1045,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		}
 	}
 
-	
-	protected static class Percentage implements Serializable, Cloneable, Comparable<Percentage> {
-
-		private static final long serialVersionUID = 1L;
-		
-		protected double v = 0;
-		
-		public Percentage(double v) {
-			this.v = v;
-		}
-
-		@Override
-		public int compareTo(Percentage o) {
-			if (this.v < o.v)
-				return -1;
-			else if (this.v == o.v)
-				return 0;
-			else
-				return 1;
-		}
-
-		@Override
-		public String toString() {
-			if (Double.isNaN(v))
-				return "";
-			else if (Double.isInfinite(v))
-				return "Infinity";
-			else
-				return Util.format(v*100) + "%";
-		}
-
-	}
-
-	
-	protected class Pair implements Serializable, Cloneable, Comparable<Pair> {
-		
-		private static final long serialVersionUID = 1L;
-
-		protected double v1 = 0;
-		
-		protected double v2 = 0;
-		
-		public Pair(double v1, double v2) {
-			this.v1 = v1;
-			this.v2 = v2;
-		}
-
-		@Override
-		public String toString() {
-			if (Double.isNaN(v1) || Double.isNaN(v1))
-				return "";
-			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
-				return "Infinity";
-			else
-				return Util.format(v1) + " / " + Util.format(v2);
-		}
-
-		@Override
-		public int compareTo(Pair o) {
-			if (this.v1 < o.v1)
-				return -1;
-			else if (this.v1 == o.v1)
-				return this.v2 < o.v2 ? -1 : (this.v2 == o.v2 ? 0 : 1);
-			else
-				return 1;
-		}
-		
-	}
-	
-	
-	@Deprecated
-	private class PairPercentage extends Pair {
-
-		private static final long serialVersionUID = 1L;
-		
-		public PairPercentage(double v1, double v2) {
-			super(v1, v2);
-		}
-
-		@Override
-		public String toString() {
-			if (Double.isNaN(v1) || Double.isNaN(v1))
-				return "";
-			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
-				return "Infinity";
-			else
-				return Util.format(v1*100) + "% / " + Util.format(v2*100) + "%";
-		}
-
-	}
-	
-	
-	@SuppressWarnings("unused")
-	@Deprecated
-	private class PairPercentageSemi extends PairPercentage {
-
-		private static final long serialVersionUID = 1L;
-		
-		public PairPercentageSemi(double v1, double v2) {
-			super(v1, v2);
-		}
-
-		@Override
-		public String toString() {
-			if (Double.isNaN(v1) || Double.isNaN(v1))
-				return "";
-			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
-				return "Infinity";
-			else
-				return Util.format(v1*100) + "% / " + Util.format(v2);
-		}
-
-	}
-
-	
-	private class Triple implements Serializable, Cloneable, Comparable<Triple> {
-		
-		private static final long serialVersionUID = 1L;
-
-		protected double v1 = 0;
-		
-		protected double v2 = 0;
-		
-		protected double v3 = 0;
-
-		public Triple(double v1, double v2, double v3) {
-			this.v1 = v1;
-			this.v2 = v2;
-			this.v3 = v3;
-		}
-
-		@Override
-		public String toString() {
-			if (Double.isNaN(v1) || Double.isNaN(v1) || Double.isNaN(v3))
-				return "";
-			else if (Double.isInfinite(v1) || Double.isInfinite(v1) || Double.isInfinite(v3))
-				return "Infinity";
-			else
-				return Util.format(v1) + " / " + Util.format(v2) + " / " + Util.format(v3) + "";
-		}
-
-		@Override
-		public int compareTo(Triple o) {
-			if (this.v1 < o.v1)
-				return -1;
-			else if (this.v1 == o.v1) {
-				if (this.v2 < o.v2)
-					return -1;
-				else if (this.v2 == o.v2)
-					return this.v3 < o.v3 ? -1 : (this.v3 == o.v3 ? 0 : 1);
-				else
-					return 1;
-			}
-			else
-				return 1;
-		}
-		
-	}
-
-	
-	protected class Time implements Serializable, Cloneable, Comparable<Time> {
-		
-		private static final long serialVersionUID = 1L;
-		
-		protected long time = 0;
-		
-		public Time(long time) {
-			this.time = time;
-		}
-
-		@Override
-		public int compareTo(Time o) {
-			if (this.time < o.time)
-				return -1;
-			else if (this.time == o.time)
-				return 0;
-			else
-				return 1;
-		}
-
-		@Override
-		public String toString() {
-			return time != 0 ? Util.format(new Date(time)) : "";
-		}
-		
-	}
-	
 	
 	protected Vector<Object> toRow(Stock stock) {
 		long timeViewInterval = market.getTimeViewInterval();
@@ -1456,6 +1265,192 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 
 
+	protected static class Percentage implements Serializable, Cloneable, Comparable<Percentage> {
+
+		private static final long serialVersionUID = 1L;
+		
+		protected double v = 0;
+		
+		public Percentage(double v) {
+			this.v = v;
+		}
+
+		@Override
+		public int compareTo(Percentage o) {
+			if (this.v < o.v)
+				return -1;
+			else if (this.v == o.v)
+				return 0;
+			else
+				return 1;
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v))
+				return "";
+			else if (Double.isInfinite(v))
+				return "Infinity";
+			else
+				return Util.format(v*100) + "%";
+		}
+
+	}
+
+	
+	protected static class Pair implements Serializable, Cloneable, Comparable<Pair> {
+		
+		private static final long serialVersionUID = 1L;
+
+		protected double v1 = 0;
+		
+		protected double v2 = 0;
+		
+		public Pair(double v1, double v2) {
+			this.v1 = v1;
+			this.v2 = v2;
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v1) || Double.isNaN(v1))
+				return "";
+			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
+				return "Infinity";
+			else
+				return Util.format(v1) + " / " + Util.format(v2);
+		}
+
+		@Override
+		public int compareTo(Pair o) {
+			if (this.v1 < o.v1)
+				return -1;
+			else if (this.v1 == o.v1)
+				return this.v2 < o.v2 ? -1 : (this.v2 == o.v2 ? 0 : 1);
+			else
+				return 1;
+		}
+		
+	}
+	
+	
+	@Deprecated
+	protected static class PairPercentage extends Pair {
+
+		private static final long serialVersionUID = 1L;
+		
+		public PairPercentage(double v1, double v2) {
+			super(v1, v2);
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v1) || Double.isNaN(v1))
+				return "";
+			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
+				return "Infinity";
+			else
+				return Util.format(v1*100) + "% / " + Util.format(v2*100) + "%";
+		}
+
+	}
+	
+	
+	@Deprecated
+	protected static class PairPercentageSemi extends PairPercentage {
+
+		private static final long serialVersionUID = 1L;
+		
+		public PairPercentageSemi(double v1, double v2) {
+			super(v1, v2);
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v1) || Double.isNaN(v1))
+				return "";
+			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
+				return "Infinity";
+			else
+				return Util.format(v1*100) + "% / " + Util.format(v2);
+		}
+
+	}
+
+	
+	protected static class Triple implements Serializable, Cloneable, Comparable<Triple> {
+		
+		private static final long serialVersionUID = 1L;
+
+		protected double v1 = 0;
+		
+		protected double v2 = 0;
+		
+		protected double v3 = 0;
+
+		public Triple(double v1, double v2, double v3) {
+			this.v1 = v1;
+			this.v2 = v2;
+			this.v3 = v3;
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v1) || Double.isNaN(v1) || Double.isNaN(v3))
+				return "";
+			else if (Double.isInfinite(v1) || Double.isInfinite(v1) || Double.isInfinite(v3))
+				return "Infinity";
+			else
+				return Util.format(v1) + " / " + Util.format(v2) + " / " + Util.format(v3) + "";
+		}
+
+		@Override
+		public int compareTo(Triple o) {
+			if (this.v1 < o.v1)
+				return -1;
+			else if (this.v1 == o.v1) {
+				if (this.v2 < o.v2)
+					return -1;
+				else if (this.v2 == o.v2)
+					return this.v3 < o.v3 ? -1 : (this.v3 == o.v3 ? 0 : 1);
+				else
+					return 1;
+			}
+			else
+				return 1;
+		}
+		
+	}
+
+	
+	protected static class Time implements Serializable, Cloneable, Comparable<Time> {
+		
+		private static final long serialVersionUID = 1L;
+		
+		protected long time = 0;
+		
+		public Time(long time) {
+			this.time = time;
+		}
+
+		@Override
+		public int compareTo(Time o) {
+			if (this.time < o.time)
+				return -1;
+			else if (this.time == o.time)
+				return 0;
+			else
+				return 1;
+		}
+
+		@Override
+		public String toString() {
+			return time != 0 ? Util.format(new Date(time)) : "";
+		}
+		
+	}
+	
+	
 }
 
 

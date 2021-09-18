@@ -404,6 +404,7 @@ public class Investor extends JFrame implements MarketListener {
 				}
 			});
 		mniExit.setMnemonic('x');
+		mniExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.ALT_DOWN_MASK));
 		mnFile.add(mniExit);
 
 		

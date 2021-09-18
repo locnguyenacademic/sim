@@ -170,6 +170,8 @@ public class PriceListTable extends JTable {
 		input = input != null ? input : getSelectedPrice();
 		if (input == null) return;
 		JDialog editor = new JDialog(Util.getDialogForComponent(this), "Edit price", true);
+		String code = getModel2().pricePool != null ? getModel2().pricePool.code() : null;
+		if (code != null) editor.setTitle(editor.getTitle() + " of " + code);
 		
 		editor.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		editor.setSize(350, 250);
@@ -1159,6 +1161,7 @@ class TakenStocksOfPrice extends JDialog {
 			
 			setAutoCreateRowSorter(true);
 			setAutoResizeMode(AUTO_RESIZE_OFF);
+			getTableHeader().setReorderingAllowed(false);
 			
 			update();
 		}
@@ -1211,10 +1214,13 @@ class TakenStocksOfPrice extends JDialog {
 			for (String marketName : marketNames) {
 				MarketImpl m = universe.c(universe.get(marketName));
 				if (m == null) continue;
-				addRows(data, m, false);
+				addRows(data, m, 0);
 				
-				MarketImpl pm = m.getWatchMarket();
-				if (pm != null) addRows(data, pm, true);
+				MarketImpl watchMarket = m.getWatchMarket();
+				if (watchMarket != null) addRows(data, watchMarket, 1);
+				
+				MarketImpl trashMarket = m.getTrashMarket();
+				if (trashMarket != null) addRows(data, trashMarket, 2);
 			}
 			
 			setDataVector(data, toColumns());
@@ -1225,7 +1231,7 @@ class TakenStocksOfPrice extends JDialog {
 			return false;
 		}
 
-		private void addRows(Vector<Vector<Object>> data, MarketImpl market, boolean watch) {
+		private void addRows(Vector<Vector<Object>> data, MarketImpl market, int index) {
 			List<Stock> stocks = market.getStocks(timeInterval);
 			for (Stock stock : stocks) {
 				StockImpl s = market.c(stock);
@@ -1235,22 +1241,23 @@ class TakenStocksOfPrice extends JDialog {
 				if (p == null || !(p instanceof TakenPrice)) continue;
 				
 				if (((TakenPrice)p).checkRefEquals(this.price)) {
-					Vector<Object> row = toRow(s, market.getName(), watch);
+					Vector<Object> row = toRow(s, market.getName(), index);
 					if (row != null) data.add(row);
 				}
 			}
 		}
 		
-		private Vector<Object> toRow(StockImpl stock, String marketName, boolean watch) {
+		private Vector<Object> toRow(StockImpl stock, String marketName, int index) {
 			Vector<Object> row = Util.newVector(0);
 			
 			row.add(stock);
 			row.add(marketName);
-			row.add(watch);
+			row.add(index == 0 ? "main" : (index == 1 ? "watch" : "trash"));
 			row.add(stock.isBuy());
-			row.add(Util.format(stock.getTakenPrice(timeInterval).getDate()));
+			row.add(new MarketTableModel.Time(stock.getTakenTimePoint(timeInterval)));
 			row.add(stock.getVolume(timeInterval, true));
-			row.add(Util.format(stock.getStopLoss()) + " / " + Util.format(stock.getTakeProfit()));
+			row.add(stock.getAverageTakenPrice(timeInterval));
+			row.add(new MarketTableModel.Pair(stock.getStopLoss(), stock.getTakeProfit()));
 			row.add(stock.getMargin(timeInterval));
 			row.add(stock.isCommitted());
 			
@@ -1265,15 +1272,30 @@ class TakenStocksOfPrice extends JDialog {
 			Vector<String> columns = Util.newVector(0);
 			columns.add("Code");
 			columns.add("Market");
-			columns.add("Watch");
+			columns.add("Class");
 			columns.add("Buy");
-			columns.add("Date");
+			columns.add("Taken date");
 			columns.add("Volume");
+			columns.add("Taken price");
 			columns.add("Stop loss / take profit");
 			columns.add("Margin");
 			columns.add("Committed");
 			
 			return columns;
+		}
+
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			if (columnIndex == 0 || columnIndex == 1 || columnIndex == 2)
+				return super.getColumnClass(columnIndex);
+			else if (columnIndex == 3 || columnIndex == 9)
+				return Boolean.class;
+			else if (columnIndex == 4)
+				return MarketTableModel.Time.class;
+			else if (columnIndex == 7)
+				return MarketTableModel.Pair.class;
+			else
+				return Double.class;
 		}
 		
 	}

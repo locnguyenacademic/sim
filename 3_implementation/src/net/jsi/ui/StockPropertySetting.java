@@ -42,7 +42,12 @@ public class StockPropertySetting extends JDialog {
 	
 	
 	public StockPropertySetting(StockProperty property, Component comp) {
-		super(Util.getDialogForComponent(comp), "Settings stock property", true);
+		this(null, property, comp);
+	}
+	
+	
+	public StockPropertySetting(String code, StockProperty property, Component comp) {
+		super(Util.getDialogForComponent(comp), "Setting property" + (code != null && !code.isEmpty() ? " of " + code : ""), true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(350, 250);
 		setLocationRelativeTo(Util.getDialogForComponent(this));

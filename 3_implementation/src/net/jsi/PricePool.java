@@ -258,8 +258,10 @@ public class PricePool implements Serializable, Cloneable {
 			
 			List<StockGroup> groups = Util.newList(0);
 			groups.addAll(m.groups);
-			MarketImpl pm = m.getWatchMarket();
-			if (pm != null) groups.addAll(pm.groups);
+			MarketImpl watchMarket = m.getWatchMarket();
+			if (watchMarket != null) groups.addAll(watchMarket.groups);
+			MarketImpl trashMarket = m.getTrashMarket();
+			if (trashMarket != null) groups.addAll(trashMarket.groups);
 			
 			for (StockGroup group : groups) {
 				if (!group.code().equals(code())) continue;
