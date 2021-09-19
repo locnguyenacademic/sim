@@ -110,15 +110,10 @@ public class Investor extends JFrame implements MarketListener {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				super.windowClosed(e);
-				
-				MarketPanel[] mps = getMarketPanels();
-				for (MarketPanel mp : mps) mp.dispose();
 			}
 		});
 		
-		addMouseListener(new MouseAdapter() {
-			
-		});
+		addMouseListener(new MouseAdapter() {});
 		
 		setSize(800, 600);
 		setLocationRelativeTo(null);
@@ -131,18 +126,6 @@ public class Investor extends JFrame implements MarketListener {
 
 		body = new InvestorTabbedPane();
 		add(body, BorderLayout.CENTER);
-		for (int i = 0; i < universe.size(); i++) {
-			Market market = universe.get(i);
-			MarketPanel mp = createMarketPanel(market);
-			body.add(market.getName(), mp);
-		}
-		
-		body.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				onTabChanged();
-			}
-		});
 		
 		JPanel footer = new JPanel(new BorderLayout());
 		add(footer, BorderLayout.SOUTH);
@@ -173,9 +156,72 @@ public class Investor extends JFrame implements MarketListener {
 		lblTotalHedge = new JLabel();
 		footerRow.add(lblTotalHedge);
 
-		//update();
+		initialize(new File(StockProperty.WORKING_DIRECTORY));
+		
+		body.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				onTabChanged();
+			}
+		});
 	}
 	
+	
+	@Override
+	public void dispose() {
+		MarketPanel[] mps = getMarketPanels();
+		for (MarketPanel mp : mps) mp.dispose();
+
+		super.dispose();
+	}
+
+
+	protected void initialize(File workingDir) {
+		for (int i = 0; i < universe.size(); i++) {
+			Market market = universe.get(i);
+			MarketPanel mp = createMarketPanel(market);
+			body.add(market.getName(), mp);
+		}
+
+		if (workingDir.exists() && workingDir.isFile()) {
+			addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
+			setVisible(true);
+			return;
+		}
+		
+		try {
+			if (!workingDir.exists()) {
+				File parent = workingDir.getParentFile();
+				if (parent != null && !parent.exists()) parent.mkdir();
+				workingDir.mkdir();
+			}
+		}
+		catch (Exception e) { }
+		
+		if (!workingDir.exists()) {
+			addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
+			return;
+		}
+		
+		String[] fileNames = workingDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name == null || name.isEmpty()) return false;
+				int index = name.lastIndexOf(".");
+				if (index < 0) return false;
+				String ext = name.substring(index + 1);
+				return ext != null && !ext.isEmpty() && ext.compareToIgnoreCase(StockProperty.JSI_EXT) == 0;
+			}
+		});
+		
+		this.curDir = workingDir;
+		for (String fileName : fileNames) {
+			addMarketPanel(new File(workingDir, fileName));
+		}
+		
+		if (getMarketPanels().length == 0) addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
+	}
+
 	
 	private void update() {
 		long timeViewInterval = universe.getTimeViewInterval();
@@ -621,13 +667,13 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	private void onSaveAs() {
+	protected void onSaveAs() {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp != null) mp.onSave();
 	}
 	
 	
-	private void onSave() {
+	protected void onSave() {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp == null)
 			return;
@@ -1361,47 +1407,12 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
+	
+	
 	public static void main(String[] args) {
-		Investor investor = new Investor(new UniverseImpl());
-		File workingJSIDir = new File(StockProperty.WORKING_DIRECTORY);
-		if (workingJSIDir.exists() && workingJSIDir.isFile()) {
-			investor.addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
-			investor.setVisible(true);
-			return;
-		}
+		UniverseImpl universe = new UniverseImpl();
+		Investor investor = new Investor(universe);
 		
-		try {
-			if (!workingJSIDir.exists()) {
-				File parent = workingJSIDir.getParentFile();
-				if (parent != null && !parent.exists()) parent.mkdir();
-				workingJSIDir.mkdir();
-			}
-		}
-		catch (Exception e) { }
-		
-		if (!workingJSIDir.exists()) {
-			investor.addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
-			investor.setVisible(true);
-			return;
-		}
-		
-		String[] fileNames = workingJSIDir.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				if (name == null || name.isEmpty()) return false;
-				int index = name.lastIndexOf(".");
-				if (index < 0) return false;
-				String ext = name.substring(index + 1);
-				return ext != null && !ext.isEmpty() && ext.compareToIgnoreCase(StockProperty.JSI_EXT) == 0;
-			}
-		});
-		
-		investor.curDir = workingJSIDir;
-		for (String fileName : fileNames) {
-			investor.addMarketPanel(new File(workingJSIDir, fileName));
-		}
-		
-		if (investor.getMarketPanels().length == 0) investor.addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
 		investor.setVisible(true);
 	}
 	

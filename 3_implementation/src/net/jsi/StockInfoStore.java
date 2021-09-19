@@ -115,6 +115,22 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 
 	
+	public void sync(StockInfoStore otherStore) {
+		Set<String> otherCodes = otherStore.codes();
+		for (String otherCode : otherCodes) {
+			StockInfo otherInfo = otherStore.get(otherCode);
+			StockInfo thisInfo = this.getCreate(otherCode);
+			thisInfo.sync(otherInfo);
+		}
+		
+		Set<String> thisCodes = Util.newSet(0);
+		thisCodes.addAll(this.codes());
+		for (String thisCode : thisCodes) {
+			if (otherStore.get(thisCode) == null) this.remove(thisCode);
+		}
+	}
+	
+	
 	protected static PricePool getPricePool(String code) {
 		if (pricePools.containsKey(code))
 			return pricePools.get(code);

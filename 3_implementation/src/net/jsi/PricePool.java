@@ -311,6 +311,33 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 
+	protected boolean sync(PricePool otherPricePool, int maxPriceCount) {
+		if (!this.code().equals(otherPricePool.code())) return false;
+		this.unitBias = otherPricePool.unitBias;
+		
+		int n = otherPricePool.size();
+		for (int i = n - 1; i >= 0; i--) {
+			Price otherPrice = otherPricePool.getByIndex(i);
+			Price thisPrice = this.getByTimePoint(otherPrice.getTime());
+			if (thisPrice == null)
+				this.add(otherPrice, maxPriceCount);
+			else
+				thisPrice.copy(otherPrice);
+		}
+		
+		n = this.size();
+		List<Price> removedPrices = Util.newList(0);
+		for (int i = n - 1; i >= 0; i--) {
+			Price thisPrice = this.getByIndex(i);
+			if (otherPricePool.lookup(thisPrice.getTime()) < 0)
+				removedPrices.add(thisPrice);
+		}
+		for (Price removedPrice : removedPrices) this.remove(removedPrice);
+		
+		return true;
+	}
+	
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

@@ -7,6 +7,9 @@
  */
 package net.jsi;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -443,6 +446,66 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+
+	private Market newMarket(File file) {
+		if (file == null || !file.exists() || file.isDirectory()) return null;
+		String fileName = file.getName();
+		if (fileName == null || fileName.isEmpty()) return null;
+		
+		String marketName = null;
+		int index = fileName.lastIndexOf(".");
+		if (index < 0)
+			marketName = fileName;
+		else
+			marketName = fileName.substring(0, index);
+		if (marketName == null | marketName.isEmpty()) return null;
+		
+		MarketImpl market = (MarketImpl)newMarket(marketName, getLeverage(), getUnitBias());
+        try {
+        	FileReader reader = new FileReader(file);
+        	market.open(reader);
+        	reader.close();
+        	return market;
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
+        
+        return null;
+	}
+
+	
+	@SuppressWarnings("unused")
+	private void open(File workingDir) {
+		if (workingDir.exists() && workingDir.isFile()) return;
+		try {
+			if (!workingDir.exists()) {
+				File parent = workingDir.getParentFile();
+				if (parent != null && !parent.exists()) parent.mkdir();
+				workingDir.mkdir();
+			}
+		}
+		catch (Exception e) { }
+		if (!workingDir.exists()) return;
+		
+		String[] fileNames = workingDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name == null || name.isEmpty()) return false;
+				int index = name.lastIndexOf(".");
+				if (index < 0) return false;
+				String ext = name.substring(index + 1);
+				return ext != null && !ext.isEmpty() && ext.compareToIgnoreCase(StockProperty.JSI_EXT) == 0;
+			}
+		});
+		
+		for (String fileName : fileNames) {
+			File file = new File(workingDir, fileName);
+			Market market = newMarket(file);
+			if (market != null) add(market);
+		}
 	}
 
 

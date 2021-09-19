@@ -179,6 +179,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	protected void sync(StockProperty otherProperty) {
+		set(otherProperty);
+	}
+	
+	
 	private Set<String> getDefaultPropertiesKeys() {
 		Set<String> keys = Util.newSet(0);
 		keys.add(MAX_PRICE_COUNT_FIELD);

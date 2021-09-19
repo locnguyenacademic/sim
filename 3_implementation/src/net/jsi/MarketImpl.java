@@ -439,7 +439,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	protected boolean remove(StockGroup group) {
+	public boolean remove(StockGroup group) {
 		return groups.remove(group);
 	}
 	
