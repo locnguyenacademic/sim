@@ -9,6 +9,7 @@ package net.jsi;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.List;
@@ -443,6 +444,35 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 
+	public void setBasicInfo(Universe other, boolean removeRedundant) {
+		setTimeViewInterval(other.getTimeViewInterval());
+		setTimeValidInterval(other.getTimeValidInterval());
+		
+		if (removeRedundant) defaultStockCodes.clear();
+		addDefaultStockCodes(other.getDefaultStockCodes());
+		
+		if (removeRedundant) defaultCategories.clear();
+		addDefaultCategories(other.getDefaultCategories());
+	}
+	
+	
+	public void setBasicInfo(UniverseRemote other, boolean removeRedundant) {
+		try {
+			setTimeViewInterval(other.getTimeViewInterval());
+			setTimeValidInterval(other.getTimeValidInterval());
+			
+			if (removeRedundant) defaultStockCodes.clear();
+			addDefaultStockCodes(other.getDefaultStockCodes());
+			
+			if (removeRedundant) defaultCategories.clear();
+			addDefaultCategories(other.getDefaultCategories());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
@@ -465,7 +495,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		MarketImpl market = (MarketImpl)newMarket(marketName, getLeverage(), getUnitBias());
         try {
         	FileReader reader = new FileReader(file);
-        	market.open(reader);
+        	market.read(reader);
         	reader.close();
         	return market;
         }
@@ -477,8 +507,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 	
-	@SuppressWarnings("unused")
-	private void open(File workingDir) {
+	@Override
+	public void open(File workingDir) {
 		if (workingDir.exists() && workingDir.isFile()) return;
 		try {
 			if (!workingDir.exists()) {
@@ -508,5 +538,62 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		}
 	}
 
+
+	@Override
+	public void save(File workingDir) {
+		if (workingDir.exists() && workingDir.isFile()) return;
+		try {
+			if (!workingDir.exists()) {
+				File parent = workingDir.getParentFile();
+				if (parent != null && !parent.exists()) parent.mkdir();
+				workingDir.mkdir();
+			}
+		}
+		catch (Exception e) { }
+		if (!workingDir.exists()) return;
+		
+		for (int i = 0; i < size(); i++) {
+			MarketImpl market = c(get(i));
+			if (market == null) continue;
+			
+			try {
+				File file = new File(workingDir, market.getName() + "." + StockProperty.JSI_EXT);
+				FileWriter writer = new FileWriter(file);
+				market.write(writer);
+				writer.close();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+
+	@Override
+	public boolean sync(UniverseRemote remoteUniverse, boolean removeRedundant) {
+		try {
+			if (!this.getName().equals(remoteUniverse.getName())) return false;
+			this.setBasicInfo(remoteUniverse, removeRedundant);
+			
+			List<String> marketNames = remoteUniverse.getMarketNames();
+			for (String marketName : marketNames) {
+				Market remoteMarket = remoteUniverse.getMarket(marketName);
+				if (remoteMarket == null || !(remoteMarket instanceof MarketImpl)) continue;
+				
+				Market market = newMarket(remoteMarket.getName(), remoteMarket.getLeverage(), remoteMarket.getUnitBias());
+				if (market instanceof MarketImpl) ((MarketImpl)market).sync(remoteMarket, removeRedundant);
+				this.add(market);
+			}
+			
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 
 }

@@ -1,49 +1,69 @@
 package net.jsi.adapter;
 
-import java.rmi.RemoteException;
-
 import javax.swing.JOptionPane;
 
 import net.hudup.core.client.Connector;
+import net.hudup.core.client.ExtraService;
+import net.hudup.core.client.PowerServer;
 import net.hudup.core.client.Server;
-import net.hudup.server.ext.MultitaskServer;
-import net.jsi.remote.UniverseExt;
-import net.jsi.remote.UniverseRemote;
-import net.jsi.remote.ui.InvestorExt;
+import net.hudup.server.ext.ExtraMultitaskService;
+import net.jsi.Universe;
+import net.jsi.UniverseImpl;
+import net.jsi.UniverseRemote;
+import net.jsi.ui.InvestorExt;
 
-public class Investor {
+public class Investor extends InvestorExt {
 
 	
-	public Investor() {
+	private static final long serialVersionUID = 1L;
 
+
+	public Investor(Universe universe, UniverseRemote remoteUniverse) {
+		super(universe, remoteUniverse);
+	}
+
+
+	public Investor(Universe universe) {
+		super(universe);
 	}
 
 
 	public static void main(String[] args) {
-		final Connector connector = Connector.connect();
-		Server server = connector.getServer();
-		if (server == null || !(server instanceof MultitaskServer)) {
-			JOptionPane.showMessageDialog(null, "Imposible to connect server", "Imposible to connect server", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		MultitaskServer mserver = (MultitaskServer)server;
-		UniverseRemote remoteUniverse = null;
-		UniverseExt universe = new UniverseExt();
 		try {
-			remoteUniverse = mserver.getInvestor();
-			universe.sync(remoteUniverse);
+			final Connector connector = Connector.connect();
+			Server server = connector.getServer();
+			if (server == null || !(server instanceof PowerServer)) {
+				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nSo, running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+				net.jsi.ui.Investor.main(args);
+				return;
+			}
+			
+			ExtraService extraService = ((PowerServer)server).getExtraService();
+			if (extraService == null || !(extraService instanceof ExtraMultitaskService)) {
+				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nSo, running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+				net.jsi.ui.Investor.main(args);
+				return;
+			}
+	
+			ExtraMultitaskService mserver = (ExtraMultitaskService)extraService;
+			UniverseRemote remoteUniverse = null;
+			UniverseImpl universe = new UniverseImpl();
+			try {
+				remoteUniverse = mserver.getInvestor();
+				universe.sync(remoteUniverse, false);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				net.jsi.ui.Investor.main(args);
+				return;
+			}
+			
+			new Investor(universe, remoteUniverse).setVisible(true);
 		}
-		catch (RemoteException e) {
-			JOptionPane.showMessageDialog(null, "Cannot retrieve remote investor", "Cannot retrieve remote investor", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-			return;
+		catch (Exception e) {
+			net.jsi.ui.Investor.main(args);
 		}
 		
-		InvestorExt investor = new InvestorExt(universe, remoteUniverse);
-		
-		investor.setVisible(true);
-
 	}
 
 	

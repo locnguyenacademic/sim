@@ -793,7 +793,7 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	protected boolean open(Reader reader) {
         try {
-        	boolean ret = m().open(reader);
+        	boolean ret = m().read(reader);
         	update();
         	
             return ret;
@@ -808,7 +808,7 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	protected boolean save(Writer writer) {
         try {
-        	boolean ret = m().save(writer);
+        	boolean ret = m().write(writer);
         	writer.flush();
             return ret;
         }

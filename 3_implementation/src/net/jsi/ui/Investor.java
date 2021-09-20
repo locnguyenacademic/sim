@@ -1407,13 +1407,8 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
-	
-	
 	public static void main(String[] args) {
-		UniverseImpl universe = new UniverseImpl();
-		Investor investor = new Investor(universe);
-		
-		investor.setVisible(true);
+		new Investor(new UniverseImpl()).setVisible(true);
 	}
 	
 	

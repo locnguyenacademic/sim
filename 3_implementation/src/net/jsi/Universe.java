@@ -7,6 +7,7 @@
  */
 package net.jsi;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -67,5 +68,26 @@ public interface Universe extends Market, Serializable, Cloneable {
 	
 	Market getPlaceMarket(String name);
 	
+	
+	void setTimeViewInterval(long timeViewInterval);
+
+		
+	void setTimeValidInterval(long timeValidInterval);
+	
+	
+	void setBasicInfo(Universe other, boolean removeRedundant);
+	
+	
+	void setBasicInfo(UniverseRemote other, boolean removeRedundant);
+
+		
+	void open(File workingDir);
+
+	
+	void save(File workingDir);
+
+	
+	boolean sync(UniverseRemote remoteUniverse, boolean removeRedundant);
+
 	
 }

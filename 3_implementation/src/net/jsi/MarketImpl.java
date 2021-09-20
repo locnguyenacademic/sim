@@ -662,6 +662,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setUnitBias(refUnitBias);
+		
+		MarketImpl placeMarket = getPlaceMarket();
+		if (placeMarket != null && placeMarket != this) placeMarket.setUnitBias(refUnitBias);
+		
+		MarketImpl trashMarket = getTrashMarket();
+		if (trashMarket != null && trashMarket != this) trashMarket.setUnitBias(refUnitBias);
 	}
 	
 	
@@ -698,6 +704,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setLeverage(refLeverage);
+		
+		MarketImpl placeMarket = getPlaceMarket();
+		if (placeMarket != null && placeMarket != this) placeMarket.setLeverage(refUnitBias);
+		
+		MarketImpl trashMarket = getTrashMarket();
+		if (trashMarket != null && trashMarket != this) trashMarket.setLeverage(refUnitBias);
 	}
 	
 	
@@ -741,8 +753,26 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		MarketImpl watchMarket = getWatchMarket();
 		if (watchMarket != null && watchMarket != this) watchMarket.setTimeStartPoint(timeStartPoint);
+		
+		MarketImpl placeMarket = getPlaceMarket();
+		if (placeMarket != null && placeMarket != this) placeMarket.setTimeStartPoint(timeStartPoint);
+		
+		MarketImpl trashMarket = getTrashMarket();
+		if (trashMarket != null && trashMarket != this) trashMarket.setTimeStartPoint(timeStartPoint);
 	}
 
+	
+	protected void setBasicInfo(MarketImpl market) {
+		this.setTimeViewInterval(market.getTimeViewInterval());
+		this.setTimeValidInterval(market.getTimeValidInterval());
+		this.setTimeStartPoint(market.getTimeStartPoint());
+		this.setLeverage(market.getLeverage());
+		this.setUnitBias(market.getUnitBias());
+		this.setBalanceBase(market.getBalanceBase());
+		this.setBalanceBias(market.getBalanceBias());
+		this.setMarginFee(market.getMarginFee());
+	}
+	
 	
 	@Override
 	public List<String> getSupportStockCodes() {
@@ -809,6 +839,110 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	public boolean sync(Market otherMarket, boolean removeRedundant) {
+		MarketImpl other = null;
+		if (otherMarket instanceof MarketImpl)
+			other = (MarketImpl)otherMarket;
+		else {
+			Universe u = this.getNearestUniverse();
+			other = u != null ? (MarketImpl)u.c(otherMarket) : null;
+		}
+		if (other == null) return false;
+		
+		sync(this, other, true, removeRedundant);
+		
+		if (this.getWatchMarket() != null && other.getWatchMarket() != null && this.getWatchMarket() != other.getWatchMarket())
+			sync(this.getWatchMarket(), other.getWatchMarket(), false, removeRedundant);
+		
+		if (this.getPlaceMarket() != null && other.getPlaceMarket() != null && this.getPlaceMarket() != other.getPlaceMarket())
+			sync(this.getPlaceMarket(), other.getPlaceMarket(), true, removeRedundant);
+		
+		if (this.getTrashMarket() != null && other.getTrashMarket() != null && this.getTrashMarket() != other.getTrashMarket())
+			sync(this.getTrashMarket(), other.getTrashMarket(), false, removeRedundant);
+		
+		this.setBasicInfo(other);
+		return true;
+	}
+	
+	
+	private static boolean sync(MarketImpl thisMarket, MarketImpl otherMarket, boolean syncStore, boolean removeRedundant) {
+		if (!thisMarket.getName().equals(otherMarket.getName())) return false;
+		if (syncStore) thisMarket.getStore().sync(otherMarket.getStore(), removeRedundant);
+		
+		for (int i = 0; i < otherMarket.size(); i++) {
+			StockGroup otherGroup = otherMarket.get(i);
+			String code = otherGroup.code();
+			boolean buy = otherGroup.isBuy();
+			
+			StockGroup thisGroup = thisMarket.get(code, buy);
+			if (thisGroup == null) thisGroup = newGroup(thisMarket, code, buy);
+			for (int j = 0; j < otherGroup.size(); j++) {
+				StockImpl otherStock = otherMarket.c(otherGroup.get(j));
+				if (otherStock == null) continue;
+				
+				long takenTimePoint = otherStock.getTakenTimePoint(0);
+				StockImpl thisStock = thisMarket.c(thisGroup.get(takenTimePoint));
+				if (thisStock == null) {
+					Stock added = thisMarket.addStock(code, buy, otherStock.getLeverage(), otherStock.getVolume(0, true), takenTimePoint);
+					thisStock = thisMarket.c(added);
+				}
+				else {
+					thisStock.setVolume(otherStock.getVolume(0, true));
+					if (thisStock.getTakenTimePoint(0) != takenTimePoint) thisStock.take(0, takenTimePoint);
+				}
+				if (thisStock != null) thisStock.setExtraInfo(otherStock);
+			}
+		}
+		
+		if (!removeRedundant) return true;
+		
+		List<StockGroup> removedGroups = Util.newList(0);
+		for (int i = 0; i < thisMarket.size(); i++) {
+			StockGroup thisGroup = thisMarket.get(i);
+			String code = thisGroup.code();
+			boolean buy = thisGroup.isBuy();
+
+			StockGroup otherGroup = otherMarket.get(code, buy);
+			if (otherGroup == null) {
+				removedGroups.add(thisGroup);
+				continue;
+			}
+			
+			for (int j = 0; j < thisGroup.size(); j++) {
+				StockImpl thisStock = thisMarket.c(thisGroup.get(j));
+				if (thisStock == null) continue;
+				
+				long takenTimePoint = thisStock.getTakenTimePoint(0);
+				StockImpl otherStock = otherMarket.c(otherGroup.get(takenTimePoint));
+				if (otherStock == null) thisGroup.remove(thisStock);
+			}
+			
+			if (thisGroup.size() == 0) removedGroups.add(thisGroup);
+		}
+		
+		for (StockGroup removedGroup : removedGroups) thisMarket.remove(removedGroup);
+		
+		return true;
+	}
+
+	
+	private static StockGroup newGroup(Market thisMarket, String code, boolean buy) {
+		StockInfo info = thisMarket.getStore().getCreate(code);
+		if (info == null) return null;
+		
+		StockGroup group = new StockGroup(code, buy) {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Market getSuperMarket() {
+				return thisMarket;
+			}
+		};
+		
+		return group;
+	}
+
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
@@ -957,7 +1091,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public boolean open(Reader in) {
+	public boolean read(Reader in) {
 		reset();
 		
 		long timeViewInterval = StockProperty.TIME_VIEW_INTERVAL;
@@ -1248,7 +1382,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	public boolean save(Writer out) {
+	public boolean write(Writer out) {
 		try {
 			BufferedWriter writer = new BufferedWriter(out);
 			

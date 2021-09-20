@@ -311,7 +311,7 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 
-	protected boolean sync(PricePool otherPricePool, int maxPriceCount) {
+	protected boolean sync(PricePool otherPricePool, int maxPriceCount, boolean removeRedundant) {
 		if (!this.code().equals(otherPricePool.code())) return false;
 		this.unitBias = otherPricePool.unitBias;
 		
@@ -324,6 +324,8 @@ public class PricePool implements Serializable, Cloneable {
 			else
 				thisPrice.copy(otherPrice);
 		}
+		
+		if (!removeRedundant) return true;
 		
 		n = this.size();
 		List<Price> removedPrices = Util.newList(0);

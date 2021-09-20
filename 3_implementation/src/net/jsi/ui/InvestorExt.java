@@ -1,12 +1,12 @@
-package net.jsi.remote.ui;
+package net.jsi.ui;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 import net.jsi.Universe;
-import net.jsi.remote.UniverseRemote;
-import net.jsi.ui.Investor;
+import net.jsi.UniverseRemote;
 
-public class InvestorExt extends Investor {
+public class InvestorExt extends net.jsi.ui.Investor {
 
 
 	private static final long serialVersionUID = 1L;
@@ -17,9 +17,21 @@ public class InvestorExt extends Investor {
 	
 	public InvestorExt(Universe universe, UniverseRemote remoteUniverse) {
 		super(universe);
+		this.remoteUniverse = remoteUniverse;
 	}
 
 	
+	public InvestorExt(Universe universe) {
+		this(universe, null);
+	}
+	
+	
+	@Override
+	protected void initialize(File workingDir) {
+		super.initialize(workingDir);
+	}
+
+
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -43,7 +55,7 @@ public class InvestorExt extends Investor {
 
 	private void onSync() {
 		try {
-			this.remoteUniverse.sync(universe);
+			if (remoteUniverse != null) remoteUniverse.sync(universe, false);
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
