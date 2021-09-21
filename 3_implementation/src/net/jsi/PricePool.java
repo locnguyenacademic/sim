@@ -110,29 +110,39 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	protected Price getPriceWithin(long timeInterval) {
-		return getPriceWithin(prices, timeInterval);
+	protected Price getWithin(long timeInterval) {
+		return getWithin(prices, timeInterval);
 	}
 
 	
-	protected static Price getPriceWithin(List<Price> prices, long timeInterval) {
+	protected static Price getWithin(List<Price> prices, long timeInterval) {
 		if (prices == null || prices.size() == 0) return null;
 		if (timeInterval <= 0) return prices.get(0);
 
 		Price lastPrice = prices.get(prices.size() - 1);
 		int n = prices.size();
-		Price found = null;
 		for (int i = n - 1; i >= 0 ; i--) {
 			Price price = prices.get(i);
-			if (lastPrice.getTime() - price.getTime() >= timeInterval) {
-				found = price;
-				break;
-			}
+			if (lastPrice.getTime() - price.getTime() >= timeInterval) return price;
 		}
 		
-		return found != null ? found : prices.get(0);
+		return prices.get(0);
 	}
 
+	
+	protected Price getAround(long timePoint) {
+		if (prices.size() == 0 || timePoint < 0) return null;
+		if (timePoint == 0) return prices.get(0);
+		
+		int n = prices.size();
+		for (int i = n - 1; i >= 0 ; i--) {
+			Price price = prices.get(i);
+			if (price.getTime() <= timePoint) return price;
+		}
+		
+		return prices.get(0);
+	}
+	
 	
 	public List<Price> getInternals() {
 		return prices;
@@ -167,7 +177,7 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
-	protected boolean checkPricePossibleAdded2(long timePoint) {
+	protected boolean checkPricePossibleAddedPrev(long timePoint) {
 		if (prices.size() == 0) return false;
 		if (prices.size() == 1) return true;
 		

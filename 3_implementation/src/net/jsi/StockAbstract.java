@@ -105,7 +105,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 		Price price = getPrice();
 		if (price == null)
 			return false;
-		else if (info.checkPricePossibleAdded2(priceTimePoint)) {
+		else if (info.checkPricePossibleAddedPrev(priceTimePoint)) {
 			price.setTime(priceTimePoint);
 			return true;
 		}

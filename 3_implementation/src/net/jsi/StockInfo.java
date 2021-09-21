@@ -85,7 +85,7 @@ public class StockInfo implements Serializable, Cloneable {
 	
 	
 	public Price getPriceWithin(long timeInterval) {
-		return pricePool.getPriceWithin(timeInterval);
+		return pricePool.getWithin(timeInterval);
 	}
 	
 	
@@ -109,8 +109,8 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
-	protected boolean checkPricePossibleAdded2(long timePoint) {
-		return pricePool.checkPricePossibleAdded2(timePoint);
+	protected boolean checkPricePossibleAddedPrev(long timePoint) {
+		return pricePool.checkPricePossibleAddedPrev(timePoint);
 	}
 
 	
