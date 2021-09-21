@@ -1031,10 +1031,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double volume = stock.getVolume(market.getTimeViewInterval(), false);
 		if (price == null || volume == 0) return false;
 		
-		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
 		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
 		if (added != null) {
+			placeMarket.getStore().get(added.code()).sync(market.getStore().get(added.code()), 10);
+			price = added.getPrice(); 
+			price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL); //To avoid immediate placing.
+			
 			added.setExtraInfo(stock);
 			return true;
 		}

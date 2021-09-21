@@ -10,9 +10,8 @@ import net.hudup.server.ext.ExtraMultitaskService;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
-import net.jsi.ui.InvestorExt;
 
-public class Investor extends InvestorExt {
+public class Investor extends net.jsi.ui.Investor {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -33,15 +32,15 @@ public class Investor extends InvestorExt {
 			final Connector connector = Connector.connect();
 			Server server = connector.getServer();
 			if (server == null || !(server instanceof PowerServer)) {
-				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nSo, running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
-				net.jsi.ui.Investor.main(args);
+				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+				new net.jsi.ui.Investor(new UniverseImpl()).setVisible(true);
 				return;
 			}
 			
 			ExtraService extraService = ((PowerServer)server).getExtraService();
 			if (extraService == null || !(extraService instanceof ExtraMultitaskService)) {
-				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nSo, running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
-				net.jsi.ui.Investor.main(args);
+				JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+				new net.jsi.ui.Investor(new UniverseImpl()).setVisible(true);
 				return;
 			}
 	
@@ -49,19 +48,19 @@ public class Investor extends InvestorExt {
 			UniverseRemote remoteUniverse = null;
 			UniverseImpl universe = new UniverseImpl();
 			try {
-				remoteUniverse = mserver.getInvestor();
+				remoteUniverse = mserver.getUniverseRemote();
 				universe.sync(remoteUniverse, false);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				net.jsi.ui.Investor.main(args);
+				new net.jsi.ui.Investor(new UniverseImpl()).setVisible(true);
 				return;
 			}
 			
 			new Investor(universe, remoteUniverse).setVisible(true);
 		}
-		catch (Exception e) {
-			net.jsi.ui.Investor.main(args);
+		catch (Throwable e) {
+			new net.jsi.ui.Investor(new UniverseImpl()).setVisible(true);
 		}
 		
 	}

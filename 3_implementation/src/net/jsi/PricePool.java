@@ -206,7 +206,8 @@ public class PricePool implements Serializable, Cloneable {
 		if (maxPriceCount > 0) {
 			int index = prices.size() - maxPriceCount;
 			if (index > 0) {
-				List<Price> subList = prices.subList(index, prices.size());
+				List<Price> subList = Util.newList(0);
+				subList.addAll(prices.subList(index, prices.size()));
 				prices.clear();
 				prices.addAll(subList);
 			}

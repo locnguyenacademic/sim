@@ -1,7 +1,6 @@
 package net.hudup.server.ext;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -12,8 +11,8 @@ import net.hudup.core.client.PowerServer;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.xURI;
 import net.hudup.server.PowerServerConfig;
-import net.jsi.StockProperty;
 import net.jsi.Universe;
+import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
 import net.jsi.UniverseRemoteImpl;
 import net.jsi.adapter.Investor;
@@ -45,18 +44,27 @@ public class MultitaskServer extends ExtendedServer {
 
 	@Override
 	protected ExtraService createExtraService() {
-		return new ExtraMultitaskServiceImpl(new File(StockProperty.WORKING_DIRECTORY), config.getServerPort());
+		try {
+			return new ExtraMultitaskServiceImpl(this);
+		}
+		catch (Throwable e) {
+			LogUtil.trace(e);
+		}
+		
+		return null;
 	}
 	
 	
 	/**
-	 * Getting investor.
-	 * @return remote universe as investor.
+	 * Getting remote universe.
+	 * @return remote universe.
 	 */
-	protected UniverseRemote getInvestor() {
-		if (extraService == null || !(extraService instanceof ExtraMultitaskService)) return null;
+	protected UniverseRemote getUniverseRemote() {
 		try {
-			return ((ExtraMultitaskService)extraService).getInvestor();
+			if (extraService == null || !(extraService instanceof ExtraMultitaskService))
+				return null;
+			else
+				return ((ExtraMultitaskService)extraService).getUniverseRemote();
 		}
 		catch (Exception e) {
 			LogUtil.trace(e);
@@ -66,14 +74,24 @@ public class MultitaskServer extends ExtendedServer {
 	}
 	
 	
+	/**
+	 * Getting universe.
+	 * @return universe.
+	 */
 	protected Universe getUniverse() {
-		UniverseRemote investor = getInvestor();
-		if (investor == null)
+		try {
+			UniverseRemote remoteUniverse = getUniverseRemote();
+			if (remoteUniverse == null)
+				return null;
+			else if (remoteUniverse instanceof UniverseRemoteImpl)
+				return ((UniverseRemoteImpl)remoteUniverse).getUniverse();
+			else
+				return null;
+		}
+		catch (Exception e) {
+			LogUtil.trace(e);
 			return null;
-		else if (investor instanceof UniverseRemoteImpl)
-			return ((UniverseRemoteImpl)investor).getUniverse();
-		else
-			return null;
+		}
 	}
 	
 	
@@ -102,8 +120,16 @@ public class MultitaskServer extends ExtendedServer {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								try {
-									Universe universe = getUniverse();
-									if (universe != null) new Investor(universe).setVisible(true);
+									UniverseRemote remoteUniverse = null;
+									Universe universe = null;
+									if (connectInfo.bindUri == null)
+										universe = getUniverse();
+									else {
+										universe = new UniverseImpl();
+										remoteUniverse = getUniverseRemote();
+									}
+
+									if (universe != null) new Investor(universe, remoteUniverse).setVisible(true);
 								}
 								catch (Exception ex) {
 									LogUtil.trace(ex);

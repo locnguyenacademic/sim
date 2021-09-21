@@ -150,6 +150,15 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
+	protected boolean sync(StockInfo otherInfo, int maxPriceCount) {
+		if (!this.code().equals(otherInfo.code())) return false;
+		
+		this.leverage = otherInfo.leverage;
+		this.property.sync(otherInfo.getProperty());
+		return this.pricePool.sync(otherInfo.pricePool, maxPriceCount, true);
+	}
+
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

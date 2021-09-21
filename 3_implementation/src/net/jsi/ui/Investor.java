@@ -63,6 +63,7 @@ import net.jsi.StockInfoStore;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
+import net.jsi.UniverseRemote;
 import net.jsi.Util;
 
 public class Investor extends JFrame implements MarketListener {
@@ -72,6 +73,9 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	protected Universe universe = null;
+	
+	
+	protected UniverseRemote remoteUniverse = null;
 	
 	
 	protected JTabbedPane body;
@@ -102,8 +106,14 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	public Investor(Universe universe) {
+		this(universe, null);
+	}
+	
+	
+	public Investor(Universe universe, UniverseRemote remoteUniverse) {
 		super("JSI - Stock/forex investment manager");
 		this.universe = universe;
+		this.remoteUniverse = remoteUniverse;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -171,6 +181,8 @@ public class Investor extends JFrame implements MarketListener {
 	public void dispose() {
 		MarketPanel[] mps = getMarketPanels();
 		for (MarketPanel mp : mps) mp.dispose();
+
+		onSync();
 
 		super.dispose();
 	}
@@ -669,7 +681,10 @@ public class Investor extends JFrame implements MarketListener {
 	
 	protected void onSaveAs() {
 		MarketPanel mp = getSelectedMarketPanel();
-		if (mp != null) mp.onSave();
+		if (mp != null) {
+			mp.onSave();
+			onSync();
+		}
 	}
 	
 	
@@ -679,13 +694,27 @@ public class Investor extends JFrame implements MarketListener {
 			return;
 		else if (mp.getFile() != null) {
 			boolean ret = mp.save(mp.getFile());
-			if (ret)
+			if (ret) {
+				onSync();
 				JOptionPane.showMessageDialog(this, "Success to save market \"" + mp.getMarket().getName() + "\"", "Save market", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
-		else
+		else {
 			mp.onSave();
+			onSync();
+		}
 	}
 	
+	
+	private void onSync() {
+		try {
+			if (remoteUniverse != null) remoteUniverse.sync(universe);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	private void report() {
 		JOptionPane.showMessageDialog(this, "This function not implemented yet");

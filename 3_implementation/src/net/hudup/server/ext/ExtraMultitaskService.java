@@ -4,6 +4,8 @@ import java.io.File;
 import java.rmi.RemoteException;
 
 import net.hudup.core.client.ExtraService;
+import net.hudup.core.client.ExtraServiceAbstract;
+import net.hudup.core.client.PowerServer;
 import net.hudup.core.logistic.LogUtil;
 import net.jsi.StockProperty;
 import net.jsi.UniverseImpl;
@@ -21,11 +23,11 @@ public interface ExtraMultitaskService extends ExtraService {
 
 	
 	/**
-	 * Getting remote universe as investor.
-	 * @return remote universe as investor.
-	 * @throws RemoteException
+	 * Getting remote universe.
+	 * @return remote universe.
+	 * @throws RemoteException if any error raises.
 	 */
-	UniverseRemote getInvestor() throws RemoteException;
+	UniverseRemote getUniverseRemote() throws RemoteException;
 	
 	
 }
@@ -39,41 +41,33 @@ public interface ExtraMultitaskService extends ExtraService {
  * @version 1.0
  *
  */
-class ExtraMultitaskServiceImpl implements ExtraMultitaskService {
+class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMultitaskService {
 
 	
 	/**
-	 * Remote universe as the investor.
+	 * Default serial version UID.
 	 */
-	protected UniverseRemoteImpl investor = null;
-	
-	
+	private static final long serialVersionUID = 1L;
+
+
 	/**
-	 * Working directory.
+	 * Remote universe.
 	 */
-	protected File workingDir = null;
-	
-	
-	/**
-	 * Server port.
-	 */
-	protected int serverPort = 0;
+	protected UniverseRemoteImpl remoteUniverse = null;
 	
 	
 	/**
 	 * Constructor with working directory and server port.
-	 * @param workingDir working directory.
-	 * @param serverPort server port.
+	 * @param server power server.
 	 */
-	public ExtraMultitaskServiceImpl(File workingDir, int serverPort) {
-		this.workingDir = workingDir;
-		this.serverPort = serverPort;
+	public ExtraMultitaskServiceImpl(PowerServer server) {
+		super(server);
 	}
 	
 	
 	@Override
-	public UniverseRemote getInvestor() throws RemoteException {
-		return investor;
+	public UniverseRemote getUniverseRemote() throws RemoteException {
+		return remoteUniverse;
 	}
 
 
@@ -86,22 +80,37 @@ class ExtraMultitaskServiceImpl implements ExtraMultitaskService {
 			LogUtil.trace(e);
 		}
 		
-		this.investor = new UniverseRemoteImpl(new UniverseImpl());
-		this.investor.open(workingDir);
-		this.investor.export(serverPort);
+		remoteUniverse = new UniverseRemoteImpl(new UniverseImpl()) {
+			@Override
+			protected boolean isAdminAccount() {
+				return getThisService().isAdminAccount();
+			}
+		};
+		remoteUniverse.open(new File(StockProperty.WORKING_DIRECTORY));
+		remoteUniverse.export(server.getPort());
 
 		return true;
 	}
 	
 	
+	/**
+	 * Get this extra service.
+	 * @return this extra service.
+	 */
+	private ExtraMultitaskServiceImpl getThisService() {
+		return this;
+	}
+	
+	
 	@Override
 	public void close() throws Exception {
-		if (investor != null) {
-			investor.save(new File(StockProperty.WORKING_DIRECTORY));
-			investor.unexport();
+		if (remoteUniverse != null) {
+			if (isAdminAccount()) remoteUniverse.save(new File(StockProperty.WORKING_DIRECTORY));
+			remoteUniverse.unexport();
 		}
-		investor = null;
+		remoteUniverse = null;
 	}
 
-	
+
+
 }

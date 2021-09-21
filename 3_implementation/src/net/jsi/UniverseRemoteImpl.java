@@ -68,7 +68,12 @@ public class UniverseRemoteImpl implements UniverseRemote {
 
 
 	@Override
-	public synchronized boolean sync(Universe otherUniverse, boolean removeRedundant) throws RemoteException {
+	public synchronized boolean sync(Universe otherUniverse) throws RemoteException {
+		return sync(otherUniverse, isAdminAccount());
+	}
+
+
+	protected synchronized boolean sync(Universe otherUniverse, boolean removeRedundant) {
 		if (otherUniverse == null || !universe.getName().equals(otherUniverse.getName())) return false;
 		universe.setBasicInfo(otherUniverse, removeRedundant);
 		
@@ -88,7 +93,7 @@ public class UniverseRemoteImpl implements UniverseRemote {
 		return true;
 	}
 
-
+	
 	public synchronized void open(File workingDir) {
 		universe.open(workingDir);
 	}
@@ -111,8 +116,13 @@ public class UniverseRemoteImpl implements UniverseRemote {
 	}
 
 
-	public Universe getUniverse() {
+	public synchronized Universe getUniverse() {
 		return universe;
+	}
+	
+	
+	protected boolean isAdminAccount() {
+		return false;
 	}
 	
 	
