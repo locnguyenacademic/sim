@@ -9,11 +9,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import net.jsi.Market;
+import net.jsi.MarketImpl;
 import net.jsi.Price;
 import net.jsi.Stock;
 import net.jsi.StockGroup;
 import net.jsi.StockImpl;
+import net.jsi.StockInfoStore;
 import net.jsi.StockProperty;
+import net.jsi.Universe;
 import net.jsi.Util;
 
 public class MarketPlaceTable extends MarketTable {
@@ -453,6 +456,90 @@ class MarketPlaceDialog extends MarketDialog {
 
 
 }
+
+
+
+class MarketPlacePanel2 extends MarketPlacePanel {
+
+
+	private static final long serialVersionUID = 1L;
+
+	
+	protected StockInfoStore prevStore;
+	
+	
+	public MarketPlacePanel2(Market market, boolean group, MarketListener superListener) {
+		super(market, group, superListener);
+	}
+
+	
+	@Override
+	protected MarketTable createMarketTable(Market market, boolean group, MarketListener superListener) {
+		this.prevStore = null;
+		if (market == null) return null;
+		
+		Universe  u = market.getNearestUniverse();
+		MarketImpl m = u != null ? u.c(market) : null;
+		if (m == null) return new MarketPlaceTable(market, group, superListener);
+		
+		try {
+			MarketImpl dualMarket = u.c(m.getDualMarket());
+			if (dualMarket != null) {
+				this.prevStore = m.getStore().pricePoolSync();
+				m.getStore().cutPrices(m.getTimeViewInterval());
+				m.getStore().sync(dualMarket.getStore(), m.getTimeViewInterval(), false);
+				return new MarketPlaceTable(m, group, superListener);
+			}
+			else
+				return new MarketPlaceTable(market, group, superListener);
+		}
+		catch (Throwable e) {
+			this.prevStore = null;
+			e.printStackTrace();
+		}
+		
+		return new MarketPlaceTable(market, group, superListener);
+	}
+
+
+	@Override
+	protected void dispose() {
+		if (prevStore != null)
+			tblMarket.getMarket().getStore().sync(prevStore, 0, true);
+	}
+
+
+}
+
+
+
+class MarketPlaceDialog2 extends MarketPlaceDialog {
+
+	
+	private static final long serialVersionUID = 1L;
+	
+	
+	public MarketPlaceDialog2(Market market, boolean group, MarketListener superListener, Component parent) {
+		super(market, group, superListener, parent);
+	}
+
+
+	@Override
+	protected MarketPanel createMarketPanel(Market market, boolean group, MarketListener superListener) {
+		return new MarketPlacePanel2(market, group, superListener);
+	}
+
+
+	@Override
+	public void dispose() {
+		paneMarket.dispose();
+		super.dispose();
+	}
+
+
+}
+
+
 
 
 

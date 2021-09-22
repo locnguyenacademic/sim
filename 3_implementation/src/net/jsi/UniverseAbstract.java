@@ -571,7 +571,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public boolean sync(UniverseRemote remoteUniverse, boolean removeRedundant) {
+	public boolean sync(UniverseRemote remoteUniverse, long timeInterval, boolean removeRedundant) {
 		try {
 			if (!this.getName().equals(remoteUniverse.getName())) return false;
 			this.setBasicInfo(remoteUniverse, removeRedundant);
@@ -582,7 +582,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 				if (remoteMarket == null || !(remoteMarket instanceof MarketImpl)) continue;
 				
 				Market market = newMarket(remoteMarket.getName(), remoteMarket.getLeverage(), remoteMarket.getUnitBias());
-				if (market instanceof MarketImpl) ((MarketImpl)market).sync(remoteMarket, removeRedundant);
+				if (market instanceof MarketImpl) ((MarketImpl)market).sync(remoteMarket, timeInterval, removeRedundant);
 				this.add(market);
 			}
 			

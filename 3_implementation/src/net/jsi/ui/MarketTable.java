@@ -1790,7 +1790,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	private void placeStocks() {
-		MarketPlaceDialog dlgMarket = new MarketPlaceDialog(tblMarket.getPlaceMarket(), tblMarket.getModel2().isGroup(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
+		MarketPlaceDialog2 dlgMarket = new MarketPlaceDialog2(tblMarket.getPlaceMarket(), tblMarket.getModel2().isGroup(), StockProperty.RUNTIME_CASCADE ? tblMarket : null, this);
 		dlgMarket.setTitle("Place stocks for market " + tblMarket.getMarket().getName());
 		dlgMarket.setVisible(true);
 		
@@ -2130,6 +2130,9 @@ class MarketDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	
+	protected MarketPanel paneMarket = null;
+	
+	
 	protected JButton btnOK;
 	
 	
@@ -2159,8 +2162,8 @@ class MarketDialog extends JDialog {
 
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
-		MarketPanel mp = createMarketPanel(market, group, superListener);
-		body.add(mp, BorderLayout.CENTER);
+		paneMarket = createMarketPanel(market, group, superListener);
+		body.add(paneMarket, BorderLayout.CENTER);
 		
 		JPanel footer = new JPanel();
 		add(footer, BorderLayout.SOUTH);

@@ -708,7 +708,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	private void onSync() {
 		try {
-			if (remoteUniverse != null) remoteUniverse.sync(universe);
+			if (remoteUniverse != null) remoteUniverse.sync(universe, 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

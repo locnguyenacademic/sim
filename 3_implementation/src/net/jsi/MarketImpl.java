@@ -839,7 +839,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public boolean sync(Market otherMarket, boolean removeRedundant) {
+	public boolean sync(Market otherMarket, long timeInterval, boolean removeRedundant) {
 		MarketImpl other = null;
 		if (otherMarket instanceof MarketImpl)
 			other = (MarketImpl)otherMarket;
@@ -849,25 +849,25 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		}
 		if (other == null) return false;
 		
-		sync(this, other, true, removeRedundant);
+		sync(this, other, timeInterval, removeRedundant, true);
 		
 		if (this.getWatchMarket() != null && other.getWatchMarket() != null && this.getWatchMarket() != other.getWatchMarket())
-			sync(this.getWatchMarket(), other.getWatchMarket(), false, removeRedundant);
+			sync(this.getWatchMarket(), other.getWatchMarket(), timeInterval, removeRedundant, false);
 		
 		if (this.getPlaceMarket() != null && other.getPlaceMarket() != null && this.getPlaceMarket() != other.getPlaceMarket())
-			sync(this.getPlaceMarket(), other.getPlaceMarket(), true, removeRedundant);
+			sync(this.getPlaceMarket(), other.getPlaceMarket(), timeInterval, removeRedundant, true);
 		
 		if (this.getTrashMarket() != null && other.getTrashMarket() != null && this.getTrashMarket() != other.getTrashMarket())
-			sync(this.getTrashMarket(), other.getTrashMarket(), false, removeRedundant);
+			sync(this.getTrashMarket(), other.getTrashMarket(), timeInterval, removeRedundant, false);
 		
 		this.setBasicInfo(other);
 		return true;
 	}
 	
 	
-	private static boolean sync(MarketImpl thisMarket, MarketImpl otherMarket, boolean syncStore, boolean removeRedundant) {
+	private static boolean sync(MarketImpl thisMarket, MarketImpl otherMarket, long timeInterval, boolean removeRedundant, boolean syncStore) {
 		if (!thisMarket.getName().equals(otherMarket.getName())) return false;
-		if (syncStore) thisMarket.getStore().sync(otherMarket.getStore(), removeRedundant);
+		if (syncStore) thisMarket.getStore().sync(otherMarket.getStore(), timeInterval, removeRedundant);
 		
 		for (int i = 0; i < otherMarket.size(); i++) {
 			StockGroup otherGroup = otherMarket.get(i);
@@ -1031,18 +1031,28 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double volume = stock.getVolume(market.getTimeViewInterval(), false);
 		if (price == null || volume == 0) return false;
 		
+		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
 		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
 		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
 		if (added != null) {
-			placeMarket.getStore().get(added.code()).sync(market.getStore().get(added.code()), 10);
-			price = added.getPrice(); 
-			price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL); //To avoid immediate placing.
-			
 			added.setExtraInfo(stock);
 			return true;
 		}
 		else
 			return false;
+
+//		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
+//		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
+//		if (added != null) {
+//			placeMarket.getStore().get(added.code()).sync(market.getStore().get(added.code()), 10);
+//			price = added.getPrice(); 
+//			price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL); //To avoid immediate placing.
+//			
+//			added.setExtraInfo(stock);
+//			return true;
+//		}
+//		else
+//			return false;
 	}
 	
 	

@@ -322,13 +322,16 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 
-	protected boolean sync(PricePool otherPricePool, int maxPriceCount, boolean removeRedundant) {
+	protected boolean sync(PricePool otherPricePool, long timeInterval, int maxPriceCount, boolean removeRedundant) {
 		if (!this.code().equals(otherPricePool.code())) return false;
 		this.unitBias = otherPricePool.unitBias;
 		
 		int n = otherPricePool.size();
+		Price otherLastPrice = otherPricePool.getLast();
 		for (int i = n - 1; i >= 0; i--) {
 			Price otherPrice = otherPricePool.getByIndex(i);
+			if (timeInterval > 0 && otherLastPrice.getTime() - otherPrice.getTime() > timeInterval)
+				break;
 			Price thisPrice = this.getByTimePoint(otherPrice.getTime());
 			if (thisPrice == null)
 				this.add(otherPrice, maxPriceCount);
@@ -340,14 +343,29 @@ public class PricePool implements Serializable, Cloneable {
 		
 		n = this.size();
 		List<Price> removedPrices = Util.newList(0);
+		Price thisLastPrice = this.getLast();
 		for (int i = n - 1; i >= 0; i--) {
 			Price thisPrice = this.getByIndex(i);
+			if (timeInterval > 0 && thisLastPrice.getTime() - thisPrice.getTime() > timeInterval)
+				break;
 			if (otherPricePool.lookup(thisPrice.getTime()) < 0)
 				removedPrices.add(thisPrice);
 		}
 		for (Price removedPrice : removedPrices) this.remove(removedPrice);
 		
 		return true;
+	}
+	
+	
+	protected void cut(long timeInterval) {
+		List<Price> prices = Util.newList(0);
+		if (timeInterval <= 0)
+			prices.addAll(this.prices);
+		else
+			prices = gets(timeInterval);
+		
+		this.prices.clear();
+		this.prices.addAll(prices);
 	}
 	
 	

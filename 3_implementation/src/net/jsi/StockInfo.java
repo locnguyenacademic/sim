@@ -24,6 +24,11 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 	
+	private StockInfo(String code, boolean flag) {
+		this.pricePool = new PricePool(code);
+	}
+	
+	
 	protected PricePool referPricePool(String code) {
 		return StockInfoStore.getPricePool(code);
 	}
@@ -141,24 +146,50 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 
 
-	protected boolean sync(StockInfo otherInfo, boolean removeRedundant) {
+	private boolean setBasicInfo(StockInfo otherInfo) {
 		if (!this.code().equals(otherInfo.code())) return false;
 		
 		this.leverage = otherInfo.leverage;
 		this.property.sync(otherInfo.getProperty());
-		return this.pricePool.sync(otherInfo.pricePool, this.property.maxPriceCount, removeRedundant);
+		return true;
 	}
 	
 	
-	protected boolean sync(StockInfo otherInfo, int maxPriceCount) {
+	protected boolean sync(StockInfo otherInfo, long timeInterval, boolean removeRedundant) {
 		if (!this.code().equals(otherInfo.code())) return false;
 		
-		this.leverage = otherInfo.leverage;
-		this.property.sync(otherInfo.getProperty());
-		return this.pricePool.sync(otherInfo.pricePool, maxPriceCount, true);
+		setBasicInfo(otherInfo);
+		return this.pricePool.sync(otherInfo.pricePool, timeInterval, this.property.maxPriceCount, removeRedundant);
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private boolean sync(StockInfo otherInfo, long timeInterval, int maxPriceCount, boolean removeRedundant) {
+		if (!this.code().equals(otherInfo.code())) return false;
+		
+		setBasicInfo(otherInfo);
+		this.property.maxPriceCount = maxPriceCount;
+		return this.pricePool.sync(otherInfo.pricePool, timeInterval, maxPriceCount, removeRedundant);
 	}
 
 	
+	protected void cutPrices(long timeInterval) {
+		pricePool.cut(timeInterval);
+	}
+
+	
+	protected StockInfo pricePoolSync() {
+		StockInfo si = new StockInfo(this.code(), false);
+		
+		si.setBasicInfo(this);
+		boolean synced = si.pricePool.sync(this.pricePool, 0, 0, true);
+		if (synced)
+			return si;
+		else
+			return null;
+	}
+	
+		
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

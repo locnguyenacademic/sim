@@ -17,7 +17,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	private static Map<String, PricePool> placePricePools = Util.newMap(0);
 	
 	
-	protected Map<String, StockInfo> stores = Util.newMap(0);
+	private Map<String, StockInfo> stores = Util.newMap(0);
 	
 	
 	public StockInfoStore() {
@@ -115,12 +115,12 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 
 	
-	protected void sync(StockInfoStore otherStore, boolean removeRedundant) {
+	public void sync(StockInfoStore otherStore, long timeInterval, boolean removeRedundant) {
 		Set<String> otherCodes = otherStore.codes();
 		for (String otherCode : otherCodes) {
 			StockInfo otherInfo = otherStore.get(otherCode);
 			StockInfo thisInfo = this.getCreate(otherCode);
-			thisInfo.sync(otherInfo, removeRedundant);
+			thisInfo.sync(otherInfo, timeInterval, removeRedundant);
 		}
 		
 		if (!removeRedundant) return;
@@ -130,6 +130,32 @@ public class StockInfoStore implements Serializable, Cloneable {
 		for (String thisCode : thisCodes) {
 			if (otherStore.get(thisCode) == null) this.remove(thisCode);
 		}
+	}
+	
+	
+	public void cutPrices(long timeInterval) {
+		Set<String> codes = codes();
+		for (String code : codes) {
+			StockInfo si = get(code);
+			si.cutPrices(timeInterval);
+		}
+	}
+
+	
+	public StockInfoStore pricePoolSync() {
+		StockInfoStore clonedStore = new StockInfoStore();
+		Set<String> codes = codes();
+		for (String code : codes) {
+			try {
+				StockInfo clonedInfo = get(code).pricePoolSync();
+				if (clonedInfo != null) clonedStore.set(code, clonedInfo);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return clonedStore;
 	}
 	
 	

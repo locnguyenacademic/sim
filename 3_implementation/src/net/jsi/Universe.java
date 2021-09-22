@@ -87,7 +87,7 @@ public interface Universe extends Market, Serializable, Cloneable {
 	void save(File workingDir);
 
 	
-	boolean sync(UniverseRemote remoteUniverse, boolean removeRedundant);
+	boolean sync(UniverseRemote remoteUniverse, long timeInterval, boolean removeRedundant);
 
 	
 }

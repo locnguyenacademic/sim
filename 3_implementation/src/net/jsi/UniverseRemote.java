@@ -22,7 +22,7 @@ public interface UniverseRemote extends Remote {
 	public List<String> getDefaultCategories() throws RemoteException;
 
 		
-	boolean sync(Universe otherUniverse) throws RemoteException;
+	boolean sync(Universe otherUniverse, long timeInterval) throws RemoteException;
 
 	
 	List<String> getMarketNames() throws RemoteException;

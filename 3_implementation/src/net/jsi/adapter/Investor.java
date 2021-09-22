@@ -49,7 +49,7 @@ public class Investor extends net.jsi.ui.Investor {
 			UniverseImpl universe = new UniverseImpl();
 			try {
 				remoteUniverse = mserver.getUniverseRemote();
-				universe.sync(remoteUniverse, false);
+				universe.sync(remoteUniverse, 0, false);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

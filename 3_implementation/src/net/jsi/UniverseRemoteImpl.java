@@ -68,12 +68,12 @@ public class UniverseRemoteImpl implements UniverseRemote {
 
 
 	@Override
-	public synchronized boolean sync(Universe otherUniverse) throws RemoteException {
-		return sync(otherUniverse, isAdminAccount());
+	public synchronized boolean sync(Universe otherUniverse, long timeInterval) throws RemoteException {
+		return sync(otherUniverse, timeInterval, isAdminAccount());
 	}
 
 
-	protected synchronized boolean sync(Universe otherUniverse, boolean removeRedundant) {
+	protected synchronized boolean sync(Universe otherUniverse, long timeInterval, boolean removeRedundant) {
 		if (otherUniverse == null || !universe.getName().equals(otherUniverse.getName())) return false;
 		universe.setBasicInfo(otherUniverse, removeRedundant);
 		
@@ -85,7 +85,7 @@ public class UniverseRemoteImpl implements UniverseRemote {
 				market = universe.c(newMarket(otherMarket.getName(), otherMarket.getLeverage(), otherMarket.getUnitBias()));
 			
 			if (market != null) {
-				market.sync(otherMarket, removeRedundant);
+				market.sync(otherMarket, timeInterval, removeRedundant);
 				if (universe.lookup(market.getName()) < 0) universe.add(market);
 			}
 		}
