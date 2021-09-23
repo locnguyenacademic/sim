@@ -486,7 +486,7 @@ class MarketPlacePanel2 extends MarketPlacePanel {
 			MarketImpl dualMarket = u.c(m.getDualMarket());
 			if (dualMarket != null) {
 				this.prevStore = m.getStore().pricePoolSync();
-				m.getStore().cutPrices(m.getTimeViewInterval());
+				//m.getStore().cutPrices(m.getTimeViewInterval());
 				m.getStore().sync(dualMarket.getStore(), m.getTimeViewInterval(), false);
 				return new MarketPlaceTable(m, group, superListener);
 			}
