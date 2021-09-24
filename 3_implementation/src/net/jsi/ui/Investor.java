@@ -10,6 +10,7 @@ package net.jsi.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -27,6 +28,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.rmi.Naming;
+import java.rmi.Remote;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +47,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -51,8 +55,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
@@ -64,6 +70,7 @@ import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
+import net.jsi.UniverseRemoteGetter;
 import net.jsi.Util;
 
 public class Investor extends JFrame implements MarketListener {
@@ -1436,8 +1443,100 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
+	public static void start(String[] args) {
+		JDialog connector = new JDialog((Frame)null, "Connect to server", true);
+		connector.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		connector.setSize(300, 200);
+		connector.setLocationRelativeTo(null);
+		connector.setLayout(new BorderLayout());
+		
+		JPanel header = new JPanel(new BorderLayout());
+		connector.add(header, BorderLayout.NORTH);
+		
+		JPanel left = new JPanel(new GridLayout(0, 1));
+		header.add(left, BorderLayout.WEST);
+		
+		left.add(new JLabel("Host:"));
+		left.add(new JLabel("Port:"));
+		left.add(new JLabel("User name:"));
+		left.add(new JLabel("Password:"));
+
+		JPanel right = new JPanel(new GridLayout(0, 1));
+		header.add(right, BorderLayout.CENTER);
+		
+		JTextField txtHost = new JTextField("localhost");
+		right.add(txtHost);
+		
+		JFormattedTextField txtPort = new JFormattedTextField(new NumberFormatter());
+		txtPort.setValue(10151);
+		right.add(txtPort);
+		
+		JTextField txtUsername = new JTextField("admin");
+		right.add(txtUsername);
+
+		JPasswordField txtPassword = new JPasswordField("admin");
+		right.add(txtPassword);
+
+		
+		JPanel footer = new JPanel();
+		connector.add(footer, BorderLayout.SOUTH);
+		
+		JButton btnConnect = new JButton("Connect");
+		btnConnect.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String host = txtHost.getText().trim();
+				int port = txtPort.getValue() instanceof Number ? ( (Number) txtPort.getValue()).intValue() : 0; 
+				String username = txtUsername.getText();
+				@SuppressWarnings("deprecation")
+				String password = txtPassword.getText();
+
+				connector.dispose();
+
+				String uri = "rmi://" + host;
+				uri = port < 1 ? uri + "/" + "extragateway" : uri + ":" + port + "/" + "extragateway";
+
+				UniverseRemote remoteUniverse = null;
+				try {
+					Remote extraGateway = Naming.lookup(uri);
+					if (extraGateway != null && extraGateway instanceof UniverseRemoteGetter)
+						remoteUniverse = ((UniverseRemoteGetter)extraGateway).getUniverseRemote(username, password);
+				}
+				catch (Exception ex) {}
+				
+				if (remoteUniverse == null) {
+					JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+					new Investor(new UniverseImpl()).setVisible(true);
+				}
+				else {
+					UniverseImpl universe = new UniverseImpl();
+					universe.sync(remoteUniverse, 0, false);
+					new Investor(universe, remoteUniverse).setVisible(true);
+				}
+				
+			}
+		});
+		footer.add(btnConnect);
+		
+		JButton btnClose = new JButton("Close");
+		btnClose.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				connector.dispose();
+				JOptionPane.showMessageDialog(null, "Not to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.INFORMATION_MESSAGE);
+				new Investor(new UniverseImpl()).setVisible(true);
+			}
+		});
+		footer.add(btnClose);
+		
+		connector.setVisible(true);
+	}
+	
+	
 	public static void main(String[] args) {
-		new Investor(new UniverseImpl()).setVisible(true);
+		start(args);
 	}
 	
 	

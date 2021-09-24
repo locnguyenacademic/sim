@@ -1,21 +1,29 @@
 package net.hudup.server.ext;
 
 import java.awt.event.ActionEvent;
+import java.rmi.RemoteException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import net.hudup.core.client.ExtraService;
+import net.hudup.core.client.ExtraServiceAbstract;
+import net.hudup.core.client.Gateway;
 import net.hudup.core.client.PowerServer;
+import net.hudup.core.client.Server;
+import net.hudup.core.client.Service;
+import net.hudup.core.data.DataConfig;
+import net.hudup.core.logistic.Account;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.xURI;
 import net.hudup.server.PowerServerConfig;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
+import net.jsi.UniverseRemoteGetter;
 import net.jsi.UniverseRemoteImpl;
-import net.jsi.adapter.Investor;
+import net.jsi.ui.Investor;
 
 /**
  * This class represents the multi-task server.
@@ -45,7 +53,7 @@ public class MultitaskServer extends ExtendedServer {
 	@Override
 	protected ExtraService createExtraService() {
 		try {
-			return new ExtraMultitaskServiceImpl(this);
+			return new ExtraMultitaskService(this);
 		}
 		catch (Throwable e) {
 			LogUtil.trace(e);
@@ -55,6 +63,12 @@ public class MultitaskServer extends ExtendedServer {
 	}
 	
 	
+	@Override
+	protected Gateway createExtraGateway() {
+		return new ExtraMultitaskGateway();
+	}
+
+
 	/**
 	 * Getting remote universe.
 	 * @return remote universe.
@@ -92,6 +106,53 @@ public class MultitaskServer extends ExtendedServer {
 			LogUtil.trace(e);
 			return null;
 		}
+	}
+	
+	
+	/**
+	 * This class represents the extra gateway.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 *
+	 */
+	protected class ExtraMultitaskGateway implements Gateway, UniverseRemoteGetter {
+
+		/**
+		 * Default serial version UID.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Server getRemoteServer(String account, String password) throws RemoteException {
+			return null;
+		}
+
+		@Override
+		public Service getRemoteService(String account, String password) throws RemoteException {
+			return null;
+		}
+
+		@Override
+		public UniverseRemote getUniverseRemote(String account, String password) throws RemoteException {
+			boolean validated = getThisServer().validateAccount(account, password, DataConfig.ACCOUNT_ACCESS_PRIVILEGE);
+			if (!validated) return null;
+			
+			ExtraService extraService = getExtraService();
+			if (extraService != null && extraService instanceof ExtraServiceAbstract)
+				((ExtraServiceAbstract)extraService).setAccount(account, password, getPrivileges(account, password));
+			
+			return getThisServer().getUniverseRemote();
+		}
+		
+	}
+	
+	
+	/**
+	 * Getting this server.
+	 * @return this server.
+	 */
+	private MultitaskServer getThisServer() {
+		return this;
 	}
 	
 	

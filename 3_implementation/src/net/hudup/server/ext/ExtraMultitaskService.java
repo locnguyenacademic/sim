@@ -3,7 +3,6 @@ package net.hudup.server.ext;
 import java.io.File;
 import java.rmi.RemoteException;
 
-import net.hudup.core.client.ExtraService;
 import net.hudup.core.client.ExtraServiceAbstract;
 import net.hudup.core.client.PowerServer;
 import net.hudup.core.logistic.LogUtil;
@@ -13,35 +12,13 @@ import net.jsi.UniverseRemote;
 import net.jsi.UniverseRemoteImpl;
 
 /**
- * This interface represents a extra multi-task service.
+ * This class represents a extra multi-task service.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public interface ExtraMultitaskService extends ExtraService {
-
-	
-	/**
-	 * Getting remote universe.
-	 * @return remote universe.
-	 * @throws RemoteException if any error raises.
-	 */
-	UniverseRemote getUniverseRemote() throws RemoteException;
-	
-	
-}
-
-
-
-/**
- * This class is an implementation of a extra multi-task service.
- * 
- * @author Loc Nguyen
- * @version 1.0
- *
- */
-class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMultitaskService {
+public class ExtraMultitaskService extends ExtraServiceAbstract {
 
 	
 	/**
@@ -60,13 +37,16 @@ class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMul
 	 * Constructor with working directory and server port.
 	 * @param server power server.
 	 */
-	public ExtraMultitaskServiceImpl(PowerServer server) {
+	public ExtraMultitaskService(PowerServer server) {
 		super(server);
 	}
 	
-	
-	@Override
-	public UniverseRemote getUniverseRemote() throws RemoteException {
+
+	/**
+	 * Getting remote universe.
+	 * @return remote universe.
+	 */
+	public UniverseRemote getUniverseRemote() {
 		return remoteUniverse;
 	}
 
@@ -81,6 +61,8 @@ class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMul
 		}
 		
 		remoteUniverse = new UniverseRemoteImpl(new UniverseImpl()) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected boolean isAdminAccount() {
 				return getThisService().isAdminAccount();
@@ -97,7 +79,7 @@ class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMul
 	 * Get this extra service.
 	 * @return this extra service.
 	 */
-	private ExtraMultitaskServiceImpl getThisService() {
+	private ExtraMultitaskService getThisService() {
 		return this;
 	}
 	
@@ -110,7 +92,6 @@ class ExtraMultitaskServiceImpl extends ExtraServiceAbstract implements ExtraMul
 		}
 		remoteUniverse = null;
 	}
-
 
 
 }

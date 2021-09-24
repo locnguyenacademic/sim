@@ -11,6 +11,7 @@ import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
 
+@Deprecated
 public class Investor extends net.jsi.ui.Investor {
 
 	

@@ -31,7 +31,7 @@ public interface UniverseRemote extends Remote {
 	Market getMarket(String marketName) throws RemoteException;
 	
 	
-	UniverseRemote export(int serverPort) throws RemoteException;
+	boolean export(int serverPort) throws RemoteException;
 
 
 	boolean unexport() throws RemoteException;

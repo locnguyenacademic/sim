@@ -1,17 +1,21 @@
 package net.jsi;
 
 import java.io.File;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class UniverseRemoteImpl implements UniverseRemote {
+public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneable {
+
+
+	private static final long serialVersionUID = 1L;
 
 
 	protected Universe universe = null;
 	
 	
-	private UniverseRemote exportedStub = null;
+	protected boolean exported = false;
 	
 	
 	public UniverseRemoteImpl(Universe universe) {
@@ -127,24 +131,22 @@ public class UniverseRemoteImpl implements UniverseRemote {
 	
 	
 	@Override
-	public UniverseRemote export(int serverPort) throws RemoteException {
-		if (exportedStub != null) return exportedStub;
+	public boolean export(int serverPort) throws RemoteException {
+		if (exported) return false;
 		try {
-			exportedStub = (UniverseRemote)UnicastRemoteObject.exportObject(this, serverPort);
+			return (exported = (UnicastRemoteObject.exportObject(this, serverPort) != null));
 		}
 		catch (Exception e) {e.printStackTrace();}
 		
-		return exportedStub;
+		return false;
 	}
 
 
 	@Override
 	public boolean unexport() throws RemoteException {
-		if (exportedStub != null) {
+		if (exported) {
 			try {
-	        	UnicastRemoteObject.unexportObject(this, true);
-	        	exportedStub = null;
-	        	return true;
+	        	return !(exported = !UnicastRemoteObject.unexportObject(this, true));
 			}
 			catch (Throwable e) {e.printStackTrace();}
 			return false;
