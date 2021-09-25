@@ -126,7 +126,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			@Override
 			public StockInfoStore getStore() {
 				Universe u = getNearestUniverse();
-				return u != null ? u.getPlaceStore() : null;
+				return u != null ? u.getCreatePlaceStore(getName()) : null;
 			}
 
 		};
@@ -827,6 +827,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
+	public StockInfoStore getStore() {
+		Universe u = getNearestUniverse();
+		return u != null ? u.getCreateStore(getName()) : null;
+	}
+
+	
 	public void sortByCode() {
 		Collections.sort(groups, new Comparator<StockGroup>() {
 
@@ -926,7 +932,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	private static StockGroup newGroup(Market thisMarket, String code, boolean buy) {
+	private static StockGroup newGroup(MarketImpl thisMarket, String code, boolean buy) {
 		StockInfo info = thisMarket.getStore().getCreate(code);
 		if (info == null) return null;
 		
@@ -1104,6 +1110,24 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	private static double fromLeverage(String leverageText) {
+		double leverage = StockProperty.LEVERAGE;
+		try {
+			leverage = Double.parseDouble(leverageText);
+			if (leverage != 0 && leverage > 1) leverage = 1.0 / leverage;
+		}
+		catch (Exception e) {}
+		
+		return leverage;
+	}
+	
+	
+	private static String toLeverage(double leverage) {
+		if (leverage != 0 && leverage < 1) leverage = 1.0 / leverage;
+		return Util.format(leverage);
+	}
+	
+	
 	public boolean read(Reader in) {
 		reset();
 		
@@ -1172,7 +1196,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 							timeViewInterval = Long.parseLong(fields[3]);
 							timeValidInterval = Long.parseLong(fields[4]);
 							this.setTimeStartPoint(Long.parseLong(fields[5]));
-							this.refLeverage = Double.parseDouble(fields[6]);
+							this.refLeverage = fromLeverage(fields[6]);
 							this.setName(fields[7]);
 						}
 						else if (!readInfo2) {
@@ -1307,10 +1331,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private void readPrices(MarketImpl market, String[] fields) {
 		Universe u = market.getNearestUniverse();
 		int marketIndex = u.lookup(market.getName());
-		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
+		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
 		
 		String code = fields[0];
-		double leverage = Double.parseDouble(fields[1]);
+		double leverage = fromLeverage(fields[1]);
 		double price = Double.parseDouble(fields[2]);
 		double lowPrice = Double.parseDouble(fields[3]);
 		double highPrice = Double.parseDouble(fields[4]);
@@ -1358,7 +1382,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private static void readStocks(MarketImpl market, String[] fields) {
 		String code = fields[0];
 		boolean buy = Boolean.parseBoolean(fields[1]);
-		double leverage = Double.parseDouble(fields[2]);
+		double leverage = fromLeverage(fields[2]);
 		double volume = Double.parseDouble(fields[3]);
 		double price = Double.parseDouble(fields[4]);
 		double lowPrice = Double.parseDouble(fields[5]);
@@ -1409,7 +1433,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				getTimeViewInterval() + ", " +
 				getTimeValidInterval() + ", " +
 				getTimeStartPoint() + ", " +
-				Util.format(refLeverage) + ", " + 
+				toLeverage(refLeverage) + ", " + 
 				getName() + "\n";
 			writer.write(info);
 			writer.write(StockProperty.NOTCODE1 + "\n");
@@ -1458,9 +1482,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	private static void writePrices(MarketImpl market, Writer writer) throws IOException {
-		Universe u = market.getNearestUniverse();
-		int marketIndex = u.lookup(market.getName());
-		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
+		//Universe u = market.getNearestUniverse();
+		//int marketIndex = u.lookup(market.getName());
+		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
 		
 		StockInfoStore store = market.getStore();
 		if (store == null) return;
@@ -1472,7 +1496,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				StringBuffer buffer = new StringBuffer();
 				
 				buffer.append(code + ", ");
-				buffer.append(Util.format(info.getLeverage()) + ", ");
+				buffer.append(toLeverage(info.getLeverage()) + ", ");
 				buffer.append(Util.format(price.get()) + ", ");
 				buffer.append(Util.format(price.getLow()) + ", ");
 				buffer.append(Util.format(price.getHigh()) + ", ");
@@ -1522,7 +1546,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				
 				buffer.append(stock.code() + ", ");
 				buffer.append(stock.isBuy() + ", ");
-				buffer.append(Util.format(stock.getLeverage()) + ", ");
+				buffer.append(toLeverage(stock.getLeverage()) + ", ");
 				buffer.append(Util.format(stock.getVolume(0, true)) + ", ");
 				
 				Price price = stock.getPrice();

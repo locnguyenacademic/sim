@@ -296,7 +296,7 @@ class RecTableModel extends DefaultTableModel {
 		if (unitBiases.containsKey(code))
 			return unitBiases.get(code);
 		else {
-			StockInfo info = market.getStore().get(code);
+			StockInfo info = m().getStore().get(code);
 			List<Price> prices = info != null ? info.getPrices(timeInterval) : Util.newList(0);
 			if (prices.size() == 0) return 0;
 			
@@ -320,7 +320,7 @@ class RecTableModel extends DefaultTableModel {
 	
 
 	protected double getROI(String code, long timeInterval) {
-		StockInfo info = market.getStore().get(code);
+		StockInfo info = m().getStore().get(code);
 		Price price = info != null ? info.getPriceWithin(timeInterval) : null;
 		if (price == null)
 			return 0;
@@ -332,7 +332,7 @@ class RecTableModel extends DefaultTableModel {
 	protected double getPositiveROISum(long timeInterval) {
 		if (!Double.isNaN(positiveROISum)) return positiveROISum;
 		
-		Set<String> codes = market.getStore().codes();
+		Set<String> codes = m().getStore().codes();
 		double roiSum = 0;
 		for (String code : codes) {
 			double roi = getROI(code, timeInterval);
@@ -364,7 +364,7 @@ class RecTableModel extends DefaultTableModel {
 		
 		Vector<Vector<Object>> data = Util.newVector(0);
 		List<String> codes = Util.newList(0);
-		codes.addAll(market.getStore().codes());
+		codes.addAll(m().getStore().codes());
 		Collections.sort(codes);
 
 		investedAmount = 0;
@@ -429,7 +429,7 @@ class RecTableModel extends DefaultTableModel {
 	
 	private Vector<Object> toRow(String code, long timeInterval) {
 		Vector<Object> row = Util.newVector(0);
-		StockInfo info = market.getStore().get(code);
+		StockInfo info = m().getStore().get(code);
 		if (info == null || info.getPriceCount() == 0) return null;
 		
 		Estimator estimator = createEstimator(code, timeInterval);
@@ -532,13 +532,13 @@ class RecTableModel extends DefaultTableModel {
 			
 			@Override
 			public List<Price> getPrices(long timeInterval) {
-				StockInfo info = market.getStore().get(code);
+				StockInfo info = m().getStore().get(code);
 				return info != null ? info.getPrices(timeInterval) : Util.newList(0);
 			}
 			
 			@Override
 			public Price getPrice() {
-				StockInfo info = market.getStore().get(code);
+				StockInfo info = m().getStore().get(code);
 				return info != null && info.getPriceCount() > 0 ? info.getLastPrice() : null;
 			}
 			
@@ -549,7 +549,7 @@ class RecTableModel extends DefaultTableModel {
 			
 			@Override
 			public double getLeverage() {
-				StockInfo info = market.getStore().get(code);
+				StockInfo info = m().getStore().get(code);
 				return info != null ? info.getLeverage() : StockProperty.LEVERAGE;
 			}
 			
@@ -560,7 +560,7 @@ class RecTableModel extends DefaultTableModel {
 			
 			@Override
 			public double getAverageTakenPrice(long timeInterval) {
-				StockInfo info = market.getStore().get(code);
+				StockInfo info = m().getStore().get(code);
 				if (info == null || info.getPricePool() == null) return 0;
 				
 				PricePool pool = info.getPricePool();

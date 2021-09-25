@@ -138,7 +138,7 @@ public class StockProperty implements Serializable, Cloneable {
 	public static boolean RUNTIME_CASCADE = false;
 
 
-	public static boolean LOOKUP_WHEN_READ_PRICES = true;
+	//public static boolean LOOKUP_WHEN_READ_PRICES = true;
 	
 	
 	public static String CATEGORY_UNDEFINED = "undefined";

@@ -186,7 +186,12 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
-	public boolean add(Price price, int maxPriceCount) {
+	public boolean add(Price price) {
+		return add(price, StockProperty.MAX_PRICE_COUNT);
+	}
+
+	
+	protected boolean add(Price price, int maxPriceCount) {
 		return add(price, maxPriceCount, true);
 	}
 	

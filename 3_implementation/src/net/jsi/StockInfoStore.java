@@ -159,18 +159,38 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected static PricePool getPricePool(String code) {
-		if (pricePools.containsKey(code))
-			return pricePools.get(code);
-		else {
-			PricePool pricePool = new PricePool(code);
-			pricePools.put(code, pricePool);
-			return pricePool;
-		}
+	protected static Set<String> getPricePoolCodes() {
+		return pricePools.keySet();
 	}
 	
 	
-	protected static PricePool getPlacePricePool(String code) {
+	protected static PricePool getPricePool(String code) {
+		if (pricePools.containsKey(code))
+			return pricePools.get(code);
+		else
+			return null;
+	}
+
+	
+	protected static PricePool getCreatePricePool(String code) {
+		PricePool pricePool = getPricePool(code);
+		if (pricePool != null) return pricePool;
+		
+		pricePool = new PricePool(code);
+		pricePools.put(code, pricePool);
+		return pricePool;
+	}
+	
+	
+	protected static PricePool removePricePool(String code) {
+		if (pricePools.containsKey(code))
+			return pricePools.remove(code);
+		else
+			return null;
+	}
+
+	
+	protected static PricePool getCreatePlacePricePool(String code) {
 		if (placePricePools.containsKey(code))
 			return placePricePools.get(code);
 		else {

@@ -1404,7 +1404,7 @@ public class Investor extends JFrame implements MarketListener {
 
 			double priceFactor = txtPriceFactor.getValue() instanceof Number ? ((Number)txtPriceFactor.getValue()).doubleValue() : 0;
 			if (priceFactor > 0 && priceFactor != 1) {
-				StockInfoStore store = universe.getStore();
+				StockInfoStore store = universe.getCreateStore(m.getName());
 				Set<String> allCodes = store.codes();
 				for (String code : allCodes) {
 					StockInfo info = store.get(code);
@@ -1519,7 +1519,7 @@ public class Investor extends JFrame implements MarketListener {
 		});
 		footer.add(btnConnect);
 		
-		JButton btnClose = new JButton("Close");
+		JButton btnClose = new JButton("Local");
 		btnClose.addActionListener(new ActionListener() {
 			
 			@Override

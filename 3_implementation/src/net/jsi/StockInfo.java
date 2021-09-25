@@ -30,7 +30,7 @@ public class StockInfo implements Serializable, Cloneable {
 	
 	
 	protected PricePool referPricePool(String code) {
-		return StockInfoStore.getPricePool(code);
+		return StockInfoStore.getCreatePricePool(code);
 	}
 	
 	

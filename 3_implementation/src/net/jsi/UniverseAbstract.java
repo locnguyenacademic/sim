@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class UniverseAbstract extends MarketAbstract implements Universe {
@@ -30,31 +31,10 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	protected Set<String> defaultCategories = Util.newSet(0);
 
 	
-	protected StockInfoStore store = new StockInfoStore();
+	protected Map<String, StockInfoStore> stores = Util.newMap(0);
 	
 	
-	protected StockInfoStore placeStore = new StockInfoStore() {
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected StockInfo create(String code) {
-			if (code == null || code.isEmpty()) return null;
-			StockInfo si = new StockInfo(code) {
-				
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				protected PricePool referPricePool(String code) {
-					return StockInfoStore.getPlacePricePool(code);
-				}
-				
-				
-			};
-			return set(code, si);
-		}
-		
-	};
+	protected Map<String, StockInfoStore> placeStores = Util.newMap(0);
 
 	
 	public UniverseAbstract() {
@@ -270,18 +250,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	@Override
 	public List<String> getSupportStockCodes() {
 		Set<String> codes = Util.newSet(0);
-		codes.addAll(getStore().codes());
-		
-		for (Market market : markets) {
-			MarketImpl m = c(market);
-			MarketImpl placed = m != null ? m.getPlaceMarket() : null;
-			if (placed == null) continue;
-			for (int i = 0; i < placed.size(); i++) {
-				StockGroup group = placed.get(i);
-				codes.add(group.code());
-			}
-		}
-
+		codes.addAll(StockInfoStore.getPricePoolCodes());
 		codes.addAll(defaultStockCodes);
 		return Util.sort(codes);
 	}
@@ -380,14 +349,62 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public StockInfoStore getStore() {
-		return store;
+	public StockInfoStore getCreateStore(String name) {
+		if (stores.containsKey(name))
+			return stores.get(name);
+		else {
+			StockInfoStore store = new StockInfoStore();
+			stores.put(name, store);
+			return store;
+		}
 	}
 	
 	
 	@Override
-	public StockInfoStore getPlaceStore() {
+	public StockInfoStore getCreatePlaceStore(String name) {
+		if (placeStores.containsKey(name)) return placeStores.get(name);
+
+		StockInfoStore placeStore = new StockInfoStore() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected StockInfo create(String code) {
+				if (code == null || code.isEmpty()) return null;
+				StockInfo si = new StockInfo(code) {
+					
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected PricePool referPricePool(String code) {
+						return StockInfoStore.getCreatePlacePricePool(code);
+					}
+					
+					
+				};
+				return set(code, si);
+			}
+			
+		};
+		placeStores.put(name, placeStore);
 		return placeStore;
+	}
+
+
+	@Override
+	public PricePool getPricePool(String code) {
+		return StockInfoStore.getPricePool(code);
+	}
+
+
+	@Override
+	public PricePool getCreatePricePool(String code) {
+		return StockInfoStore.getCreatePricePool(code);
+	}
+
+
+	@Override
+	public PricePool removePricePool(String code) {
+		return StockInfoStore.removePricePool(code);
 	}
 
 

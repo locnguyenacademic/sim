@@ -505,7 +505,7 @@ class MarketPlacePanel2 extends MarketPlacePanel {
 	@Override
 	protected void dispose() {
 		if (prevStore != null)
-			tblMarket.getMarket().getStore().sync(prevStore, 0, true);
+			tblMarket.m().getStore().sync(prevStore, 0, true);
 	}
 
 

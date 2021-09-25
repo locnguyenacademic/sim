@@ -14,7 +14,6 @@ import net.hudup.core.client.PowerServer;
 import net.hudup.core.client.Server;
 import net.hudup.core.client.Service;
 import net.hudup.core.data.DataConfig;
-import net.hudup.core.logistic.Account;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.xURI;
 import net.hudup.server.PowerServerConfig;

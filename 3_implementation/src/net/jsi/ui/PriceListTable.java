@@ -56,8 +56,6 @@ import net.jsi.Stock;
 import net.jsi.StockAbstract;
 import net.jsi.StockGroup;
 import net.jsi.StockImpl;
-import net.jsi.StockInfo;
-import net.jsi.StockInfoStore;
 import net.jsi.StockProperty;
 import net.jsi.TakenPrice;
 import net.jsi.Universe;
@@ -304,17 +302,7 @@ public class PriceListTable extends JTable {
 	
 	
 	public boolean update(String code) {
-		PricePool pricePool = null;
-		StockInfoStore store = u().getStore();
-		if (code == null)
-			pricePool = null;
-		else if (store == null)
-			pricePool = null;
-		else {
-			StockInfo si = store.get(code);
-			pricePool = si != null ? si.getPricePool() : null;
-		}
-		
+		PricePool pricePool = code != null ? u().getPricePool(code) : null;
 		boolean ret = getModel2().update(pricePool);
 		
 		if (getColumnModel().getColumnCount() > 0) {
@@ -931,10 +919,7 @@ class PriceList extends JDialog {
 		try {
 			double factor = Double.parseDouble(factorText);
 			if (factor > 0 && factor != 1) {
-				StockInfo info = universe.getStore().get(code);
-				if (info == null) return;
-				
-				List<Price> prices = info.getPricePool().getInternals();
+				List<Price> prices = universe.getPricePool(code).getInternals();
 				for (Price price : prices) price.applyFactor(factor);
 				
 				update(null, true);
@@ -963,8 +948,8 @@ class PriceList extends JDialog {
 		if (applied) {
 			String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 			if (code != null) {
-				StockInfo si = universe.getStore().get(code);
-				btnRemoveCode.setVisible(si == null || si.getPriceCount() == 0);
+				PricePool pricePool  = universe.getPricePool(code);
+				btnRemoveCode.setVisible(pricePool == null || pricePool.size() == 0);
 			}
 		}
 		this.applied = this.applied || applied;
@@ -984,10 +969,10 @@ class PriceList extends JDialog {
 		newCode = newCode.trim();
 		if (newCode.isEmpty()) return false;
 
-		StockInfo si = universe.getStore().get(newCode);
-		if (si != null) return false;
-		si = universe.getStore().getCreate(newCode);
-		if (si != null) {
+		PricePool pricePool = universe.getPricePool(newCode);
+		if (pricePool != null) return false;
+		pricePool = universe.getCreatePricePool(newCode);
+		if (pricePool != null) {
 			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
 			cmbCode.setModel(model);
 			
@@ -1009,13 +994,13 @@ class PriceList extends JDialog {
 		String removedCode = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (removedCode == null) return false;
 		
-		StockInfo si = universe.getStore().get(removedCode);
-		if (si == null)
+		PricePool pricelPool = universe.getPricePool(removedCode);
+		if (pricelPool == null)
 			return false;
-		else if (si.getPriceCount() > 0)
+		else if (pricelPool.size() > 0)
 			return false;
 		else {
-			universe.getStore().remove(removedCode);
+			universe.removePricePool(removedCode);
 			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
 			cmbCode.setModel(model);
 			update(null, true);
@@ -1029,8 +1014,8 @@ class PriceList extends JDialog {
 		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		btnRemoveCode.setVisible(false);
 		if (code != null) {
-			StockInfo si = universe.getStore().get(code);
-			if (si == null || si.getPriceCount() == 0) btnRemoveCode.setVisible(true);
+			PricePool pricePool = universe.getPricePool(code);
+			if (pricePool == null || pricePool.size() == 0) btnRemoveCode.setVisible(true);
 		}
 
 		Price input = tblPriceList.getLastRowPrice();
@@ -1045,10 +1030,10 @@ class PriceList extends JDialog {
 			String newCode = newPrice.getNewCode();
 			if (newCode == null) return false;
 			
-			StockInfo si = universe.getStore().get(newCode);
-			if (si != null) return false;
-			si = universe.getStore().getCreate(newCode);
-			if (!si.addPrice(output))
+			PricePool pricePool = universe.getPricePool(newCode);
+			if (pricePool != null) return false;
+			pricePool = universe.getCreatePricePool(newCode);
+			if (!pricePool.add(output))
 				return false;
 			else {
 				DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(universe.getSupportStockCodes().toArray(new String[] {}));
@@ -1088,8 +1073,8 @@ class PriceList extends JDialog {
 		
 		btnRemoveCode.setVisible(false);
 		if (code != null) {
-			StockInfo si = universe.getStore().get(code);
-			if (si == null || si.getPriceCount() == 0) btnRemoveCode.setVisible(true);
+			PricePool pricePool = universe.getPricePool(code);
+			if (pricePool == null || pricePool.size() == 0) btnRemoveCode.setVisible(true);
 		}
 	}
 	

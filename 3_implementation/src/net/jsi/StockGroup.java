@@ -510,7 +510,15 @@ public class StockGroup extends StockAbstract implements Market {
 	@Override
 	public StockInfoStore getStore() {
 		Market superMarket = getSuperMarket();
-		return superMarket != null ? superMarket.getStore() : null;
+		if (superMarket == null)
+			return null;
+		else if (superMarket instanceof MarketImpl)
+			return ((MarketImpl)superMarket).getStore();
+		else {
+			Universe u = getNearestUniverse();
+			MarketImpl m = u != null ? u.c(superMarket) : null;
+			return m != null ? m.getStore() : null;
+		}
 	}
 
 

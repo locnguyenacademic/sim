@@ -44,7 +44,7 @@ public final class Util {
 	public static String DATE_FORMAT = DATESIMPLE_FORMAT + " HH-mm-ss";
 			
 	
-	public static int DECIMAL_PRECISION = 4;
+	public static int DECIMAL_PRECISION = 5;
 
 	
 	/**

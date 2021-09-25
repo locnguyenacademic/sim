@@ -63,11 +63,23 @@ public interface Universe extends Market, Serializable, Cloneable {
 	Market getWatchMarket(String name);
 	
 	
-	StockInfoStore getPlaceStore();
-	
-	
 	Market getPlaceMarket(String name);
 	
+
+	StockInfoStore getCreateStore(String name);
+	
+	
+	StockInfoStore getCreatePlaceStore(String name);
+	
+	
+	PricePool getPricePool(String code);
+	
+	
+	PricePool getCreatePricePool(String code);
+
+	
+	PricePool removePricePool(String code);
+
 	
 	void setTimeViewInterval(long timeViewInterval);
 
