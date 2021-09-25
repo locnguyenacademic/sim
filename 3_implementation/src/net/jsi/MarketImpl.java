@@ -1344,14 +1344,16 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		StockInfo si = market.getStore().getCreate(code);
 		if (si == null) return;
-		if (marketIndex > 0 && si.getPrice(0, priceDate) != null)
-			return;
-		
-		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
-		p.setAlt(altPrice);
-		si.addPrice(p);
-		si.setLeverage(leverage);
-		si.setUnitBias(unitBias);
+		if (marketIndex > 0 && si.getPrice(0, priceDate) != null) {
+			si.setLeverage(leverage);
+		}
+		else {
+			Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
+			p.setAlt(altPrice);
+			si.addPrice(p);
+			si.setLeverage(leverage);
+			si.setUnitBias(unitBias);
+		}
 	}
 	
 	
