@@ -586,7 +586,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		}
 		else if (column == 1) {
 			if (aValue == null)
-				aValue = 0;
+				aValue = new Date();
 			else if (!(aValue instanceof Date)) {
 				try {
 					SimpleDateFormat df = new SimpleDateFormat(Util.DATE_FORMAT);
@@ -597,15 +597,58 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 				}
 			}
 		}
+		else if (column == 6) {
+			
+		}
 		else if (aValue == null)
 			aValue = Double.valueOf(0);
 		else if (!(aValue instanceof Number)) {
-			try {
-				aValue = Double.parseDouble(aValue.toString());
+			double value = 0;
+			if (aValue instanceof Number)
+				value = ((Number)aValue).doubleValue();
+			else {
+				try {
+					value = Double.parseDouble(aValue.toString());
+				}
+				catch (Exception e) {value = 0;}
 			}
-			catch (Exception e) {
-				aValue = Double.valueOf(0);
+			
+			double[] quad = getRowValuesAt(row);
+			switch (column) {
+			case 2:
+				quad[0] = value;
+				break;
+			case 3:
+				quad[1] = value;
+				break;
+			case 4:
+				quad[2] = value;
+				break;
+			case 5:
+				quad[3] = value;
+				break;
+			default:
+				break;
 			}
+			
+			double price = quad[0];
+			double low = quad[1];
+			double high = quad[2];
+			double alt = quad[3];
+			if (column == 5) {
+				if ((value != 0) && (alt < low || alt > high)) {
+					fireTableCellUpdated(row, column);
+					return;
+				}
+			}
+			else {
+				if (price < low || price > high) {
+					fireTableCellUpdated(row, column);
+					return;
+				}
+			}
+			
+			aValue = value;
 		}
 			
 		super.setValueAt(aValue, row, column);
@@ -664,6 +707,24 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		}
 		else
 			return null;
+	}
+	
+	
+	private double[] getRowValuesAt(int row) {
+		double[] quad = new double[] {0, 0, 0, 0};
+		Object price = getValueAt(row, 2);
+		if (price != null && price instanceof Number) quad[0] = ((Number)price).doubleValue();
+		
+		Object lowPrice = getValueAt(row, 3);
+		if (lowPrice != null && lowPrice instanceof Number) quad[1] = ((Number)lowPrice).doubleValue();
+		
+		Object highPrice = getValueAt(row, 4);
+		if (highPrice != null && highPrice instanceof Number) quad[2] = ((Number)highPrice).doubleValue();
+
+		Object altPrice = getValueAt(row, 5);
+		if (altPrice != null && altPrice instanceof Number) quad[3] = ((Number)altPrice).doubleValue();
+		
+		return quad;
 	}
 	
 	
@@ -1970,7 +2031,7 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		}
 		else if (column == 1) {
 			if (aValue == null)
-				aValue = 0;
+				aValue = new Date();
 			else if (!(aValue instanceof Date)) {
 				try {
 					SimpleDateFormat df = new SimpleDateFormat(Util.DATE_FORMAT);
@@ -1981,15 +2042,58 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 				}
 			}
 		}
+		else if (column == 6) {
+			
+		}
 		else if (aValue == null)
 			aValue = Double.valueOf(0);
-		else if (!(aValue instanceof Number)) {
-			try {
-				aValue = Double.parseDouble(aValue.toString());
+		else {
+			double value = 0;
+			if (aValue instanceof Number)
+				value = ((Number)aValue).doubleValue();
+			else {
+				try {
+					value = Double.parseDouble(aValue.toString());
+				}
+				catch (Exception e) {value = 0;}
 			}
-			catch (Exception e) {
-				aValue = Double.valueOf(0);
+			
+			double[] quad = getRowValuesAt(row);
+			switch (column) {
+			case 2:
+				quad[0] = value;
+				break;
+			case 3:
+				quad[1] = value;
+				break;
+			case 4:
+				quad[2] = value;
+				break;
+			case 5:
+				quad[3] = value;
+				break;
+			default:
+				break;
 			}
+			
+			double price = quad[0];
+			double low = quad[1];
+			double high = quad[2];
+			double alt = quad[3];
+			if (column == 5) {
+				if ((value != 0) && (alt < low || alt > high)) {
+					fireTableCellUpdated(row, column);
+					return;
+				}
+			}
+			else {
+				if (price < low || price > high) {
+					fireTableCellUpdated(row, column);
+					return;
+				}
+			}
+			
+			aValue = value;
 		}
 			
 		super.setValueAt(aValue, row, column);
@@ -2047,6 +2151,24 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 		}
 		else
 			return null;
+	}
+	
+	
+	private double[] getRowValuesAt(int row) {
+		double[] quad = new double[] {0, 0, 0, 0};
+		Object price = getValueAt(row, 2);
+		if (price != null && price instanceof Number) quad[0] = ((Number)price).doubleValue();
+		
+		Object lowPrice = getValueAt(row, 3);
+		if (lowPrice != null && lowPrice instanceof Number) quad[1] = ((Number)lowPrice).doubleValue();
+		
+		Object highPrice = getValueAt(row, 4);
+		if (highPrice != null && highPrice instanceof Number) quad[2] = ((Number)highPrice).doubleValue();
+
+		Object altPrice = getValueAt(row, 5);
+		if (altPrice != null && altPrice instanceof Number) quad[3] = ((Number)altPrice).doubleValue();
+		
+		return quad;
 	}
 	
 	

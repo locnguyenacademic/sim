@@ -56,6 +56,20 @@
 
 
 	<!--
+	Function: The Hudup framework.
+	Affected packages, classes: Over all Sim project.
+	Referred jars:
+	Source: http://www.locnguyen.net/st/products/hudup
+	Vendor: Loc Nguyen
+	Archive: working/projects/hudup-ext/3_implementation
+	Version: 12 build 2019.09.16
+	Status: using
+	Note:
+	-->
+	<property name="hudup.jar" value="${lib.home}/hudup.jar"/>
+
+
+	<!--
 	Function: The runtime library for Hudup framework.
 	Affected packages, classes: Over all Sim project.
 	Referred jars:
@@ -570,6 +584,7 @@
 		<then>
 			<jar destfile="${archive.home}/${product}-jsi.jar">
 	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
+				<zipfileset includes="net/hudup/core/client/**" src="${hudup.jar}"/>
 				<!--
 	    		<restrict>
 	     			<name name="**"/>
@@ -596,7 +611,8 @@
 
 			<jar destfile="${archive.home}/${product}-jsi.jar">
 	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
-	    		
+				<zipfileset includes="net/hudup/core/client/**" src="${hudup.jar}"/>
+
 				<manifest>
 					<attribute name="Main-Class" value="net.jsi.ui.Investor"/>
 				</manifest>

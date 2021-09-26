@@ -1503,7 +1503,7 @@ public class Investor extends JFrame implements MarketListener {
 					if (extraGateway != null && extraGateway instanceof UniverseRemoteGetter)
 						remoteUniverse = ((UniverseRemoteGetter)extraGateway).getUniverseRemote(username, password);
 				}
-				catch (Exception ex) {}
+				catch (Exception ex) {ex.printStackTrace();}
 				
 				if (remoteUniverse == null) {
 					JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
