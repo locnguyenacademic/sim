@@ -1330,8 +1330,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	private void readPrices(MarketImpl market, String[] fields) {
 		Universe u = market.getNearestUniverse();
-		int marketIndex = u.lookup(market.getName());
-		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
+		int marketCount = u != null ? u.size() : 0;
+		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
 		
 		String code = fields[0];
 		double leverage = fromLeverage(fields[1]);
@@ -1344,7 +1344,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		StockInfo si = market.getStore().getCreate(code);
 		if (si == null) return;
-		if (marketIndex > 0 && si.getPrice(0, priceDate) != null) {
+		if (marketCount > 0 && si.getPrice(0, priceDate) != null) {
 			si.setLeverage(leverage);
 		}
 		else {
@@ -1485,8 +1485,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	private static void writePrices(MarketImpl market, Writer writer) throws IOException {
 		//Universe u = market.getNearestUniverse();
-		//int marketIndex = u.lookup(market.getName());
-		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketIndex > 0) return;
+		//int marketCount = u != null ? u.size() : 0;
+		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
 		
 		StockInfoStore store = market.getStore();
 		if (store == null) return;
