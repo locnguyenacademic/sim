@@ -291,11 +291,11 @@ public class StockImpl extends StockAbstract {
 
 	@Override
 	public StockGroup getGroup() {
-		if (StockProperty.g == null) return null;
+		Universe g = UniverseImpl.g();
+		if (g == null) return null;
 		
-		for (int i = 0; i < StockProperty.g.size(); i++) {
-			Market market = StockProperty.g.get(i);
-			MarketImpl m = StockProperty.g.c(market);
+		for (int i = 0; i < g.size(); i++) {
+			MarketImpl m = g.c(g.get(i));
 			if (m == null) continue;
 			
 			StockGroup group = m.get(code(), isBuy());

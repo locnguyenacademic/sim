@@ -615,7 +615,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			
 			List<String> marketNames = remoteUniverse.getMarketNames();
 			for (String marketName : marketNames) {
-				Market remoteMarket = remoteUniverse.getMarket(marketName);
+				Market remoteMarket = (Market)remoteUniverse.getMarket(marketName);
 				if (remoteMarket == null || !(remoteMarket instanceof MarketImpl)) continue;
 				
 				Market market = newMarket(remoteMarket.getName(), remoteMarket.getLeverage(), remoteMarket.getUnitBias());

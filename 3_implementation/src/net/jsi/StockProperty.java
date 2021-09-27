@@ -26,9 +26,6 @@ public class StockProperty implements Serializable, Cloneable {
 	public static final String VERSION = "2.0 build 2021.09.27";
 			
 	
-	public static Universe g = null;
-	
-	
 	public final static String NONAME = "noname";
 
 

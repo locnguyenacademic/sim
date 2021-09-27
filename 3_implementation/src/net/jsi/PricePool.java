@@ -267,8 +267,8 @@ public class PricePool implements Serializable, Cloneable {
 	
 	public List<TakenStockPrice> getTakenPrices(Price price, Universe universe, long timeInterval) {
 		List<TakenStockPrice> takenPrices = Util.newList(0);
+		universe = universe != null ? universe : UniverseImpl.g();
 		if (price == null || universe == null) return takenPrices;
-		universe = universe != null ? universe : StockProperty.g;
 		
 		List<String> marketNames = universe.names();
 		for (String marketName : marketNames) {

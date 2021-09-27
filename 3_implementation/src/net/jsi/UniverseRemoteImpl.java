@@ -54,23 +54,6 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 
 
-	private Market newMarket(String name, double leverage, double unitBias) {
-		MarketImpl market = new MarketImpl(name, leverage, unitBias) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Market getSuperMarket() {
-				return universe;
-			}
-			
-		};
-		market.setTimeViewInterval(universe.getTimeViewInterval());
-		market.setTimeValidInterval(universe.getTimeValidInterval());
-		return market;
-	}
-
-
 	@Override
 	public synchronized boolean sync(Universe otherUniverse, long timeInterval) throws RemoteException {
 		return sync(otherUniverse, timeInterval, isAdminAccount());
@@ -86,7 +69,7 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 			if (otherMarket == null) continue;
 			MarketImpl market = universe.c(universe.get(otherMarket.getName()));
 			if (market == null)
-				market = universe.c(newMarket(otherMarket.getName(), otherMarket.getLeverage(), otherMarket.getUnitBias()));
+				market = universe.c(universe.newMarket(otherMarket.getName(), otherMarket.getLeverage(), otherMarket.getUnitBias()));
 			
 			if (market != null) {
 				market.sync(otherMarket, timeInterval, removeRedundant);
@@ -136,7 +119,7 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	
 	
 	@Override
-	public boolean export(int serverPort) throws RemoteException {
+	public synchronized boolean export(int serverPort) throws RemoteException {
 		if (exported) return false;
 		try {
 			return (exported = (UnicastRemoteObject.exportObject(this, serverPort) != null));
@@ -148,7 +131,7 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 
 
 	@Override
-	public boolean unexport() throws RemoteException {
+	public synchronized boolean unexport() throws RemoteException {
 		if (exported) {
 			try {
 	        	return !(exported = !UnicastRemoteObject.unexportObject(this, true));

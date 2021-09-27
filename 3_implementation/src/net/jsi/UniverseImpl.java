@@ -6,8 +6,16 @@ public class UniverseImpl extends UniverseAbstract {
 	private static final long serialVersionUID = 1L;
 
 	
+	private static Universe g = null;
+	
+	
+	public static Universe g() {
+		return g;
+	}
+	
+	
 	public UniverseImpl() {
-		if (StockProperty.g == null) StockProperty.g = this;
+		if (g == null) g = this;
 	}
 
 

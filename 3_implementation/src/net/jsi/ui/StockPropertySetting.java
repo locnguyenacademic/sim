@@ -27,6 +27,7 @@ import javax.swing.WindowConstants;
 
 import net.jsi.StockProperty;
 import net.jsi.Universe;
+import net.jsi.UniverseImpl;
 import net.jsi.Util;
 
 public class StockPropertySetting extends JDialog {
@@ -300,7 +301,7 @@ public class StockPropertySetting extends JDialog {
 		StockProperty property = new StockProperty();
 		property.parseText(moreText);
 
-		Universe u = StockProperty.g;
+		Universe u = UniverseImpl.g();
 		String category = null;
 		if (u != null) {
 			String[] categories = u.getDefaultCategories().toArray(new String[] {});

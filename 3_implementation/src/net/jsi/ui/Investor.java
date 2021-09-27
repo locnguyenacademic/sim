@@ -35,6 +35,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -80,6 +82,12 @@ public class Investor extends JFrame implements MarketListener {
 	private static final long serialVersionUID = 1L;
 	
 	
+	/**
+	 * Server synchronization period in seconds.
+	 */
+	public static long SYNC_SERVER_PERIOD = 60*10; //10-minute period to connect server.
+
+	
 	protected Universe universe = null;
 	
 	
@@ -87,6 +95,9 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	protected boolean inServer = false;
+	
+	
+	protected Timer timer = null;
 	
 	
 	protected JTabbedPane body;
@@ -204,6 +215,11 @@ public class Investor extends JFrame implements MarketListener {
 			}
 		}
 		
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+		
 		super.dispose();
 	}
 
@@ -268,6 +284,18 @@ public class Investor extends JFrame implements MarketListener {
 		}
 		
 		if (getMarketPanels().length == 0) addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
+		
+		if (remoteUniverse != null) {
+			if (timer != null) timer.cancel();
+			
+			timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					onSync();
+				}
+			}, SYNC_SERVER_PERIOD*1000, SYNC_SERVER_PERIOD*1000);
+		}
 	}
 
 	
