@@ -855,6 +855,15 @@ class PriceList extends JDialog {
 			}
 		});
 		cmbCode.setEnabled(!selectMode);
+		cmbCode.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(SwingUtilities.isRightMouseButton(e) ) {
+					JPopupMenu contextMenu = createCodeContextMenu();
+					if(contextMenu != null) contextMenu.show((Component)e.getSource(), e.getX(), e.getY());
+				}
+			}
+		});
 		header.add(cmbCode, BorderLayout.CENTER);
 		
 		JPanel body = new JPanel(new BorderLayout());
@@ -966,7 +975,40 @@ class PriceList extends JDialog {
 		mniFactor.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
 		mnTool.add(mniFactor);
 		
+		mnTool.addSeparator();
+		
+		JMenuItem mniRenameCode = new JMenuItem(
+			new AbstractAction("Rename code") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					renameCode();
+				}
+			});
+		mniRenameCode.setMnemonic('n');
+		mnTool.add(mniRenameCode);
+
 		return mnBar;
+	}
+	
+	
+	private JPopupMenu createCodeContextMenu() {
+		JPopupMenu ctxMenu = new JPopupMenu();
+		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		if (code == null) return null;
+		
+		JMenuItem miRenameCode = new JMenuItem("Rename code");
+		miRenameCode.addActionListener( 
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					renameCode();
+				}
+			});
+		ctxMenu.add(miRenameCode);
+
+		return ctxMenu;
 	}
 	
 	
@@ -990,6 +1032,11 @@ class PriceList extends JDialog {
 		catch (Exception e) {}
 	}
 
+	
+	private void renameCode() {
+		JOptionPane.showMessageDialog(this, "This function not implemented yet", "Not implemented yet", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	
 	private void ok() {
 		apply();
