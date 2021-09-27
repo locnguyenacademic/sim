@@ -477,7 +477,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (price == null) return null;
 		StockInfo info = getStore().getCreate(code);
 		if (info == null) return null;
-		if (!info.checkPricePossibleAdded(price.getTime())) return null;
+		if (!info.checkPricePossibleAdded(price.getTime())) {
+			Price p = info.getPrice(0, price.getTime());
+			if (p == null)
+				return null;
+			else
+				price = p;
+		}
 
 		double unitBias = StockAbstract.calcMaxUnitBias(this.refUnitBias, leverage, this.refLeverage);
 		final Market superMarket = this;
@@ -1329,9 +1335,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	private void readPrices(MarketImpl market, String[] fields) {
-		Universe u = market.getNearestUniverse();
-		int marketCount = u != null ? u.size() : 0;
-		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
+//		Universe u = market.getNearestUniverse();
+//		int marketCount = u != null ? u.size() : 0;
+//		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
 		
 		String code = fields[0];
 		double leverage = fromLeverage(fields[1]);
@@ -1344,7 +1350,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		StockInfo si = market.getStore().getCreate(code);
 		if (si == null) return;
-		if (marketCount > 0 && si.getPrice(0, priceDate) != null) {
+//		if (marketCount > 0 && si.getPrice(0, priceDate) != null) {
+		if (si.getPrice(0, priceDate) != null) {
 			si.setLeverage(leverage);
 		}
 		else {
@@ -1484,9 +1491,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	private static void writePrices(MarketImpl market, Writer writer) throws IOException {
-		//Universe u = market.getNearestUniverse();
-		//int marketCount = u != null ? u.size() : 0;
-		//if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
+//		Universe u = market.getNearestUniverse();
+//		int marketCount = u != null ? u.size() : 0;
+//		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
 		
 		StockInfoStore store = market.getStore();
 		if (store == null) return;

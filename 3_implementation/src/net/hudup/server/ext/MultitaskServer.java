@@ -72,7 +72,7 @@ public class MultitaskServer extends ExtendedServer {
 	 * Getting remote universe.
 	 * @return remote universe.
 	 */
-	protected UniverseRemote getUniverseRemote() {
+	private UniverseRemote getUniverseRemote() {
 		try {
 			if (extraService == null || !(extraService instanceof ExtraMultitaskService))
 				return null;
@@ -91,7 +91,7 @@ public class MultitaskServer extends ExtendedServer {
 	 * Getting universe.
 	 * @return universe.
 	 */
-	protected Universe getUniverse() {
+	private Universe getUniverse() {
 		try {
 			UniverseRemote remoteUniverse = getUniverseRemote();
 			if (remoteUniverse == null)
@@ -108,6 +108,20 @@ public class MultitaskServer extends ExtendedServer {
 	}
 	
 	
+	@Override
+	protected void serverTasks() {
+		super.serverTasks();
+		
+		if (extraService != null && extraService instanceof ExtraMultitaskService) {
+			try {
+				((ExtraMultitaskService)extraService).saveUniverseRemote();
+				LogUtil.info("Server timer internal tasks: Applying and saving universe.");
+			}
+			catch (Throwable e) {LogUtil.trace(e);}
+		}
+	}
+
+
 	/**
 	 * This class represents the extra gateway.
 	 * @author Loc Nguyen
@@ -189,7 +203,7 @@ public class MultitaskServer extends ExtendedServer {
 										remoteUniverse = getUniverseRemote();
 									}
 
-									if (universe != null) new Investor(universe, remoteUniverse).setVisible(true);
+									if (universe != null) new Investor(universe, remoteUniverse, connectInfo.bindUri == null).setVisible(true);
 								}
 								catch (Exception ex) {
 									LogUtil.trace(ex);

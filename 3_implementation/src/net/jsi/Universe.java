@@ -93,10 +93,13 @@ public interface Universe extends Market, Serializable, Cloneable {
 	void setBasicInfo(UniverseRemote other, boolean removeRedundant);
 
 		
-	void open(File workingDir);
+	boolean apply();
+
+		
+	boolean open(File workingDir);
 
 	
-	void save(File workingDir);
+	boolean save(File workingDir);
 
 	
 	boolean sync(UniverseRemote remoteUniverse, long timeInterval, boolean removeRedundant);

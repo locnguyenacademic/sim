@@ -94,13 +94,17 @@ public class PricePool implements Serializable, Cloneable {
 		if (lastPrice == null) return null;
 		
 		int n = prices.size();
+		long lastTimePoint = lastPrice.getTime();
 		for (int i = n - 1; i >= 0 ; i--) {
 			Price price = prices.get(i);
-			if (price.getTime() != timePoint)
+			long pt = price.getTime(); 
+			if (pt < timePoint)
+				break;
+			else if (pt > timePoint)
 				continue;
 			else if (timeInterval <= 0) 
 				return price;
-			else if (lastPrice.getTime() - timePoint <= timeInterval)
+			else if (lastTimePoint - timePoint <= timeInterval)
 				return price;
 			else
 				break;

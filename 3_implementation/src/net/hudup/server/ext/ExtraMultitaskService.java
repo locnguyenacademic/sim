@@ -87,11 +87,21 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 	@Override
 	public void close() throws Exception {
 		if (remoteUniverse != null) {
-			remoteUniverse.save(new File(StockProperty.WORKING_DIRECTORY));
-			remoteUniverse.unexport();
+			synchronized (remoteUniverse) {
+				saveUniverseRemote();
+				remoteUniverse.unexport();
+			}
 		}
 		remoteUniverse = null;
 	}
 
 
+	protected void saveUniverseRemote() {
+		synchronized (remoteUniverse) {
+			remoteUniverse.apply();
+			remoteUniverse.save(new File(StockProperty.WORKING_DIRECTORY));
+		}
+	}
+	
+	
 }

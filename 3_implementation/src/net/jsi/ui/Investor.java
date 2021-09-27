@@ -85,6 +85,9 @@ public class Investor extends JFrame implements MarketListener {
 	protected UniverseRemote remoteUniverse = null;
 	
 	
+	protected boolean inServer = false;
+	
+	
 	protected JTabbedPane body;
 	
 	
@@ -112,15 +115,11 @@ public class Investor extends JFrame implements MarketListener {
 	protected MarketPanel curMarketPanel = null;
 	
 	
-	public Investor(Universe universe) {
-		this(universe, null);
-	}
-	
-	
-	public Investor(Universe universe, UniverseRemote remoteUniverse) {
+	public Investor(Universe universe, UniverseRemote remoteUniverse, boolean inServer) {
 		super("JSI - Stock/forex investment manager");
 		this.universe = universe;
 		this.remoteUniverse = remoteUniverse;
+		this.inServer = inServer;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -173,7 +172,7 @@ public class Investor extends JFrame implements MarketListener {
 		lblTotalHedge = new JLabel();
 		footerRow.add(lblTotalHedge);
 
-		initialize(new File(StockProperty.WORKING_DIRECTORY));
+		initialize();
 		
 		body.addChangeListener(new ChangeListener() {
 			@Override
@@ -186,25 +185,29 @@ public class Investor extends JFrame implements MarketListener {
 	
 	@Override
 	public void dispose() {
-		MarketPanel[] mps = getMarketPanels();
-		for (MarketPanel mp : mps) mp.dispose();
-
+		universe.apply();
 		onSync();
-
+		
+		if (!inServer) {
+			MarketPanel[] mps = getMarketPanels();
+			for (MarketPanel mp : mps) mp.dispose();
+		}
+		
 		super.dispose();
 	}
 
 
-	protected void initialize(File workingDir) {
+	private void initialize() {
 		for (int i = 0; i < universe.size(); i++) {
 			Market market = universe.get(i);
 			MarketPanel mp = createMarketPanel(market);
 			body.add(market.getName(), mp);
 		}
-
+		if (inServer) return;
+		
+		File workingDir = new File(StockProperty.WORKING_DIRECTORY);
 		if (workingDir.exists() && workingDir.isFile()) {
-			addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
-			setVisible(true);
+			if (getMarketPanels().length == 0)  addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
 			return;
 		}
 		
@@ -218,7 +221,7 @@ public class Investor extends JFrame implements MarketListener {
 		catch (Exception e) { }
 		
 		if (!workingDir.exists()) {
-			addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
+			if (getMarketPanels().length == 0) addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
 			return;
 		}
 		
@@ -715,7 +718,7 @@ public class Investor extends JFrame implements MarketListener {
 	
 	private void onSync() {
 		try {
-			if (remoteUniverse != null) remoteUniverse.sync(universe, 0);
+			if (remoteUniverse != null && !inServer) remoteUniverse.sync(universe, 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1507,12 +1510,12 @@ public class Investor extends JFrame implements MarketListener {
 				
 				if (remoteUniverse == null) {
 					JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
-					new Investor(new UniverseImpl()).setVisible(true);
+					new Investor(new UniverseImpl(), null, false).setVisible(true);
 				}
 				else {
 					UniverseImpl universe = new UniverseImpl();
 					universe.sync(remoteUniverse, 0, false);
-					new Investor(universe, remoteUniverse).setVisible(true);
+					new Investor(universe, remoteUniverse, false).setVisible(true);
 				}
 				
 			}
@@ -1526,7 +1529,7 @@ public class Investor extends JFrame implements MarketListener {
 			public void actionPerformed(ActionEvent e) {
 				connector.dispose();
 				JOptionPane.showMessageDialog(null, "Not to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.INFORMATION_MESSAGE);
-				new Investor(new UniverseImpl()).setVisible(true);
+				new Investor(new UniverseImpl(), null, false).setVisible(true);
 			}
 		});
 		footer.add(btnClose);

@@ -98,8 +98,13 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 
 	
-	public synchronized void open(File workingDir) {
-		universe.open(workingDir);
+	public synchronized boolean apply() {
+		return universe.apply();
+	}
+	
+	
+	public synchronized boolean open(File workingDir) {
+		return universe.open(workingDir);
 	}
 	
 	

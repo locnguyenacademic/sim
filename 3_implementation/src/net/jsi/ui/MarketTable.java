@@ -2036,12 +2036,6 @@ class MarketPanel extends JPanel implements MarketListener {
 	
 	
 	protected void dispose() {
-		Universe u = getMarket().getNearestUniverse();
-		if (u != null) {
-			MarketImpl m = u.c(getMarket());
-			if (m != null) m.apply();
-		}
-		
 		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		if (this.file != null) {
 			if (save(this.file)) {

@@ -496,6 +496,17 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 
+	@Override
+	public boolean apply() {
+		boolean ret = true;
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m != null) ret = m.apply() && ret;
+		}
+		return ret;
+	}
+	
+	
 	private Market newMarket(File file) {
 		if (file == null || !file.exists() || file.isDirectory()) return null;
 		String fileName = file.getName();
@@ -525,8 +536,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	
 	@Override
-	public void open(File workingDir) {
-		if (workingDir.exists() && workingDir.isFile()) return;
+	public boolean open(File workingDir) {
+		if (workingDir.exists() && workingDir.isFile()) return false;
 		try {
 			if (!workingDir.exists()) {
 				File parent = workingDir.getParentFile();
@@ -535,7 +546,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			}
 		}
 		catch (Exception e) { }
-		if (!workingDir.exists()) return;
+		if (!workingDir.exists()) return false;
 		
 		String[] fileNames = workingDir.list(new FilenameFilter() {
 			@Override
@@ -548,17 +559,23 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			}
 		});
 		
+		markets.clear();
+		boolean ret = true;
 		for (String fileName : fileNames) {
 			File file = new File(workingDir, fileName);
 			Market market = newMarket(file);
 			if (market != null) add(market);
+			
+			ret = (market != null) && ret;
 		}
+		
+		return ret;
 	}
 
 
 	@Override
-	public void save(File workingDir) {
-		if (workingDir.exists() && workingDir.isFile()) return;
+	public boolean save(File workingDir) {
+		if (workingDir.exists() && workingDir.isFile()) return false;
 		try {
 			if (!workingDir.exists()) {
 				File parent = workingDir.getParentFile();
@@ -567,8 +584,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			}
 		}
 		catch (Exception e) { }
-		if (!workingDir.exists()) return;
+		if (!workingDir.exists()) return false;
 		
+		boolean ret = true;
 		for (int i = 0; i < size(); i++) {
 			MarketImpl market = c(get(i));
 			if (market == null) continue;
@@ -576,14 +594,16 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			try {
 				File file = new File(workingDir, market.getName() + "." + StockProperty.JSI_EXT);
 				FileWriter writer = new FileWriter(file);
-				market.write(writer);
+				ret = market.write(writer) && ret;
 				writer.close();
 			}
 			catch (Exception e) {
+				ret = ret && false;
 				e.printStackTrace();
 			}
 		}
 		
+		return ret;
 	}
 
 
