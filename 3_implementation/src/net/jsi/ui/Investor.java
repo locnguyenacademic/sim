@@ -27,6 +27,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.rmi.Naming;
 import java.rmi.Remote;
@@ -189,8 +190,18 @@ public class Investor extends JFrame implements MarketListener {
 		onSync();
 		
 		if (!inServer) {
+			Set<String> remoteMarketNames = Util.newSet(0);
+			if (remoteUniverse != null) {
+				try {
+					remoteMarketNames.addAll(remoteUniverse.getMarketNames());
+				} catch (Throwable e) {Util.trace(e);}
+			}
+			
 			MarketPanel[] mps = getMarketPanels();
-			for (MarketPanel mp : mps) mp.dispose();
+			for (MarketPanel mp : mps) {
+				String marketName = mp.getMarket().getName();
+				if (!remoteMarketNames.contains(marketName)) mp.autoSave();
+			}
 		}
 		
 		super.dispose();
@@ -238,7 +249,22 @@ public class Investor extends JFrame implements MarketListener {
 		
 		this.curDir = workingDir;
 		for (String fileName : fileNames) {
-			addMarketPanel(new File(workingDir, fileName));
+			File file = new File(workingDir, fileName);
+			if (remoteUniverse == null) {
+				addMarketPanel(file);
+				continue;
+			}
+			
+			String marketName = null;
+			try {
+				FileReader reader = new FileReader(file);
+				marketName = MarketImpl.readMarketName(reader);
+				reader.close();
+			}
+			catch (Throwable e) {Util.trace(e);}
+			if (marketName == null) continue;
+			
+			if (getMarketPanel(marketName) == null) addMarketPanel(file);
 		}
 		
 		if (getMarketPanels().length == 0) addMarketPanel(StockProperty.MARKET_NAME_PREFIX + "1");
@@ -856,7 +882,7 @@ public class Investor extends JFrame implements MarketListener {
 		int index = universe.lookup(mp.getMarket().getName());
 		if (index < 0) return;
 		
-		mp.dispose();
+		if (!inServer && remoteUniverse == null) mp.autoSave();
 		Market removedMarket = universe.remove(index);
 		if (removedMarket != null) {
 			int idx = getSelectedMarketPanelIndex();

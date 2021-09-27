@@ -503,7 +503,7 @@ class MarketPlacePanel2 extends MarketPlacePanel {
 
 
 	@Override
-	protected void dispose() {
+	protected void autoSave() {
 		if (prevStore != null)
 			tblMarket.m().getStore().sync(prevStore, 0, true);
 	}
@@ -532,7 +532,7 @@ class MarketPlaceDialog2 extends MarketPlaceDialog {
 
 	@Override
 	public void dispose() {
-		paneMarket.dispose();
+		paneMarket.autoSave();
 		super.dispose();
 	}
 

@@ -2035,7 +2035,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	protected void dispose() {
+	protected void autoSave() {
 		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		if (this.file != null) {
 			if (save(this.file)) {

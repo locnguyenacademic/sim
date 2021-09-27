@@ -1134,6 +1134,45 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
+	public static String readMarketName(Reader in) {
+		try {
+			BufferedReader reader = new BufferedReader(in);
+			String line = null;
+			boolean readHeader = false;
+			boolean readInfoStart = false;
+			String marketName = null;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				if (line.isEmpty()) continue;
+				
+				String[] fields = line.split(Util.NOSPACE_DEFAULT_SEP);
+				if (fields == null || fields.length < 1) continue;
+				for (int i = 0; i < fields.length; i++) fields[i] = fields[i].trim();
+				
+				if (!readHeader) {
+					readHeader = true;
+					continue;
+				}
+				else if (!readInfoStart && fields[0].equals(StockProperty.NOTCODE1)) {
+					readInfoStart = true;
+					continue;
+				}
+				else if (readInfoStart && !fields[0].equals(StockProperty.NOTCODE1)) {
+					if (fields.length > 7) marketName = fields[7];
+					break;
+				}
+			}
+			
+			return marketName.isEmpty() ? null : marketName;
+		}
+		catch (Throwable e) {
+			Util.trace(e);
+		}
+		
+		return null;
+	}
+	
+	
 	public boolean read(Reader in) {
 		reset();
 		

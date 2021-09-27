@@ -241,5 +241,10 @@ public final class Util {
 	}
 	
 	
+	public static void trace(Throwable e) {
+		e.printStackTrace();
+	}
+	
+	
 
 }
