@@ -568,7 +568,7 @@ class RecTableModel extends DefaultTableModel {
 				int n = 0;
 				for (int i = 0; i < pool.size(); i++) {
 					Price price = pool.getByIndex(i);
-					List<TakenStockPrice> takenPrices = pool.getTakenPrices(price, market.getNearestUniverse(), timeInterval);
+					List<TakenStockPrice> takenPrices = PricePool.getTakenPrices(pool.code(), price, market.getNearestUniverse(), timeInterval);
 					for (TakenStockPrice takenPrice : takenPrices) {
 						takenSum += takenPrice.takenPrice.get();
 						n++;

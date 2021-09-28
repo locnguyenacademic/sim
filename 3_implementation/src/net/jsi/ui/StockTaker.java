@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -29,13 +30,16 @@ import net.jsi.Estimator;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Price;
+import net.jsi.PricePool;
 import net.jsi.Stock;
 import net.jsi.StockAbstract;
 import net.jsi.StockGroup;
 import net.jsi.StockImpl;
+import net.jsi.StockInfoStore;
 import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.Util;
+import net.jsi.PricePool.TakenStockPrice;
 
 public class StockTaker extends JDialog {
 
@@ -599,28 +603,40 @@ public class StockTaker extends JDialog {
 	
 	
 	private StockGroup getAltStockGroup(boolean buy) {
+		StockGroup group = getAltStockGroup0(buy);
+		if (group != null) return group;
+		
+		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		if (code == null) return null;
+		PricePool pricePool = StockInfoStore.getPricePool(code);
+		if (pricePool == null || pricePool.size() == 0) return null;
+		
+		List<TakenStockPrice> takenPrices = PricePool.getLastTakenPrices(code, market.getNearestUniverse(), market.getTimeViewInterval());
+		return takenPrices != null && takenPrices.size() > 0 ? takenPrices.get(0).group : null;
+	}
+	
+	
+	private StockGroup getAltStockGroup0(boolean buy) {
 		StockGroup group = getStockGroup(buy);
 		if (group != null) return group;
 		
 		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (code == null) return null;
-		MarketImpl m = m();
-		if (m == null) return null;
-		if (m.getWatchMarket() != null) return stockGroupOf(m.getWatchMarket(), code, buy);
+		MarketImpl m = m(); if (m == null) return null;
+		if (m.getWatchMarket() != null) return stockGroupOf0(m.getWatchMarket(), code, buy);
 		
 		Universe u = m.getNearestUniverse();
-		if (u == null) return null;
-		MarketImpl dualMarket = u.c(m.getDualMarket());
+		MarketImpl dualMarket = u != null ? u.c(m.getDualMarket()) : null;
 		if (dualMarket == null || dualMarket.getWatchMarket() == null || dualMarket.getWatchMarket() == m)
 			return null;
 		
-		group = stockGroupOf(dualMarket, code, buy);
-		group = group != null ? group : stockGroupOf(dualMarket.getWatchMarket(), code, buy);
+		group = stockGroupOf0(dualMarket, code, buy);
+		group = group != null ? group : stockGroupOf0(dualMarket.getWatchMarket(), code, buy);
 		return group;
 	}
 	
 	
-	private StockGroup stockGroupOf(Market market, String code, boolean buy) {
+	private static StockGroup stockGroupOf0(Market market, String code, boolean buy) {
 		if (market == null) return null;
 		Universe u = market.getNearestUniverse();
 		MarketImpl m = u != null ? u.c(market) : null;
@@ -1337,28 +1353,40 @@ class StockSelector extends JDialog {
 	
 	
 	private StockGroup getAltStockGroup(boolean buy) {
+		StockGroup group = getAltStockGroup0(buy);
+		if (group != null) return group;
+		
+		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
+		if (code == null) return null;
+		PricePool pricePool = StockInfoStore.getPricePool(code);
+		if (pricePool == null || pricePool.size() == 0) return null;
+		
+		List<TakenStockPrice> takenPrices = PricePool.getLastTakenPrices(code, market.getNearestUniverse(), market.getTimeViewInterval());
+		return takenPrices != null && takenPrices.size() > 0 ? takenPrices.get(0).group : null;
+	}
+	
+	
+	private StockGroup getAltStockGroup0(boolean buy) {
 		StockGroup group = getStockGroup(buy);
 		if (group != null) return group;
 		
 		String code = cmbCode.getSelectedItem() != null ? cmbCode.getSelectedItem().toString() : null;
 		if (code == null) return null;
-		MarketImpl m = m();
-		if (m == null) return null;
-		if (m.getWatchMarket() != null) return stockGroupOf(m.getWatchMarket(), code, buy);
+		MarketImpl m = m(); if (m == null) return null;
+		if (m.getWatchMarket() != null) return stockGroupOf0(m.getWatchMarket(), code, buy);
 		
 		Universe u = m.getNearestUniverse();
-		if (u == null) return null;
-		MarketImpl dualMarket = u.c(m.getDualMarket());
+		MarketImpl dualMarket = u != null ? u.c(m.getDualMarket()) : null;
 		if (dualMarket == null || dualMarket.getWatchMarket() == null || dualMarket.getWatchMarket() == m)
 			return null;
 		
-		group = stockGroupOf(dualMarket, code, buy);
-		group = group != null ? group : stockGroupOf(dualMarket.getWatchMarket(), code, buy);
+		group = stockGroupOf0(dualMarket, code, buy);
+		group = group != null ? group : stockGroupOf0(dualMarket.getWatchMarket(), code, buy);
 		return group;
 	}
 	
 	
-	private StockGroup stockGroupOf(Market market, String code, boolean buy) {
+	private static StockGroup stockGroupOf0(Market market, String code, boolean buy) {
 		if (market == null) return null;
 		Universe u = market.getNearestUniverse();
 		MarketImpl m = u != null ? u.c(market) : null;

@@ -164,7 +164,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
-	protected static PricePool getPricePool(String code) {
+	public static PricePool getPricePool(String code) {
 		if (pricePools.containsKey(code))
 			return pricePools.get(code);
 		else

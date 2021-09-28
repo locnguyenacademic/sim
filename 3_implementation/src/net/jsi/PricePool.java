@@ -249,7 +249,7 @@ public class PricePool implements Serializable, Cloneable {
 
 	
 	
-	public class TakenStockPrice implements Serializable, Cloneable {
+	public static class TakenStockPrice implements Serializable, Cloneable {
 
 		private static final long serialVersionUID = 1L;
 		
@@ -257,7 +257,10 @@ public class PricePool implements Serializable, Cloneable {
 		
 		public StockImpl stock = null;
 		
-		public TakenStockPrice(StockImpl stock, TakenPrice takenPrice) {
+		public StockGroup group = null;
+		
+		public TakenStockPrice(StockGroup group, StockImpl stock, TakenPrice takenPrice) {
+			this.group = group;
 			this.stock = stock;
 			this.takenPrice = takenPrice;
 		}
@@ -265,7 +268,7 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
-	public List<TakenStockPrice> getTakenPrices(Price price, Universe universe, long timeInterval) {
+	public static List<TakenStockPrice> getTakenPrices(String code, Price price, Universe universe, long timeInterval) {
 		List<TakenStockPrice> takenPrices = Util.newList(0);
 		universe = universe != null ? universe : UniverseImpl.g();
 		if (price == null || universe == null) return takenPrices;
@@ -284,7 +287,7 @@ public class PricePool implements Serializable, Cloneable {
 			if (trashMarket != null) groups.addAll(trashMarket.groups);
 			
 			for (StockGroup group : groups) {
-				if (!group.code().equals(code())) continue;
+				if (!group.code().equals(code)) continue;
 				
 				List<Stock> stocks = group.getStocks(timeInterval);
 				for (Stock stock : stocks) {
@@ -292,12 +295,30 @@ public class PricePool implements Serializable, Cloneable {
 					if (s == null) continue;
 					Price p = s.getTakenPrice(timeInterval);
 					if (p != null && p instanceof TakenPrice && p.checkRefEquals(price))
-						takenPrices.add(new TakenStockPrice(s, (TakenPrice)p));
+						takenPrices.add(new TakenStockPrice(group, s, (TakenPrice)p));
 				}
 			}
 		}
 		
 		return takenPrices;
+	}
+	
+	
+	public static List<TakenStockPrice> getLastTakenPrices(String code, Universe universe, long timeInterval) {
+		PricePool pricePool = StockInfoStore.getPricePool(code);
+		if (pricePool == null || pricePool.size() == 0) return Util.newList(0);
+		
+		Price lastPrice = pricePool.getLast();
+		int n = pricePool.size();
+		for (int i = n - 1; i >= 0; i--) {
+			Price price = pricePool.getByIndex(i);
+			if (timeInterval > 0 && lastPrice.getTime() - price.getTime() > timeInterval) break;
+			
+			List<TakenStockPrice> takenPrices = getTakenPrices(code, price, universe, timeInterval);
+			if (takenPrices != null && takenPrices.size() > 0) return takenPrices; 
+		}
+		
+		return Util.newList(0);
 	}
 	
 	

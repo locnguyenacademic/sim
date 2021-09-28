@@ -538,7 +538,7 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 		if (price == null)
 			return Util.newList(0);
 		else
-			return pricePool.getTakenPrices(price, universe, timeInterval);
+			return PricePool.getTakenPrices(pricePool.code(), price, universe, timeInterval);
 	}
 
 	

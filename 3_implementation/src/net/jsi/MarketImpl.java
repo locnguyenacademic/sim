@@ -1374,10 +1374,6 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	private void readPrices(MarketImpl market, String[] fields) {
-//		Universe u = market.getNearestUniverse();
-//		int marketCount = u != null ? u.size() : 0;
-//		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
-		
 		String code = fields[0];
 		double leverage = fromLeverage(fields[1]);
 		double price = Double.parseDouble(fields[2]);
@@ -1386,19 +1382,26 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double altPrice = Double.parseDouble(fields[5]);
 		long priceDate = Long.parseLong(fields[6]);
 		double unitBias = Double.parseDouble(fields[7]);
-		
-		StockInfo si = market.getStore().getCreate(code);
-		if (si == null) return;
-//		if (marketCount > 0 && si.getPrice(0, priceDate) != null) {
-		if (si.getPrice(0, priceDate) != null) {
-			si.setLeverage(leverage);
+
+		if (Double.isNaN(leverage)) {
+			PricePool pricePool = StockInfoStore.getCreatePricePool(code);
+			if (pricePool == null || pricePool.lookup(priceDate) >= 0) return;
+			Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
+			pricePool.add(p);
 		}
 		else {
-			Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
-			p.setAlt(altPrice);
-			si.addPrice(p);
-			si.setLeverage(leverage);
-			si.setUnitBias(unitBias);
+			StockInfo si = market.getStore().getCreate(code);
+			if (si == null) return;
+			if (si.getPrice(0, priceDate) != null) {
+				si.setLeverage(leverage);
+			}
+			else {
+				Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
+				p.setAlt(altPrice);
+				si.addPrice(p);
+				si.setLeverage(leverage);
+				si.setUnitBias(unitBias);
+			}
 		}
 	}
 	
@@ -1530,12 +1533,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	private static void writePrices(MarketImpl market, Writer writer) throws IOException {
-//		Universe u = market.getNearestUniverse();
-//		int marketCount = u != null ? u.size() : 0;
-//		if (!StockProperty.LOOKUP_WHEN_READ_PRICES && marketCount > 0) return;
-		
 		StockInfoStore store = market.getStore();
 		if (store == null) return;
+		
 		Set<String> codes = store.codes();
 		for (String code : codes) {
 			StockInfo info = store.get(code);
@@ -1551,6 +1551,28 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(price.getAlt()) + ", ");
 				buffer.append(price.getTime() + ", ");
 				buffer.append(Util.format(info.getUnitBias()) + "\n");
+				
+				writer.write(buffer.toString());
+			}
+		}
+		
+		Set<String> priceCodes = Util.newSet(0);
+		priceCodes.addAll(StockInfoStore.getPricePoolCodes());
+		priceCodes.removeAll(codes);
+		for (String priceCode : priceCodes) {
+			PricePool pricePool = StockInfoStore.getPricePool(priceCode);
+			for (int i = 0; i < pricePool.size(); i++) {
+				Price price = pricePool.getByIndex(i);
+				StringBuffer buffer = new StringBuffer();
+				
+				buffer.append(priceCode + ", ");
+				buffer.append(Double.NaN + ", ");
+				buffer.append(Util.format(price.get()) + ", ");
+				buffer.append(Util.format(price.getLow()) + ", ");
+				buffer.append(Util.format(price.getHigh()) + ", ");
+				buffer.append(Util.format(price.getAlt()) + ", ");
+				buffer.append(price.getTime() + ", ");
+				buffer.append("0\n");
 				
 				writer.write(buffer.toString());
 			}
