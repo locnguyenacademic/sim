@@ -23,7 +23,7 @@ public class StockProperty implements Serializable, Cloneable {
 	private final static String PAIR_SEP = ":";
 	
 
-	public static final String VERSION = "2.0 build 2021.09.27";
+	public static final String VERSION = "2.0 build 2021.09.28";
 			
 	
 	public final static String NONAME = "noname";

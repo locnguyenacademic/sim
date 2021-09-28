@@ -1556,6 +1556,9 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			}
 		}
 		
+		Universe u = market.getNearestUniverse();
+		if (u != null && u.lookup(market.getName()) > 0) return;
+		
 		Set<String> priceCodes = Util.newSet(0);
 		priceCodes.addAll(StockInfoStore.getPricePoolCodes());
 		priceCodes.removeAll(codes);
