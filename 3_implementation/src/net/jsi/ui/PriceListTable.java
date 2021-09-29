@@ -270,7 +270,7 @@ public class PriceListTable extends JTable {
 				newPrice.setAlt(altPrice);
 				int selectedRow = getSelectedRow();
 				if (newPrice != null && selectedRow >= 0) {
-					getModel2().setValueAt(newPrice, selectedRow);
+					getModel2().setValueAt(newPrice, selectedRow, true);
 				}
 
 				editor.dispose();
@@ -569,13 +569,23 @@ class PriceListTableModel extends DefaultTableModel implements TableModelListene
 	}
 	
 	
-	protected void setValueAt(Price price, int row) {
+	protected void setValueAt(Price price, int row, boolean alreadyChecked) {
 		if (price == null || row < 0 | row > getRowCount()) return;
-		setValueAt(price.getDate(), row, 1);
-		setValueAt(price.get(), row, 2);
-		setValueAt(price.getLow(), row, 3);
-		setValueAt(price.getHigh(), row, 4);
-		setValueAt(price.getAlt(), row, 5);
+		if (alreadyChecked) {
+			super.setValueAt(price.getDate(), row, 1);
+			super.setValueAt(price.get(), row, 2);
+			super.setValueAt(price.getLow(), row, 3);
+			super.setValueAt(price.getHigh(), row, 4);
+			super.setValueAt(price.getAlt(), row, 5);
+			modified = true;
+		}
+		else {
+			setValueAt(price.getDate(), row, 1);
+			setValueAt(price.get(), row, 2);
+			setValueAt(price.getLow(), row, 3);
+			setValueAt(price.getHigh(), row, 4);
+			setValueAt(price.getAlt(), row, 5);
+		}
 	}
 	
 	
@@ -1647,7 +1657,7 @@ class PriceListPartialTable extends JTable {
 				newPrice.setAlt(altPrice);
 				int selectedRow = getSelectedRow();
 				if (newPrice != null && selectedRow >= 0) {
-					getModel2().setValueAt(newPrice, selectedRow);
+					getModel2().setValueAt(newPrice, selectedRow, true);
 				}
 
 				editor.dispose();
@@ -2061,13 +2071,23 @@ abstract class PriceListPartialTableModel extends DefaultTableModel implements T
 	}
 	
 	
-	protected void setValueAt(Price price, int row) {
+	protected void setValueAt(Price price, int row, boolean alreadyChecked) {
 		if (price == null || row < 0 | row > getRowCount()) return;
-		setValueAt(price.getDate(), row, 1);
-		setValueAt(price.get(), row, 2);
-		setValueAt(price.getLow(), row, 3);
-		setValueAt(price.getHigh(), row, 4);
-		setValueAt(price.getAlt(), row, 5);
+		if (alreadyChecked) {
+			super.setValueAt(price.getDate(), row, 1);
+			super.setValueAt(price.get(), row, 2);
+			super.setValueAt(price.getLow(), row, 3);
+			super.setValueAt(price.getHigh(), row, 4);
+			super.setValueAt(price.getAlt(), row, 5);
+			modified = true;
+		}
+		else {
+			setValueAt(price.getDate(), row, 1);
+			setValueAt(price.get(), row, 2);
+			setValueAt(price.getLow(), row, 3);
+			setValueAt(price.getHigh(), row, 4);
+			setValueAt(price.getAlt(), row, 5);
+		}
 	}
 	
 	
