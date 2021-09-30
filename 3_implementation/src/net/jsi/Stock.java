@@ -49,9 +49,12 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getPriceOscill(long timeInterval);
 	
 	
-	double getPriceOscillRatio(long timeInterval);
+	double calcOscillRatio(long timeInterval);
 
 	
+	double getPriceMinMaxDev(long timeInterval);
+
+		
 	boolean isCommitted();
 	
 	

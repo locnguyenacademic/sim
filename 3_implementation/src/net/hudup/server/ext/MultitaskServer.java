@@ -7,12 +7,10 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import net.hudup.core.client.ExtraGateway;
 import net.hudup.core.client.ExtraService;
 import net.hudup.core.client.ExtraServiceAbstract;
-import net.hudup.core.client.Gateway;
 import net.hudup.core.client.PowerServer;
-import net.hudup.core.client.Server;
-import net.hudup.core.client.Service;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.logistic.LogUtil;
 import net.hudup.core.logistic.xURI;
@@ -63,7 +61,7 @@ public class MultitaskServer extends ExtendedServer {
 	
 	
 	@Override
-	protected Gateway createExtraGateway() {
+	protected ExtraGateway createExtraGateway() {
 		return new ExtraMultitaskGateway();
 	}
 
@@ -128,22 +126,12 @@ public class MultitaskServer extends ExtendedServer {
 	 * @version 1.0
 	 *
 	 */
-	protected class ExtraMultitaskGateway implements Gateway, UniverseRemoteGetter {
+	protected class ExtraMultitaskGateway implements ExtraGateway, UniverseRemoteGetter {
 
 		/**
 		 * Default serial version UID.
 		 */
 		private static final long serialVersionUID = 1L;
-
-		@Override
-		public Server getRemoteServer(String account, String password) throws RemoteException {
-			return null;
-		}
-
-		@Override
-		public Service getRemoteService(String account, String password) throws RemoteException {
-			return null;
-		}
 
 		@Override
 		public UniverseRemote getUniverseRemote(String account, String password) throws RemoteException {

@@ -185,10 +185,15 @@ public final class Util {
 	 */
 	public static String format(double number) {
 		return "" + round(number, DECIMAL_PRECISION);
-		//return String.format("%." + DECIMAL_PRECISION + "f", number);
 	}
 
 
+	public static String format(double number, int decimal) {
+		return "" + round(number, decimal);
+		//return String.format("%." + decimal + "f", number);
+	}
+
+	
 	/**
 	 * Rounding the specified number with decimal precision specified by the number of decimal digits.
 	 * 

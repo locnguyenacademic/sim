@@ -1062,9 +1062,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.getProfit(timeViewInterval));
 			row.add(new Percentage(group.getROIByLeverage(timeViewInterval)));
 			row.add(new Percentage(group.getROI(timeViewInterval)));
-			row.add(new Percentage(group.getPriceOscillRatio(timeViewInterval)));
-			row.add(group.calcTotalPriceOscill(timeViewInterval));
-			row.add(group.calcTotalBias(timeViewInterval));
+			row.add(new Percentage(group.calcOscillRatio(timeViewInterval)));
+			row.add(group.calcOscill(timeViewInterval));
+			row.add(group.calcBias(timeViewInterval));
 			
 			Triple tv = new Triple(Double.NaN, Double.NaN, Double.NaN);
 			Estimator estimator = estimators.get(keyOf(group.code(), group.isBuy()));
@@ -1106,7 +1106,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			
 			row.add(new Percentage(stock.getROIByLeverage(timeViewInterval)));
 			row.add(new Percentage(stock.getROI(timeViewInterval)));
-			row.add(new Percentage(stock.getPriceOscillRatio(timeViewInterval)));
+			row.add(new Percentage(stock.calcOscillRatio(timeViewInterval)));
 			row.add(stock.getPriceOscill(timeViewInterval));
 			row.add(found != null ? new Pair(found.estimatedUnitBias, stock.getUnitBias()) : new Pair(stock.getUnitBias(), stock.getUnitBias()));
 
@@ -1718,8 +1718,9 @@ class MarketPanel extends JPanel implements MarketListener {
 		//double roi = market.getROI(timeViewInterval);
 		double lRoi = market.getROIByLeverage(timeViewInterval);
 		//double oscillRatio = market.getPriceOscillRatio(timeViewInterval);
-		double oscill = market.calcTotalPriceOscill(timeViewInterval);
-		double bias = market.calcTotalBias(timeViewInterval);
+		double oscill = market.calcOscill(timeViewInterval);
+		double bias = market.calcBias(timeViewInterval);
+		double dev = market.calcMinMaxDev(timeViewInterval);
 		double invest = market.calcInvestAmount(timeViewInterval);
 		double investRisky = market.calcInvestAmountRisky(timeViewInterval);
 		
@@ -1728,18 +1729,18 @@ class MarketPanel extends JPanel implements MarketListener {
 			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()) + " last " + days + " days");
 		}
 		
-		lblBalance.setText("Balance: " + Util.format(balance));
-		lblEquity.setText("Equity: " + Util.format(equity));
-		lblMargin.setText("Margin: " + Util.format(margin));
-		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin));
-		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100) + "%");
+		lblBalance.setText("Balance: " + Util.format(balance, 2));
+		lblEquity.setText("Equity: " + Util.format(equity, 2));
+		lblMargin.setText("Margin: " + Util.format(margin, 2));
+		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin, 2));
+		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100, 2) + "%");
 		
-		lblProfit.setText("Profit: " + Util.format(profit));
-		lblSurplus.setText("Sur: " + Util.format(surplus*100) + "%");
-		lblROI.setText("Lev.ROI: " + Util.format(lRoi*100) + "%");
-		lblOscill.setText("Oscill: " + Util.format(oscill));
-		lblBias.setText("Bias: " + Util.format(bias));
-		lblEstInvest.setText("INVEST: " + Util.format(invest) + " / " + Util.format(investRisky));
+		lblProfit.setText("Profit: " + Util.format(profit, 2));
+		lblSurplus.setText("Sur: " + Util.format(surplus*100, 2) + "%");
+		lblROI.setText("Lev.ROI: " + Util.format(lRoi*100, 2) + "%");
+		lblOscill.setText("Oscill: " + Util.format(oscill, 2));
+		lblBias.setText("Bias: " + Util.format(bias, 2) + " / " + Util.format(dev, 2));
+		lblEstInvest.setText("INVEST: " + Util.format(invest, 2) + " / " + Util.format(investRisky, 2));
 	}
 
 
@@ -2345,7 +2346,7 @@ class AddPrice extends JDialog {
 
 	
 	public AddPrice(Market market, Stock input, Component parent) {
-		super(Util.getDialogForComponent(parent), "Add price", true);
+		super(Util.getDialogForComponent(parent), "Add price" + (input != null ? " for " + input.code() : ""), true);
 		this.market = market;
 		this.input = input;
 		

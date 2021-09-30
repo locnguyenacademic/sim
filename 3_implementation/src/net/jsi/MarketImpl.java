@@ -274,10 +274,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	
 	
 	@Override
-	public double calcTotalBias(long timeInterval) {
+	public double calcBias(long timeInterval) {
 		double biasSum = 0;
 		for (StockGroup group : groups) {
-			biasSum += group.calcTotalBias(timeInterval);
+			biasSum += group.calcBias(timeInterval);
 		}
 		
 		return biasSum;
@@ -285,10 +285,10 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 
 	@Override
-	public double calcTotalPriceOscill(long timeInterval) {
+	public double calcOscill(long timeInterval) {
 		double oscillSum = 0;
 		for (StockGroup group : groups) {
-			oscillSum += group.calcTotalPriceOscill(timeInterval);
+			oscillSum += group.calcOscill(timeInterval);
 		}
 		
 		return oscillSum;
@@ -296,14 +296,25 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 
 	@Override
-	public double getPriceOscillRatio(long timeInterval) {
+	public double calcOscillRatio(long timeInterval) {
 		if (groups.size() == 0) return 0;
 		double oscillRatio = 0;
 		for (StockGroup group : groups) {
-			oscillRatio += group.getPriceOscillRatio(timeInterval);
+			oscillRatio += group.calcOscillRatio(timeInterval);
 		}
 		
 		return oscillRatio / groups.size();
+	}
+
+
+	@Override
+	public double calcMinMaxDev(long timeInterval) {
+		double minmaxDevSum = 0;
+		for (StockGroup group : groups) {
+			minmaxDevSum += group.calcMinMaxDev(timeInterval);
+		}
+		
+		return minmaxDevSum;
 	}
 
 

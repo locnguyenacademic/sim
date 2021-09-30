@@ -153,6 +153,21 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
+	protected double[] getMinMax(long timeInterval) {
+		List<Price> priceList = gets(timeInterval);
+		if (priceList.size() == 0) return new double[] {0, 0};
+		double min = Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
+		for (Price price : priceList) {
+			double v = price.get();
+			min = Math.min(min, v);
+			max = Math.max(max, v);
+		}
+		
+		return new double[] {min, max};
+	}
+	
+	
 	public Price removeByIndex(int index) {
 		return prices.remove(index);
 	}
@@ -247,8 +262,7 @@ public class PricePool implements Serializable, Cloneable {
 		return true;
 	}
 
-	
-	
+
 	public static class TakenStockPrice implements Serializable, Cloneable {
 
 		private static final long serialVersionUID = 1L;

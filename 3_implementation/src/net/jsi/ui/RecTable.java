@@ -685,9 +685,9 @@ class RecPanel extends JPanel implements MarketListener {
 	
 	protected void update() {
 		RecTableModel m = tblRec.getModel2();
-		lblEstInvest.setText("INVEST: " + Util.format(m.getInvestAmount()));
-		lblInvest.setText("Invested: " + Util.format(m.getInvestedAmount()) + " (" + Util.format(m.getInvestedVolume()) + ") / " + Util.format(m.investedAmount/m.investAmount*100) + "%");
-		lblBias.setText("Bias: " + Util.format(m.getBiasSum()));
+		lblEstInvest.setText("INVEST: " + Util.format(m.getInvestAmount(), 2));
+		lblInvest.setText("Invested: " + Util.format(m.getInvestedAmount(), 2) + " (" + Util.format(m.getInvestedVolume(), 2) + ") / " + Util.format(m.investedAmount/m.investAmount*100, 2) + "%");
+		lblBias.setText("Bias: " + Util.format(m.getBiasSum(), 2));
 	}
 	
 	

@@ -312,12 +312,12 @@ public class Investor extends JFrame implements MarketListener {
 		
 		profit = profit < 0 ? profit : (totalInvest > profit ? profit : profit - totalInvest);
 		
-		lblTotalProfit.setText("PROFIT: " + Util.format(profit));
-		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100) + "%");
-		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100) + "%");
-		//lblTotalBias.setText("BIAS: " + Util.format(totalBias));
-		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill));
-		lblTotalHedge.setText("HEDGE: " + (totalInvest > 0 ? 0 : Util.format(-totalInvest)));
+		lblTotalProfit.setText("PROFIT: " + Util.format(profit, 2));
+		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100, 2) + "%");
+		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100, 2) + "%");
+		//lblTotalBias.setText("BIAS: " + Util.format(totalBias, 2));
+		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill, 2));
+		lblTotalHedge.setText("HEDGE: " + (totalInvest > 0 ? 0 : Util.format(-totalInvest, 2)));
 		
 		curMarketPanel = getSelectedMarketPanel();
 		System.out.println("Current market updated: " + curMarketPanel.getMarket().getName());

@@ -142,7 +142,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public double calcTotalBias(long timeInterval) {
+	public double calcBias(long timeInterval) {
 		return estimateUnitBias(timeInterval) * getVolume(timeInterval, false);
 	}
 	
@@ -157,18 +157,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
+	public double calcOscill(long timeInterval) {
+		return getPriceOscill(timeInterval) * getVolume(timeInterval, false);
+	}
+
+	
 	@Override
-	public double getPriceOscillRatio(long timeInterval) {
+	public double calcOscillRatio(long timeInterval) {
 		Price price = info.getPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
 		else
 			return (getPrice().get() - price.get()) / price.get();
-	}
-
-	
-	public double calcTotalPriceOscill(long timeInterval) {
-		return getPriceOscill(timeInterval) * getVolume(timeInterval, false);
 	}
 
 	
@@ -182,6 +182,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 			return Math.max(unitBias, unitBias*refBaseLeverage/leverage);
 	}
 	
+	
+	@Override
+	public double getPriceMinMaxDev(long timeInterval) {
+		double[] minmax = info.getPricePool().getMinMax(timeInterval);
+		return (minmax[1] - minmax[0]) / 2;
+	}
+
+	
+	public double calcMinMaxDev(long timeInterval) {
+		return getPriceMinMaxDev(timeInterval) * getVolume(timeInterval, false);
+	}
+
 	
 	@Override
 	public double getPositiveROISum(long timeInterval) {

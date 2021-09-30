@@ -84,10 +84,10 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 	
 	@Override
-	public double calcTotalBias(long timeInterval) {
+	public double calcBias(long timeInterval) {
 		double biasSum = 0;
 		for (Market market : markets) {
-			biasSum += market.calcTotalBias(timeInterval);
+			biasSum += market.calcBias(timeInterval);
 		}
 		
 		return biasSum;
@@ -95,10 +95,10 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public double calcTotalPriceOscill(long timeInterval) {
+	public double calcOscill(long timeInterval) {
 		double oscillSum = 0;
 		for (Market market : markets) {
-			oscillSum += market.calcTotalPriceOscill(timeInterval);
+			oscillSum += market.calcOscill(timeInterval);
 		}
 		
 		return oscillSum;
@@ -106,14 +106,25 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public double getPriceOscillRatio(long timeInterval) {
+	public double calcOscillRatio(long timeInterval) {
 		if (markets.size() == 0) return 0;
 		double oscillRatio = 0;
 		for (Market market : markets) {
-			oscillRatio += market.getPriceOscillRatio(timeInterval);
+			oscillRatio += market.calcOscillRatio(timeInterval);
 		}
 		
 		return oscillRatio / markets.size();
+	}
+
+
+	@Override
+	public double calcMinMaxDev(long timeInterval) {
+		double minmaxDevSum = 0;
+		for (Market market : markets) {
+			minmaxDevSum += market.calcMinMaxDev(timeInterval);
+		}
+		
+		return minmaxDevSum;
 	}
 
 

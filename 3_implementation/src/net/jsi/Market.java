@@ -34,15 +34,18 @@ public interface Market extends Serializable, Cloneable {
 	double getROIByLeverage(long timeInterval);
 
 	
-	double getPriceOscillRatio(long timeInterval);
+	double calcBias(long timeInterval);
 
 	
-	double calcTotalBias(long timeInterval);
+	double calcOscill(long timeInterval);
 
 	
-	double calcTotalPriceOscill(long timeInterval);
+	double calcOscillRatio(long timeInterval);
 
-		
+	
+	double calcMinMaxDev(long timeInterval);
+
+	
 	double calcInvestAmount(long timeInterval);
 
 		

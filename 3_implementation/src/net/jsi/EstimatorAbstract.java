@@ -179,7 +179,7 @@ public abstract class EstimatorAbstract implements Estimator {
 	
 	@Override
 	public double estimateLowPrice(long timeInterval) {
-		double price = getPrice().get();;
+		double price = getPrice().get();
 		double lowPrice = price;
 		double roi = getROIAdjusted(timeInterval);
 		double unitBias = estimateUnitBias(timeInterval);
