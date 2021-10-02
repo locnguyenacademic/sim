@@ -63,6 +63,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
+import net.hudup.core.logistic.LogUtil;
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
@@ -264,6 +265,7 @@ public class Investor extends JFrame implements MarketListener {
 		});
 		
 		this.curDir = workingDir;
+		Arrays.sort(fileNames);
 		for (String fileName : fileNames) {
 			File file = new File(workingDir, fileName);
 			if (remoteUniverse == null) {
@@ -773,10 +775,7 @@ public class Investor extends JFrame implements MarketListener {
 	private void onSync() {
 		try {
 			if (remoteUniverse != null && !inServer) remoteUniverse.sync(universe, 0);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {LogUtil.trace(e);}
 	}
 
 	
@@ -1178,21 +1177,28 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private void sortAllCodes() {
+		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to resort codes?", "Resort confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+
 		MarketPanel[] mps = getMarketPanels();
 		for (MarketPanel mp : mps) {
 			MarketImpl market = universe.c(mp.getMarket());
 			if (market == null) continue;
 			
-			market.sortByCode();
+			market.sortCodes();
 			MarketImpl watchMarket = market.getWatchMarket();
-			if (watchMarket != null) watchMarket.sortByCode();
+			if (watchMarket != null) watchMarket.sortCodes();
 			MarketImpl placeMarket = market.getPlaceMarket();
-			if (placeMarket != null) placeMarket.sortByCode();
+			if (placeMarket != null) placeMarket.sortCodes();
 			MarketImpl trashMarket = market.getTrashMarket();
-			if (trashMarket != null) trashMarket.sortByCode();
+			if (trashMarket != null) trashMarket.sortCodes();
 		}
 		
 		getSelectedMarketTable().update();
+		
+		try {
+			if (remoteUniverse != null && !inServer) remoteUniverse.sortCodes();
+		} catch (Exception e) {LogUtil.trace(e);}
 	}
 
 	

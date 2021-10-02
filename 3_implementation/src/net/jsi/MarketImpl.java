@@ -850,7 +850,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
-	public void sortByCode() {
+	public void sortCodes() {
 		Collections.sort(groups, new Comparator<StockGroup>() {
 
 			@Override

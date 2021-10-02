@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -518,6 +519,15 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 	
 	
+	@Override
+	public void sortCodes() {
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m != null) m.sortCodes();
+		}
+	}
+
+
 	private Market newMarket(File file) {
 		if (file == null || !file.exists() || file.isDirectory()) return null;
 		String fileName = file.getName();
@@ -572,6 +582,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		
 		markets.clear();
 		boolean ret = true;
+		Arrays.sort(fileNames);
 		for (String fileName : fileNames) {
 			File file = new File(workingDir, fileName);
 			Market market = newMarket(file);

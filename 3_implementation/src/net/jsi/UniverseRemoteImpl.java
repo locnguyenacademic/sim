@@ -91,6 +91,12 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 	
 	
+	@Override
+	public synchronized void sortCodes() throws RemoteException {
+		universe.sortCodes();
+	}
+
+
 	public synchronized void save(File workingDir) {
 		universe.save(workingDir);
 	}

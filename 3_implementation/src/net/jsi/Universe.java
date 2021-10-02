@@ -96,6 +96,9 @@ public interface Universe extends Market, Serializable, Cloneable {
 	boolean apply();
 
 		
+	void sortCodes();
+
+		
 	boolean open(File workingDir);
 
 	

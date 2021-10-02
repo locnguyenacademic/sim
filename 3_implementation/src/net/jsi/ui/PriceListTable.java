@@ -302,6 +302,8 @@ public class PriceListTable extends JTable {
 	
 	
 	public boolean update(String code) {
+		int selectedRow = getSelectedRow();
+
 		PricePool pricePool = code != null ? u().getPricePool(code) : null;
 		boolean ret = getModel2().update(pricePool);
 		
@@ -311,6 +313,7 @@ public class PriceListTable extends JTable {
 			getColumnModel().getColumn(0).setPreferredWidth(0);
 		}
 		
+		if (selectedRow >= 0 && selectedRow < getRowCount()) {try {setRowSelectionInterval(selectedRow, selectedRow);} catch (Throwable e) {}}
 		return ret;
 	}
 	
@@ -1163,11 +1166,14 @@ class PriceList extends JDialog {
 				else
 					cmbCode.setSelectedItem(newCode);
 
+				try {int n = tblPriceList.getRowCount(); if (n > 0) tblPriceList.setRowSelectionInterval(n - 1, n - 1);} catch (Throwable e) {}
 				return true;
 			}
 		}
 		else {
-			return tblPriceList.addPrice(output);
+			boolean ret = tblPriceList.addPrice(output);
+			try {int n = tblPriceList.getRowCount(); if (n > 0) tblPriceList.setRowSelectionInterval(n - 1, n - 1);} catch (Throwable e) {}
+			return ret;
 		}
 	}
 	
@@ -1687,6 +1693,8 @@ class PriceListPartialTable extends JTable {
 
 	
 	public void update() {
+		int selectedRow = getSelectedRow();
+
 		getModel2().update();
 		
 		if (getColumnModel().getColumnCount() > 0) {
@@ -1694,6 +1702,8 @@ class PriceListPartialTable extends JTable {
 			getColumnModel().getColumn(0).setMinWidth(0);
 			getColumnModel().getColumn(0).setPreferredWidth(0);
 		}
+		
+		if (selectedRow >= 0 && selectedRow < getRowCount()) {try {setRowSelectionInterval(selectedRow, selectedRow);} catch (Throwable e) {}}
 	}
 	
 	
@@ -2416,6 +2426,7 @@ class PriceListPartial extends JDialog {
 		if (output == null) return;
 		
 		tblPriceList.addPrice(output);
+		try {int n = tblPriceList.getRowCount(); if (n > 0) tblPriceList.setRowSelectionInterval(n - 1, n - 1);} catch (Throwable e) {}
 	}
 
 	

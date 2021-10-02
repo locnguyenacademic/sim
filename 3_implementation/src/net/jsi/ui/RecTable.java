@@ -167,8 +167,12 @@ public class RecTable extends JTable {
 
 	
 	public void update() {
+		int selectedRow = getSelectedRow();
+
 		getModel2().update();
 		init();
+		
+		if (selectedRow >= 0 && selectedRow < getRowCount()) {try {setRowSelectionInterval(selectedRow, selectedRow);} catch (Throwable e) {}}
 	}
 
 	

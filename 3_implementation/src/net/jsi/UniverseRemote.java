@@ -25,6 +25,9 @@ public interface UniverseRemote extends Remote {
 	boolean sync(Universe otherUniverse, long timeInterval) throws RemoteException;
 
 	
+	void sortCodes() throws RemoteException;
+	
+	
 	List<String> getMarketNames() throws RemoteException;
 	
 	

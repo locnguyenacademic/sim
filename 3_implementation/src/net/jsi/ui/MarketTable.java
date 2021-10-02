@@ -701,8 +701,12 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	
 	public void update() {
+		int selectedRow = getSelectedRow();
+		
 		getModel2().update();
 		init();
+		
+		if (selectedRow >= 0 && selectedRow < getRowCount()) {try {setRowSelectionInterval(selectedRow, selectedRow);} catch (Throwable e) {}}
 	}
 	
 	
@@ -832,8 +836,12 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	
 	public boolean apply() {
+		int selectedRow = getSelectedRow();
+
 		boolean applied = getModel2().apply();
 		init();
+		
+		if (selectedRow >= 0 && selectedRow < getRowCount()) {try {setRowSelectionInterval(selectedRow, selectedRow);} catch (Throwable e) {}}
 		return applied;
 	}
 	
@@ -1621,7 +1629,7 @@ class MarketPanel extends JPanel implements MarketListener {
 		btnSortCodes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tblMarket.m().sortByCode();
+				tblMarket.m().sortCodes();
 				tblMarket.update();
 			}
 		});
