@@ -135,9 +135,6 @@ public class StockProperty implements Serializable, Cloneable {
 	public static boolean RUNTIME_CASCADE = false;
 
 
-	//public static boolean LOOKUP_WHEN_READ_PRICES = true;
-	
-	
 	public static String CATEGORY_UNDEFINED = "undefined";
 	
 	
@@ -491,8 +488,8 @@ public class StockProperty implements Serializable, Cloneable {
 					
 				if (v != null) properties.put(key, v);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Throwable e) {
+				Util.trace(e);
 			}
 		}
 		
@@ -520,4 +517,35 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 
 
+	public static String keyOf(String code, boolean buy) {
+		return code != null ? code + PAIR_SEP + buy : null;
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private static String codeOf(String key) {
+		if (key == null) return null;
+		String[] sa = key.split(PAIR_SEP);
+		if (sa == null || sa.length < 2 || sa[0] == null)
+			return null;
+		else
+			return sa[0];
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private static boolean buyOf(String key) {
+		if (key == null) return true;
+		String[] sa = key.split(PAIR_SEP);
+		if (sa == null || sa.length < 2 || sa[1] == null)
+			return true;
+		else {
+			try {
+				return Boolean.parseBoolean(sa[1]);
+			} catch (Throwable e) {Util.trace(e);}
+			return true;
+		}
+	}
+	
+	
 }

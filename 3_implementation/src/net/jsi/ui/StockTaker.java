@@ -257,8 +257,8 @@ public class StockTaker extends JDialog {
 				StockImpl s = m().c(input);
 				if (s != null) txtTakenPrice.setValue(s.getAverageTakenPrice(0));
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Throwable e) {
+				Util.trace(e);
 			}
 		}
 		txtTakenPrice.setEditable(false);
@@ -1110,8 +1110,8 @@ class StockSelector extends JDialog {
 				StockImpl s = m().c(input);
 				if (s != null) txtTakenPrice.setValue(s.getAverageTakenPrice(0));
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Throwable e) {
+				Util.trace(e);
 			}
 		}
 		txtTakenPrice.setEditable(false);

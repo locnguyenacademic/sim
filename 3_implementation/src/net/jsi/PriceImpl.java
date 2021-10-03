@@ -141,29 +141,11 @@ public class PriceImpl implements Price {
 	}
 
 
-//	@Override
-//	public Serializable getTag() {
-//		return tag;
-//	}
-//
-//
-//	@Override
-//	public double getPriceRatio() {
-//		return priceRatio;
-//	}
-//	
-//	
-//	@Override
-//	public void setPriceRatio(double priceRatio) {
-//		this.priceRatio = priceRatio;
-//	}
-	
-	
 	@Override
 	public Object clone() {
 		try {
 			return super.clone();
-		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		} catch (CloneNotSupportedException e) {Util.trace(e);}
 		return null;
 	}
 

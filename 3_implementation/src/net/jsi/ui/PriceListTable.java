@@ -2629,7 +2629,7 @@ class NewPrice extends JDialog {
 	
 	private void ok() {
 		output = null;
-		try {output = (Price)input.clone();} catch (Exception e) {e.printStackTrace();}
+		try {output = (Price)input.clone();} catch (Throwable e) {Util.trace(e);}
 		if (output == null) return;
 		
 		if (!validateInput() || output == null) {

@@ -9,6 +9,8 @@ package net.jsi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -1048,7 +1050,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (stock.isCommitted()) return false;
 		
 		Price price = null;
-		try {price = (Price)stock.getPrice().clone();} catch (Exception e) {e.printStackTrace();}
+		try {price = (Price)stock.getPrice().clone();} catch (Throwable e) {Util.trace(e);}
 		if (price == null) return false;
 		
 		double volume = stock.getVolume(market.getTimeViewInterval(), false);
@@ -1142,6 +1144,19 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private static String toLeverage(double leverage) {
 		if (leverage != 0 && leverage < 1) leverage = 1.0 / leverage;
 		return Util.format(leverage);
+	}
+	
+	
+	public static String readMarketName(File file) {
+		try {
+			FileReader in = new FileReader(file);
+			String marketName = readMarketName(in);
+			in.close();
+			return marketName;
+		}
+		catch (Throwable e) {Util.trace(e);}
+		
+		return null;
 	}
 	
 	
@@ -1370,7 +1385,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			
 			return true;
 		}
-		catch (Exception e) { e.printStackTrace();}
+		catch (Exception e) {Util.trace(e);}
 		
 		return false;
 	}
@@ -1537,7 +1552,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			writer.flush();
 			return true;
 		}
-		catch (Exception e) { e.printStackTrace();}
+		catch (Throwable e) {Util.trace(e);}
 		
 		return false;
 	}

@@ -42,6 +42,12 @@ public interface Universe extends Market, Serializable, Cloneable {
 	Market remove(int index);
 	
 	
+	boolean remove(Market market);
+	
+	
+	boolean rename(String marketName, String newMarketName);
+
+	
 	Market set(int index, Market market);
 	
 	

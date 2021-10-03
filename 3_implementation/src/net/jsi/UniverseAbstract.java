@@ -205,16 +205,60 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	
 	@Override
 	public Market remove(int index) {
-		return markets.remove(index);
+		Market removedMarket = markets.remove(index);
+		if (removedMarket != null) {
+			String marketName = removedMarket.getName();
+			stores.remove(marketName); placeStores.remove(marketName);
+		}
+		return removedMarket;
 	}
 	
 	
 	@Override
+	public boolean remove(Market market) {
+		boolean removed = markets.remove(market);
+		if (removed) {
+			String marketName = market.getName();
+			stores.remove(marketName); placeStores.remove(marketName);
+		}
+		return removed;
+	}
+
+
+	@Override
+	public boolean rename(String marketName, String newMarketName) {
+		if (marketName == null || newMarketName == null || newMarketName.equals(marketName)) return false;
+		Market market = get(marketName);
+		if (market == null) return false;
+		if (lookup(newMarketName) >= 0) return false;
+		MarketImpl m = c(market); if (m == null) return false;
+		
+		m.setName(newMarketName);
+		StockInfoStore store = stores.get(marketName);
+		if (store != null) {
+			stores.remove(marketName); stores.put(newMarketName, store);
+		}
+		StockInfoStore placeStore = placeStores.get(marketName);
+		if (placeStore != null) {
+			placeStores.remove(marketName); placeStores.put(newMarketName, placeStore);
+		}
+		
+		return true;
+	}
+
+
+	@Override
 	public Market set(int index, Market market) {
 		if (market == null || lookup(market.getName()) >= 0)
 			return null;
-		else
-			return markets.set(index, market);
+		else {
+			Market replacedMarket = markets.set(index, market);
+			if (replacedMarket != null) {
+				String marketName = replacedMarket.getName();
+				stores.remove(marketName); placeStores.remove(marketName);
+			}
+			return replacedMarket;
+		}
 	}
 
 
@@ -496,8 +540,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			if (removeRedundant) defaultCategories.clear();
 			addDefaultCategories(other.getDefaultCategories());
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (Throwable e) {
+			Util.trace(e);
 		}
 	}
 
@@ -548,8 +592,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
         	reader.close();
         	return market;
         }
-        catch (Exception e) {
-        	e.printStackTrace();
+        catch (Throwable e) {
+			Util.trace(e);
         }
         
         return null;
@@ -619,9 +663,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 				ret = market.write(writer) && ret;
 				writer.close();
 			}
-			catch (Exception e) {
+			catch (Throwable e) {
 				ret = ret && false;
-				e.printStackTrace();
+				Util.trace(e);
 			}
 		}
 		
@@ -647,8 +691,8 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			
 			return true;
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (Throwable e) {
+			Util.trace(e);
 		}
 		
 		return false;

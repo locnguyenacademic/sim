@@ -187,7 +187,7 @@ public class TakenPrice implements Price {
 	public Object clone() {
 		try {
 			return super.clone();
-		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		} catch (CloneNotSupportedException e) {Util.trace(e);}
 		return null;
 	}
 

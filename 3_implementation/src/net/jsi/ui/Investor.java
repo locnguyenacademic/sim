@@ -63,7 +63,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
-import net.hudup.core.logistic.LogUtil;
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
@@ -738,14 +737,16 @@ public class Investor extends JFrame implements MarketListener {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp == null) return;
 		
-		if (mp.onOpen()) {
+		List<String> exclusiveNames = getMarketNames();
+		exclusiveNames.remove(mp.getMarket().getName());
+		if (mp.onOpen(exclusiveNames)) {
 			int index = indexOfMarketPanel(mp);
 			if (index >= 0) body.setTitleAt(index, mp.getMarket().getName());
 		}
 	}
 	
 	
-	protected void onSaveAs() {
+	private void onSaveAs() {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp != null) {
 			mp.onSave();
@@ -754,7 +755,7 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	protected void onSave() {
+	private void onSave() {
 		MarketPanel mp = getSelectedMarketPanel();
 		if (mp == null)
 			return;
@@ -775,7 +776,7 @@ public class Investor extends JFrame implements MarketListener {
 	private void onSync() {
 		try {
 			if (remoteUniverse != null && !inServer) remoteUniverse.sync(universe, 0);
-		} catch (Exception e) {LogUtil.trace(e);}
+		} catch (Exception e) {Util.trace(e);}
 	}
 
 	
@@ -820,7 +821,7 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	protected void addMarketPanel() {
+	private void addMarketPanel() {
 		MarketPanel[] mps = getMarketPanels();
 		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
 		if (marketName == null) return;
@@ -838,7 +839,7 @@ public class Investor extends JFrame implements MarketListener {
 	}
 	
 	
-	protected MarketPanel addMarketPanel(String marketName) {
+	private MarketPanel addMarketPanel(String marketName) {
 		if (marketName == null || marketName.isEmpty()) return null;
 		if (getMarketPanel(marketName) != null) return null;
 		
@@ -876,22 +877,33 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 		
-	protected void renameMarketPanel() {
+	private void renameMarketPanel() {
 		MarketImpl selectedMarket = getSelectedMarket();
 		if (selectedMarket == null) return;
 		MarketPanel[] mps = getMarketPanels();
-		String marketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
-		if (marketName == null) return;
+		String newMarketName = JOptionPane.showInputDialog(this, "Enter new market name", "Market " + (mps.length + 1));
+		if (newMarketName == null) return;
 		
-		marketName = marketName.trim();
-		if (marketName.isEmpty())
+		newMarketName = newMarketName.trim();
+		if (newMarketName.isEmpty())
 			JOptionPane.showMessageDialog(this, "Empty market name", "Empty market name", JOptionPane.ERROR_MESSAGE);
-		else if (getMarketPanel(marketName) != null)
+		else if (getMarketPanel(newMarketName) != null)
 			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated market name", JOptionPane.ERROR_MESSAGE);
 		else {
-			selectedMarket.setName(marketName);
+			String oldMarketName = selectedMarket.getName();
+			boolean ret = universe.rename(oldMarketName, newMarketName);
+			if (!ret) {
+				JOptionPane.showMessageDialog(this, "Impossible to rename market", "Impossible to rename market", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			if (remoteUniverse != null && !inServer) {
+				try {
+					remoteUniverse.rename(oldMarketName, newMarketName);
+				} catch (Throwable e) {Util.trace(e);}
+			}
 			int index = getSelectedMarketPanelIndex();
-			body.setTitleAt(index, marketName);
+			body.setTitleAt(index, newMarketName);
 		}
 	}
 
@@ -900,7 +912,7 @@ public class Investor extends JFrame implements MarketListener {
 		MarketPanel[] mps = getMarketPanels();
 		if (mps.length == 0) return;
 		if (mps.length < 2) {
-			JOptionPane.showMessageDialog(this, "Universe has 1 market at least", "Imposible to remove market", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Universe has 1 market at least", "Impossible to remove market", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		
@@ -1017,18 +1029,30 @@ public class Investor extends JFrame implements MarketListener {
 	}
 
 	
-	private MarketImpl[] getMarkets() {
+	private List<MarketImpl> getMarkets() {
 		MarketPanel[] mps = getMarketPanels();
-		MarketImpl[] ms = new MarketImpl[mps.length];
-		for (int i = 0; i < mps.length; i++) ms[i] = universe.c(mps[i].getMarket());
+		List<MarketImpl> ms = Util.newList(mps.length);
+		for (int i = 0; i < mps.length; i++) {
+			MarketImpl m = universe.c(mps[i].getMarket());
+			if (m != null) ms.add(m);
+		}
 		
 		return ms;
 	}
 	
 	
+	private List<String> getMarketNames() {
+		List<MarketImpl> ms = getMarkets();
+		List<String> names = Util.newList(ms.size());
+		for (MarketImpl m : ms) names.add(m.getName());
+		
+		return names;
+	}
+	
+	
 	private long enterTimeInterval() {
 		long timeInterval = 0;
-		MarketImpl[] markets = getMarkets();
+		List<MarketImpl> markets = getMarkets();
 		for (MarketImpl market : markets) {
 			long ti = market.getTimeViewInterval();
 			if (ti == 0) {
@@ -1198,7 +1222,7 @@ public class Investor extends JFrame implements MarketListener {
 		
 		try {
 			if (remoteUniverse != null && !inServer) remoteUniverse.sortCodes();
-		} catch (Exception e) {LogUtil.trace(e);}
+		} catch (Exception e) {Util.trace(e);}
 	}
 
 	
@@ -1569,7 +1593,7 @@ public class Investor extends JFrame implements MarketListener {
 				catch (Exception ex) {ex.printStackTrace();}
 				
 				if (remoteUniverse == null) {
-					JOptionPane.showMessageDialog(null, "Imposible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Impossible to connect server.\nTherefore running local investor.", "Local investtor", JOptionPane.WARNING_MESSAGE);
 					new Investor(new UniverseImpl(), null, false).setVisible(true);
 				}
 				else {

@@ -495,7 +495,7 @@ class MarketPlacePanel2 extends MarketPlacePanel {
 		}
 		catch (Throwable e) {
 			this.prevStore = null;
-			e.printStackTrace();
+			Util.trace(e);
 		}
 		
 		return new MarketPlaceTable(market, group, superListener);

@@ -803,7 +803,7 @@ public class MarketTable extends JTable implements MarketListener {
             return ret;
         }
         catch (Exception e) {
-        	e.printStackTrace();
+			Util.trace(e);
         }
         
         return false;
@@ -817,7 +817,7 @@ public class MarketTable extends JTable implements MarketListener {
             return ret;
         }
         catch (Exception e) {
-        	e.printStackTrace();
+			Util.trace(e);
         }
         
         return false;
@@ -896,7 +896,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
 	public List<EstimateStock> getEstimateStocks(String code, boolean buy) {
-		String key = keyOf(code, buy);
+		String key = StockProperty.keyOf(code, buy);
 		if (stockEstimators.containsKey(key))
 			return stockEstimators.get(key);
 		else
@@ -927,11 +927,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 
-	private String keyOf(String code, boolean buy) {
-		return code + ":" + buy;
-	}
-	
-	
 	public void update() {
 		setDataVector(new Object[][] {}, new Object[] {});
 		MarketImpl m = m();
@@ -947,7 +942,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				StockGroup group = m.get(i);
 				if (group.isCommitted() && !showCommit) continue;
 				
-				String key = keyOf(group.code(), group.isBuy());
+				String key = StockProperty.keyOf(group.code(), group.isBuy());
 				Estimator estimator = query.getEstimator(group.code(), group.isBuy());
 				estimators.put(key, estimator);
 				
@@ -1075,7 +1070,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.calcBias(timeViewInterval));
 			
 			Triple tv = new Triple(Double.NaN, Double.NaN, Double.NaN);
-			Estimator estimator = estimators.get(keyOf(group.code(), group.isBuy()));
+			Estimator estimator = estimators.get(StockProperty.keyOf(group.code(), group.isBuy()));
 			if (estimator != null && group.getLeverage() != 0) {
 				double volume = estimator.estimateInvestVolume(timeViewInterval);
 				double amount = estimator.estimateInvestAmount(timeViewInterval);
@@ -1956,12 +1951,25 @@ class MarketPanel extends JPanel implements MarketListener {
 
 
 	protected boolean onOpen() {
+		return onOpen(null);
+	}
+	
+	
+	protected boolean onOpen(List<String> exclusiveNames) {
 		JFileChooser fc = createFileChooser();
         if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return false;
         File file = fc.getSelectedFile();
         if (!file.exists() || file.isDirectory()) {
 			JOptionPane.showMessageDialog(this, "Wrong file", "Wrong file", JOptionPane.ERROR_MESSAGE);
 			return false;
+        }
+        
+        if (exclusiveNames != null && exclusiveNames.size() > 0) {
+        	String marketName = MarketImpl.readMarketName(file);
+        	if (marketName != null && exclusiveNames.contains(marketName)) {
+    			JOptionPane.showMessageDialog(this, "Duplicated market name", "Duplicated name", JOptionPane.ERROR_MESSAGE);
+        		return false;
+        	}
         }
         
         boolean ret = open(file);
@@ -1985,7 +1993,7 @@ class MarketPanel extends JPanel implements MarketListener {
             return ret;
         }
         catch (Exception e) {
-        	e.printStackTrace();
+			Util.trace(e);
         }
         
         return false;
@@ -2032,7 +2040,7 @@ class MarketPanel extends JPanel implements MarketListener {
             return ret;
         }
         catch (Exception e) {
-        	e.printStackTrace();
+			Util.trace(e);
         }
         
         return false;

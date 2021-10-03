@@ -17,7 +17,7 @@ public class StockInfoStore implements Serializable, Cloneable {
 	private static Map<String, PricePool> placePricePools = Util.newMap(0);
 	
 	
-	private Map<String, StockInfo> stores = Util.newMap(0);
+	private Map<String, StockInfo> infos = Util.newMap(0);
 	
 	
 	public StockInfoStore() {
@@ -26,26 +26,26 @@ public class StockInfoStore implements Serializable, Cloneable {
 
 	
 	protected int size() {
-		return stores.size();
+		return infos.size();
 	}
 	
 	
 	public Set<String> codes() {
-		return stores.keySet();
+		return infos.keySet();
 	}
 	
 	
 	public StockInfo get(String code) {
-		if (stores.containsKey(code))
-			return stores.get(code);
+		if (infos.containsKey(code))
+			return infos.get(code);
 		else
 			return null;
 	}
 	
 	
 	public StockInfo getCreate(String code) {
-		if (stores.containsKey(code))
-			return stores.get(code);
+		if (infos.containsKey(code))
+			return infos.get(code);
 		else
 			return create(code);
 	}
@@ -62,36 +62,36 @@ public class StockInfoStore implements Serializable, Cloneable {
 		if (code == null || si == null)
 			return null;
 		else {
-			stores.put(code, si);
+			infos.put(code, si);
 			return si;
 		}
 	}
 	
 	
 	public StockInfo remove(String code) {
-		return stores.remove(code);
+		return infos.remove(code);
 	}
 	
 	
 	public Price getLastPrice(String code) {
-		if (stores.containsKey(code))
-			return stores.get(code).getLastPrice();
+		if (infos.containsKey(code))
+			return infos.get(code).getLastPrice();
 		else
 			return null;
 	}
 	
 
 	public Price getPriceByTimePoint(String code, long timePoint) {
-		if (stores.containsKey(code))
-			return stores.get(code).getPriceByTimePoint(timePoint);
+		if (infos.containsKey(code))
+			return infos.get(code).getPriceByTimePoint(timePoint);
 		else
 			return null;
 	}
 	
 	
 	protected List<Price> getPrices(String code, long timeInterval) {
-		if (stores.containsKey(code))
-			return stores.get(code).getPrices(timeInterval);
+		if (infos.containsKey(code))
+			return infos.get(code).getPrices(timeInterval);
 		else
 			return Util.newList(0);
 	}
@@ -150,8 +150,8 @@ public class StockInfoStore implements Serializable, Cloneable {
 				StockInfo clonedInfo = get(code).pricePoolSync();
 				if (clonedInfo != null) clonedStore.set(code, clonedInfo);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Throwable e) {
+				Util.trace(e);
 			}
 		}
 		

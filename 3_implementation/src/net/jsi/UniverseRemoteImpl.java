@@ -60,7 +60,7 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 
 
-	protected synchronized boolean sync(Universe otherUniverse, long timeInterval, boolean removeRedundant) {
+	private synchronized boolean sync(Universe otherUniverse, long timeInterval, boolean removeRedundant) {
 		if (otherUniverse == null || !universe.getName().equals(otherUniverse.getName())) return false;
 		universe.setBasicInfo(otherUniverse, removeRedundant);
 		
@@ -86,17 +86,17 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 	
 	
-	public synchronized boolean open(File workingDir) {
-		return universe.open(workingDir);
-	}
-	
-	
 	@Override
 	public synchronized void sortCodes() throws RemoteException {
 		universe.sortCodes();
 	}
 
 
+	public synchronized boolean open(File workingDir) {
+		return universe.open(workingDir);
+	}
+	
+	
 	public synchronized void save(File workingDir) {
 		universe.save(workingDir);
 	}
@@ -125,12 +125,18 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	
 	
 	@Override
+	public synchronized boolean rename(String marketName, String newMarketName) throws RemoteException {
+		return universe.rename(marketName, newMarketName);
+	}
+
+
+	@Override
 	public synchronized boolean export(int serverPort) throws RemoteException {
 		if (exported) return false;
 		try {
 			return (exported = (UnicastRemoteObject.exportObject(this, serverPort) != null));
 		}
-		catch (Exception e) {e.printStackTrace();}
+		catch (Throwable e) {Util.trace(e);}
 		
 		return false;
 	}
@@ -142,7 +148,7 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 			try {
 	        	return !(exported = !UnicastRemoteObject.unexportObject(this, true));
 			}
-			catch (Throwable e) {e.printStackTrace();}
+			catch (Throwable e) {Util.trace(e);}
 			return false;
 		}
 		else

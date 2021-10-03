@@ -385,7 +385,7 @@ class RecTableModel extends DefaultTableModel {
 				percent.v = (margin1 + margin2) / investAmount;
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				Util.trace(e);
 			}
 		}
 		
