@@ -1420,6 +1420,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			if (si == null) return;
 			if (si.getPrice(0, priceDate) != null) {
 				si.setLeverage(leverage);
+				si.setUnitBias(unitBias);
 			}
 			else {
 				Price p = market.newPrice(price, lowPrice, highPrice, priceDate);

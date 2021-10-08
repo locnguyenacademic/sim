@@ -1601,7 +1601,10 @@ class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int answer= JOptionPane.showConfirmDialog(thisPanel, "Be careful to reestimate stop losses and take profits.\nAre you sure to reestimate them?", "Reestimation confirmation", JOptionPane.YES_NO_OPTION);
-				if (answer == JOptionPane.YES_OPTION) tblMarket.resetAllStopLossTakeProfits();
+				if (answer == JOptionPane.YES_OPTION) {
+					tblMarket.resetAllStopLossTakeProfits();
+					tblMarket.update();
+				}
 			}
 		});
 		btnReestimateLossesProfits.setMnemonic('o');
@@ -1613,7 +1616,10 @@ class MarketPanel extends JPanel implements MarketListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int answer= JOptionPane.showConfirmDialog(thisPanel, "Be careful to reestimate unit biases.\nAre you sure to reestimate them?", "Reestimation confirmation", JOptionPane.YES_NO_OPTION);
-				if (answer == JOptionPane.YES_OPTION) tblMarket.resetAllUnitBiases();
+				if (answer == JOptionPane.YES_OPTION) {
+					tblMarket.resetAllUnitBiases();
+					tblMarket.update();
+				}
 			}
 		});
 		btnReestimateUnitBiases.setMnemonic('b');
