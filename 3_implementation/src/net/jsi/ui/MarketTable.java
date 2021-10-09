@@ -980,6 +980,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			EstimateStock es = getEstimateStock(row);
 			if (es != null) setStopLossTakeProfit(row, es.estimatedStopLoss, es.estimatedTakeProfit);
 		}
+		
+		fireMarketEvent(new MarketEvent(this));
 	}
 	
 	
@@ -988,6 +990,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			EstimateStock es = getEstimateStock(row);
 			if (es != null) setUnitBias(row, es.estimatedUnitBiasFromData);
 		}
+		
+		fireMarketEvent(new MarketEvent(this));
 	}
 	
 	
@@ -1603,7 +1607,6 @@ class MarketPanel extends JPanel implements MarketListener {
 				int answer= JOptionPane.showConfirmDialog(thisPanel, "Be careful to reestimate stop losses and take profits.\nAre you sure to reestimate them?", "Reestimation confirmation", JOptionPane.YES_NO_OPTION);
 				if (answer == JOptionPane.YES_OPTION) {
 					tblMarket.resetAllStopLossTakeProfits();
-					tblMarket.update();
 				}
 			}
 		});
@@ -1618,7 +1621,6 @@ class MarketPanel extends JPanel implements MarketListener {
 				int answer= JOptionPane.showConfirmDialog(thisPanel, "Be careful to reestimate unit biases.\nAre you sure to reestimate them?", "Reestimation confirmation", JOptionPane.YES_NO_OPTION);
 				if (answer == JOptionPane.YES_OPTION) {
 					tblMarket.resetAllUnitBiases();
-					tblMarket.update();
 				}
 			}
 		});

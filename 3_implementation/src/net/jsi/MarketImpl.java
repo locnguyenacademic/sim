@@ -39,11 +39,14 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	private double balanceBase = 0;
 	
 	
-	protected double balanceBias = 0;
+	private double balanceBias = 0;
 
 	
-	protected double marginFee = 0;
+	private double marginFee = 0;
 	
+	
+	private double credit = 0;
+
 	
 	protected List<StockGroup> groups = Util.newList(0);
 	
@@ -1264,11 +1267,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 							this.balanceBase = Double.parseDouble(fields[0]);
 							this.balanceBias = Double.parseDouble(fields[1]);
 							this.marginFee = Double.parseDouble(fields[2]);
-							timeViewInterval = Long.parseLong(fields[3]);
-							timeValidInterval = Long.parseLong(fields[4]);
-							this.setTimeStartPoint(Long.parseLong(fields[5]));
-							this.refLeverage = fromLeverage(fields[6]);
-							this.setName(fields[7]);
+							this.credit = Double.parseDouble(fields[3]);
+							timeViewInterval = Long.parseLong(fields[4]);
+							timeValidInterval = Long.parseLong(fields[5]);
+							this.setTimeStartPoint(Long.parseLong(fields[6]));
+							this.refLeverage = fromLeverage(fields[7]);
+							this.setName(fields[8]);
 						}
 						else if (!readInfo2) {
 							readInfo2 = true;
@@ -1508,6 +1512,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			String info = Util.format(balanceBase) + ", " +
 				Util.format(balanceBias) + ", " +
 				Util.format(marginFee) + ", " +
+				Util.format(credit) + ", " +
 				getTimeViewInterval() + ", " +
 				getTimeValidInterval() + ", " +
 				getTimeStartPoint() + ", " +
