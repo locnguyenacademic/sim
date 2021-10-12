@@ -150,6 +150,9 @@ public class StockImpl extends StockAbstract {
 	}
 
 
+	/*
+	 * As a convention, stock price is bid price.
+	 */
 	public Price getTakenPrice(long timeInterval) {
 		if (takenPrice == null) return null;
 		if (timeInterval <= 0) return takenPrice;
@@ -180,31 +183,35 @@ public class StockImpl extends StockAbstract {
 		return getTakenValue(timeInterval) * getLeverage();
 	}
 	
-	
+
+	/*
+	 * As a convention, stock price is bid price.
+	 */
 	@Override
 	public double getValue(long timeInterval) {
 		List<Price> prices = getPrices(timeInterval);
 		if (prices.size() == 0) return 0;
 		
 		Price last = prices.get(prices.size() - 1);
-		if (buy)
-			return volume * last.get();
-		else
-			return volume * (last.get() + getProperty().spread);
+		return volume * last.get();
 	}
 	
 	
+	/*
+	 * As a convention, stock price is bid price.
+	 */
 	@Override
 	public double getProfit(long timeInterval) {
 		Price takenPrice = getTakenPrice(timeInterval);
 		if (takenPrice == null) return 0;
 		
 		double takenValue = getTakenValue(timeInterval);
-		return (buy ? getValue(timeInterval)-takenValue : takenValue-getValue(timeInterval)) - getFee(timeInterval);
+		double value = getValue(timeInterval);
+		return (buy ? value-takenValue : takenValue-value) - getProperty().spread - getFee(timeInterval);
 	}
 	
 	
-	public double getFee(long timeInterval) {
+	protected double getFee(long timeInterval) {
 		long interval = getCommittedTimePoint() - getTakenTimePoint(timeInterval);
 		int days = (int) (interval / (1000*3600*24) + 0.5);
 		days = days > 0 ? days : 0;

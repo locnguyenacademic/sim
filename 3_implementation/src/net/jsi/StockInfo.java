@@ -163,6 +163,14 @@ public class StockInfo implements Serializable, Cloneable {
 	}
 	
 	
+	protected boolean retain(StockInfo referredInfo, long timeInterval, boolean update) {
+		if (!this.code().equals(referredInfo.code())) return false;
+		
+		setBasicInfo(referredInfo);
+		return this.pricePool.retain(referredInfo.pricePool, timeInterval, update);
+	}
+
+		
 	@SuppressWarnings("unused")
 	private boolean sync(StockInfo otherInfo, long timeInterval, int maxPriceCount, boolean removeRedundant) {
 		if (!this.code().equals(otherInfo.code())) return false;

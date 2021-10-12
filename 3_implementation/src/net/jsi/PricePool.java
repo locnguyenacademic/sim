@@ -401,6 +401,44 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
+	protected boolean retain(PricePool referredPricePool, long timeInterval, boolean update) {
+		if (!this.code().equals(referredPricePool.code())) return false;
+		this.unitBias = referredPricePool.unitBias;
+
+		int n = this.size();
+		if (n == 0) return true;
+		
+		Price lastPrice = this.getLast();
+		List<Price> removedPrices = Util.newList(0);
+		int breakIndex = -1;
+		for (int i = n - 1; i >= 0; i--) {
+			Price thisPrice = this.getByIndex(i);
+			if (timeInterval > 0 && lastPrice.getTime() - thisPrice.getTime() > timeInterval) {
+				breakIndex = i;
+				break;
+			}
+			
+			Price referredPrice = referredPricePool.getByTimePoint(thisPrice.getTime());
+			if (referredPrice == null)
+				removedPrices.add(thisPrice);
+			else if (update)
+				thisPrice.copy(referredPrice);
+		}
+		
+		if (breakIndex == n - 1)
+			this.prices.clear();
+		else if (breakIndex >= 0) {
+			List<Price> subPrices = this.prices.subList(breakIndex + 1, n);
+			this.prices.clear();
+			this.prices.addAll(subPrices);
+		}
+		
+		for (Price removedPrice : removedPrices) this.remove(removedPrice);
+		
+		return true;
+	}
+	
+	
 	protected void cut(long timeInterval) {
 		List<Price> prices = Util.newList(0);
 		if (timeInterval <= 0)

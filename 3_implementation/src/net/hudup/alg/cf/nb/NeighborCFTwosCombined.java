@@ -132,7 +132,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	 * Getting the similarity measure.
 	 * @return similar measure.
 	 */
-	public String getOtherSimilarMeasure() {
+	public String getOtherMeasure() {
 		String measure = config.getAsString(OTHER_MEASURE);
 		if (measure == null)
 			return getDefaultMeasure();
@@ -145,7 +145,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	 * Setting the similarity measure.
 	 * @param measure the similarity measure.
 	 */
-	public void setOtherSimilarMeasure(String measure) {
+	public void setOtherMeasure(String measure) {
 		config.put(OTHER_MEASURE, measure);
 	}
 
@@ -153,7 +153,7 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 	@Override
 	public boolean requireDiscreteRatingBins() {
 		return requireDiscreteRatingBins(getMeasure())
-				|| requireDiscreteRatingBins(getOtherSimilarMeasure());
+				|| requireDiscreteRatingBins(getOtherMeasure());
 	}
 
 
@@ -170,6 +170,19 @@ public abstract class NeighborCFTwosCombined extends NeighborCFExt {
 		combinedTypes.addAll(ctSet);
 		Collections.sort(combinedTypes);
 		return combinedTypes;
+	}
+
+	
+	@Override
+	public boolean isSymmetric() {
+		String measure = getMeasure();
+		String otherMeasure = getOtherMeasure();
+		if (measure == null || otherMeasure == null)
+			return true;
+		else if (measure.equals(Measure.TA) || otherMeasure.equals(Measure.TA))
+			return false;
+		else
+			return true;
 	}
 
 	

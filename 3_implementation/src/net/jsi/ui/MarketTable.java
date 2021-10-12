@@ -439,6 +439,23 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	protected void sortCodes() {
+		Investor g = Investor.g();
+		if (g == null) {
+			JOptionPane.showMessageDialog(this, "Cannot retrieve global investor", "Cannot retrieve investor", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		MarketImpl m = m();
+		if (m == null) return;
+		
+		m.sortCodes();
+		try {
+			if (g.remoteUniverse != null && !g.inServer) g.remoteUniverse.sortCodes(m.getName());
+		} catch (Exception e) {Util.trace(e);}
+		update();
+	}
+	
+	
 	protected JPopupMenu createContextMenu() {
 		JPopupMenu ctxMenu = new JPopupMenu();
 		Stock stock = getSelectedStock();
@@ -510,6 +527,17 @@ public class MarketTable extends JTable implements MarketListener {
 				ctxMenu.addSeparator();
 			}
 			
+			JMenuItem mniSortCodes = new JMenuItem(
+				new AbstractAction("Sort codes") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						sortCodes();
+					}
+				});
+			ctxMenu.add(mniSortCodes);
+
 			JMenuItem miRefresh = new JMenuItem("Refresh");
 			miRefresh.addActionListener( 
 				new ActionListener() {
@@ -2060,7 +2088,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	}
 	
 	
-	protected void autoSave() {
+	protected void autoBackup() {
 		String backupExt = "" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		if (this.file != null) {
 			if (save(this.file)) {

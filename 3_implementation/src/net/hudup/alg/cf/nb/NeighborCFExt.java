@@ -455,6 +455,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	@Override
+	public boolean isSymmetric() {
+		String measure = getMeasure();
+		if (measure == null)
+			return true;
+		else if (measure.equals(Measure.TA))
+			return false;
+		else
+			return true;
+	}
+
+
+	@Override
 	protected boolean isCachedSim() {
 		String measure = getMeasure();
 		if (measure == null)
@@ -1866,7 +1878,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected double jaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		String jtype = config.getAsString(JACCARD_TYPE);
 		if (jtype.equals(JACCARD_TYPE_IJ))
-			return improvedJaccard(vRating1, vRating2, profile1, profile2);
+			return jaccardImproved(vRating1, vRating2, profile1, profile2);
 		else
 			return super.jaccard(vRating1, vRating2, profile1, profile2);
 	}
@@ -1885,7 +1897,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return Improved Jaccard (IJ) measure between both two rating vectors and profiles.
 	 * @author Shunpan Liang, Lin Ma, Fuyong Yuan
 	 */
-	protected double improvedJaccard(RatingVector vRating1, RatingVector vRating2,
+	protected double jaccardImproved(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
 		Set<Integer> PA = Util.newSet(), NA = Util.newSet(), D = Util.newSet(), PO = Util.newSet(), NO = Util.newSet();
 		Set<Integer> ids = unionFieldIds(vRating1, vRating2);

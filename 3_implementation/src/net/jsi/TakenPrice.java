@@ -18,6 +18,9 @@ public class TakenPrice implements Price {
 	private Price price = null;
 	
 	
+	private double realPrice = Double.NaN;
+	
+	
 	private double extraPrice = 0;
 	
 	
@@ -26,15 +29,22 @@ public class TakenPrice implements Price {
 	}
 	
 	
-	public TakenPrice(Price price, double extra) {
+	public TakenPrice(Price price, double realPrice) {
 		this.price = price;
+		this.realPrice = realPrice;
+	}
+	
+	
+	public TakenPrice(Price price, double realPrice, double extra) {
+		this.price = price;
+		this.realPrice = realPrice;
 		this.extraPrice = extra;
 	}
 
 	
 	@Override
 	public double get() {
-		return price.get() + extraPrice;
+		return (Double.isNaN(realPrice) ? price.get() : realPrice) + extraPrice; 
 	}
 
 	
@@ -125,30 +135,13 @@ public class TakenPrice implements Price {
 	}
 
 
-//	@Override
-//	public Serializable getTag() {
-//		return price.getTag();
-//	}
-//
-//
-//	@Override
-//	public double getPriceRatio() {
-//		return price.getPriceRatio();
-//	}
-//
-//
-//	@Override
-//	public void setPriceRatio(double priceRatio) {
-//		price.setPriceRatio(priceRatio);
-//	}
-
-
 	@Override
 	public boolean copy(Price price) {
 		if (price == null) return false;
 		
 		if (price instanceof TakenPrice) {
 			this.price = ((TakenPrice)price).price;
+			this.realPrice = ((TakenPrice)price).realPrice;
 			this.extraPrice = ((TakenPrice)price).extraPrice;
 		}
 		else {
@@ -156,6 +149,7 @@ public class TakenPrice implements Price {
 			this.setLow(price.getLow());
 			this.setHigh(price.getHigh());
 			this.setAlt(price.getAlt());
+			this.realPrice = Double.NaN;
 			this.setTime(price.getTime());
 		}
 			
@@ -163,6 +157,12 @@ public class TakenPrice implements Price {
 	}
 
 
+	protected void copy(Price price, double realPrice) {
+		copy(price);
+		this.realPrice = realPrice;
+	}
+	
+	
 	@Override
 	public boolean checkRefEquals(Price price) {
 		if (price == null)

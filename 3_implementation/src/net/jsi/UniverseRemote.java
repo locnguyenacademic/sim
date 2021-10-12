@@ -28,6 +28,9 @@ public interface UniverseRemote extends Remote {
 	void sortCodes() throws RemoteException;
 	
 	
+	void sortCodes(String marketName) throws RemoteException;
+
+	
 	List<String> getMarketNames() throws RemoteException;
 	
 	

@@ -66,6 +66,12 @@ public abstract class WaspWaistCF extends NeighborCFExt {
 	}
 
 
+	@Override
+	public boolean isSymmetric() {
+		return super.isSymmetric() && dualCF.isSymmetric();
+	}
+
+	
 	/**
 	 * Crushing column rating vector having specified ID.
 	 * @param columnId specified ID.

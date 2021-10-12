@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -264,6 +265,17 @@ public class MarketPlaceTable extends MarketTable {
 				ctxMenu.addSeparator();
 			}
 			
+			JMenuItem mniSortCodes = new JMenuItem(
+				new AbstractAction("Sort codes") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						sortCodes();
+					}
+				});
+			ctxMenu.add(mniSortCodes);
+
 			JMenuItem miRefresh = new JMenuItem("Refresh");
 			miRefresh.addActionListener( 
 				new ActionListener() {
@@ -503,9 +515,11 @@ class MarketPlacePanel2 extends MarketPlacePanel {
 
 
 	@Override
-	protected void autoSave() {
-		if (prevStore != null)
-			tblMarket.m().getStore().sync(prevStore, 0, true);
+	protected void autoBackup() {
+		MarketImpl m = tblMarket.m();
+		
+		//if (prevStore != null) m.getStore().sync(prevStore, 0, true);
+		if (prevStore != null) m.getStore().retain(prevStore, m.getTimeViewInterval(), false);
 	}
 
 
@@ -532,7 +546,7 @@ class MarketPlaceDialog2 extends MarketPlaceDialog {
 
 	@Override
 	public void dispose() {
-		paneMarket.autoSave();
+		paneMarket.autoBackup();
 		super.dispose();
 	}
 

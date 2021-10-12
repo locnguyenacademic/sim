@@ -1063,7 +1063,7 @@ class PriceList extends JDialog {
 	
 	
 	private boolean apply() {
-		if (!editMode) return false;
+		if (!editMode && !selectMode) return false;
 		
 		boolean applied = tblPriceList.apply();
 		if (applied) {
@@ -2442,7 +2442,7 @@ class PriceListPartial extends JDialog {
 	
 	
 	private boolean apply() {
-		if (!editMode) return false;
+		if (!editMode && !selectMode) return false;
 		
 		boolean applied = tblPriceList.apply();
 		this.applied = this.applied || applied;

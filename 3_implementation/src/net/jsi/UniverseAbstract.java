@@ -572,6 +572,13 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 
+	@Override
+	public void sortCodes(String marketName) {
+		MarketImpl m = c(get(marketName));
+		if (m != null && m.getName().equals(marketName)) m.sortCodes();
+	}
+
+
 	private Market newMarket(File file) {
 		if (file == null || !file.exists() || file.isDirectory()) return null;
 		String fileName = file.getName();

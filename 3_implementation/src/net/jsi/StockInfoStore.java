@@ -133,6 +133,20 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
+	public void retain(StockInfoStore referredStore, long timeInterval, boolean update) {
+		Set<String> thisCodes = Util.newSet(0);
+		thisCodes.addAll(this.codes());
+		for (String thisCode : thisCodes) {
+			StockInfo thisInfo = this.get(thisCode);
+			StockInfo referredInfo = referredStore.get(thisCode);
+			if (referredInfo == null)
+				this.remove(thisCode);
+			else
+				thisInfo.retain(referredInfo, timeInterval, update);
+		}
+	}
+	
+	
 	public void cutPrices(long timeInterval) {
 		Set<String> codes = codes();
 		for (String code : codes) {

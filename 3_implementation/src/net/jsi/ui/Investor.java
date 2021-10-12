@@ -82,6 +82,14 @@ public class Investor extends JFrame implements MarketListener {
 	private static final long serialVersionUID = 1L;
 	
 	
+	private static Investor investor = null;
+	
+	
+	public final static Investor g() {
+		return investor;
+	}
+	
+	
 	/**
 	 * Server synchronization period in seconds.
 	 */
@@ -132,6 +140,7 @@ public class Investor extends JFrame implements MarketListener {
 		this.universe = universe;
 		this.remoteUniverse = remoteUniverse;
 		this.inServer = inServer;
+		if (investor == null) investor = this;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -211,7 +220,7 @@ public class Investor extends JFrame implements MarketListener {
 			MarketPanel[] mps = getMarketPanels();
 			for (MarketPanel mp : mps) {
 				String marketName = mp.getMarket().getName();
-				if (!remoteMarketNames.contains(marketName)) mp.autoSave();
+				if (!remoteMarketNames.contains(marketName)) mp.autoBackup();
 			}
 		}
 		
@@ -921,7 +930,7 @@ public class Investor extends JFrame implements MarketListener {
 		int index = universe.lookup(mp.getMarket().getName());
 		if (index < 0) return;
 		
-		if (!inServer && remoteUniverse == null) mp.autoSave();
+		if (!inServer && remoteUniverse == null) mp.autoBackup();
 		Market removedMarket = universe.remove(index);
 		if (removedMarket != null) {
 			int idx = getSelectedMarketPanelIndex();

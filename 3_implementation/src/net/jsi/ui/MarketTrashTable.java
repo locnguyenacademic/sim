@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -115,6 +116,17 @@ public class MarketTrashTable extends MarketTable {
 				ctxMenu.addSeparator();
 			}
 			
+			JMenuItem mniSortCodes = new JMenuItem(
+				new AbstractAction("Sort codes") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						sortCodes();
+					}
+				});
+			ctxMenu.add(mniSortCodes);
+
 			JMenuItem miRefresh = new JMenuItem("Refresh");
 			miRefresh.addActionListener( 
 				new ActionListener() {
