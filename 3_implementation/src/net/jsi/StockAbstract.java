@@ -157,18 +157,18 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	}
 	
 	
-	public double calcOscill(long timeInterval) {
-		return getPriceOscill(timeInterval) * getVolume(timeInterval, false);
+	public double calcOscillAbs(long timeInterval) {
+		return Math.abs(getPriceOscill(timeInterval)) * getVolume(timeInterval, false);
 	}
 
 	
 	@Override
-	public double calcOscillRatio(long timeInterval) {
+	public double calcOscillAbsRatio(long timeInterval) {
 		Price price = info.getPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
 		else
-			return (getPrice().get() - price.get()) / price.get();
+			return Math.abs(getPrice().get() - price.get()) / price.get();
 	}
 
 	

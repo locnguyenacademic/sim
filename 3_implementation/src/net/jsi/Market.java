@@ -39,8 +39,11 @@ public interface Market extends Serializable, Cloneable {
 	
 	double calcOscill(long timeInterval);
 
+		
+	double calcOscillAbs(long timeInterval);
+
 	
-	double calcOscillRatio(long timeInterval);
+	double calcOscillAbsRatio(long timeInterval);
 
 	
 	double calcMinMaxDev(long timeInterval);

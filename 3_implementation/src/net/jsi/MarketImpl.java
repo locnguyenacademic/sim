@@ -299,13 +299,24 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		return oscillSum;
 	}
 
+	
+	@Override
+	public double calcOscillAbs(long timeInterval) {
+		double oscillSum = 0;
+		for (StockGroup group : groups) {
+			oscillSum += group.calcOscillAbs(timeInterval);
+		}
+		
+		return oscillSum;
+	}
+
 
 	@Override
-	public double calcOscillRatio(long timeInterval) {
+	public double calcOscillAbsRatio(long timeInterval) {
 		if (groups.size() == 0) return 0;
 		double oscillRatio = 0;
 		for (StockGroup group : groups) {
-			oscillRatio += group.calcOscillRatio(timeInterval);
+			oscillRatio += group.calcOscillAbsRatio(timeInterval);
 		}
 		
 		return oscillRatio / groups.size();
