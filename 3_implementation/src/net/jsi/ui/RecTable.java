@@ -88,7 +88,7 @@ public class RecTable extends JTable {
 		Price price1 = placeMarket.newPrice(invest.invests[0].price, invest.invests[0].lowPrice, invest.invests[0].highPrice, System.currentTimeMillis());
 		if (lastPrice != null)
 			price1.setTime(Math.max(price1.getTime(), lastPrice.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
-		Stock added1 = (StockImpl)placeMarket.addStock(invest.code, invest.buy, info.getLeverage(), invest.invests[0].volume, price1);
+		Stock added1 = (StockImpl)placeMarket.addStock(invest.code, invest.buy, info.getLeverage(), invest.invests[0].volume, price1, Double.NaN);
 		if (added1 == null || !(added1 instanceof StockImpl)) return false;
 		added1.setUnitBias(invest.invests[0].unitBias);
 		placeMarket.c(added1).setStopLoss(invest.invests[0].stopLoss);
@@ -98,7 +98,7 @@ public class RecTable extends JTable {
 		Price price2 = placeMarket.newPrice(invest.invests[1].price, invest.invests[1].lowPrice, invest.invests[1].highPrice, System.currentTimeMillis());
 		if (lastPrice != null)
 			price2.setTime(Math.max(price2.getTime(), lastPrice.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL));
-		Stock added2 = placeMarket.addStock(invest.code, invest.buy, info.getLeverage(), invest.invests[1].volume, price2);
+		Stock added2 = placeMarket.addStock(invest.code, invest.buy, info.getLeverage(), invest.invests[1].volume, price2, Double.NaN);
 		if (added2 == null || !(added2 instanceof StockImpl)) return false;
 		added2.setUnitBias(invest.invests[1].unitBias);
 		placeMarket.c(added2).setStopLoss(invest.invests[1].stopLoss);

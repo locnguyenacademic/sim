@@ -1880,26 +1880,8 @@ class MarketPanel extends JPanel implements MarketListener {
 			}
 
 			private boolean moveStockToTrash(Stock stock) {
-				if (stock == null) return false;
 				MarketImpl m = m(); if (m == null) return false;
-				StockImpl s = m.c(stock); if (s == null) return false;
-				
-				MarketImpl trashMarket = m.getTrashMarket();
-				double volume = stock.getVolume(m.getTimeViewInterval(), true);
-				if (trashMarket != null) {
-					Stock added = trashMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
-					if (added == null)
-						return false;
-					else {
-						added.setCommitted(stock.isCommitted());
-						try {
-							trashMarket.c(added).setStopLoss(s.getStopLoss());
-							trashMarket.c(added).setTakeProfit(s.getTakeProfit());
-						} catch (Exception e) {}
-					}
-				}
-
-				return MarketImpl.remove(stock, m);
+				return MarketImpl.move(stock, m, m.getTrashMarket());
 			}
 
 			private void watch() {
@@ -2414,8 +2396,8 @@ class AddPrice extends JDialog {
 		header.add(left, BorderLayout.WEST);
 		
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 
@@ -2568,7 +2550,12 @@ class AddPrice extends JDialog {
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 		if (highPrice < 0) return false;
 		
-		if (price < lowPrice || price > highPrice) return false;
+		if (lowPrice == 0 && highPrice == 0) {
+			txtLowPrice.setValue(lowPrice = price);
+			txtHighPrice.setValue(highPrice = price);
+		}
+		else if (price < lowPrice || price > highPrice)
+			return false;
 		
 		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 		Universe universe = market.getNearestUniverse();

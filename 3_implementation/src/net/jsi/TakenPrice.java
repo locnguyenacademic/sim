@@ -25,34 +25,52 @@ public class TakenPrice implements Price {
 	
 	
 	public TakenPrice(Price price) {
-		this.price = price;
+		this(price, Double.NaN, 0);
 	}
 	
 	
 	public TakenPrice(Price price, double realPrice) {
-		this.price = price;
-		this.realPrice = realPrice;
+		this(price, realPrice, 0);
 	}
 	
 	
 	public TakenPrice(Price price, double realPrice, double extra) {
 		this.price = price;
-		this.realPrice = realPrice;
+		if (price == null)
+			this.realPrice = realPrice;
+		else if (price.get() != realPrice && !Double.isNaN(realPrice))
+			this.realPrice = realPrice;
 		this.extraPrice = extra;
 	}
 
 	
 	@Override
 	public double get() {
-		return (Double.isNaN(realPrice) ? price.get() : realPrice) + extraPrice; 
+		return (Double.isNaN(realPrice) && price != null ? price.get() : realPrice) + extraPrice; 
 	}
 
 	
 	@Override
 	public void set(double price) {
+		if (!Double.isNaN(realPrice)) realPrice = Double.NaN;
 		this.price.set(price);
 	}
 
+	
+	public double queryReal() {
+		return this.realPrice;
+	}
+	
+	
+	public void setReal(double realPrice) {
+		this.realPrice = realPrice;
+	}
+	
+	
+	public void unsetReal() {
+		this.realPrice = Double.NaN;
+	}
+	
 	
 	public double getExtra() {
 		return extraPrice;

@@ -38,24 +38,19 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
-	private void setExtraForTakenPrice(TakenPrice takenPrice) {
-		if (buy) {
-			takenPrice.setExtra(getProperty().spread);
-		}
-		else {
-			
-		}
-	}
-	
-	
-	public boolean take(long timeInterval, long takenTimePoint) {
+	public boolean take(long timeInterval, long takenTimePoint, double realPrice) {
 		Price price = getPrice(timeInterval, takenTimePoint);
 		if (price == null) {
 			takenPrice = null;
 			return false;
 		}
 		else
-			return take(price);
+			return take(price, realPrice);
+	}
+	
+	
+	public boolean take(long timeInterval, long takenTimePoint) {
+		return take(timeInterval, takenTimePoint, Double.NaN);
 	}
 	
 	
@@ -64,11 +59,11 @@ public class StockImpl extends StockAbstract {
 		if (lastPrice == null)
 			return false;
 		else
-			return take(lastPrice);
+			return take(lastPrice, Double.NaN);
 	}
 	
 	
-	private boolean take(Price price) {
+	private boolean take(Price price, double realPrice) {
 		if (isCommitted())
 			return false;
 		else if (price == null) {
@@ -76,12 +71,21 @@ public class StockImpl extends StockAbstract {
 			return false;
 		}
 		else {
-			takenPrice = new TakenPrice(price);
+			takenPrice = new TakenPrice(price, realPrice);
 			setExtraForTakenPrice(takenPrice);
 			return true;
 		}
 	}
 	
+	
+	private void setExtraForTakenPrice(TakenPrice takenPrice) {
+		if (buy) {
+
+		}
+		else {
+			
+		}
+	}
 	
 	
 	@Override
@@ -162,6 +166,15 @@ public class StockImpl extends StockAbstract {
 			return null;
 		else
 			return takenPrice;
+	}
+	
+	
+	protected double getRealTakenPrice(long timeInterval) {
+		Price takenPrice = getTakenPrice(timeInterval);
+		if (takenPrice != null && takenPrice instanceof TakenPrice)
+			return ((TakenPrice)takenPrice).queryReal();
+		else
+			return Double.NaN;
 	}
 	
 	
@@ -317,6 +330,21 @@ public class StockImpl extends StockAbstract {
 	public StockInfoStore getStore() {
 		StockGroup group = getGroup();
 		return group != null ? group.getStore() : null;
+	}
+
+
+	protected boolean copyRealTakenPrice(StockImpl source, long timeInterval) {
+		if (source == null) return false;
+		Price thisTakenPrice = this.getTakenPrice(timeInterval);
+		Price sourceTakenPrice = source.getTakenPrice(timeInterval);
+		if (thisTakenPrice == null || sourceTakenPrice == null)
+			return false;
+		else if (thisTakenPrice instanceof TakenPrice && sourceTakenPrice instanceof TakenPrice) {
+			((TakenPrice)thisTakenPrice).setReal(((TakenPrice)sourceTakenPrice).queryReal());
+			return true;
+		}
+		else
+			return false;
 	}
 
 

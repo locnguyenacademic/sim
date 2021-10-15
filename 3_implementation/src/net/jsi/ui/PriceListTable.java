@@ -183,8 +183,8 @@ public class PriceListTable extends JTable {
 		header.add(left, BorderLayout.WEST);
 		
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 
@@ -252,7 +252,12 @@ public class PriceListTable extends JTable {
 				double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 				if (highPrice < 0) check = check && false;
 				
-				if (price < lowPrice || price > highPrice) check = check && false;
+				if (lowPrice == 0 && highPrice == 0) {
+					lowPrice = price;
+					highPrice = price;
+				}
+				else if (price < lowPrice || price > highPrice)
+					check = check && false;
 				
 				double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
 				if (altPrice < lowPrice || altPrice > highPrice) altPrice = 0;
@@ -1140,7 +1145,7 @@ class PriceList extends JDialog {
 		}
 
 		Price input = tblPriceList.getLastRowPrice();
-		if (input == null) input = universe.newPrice(1, 1, 1, System.currentTimeMillis());
+		if (input == null) input = universe.newPrice(1, 0, 0, System.currentTimeMillis());
 		NewPrice newPrice = new NewPrice(input, bNewCode, this);
 		newPrice.setVisible(true);
 		
@@ -1534,8 +1539,8 @@ class PriceListPartialTable extends JTable {
 		header.add(left, BorderLayout.WEST);
 		
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		left.add(new JLabel("Alt price : "));
 		left.add(new JLabel("Last date: "));
 
@@ -1643,7 +1648,12 @@ class PriceListPartialTable extends JTable {
 				double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 				if (highPrice < 0) check = check && false;
 				
-				if (price < lowPrice || price > highPrice) check = check && false;
+				if (lowPrice == 0 && highPrice == 0) {
+					lowPrice = price;
+					highPrice = price;
+				}
+				else if (price < lowPrice || price > highPrice)
+					check = check && false;
 				
 				double altPrice = txtAltPrice.getValue() instanceof Number ? ((Number)txtAltPrice.getValue()).doubleValue() : 0;
 				if (altPrice < lowPrice || altPrice > highPrice) altPrice = 0;
@@ -2536,8 +2546,8 @@ class NewPrice extends JDialog {
 		
 		if(newCode) left.add(new JLabel("Code (*): "));
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Date: "));
 
@@ -2618,7 +2628,13 @@ class NewPrice extends JDialog {
 		double price = txtPrice.getValue() instanceof Number ? ((Number)txtPrice.getValue()).doubleValue() : 0;
 		double lowPrice = txtLowPrice.getValue() instanceof Number ? ((Number)txtLowPrice.getValue()).doubleValue() : 0;
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
-		if (price < lowPrice || price > highPrice) return false;
+		
+		if (lowPrice == 0 && highPrice == 0) {
+			txtLowPrice.setValue(lowPrice = price);
+			txtHighPrice.setValue(highPrice = price);
+		}
+		else if (price < lowPrice || price > highPrice)
+			return false;
 		
 		Date lastDate = txtLastDate.getValue() instanceof Date ? (Date)txtLastDate.getValue() : null;
 		if (lastDate == null) return false;

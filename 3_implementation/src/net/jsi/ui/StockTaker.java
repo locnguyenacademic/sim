@@ -191,8 +191,8 @@ public class StockTaker extends JDialog {
 		if (update) left.add(new JLabel("Taken price: "));
 		if (update) left.add(new JLabel("Taken date: "));
 		left.add(new JLabel("Price (*): "));
-		left.add(new JLabel("Low price (*): "));
-		left.add(new JLabel("High price (*): "));
+		left.add(new JLabel("Low price: "));
+		left.add(new JLabel("High price: "));
 		left.add(new JLabel("Alt price: "));
 		left.add(new JLabel("Last date: "));
 		left.add(new JLabel("Unit bias: "));
@@ -264,15 +264,22 @@ public class StockTaker extends JDialog {
 		txtTakenPrice.setEditable(false);
 		paneTakenPrice.add(txtTakenPrice, BorderLayout.CENTER);
 		//
-		btnTakenPrice = new JButton("Set");
+		btnTakenPrice = new JButton("Modify");
 		btnTakenPrice.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setTakenPrice();
+				double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : 1.0;
+				String txtPrice = JOptionPane.showInputDialog(btnTakenPrice, "Enter taken price", takenPrice);
+				takenPrice = Double.NaN;
+				try {
+					takenPrice = Double.parseDouble(txtPrice);
+				}
+				catch (Throwable ex) {}
+				if (!Double.isNaN(takenPrice) && takenPrice >= 0) txtTakenPrice.setValue(takenPrice);
 			}
 		});
 		btnTakenPrice.setEnabled(update);
-//		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
+		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenDate);
@@ -310,7 +317,7 @@ public class StockTaker extends JDialog {
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
 		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtLowPrice.setValue(update ? input.getPrice().getLow() : 1.0);
+		txtLowPrice.setValue(update ? input.getPrice().getLow() : 0.0);
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		//
 		btnLowPrice = new JButton("Estimate");
@@ -326,7 +333,7 @@ public class StockTaker extends JDialog {
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
 		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 1.0);
+		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 0.0);
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		//
 		btnHighPrice = new JButton("Estimate");
@@ -342,7 +349,7 @@ public class StockTaker extends JDialog {
 		JPanel paneAltPrice = new JPanel(new BorderLayout());
 		right.add(paneAltPrice);
 		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtAltPrice.setValue(update ? input.getPrice().getAlt() : 1.0);
+		txtAltPrice.setValue(update ? input.getPrice().getAlt() : 0.0);
 		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
 		//
 		btnAltPrice = new JButton("Estimate");
@@ -708,9 +715,9 @@ public class StockTaker extends JDialog {
 			txtUnitBias.setValue(unitBias);
 			
 			txtPrice.setValue(group != null ? group.getPrice().get() : 1.0);
-			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1.0);
-			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1.0);
-			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 1.0);
+			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 0.0);
+			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 0.0);
+			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 0.0);
 			
 			txtStopLoss.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getStopLoss() : 0);
 			txtTakeProfit.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getTakeProfit() : 0);
@@ -797,7 +804,11 @@ public class StockTaker extends JDialog {
 		double highPrice = txtHighPrice.getValue() instanceof Number ? ((Number)txtHighPrice.getValue()).doubleValue() : 0;
 		if (highPrice < 0) return false;
 		
-		if (price < lowPrice || price > highPrice) {
+		if (lowPrice == 0 && highPrice == 0) {
+			txtLowPrice.setValue(lowPrice = price);
+			txtHighPrice.setValue(highPrice = price);
+		}
+		else if (price < lowPrice || price > highPrice) {
 			txtLowPrice.setValue(price);
 			txtHighPrice.setValue(price);
 			return false;
@@ -861,7 +872,7 @@ public class StockTaker extends JDialog {
 		if (update)
 			output = input;
 		else {
-			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), price);
+			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), price, Double.NaN);
 			if (output == null) return;
 		}
 		
@@ -872,7 +883,8 @@ public class StockTaker extends JDialog {
 		if (update) {
 			if (!chkAddPrice.isSelected()) {
 				long takenTimePoint = ((Date)txtTakenDate.getValue()).getTime();
-				s.take(market.getTimeViewInterval(), takenTimePoint);
+				double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
+				s.take(market.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
 				
 				if (chkLastDate.isSelected()) s.setPriceTimePoint(lastTime);
 				
@@ -1117,15 +1129,22 @@ class StockSelector extends JDialog {
 		txtTakenPrice.setEditable(false);
 		paneTakenPrice.add(txtTakenPrice, BorderLayout.CENTER);
 		//
-		btnTakenPrice = new JButton("Set");
+		btnTakenPrice = new JButton("Modify");
 		btnTakenPrice.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setTakenPrice();
+				double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : 1.0;
+				String txtPrice = JOptionPane.showInputDialog(btnTakenPrice, "Enter taken price", takenPrice);
+				takenPrice = Double.NaN;
+				try {
+					takenPrice = Double.parseDouble(txtPrice);
+				}
+				catch (Throwable ex) {}
+				if (!Double.isNaN(takenPrice) && takenPrice >= 0) txtTakenPrice.setValue(takenPrice);
 			}
 		});
 		btnTakenPrice.setEnabled(update);
-//		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
+		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		right.add(paneTakenDate);
@@ -1146,21 +1165,21 @@ class StockSelector extends JDialog {
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
 		txtLowPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtLowPrice.setValue(update ? input.getPrice().getLow() : 1.0);
+		txtLowPrice.setValue(update ? input.getPrice().getLow() : 0.0);
 		txtLowPrice.setEditable(false);
 		paneLowPrice.add(txtLowPrice, BorderLayout.CENTER);
 		
 		JPanel paneHighPrice = new JPanel(new BorderLayout());
 		right.add(paneHighPrice);
 		txtHighPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 1.0);
+		txtHighPrice.setValue(update ? input.getPrice().getHigh() : 0.0);
 		txtHighPrice.setEditable(false);
 		paneHighPrice.add(txtHighPrice, BorderLayout.CENTER);
 		
 		JPanel paneAltPrice = new JPanel(new BorderLayout());
 		right.add(paneAltPrice);
 		txtAltPrice = new JFormattedTextField(Util.getNumberFormatter());
-		txtAltPrice.setValue(update ? input.getPrice().getAlt() : 1.0);
+		txtAltPrice.setValue(update ? input.getPrice().getAlt() : 0.0);
 		txtAltPrice.setEditable(false);
 		paneAltPrice.add(txtAltPrice, BorderLayout.CENTER);
 
@@ -1448,9 +1467,9 @@ class StockSelector extends JDialog {
 
 			txtUnitBias.setValue(unitBias);
 			
-			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 1.0);
-			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 1.0);
-			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 1.0);
+			txtLowPrice.setValue(group != null ? group.getPrice().getLow() : 0.0);
+			txtHighPrice.setValue(group != null ? group.getPrice().getHigh() : 0.0);
+			txtAltPrice.setValue(group != null ? group.getPrice().getAlt() : 0.0);
 			
 			txtStopLoss.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getStopLoss() : 0);
 			txtTakeProfit.setValue(s != null && group != null && s.code().equals(group.code()) ? s.getTakeProfit() : 0);
@@ -1536,7 +1555,7 @@ class StockSelector extends JDialog {
 			output = input;
 		}
 		else {
-			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), takenTimePoint);
+			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), takenTimePoint, Double.NaN);
 			if (output == null) return;
 		}
 		
@@ -1546,7 +1565,10 @@ class StockSelector extends JDialog {
 		
 		if (update) {
 			if (!Double.isNaN(leverage)) group.setLeverage(leverage);
-			s.take(m.getTimeViewInterval(), takenTimePoint);
+			
+			double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
+			s.take(m.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
+			
 			s.setCommitted(chkCommitted.isSelected());
 		}
 		

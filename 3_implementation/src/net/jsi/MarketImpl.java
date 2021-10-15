@@ -549,10 +549,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	protected Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint, Price price) {
+	private Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint, Price price, double realTakenPrice) {
 		StockInfo info = getStore().getCreate(code);
 		if (info == null) return null;
 		
+		Stock stock = null;
 		StockGroup group = get(code, buy);
 		if (group == null) {
 			if (price == null)
@@ -566,13 +567,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				return null;
 			}
 			
-			Stock stock = group.add(getTimeViewInterval(), takenTimePoint, volume);
+			stock = group.add(getTimeViewInterval(), takenTimePoint, volume);
 			if (stock == null) {
 				remove(code, buy);
 				info.removePrice(price);
 			}
-			
-			return stock;
 		}
 		else {
 			if (price != null) {
@@ -581,29 +580,55 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			}
 			if (!Double.isNaN(refLeverage)) group.setLeverage(refLeverage);
 			
-			return group.add(this.getTimeViewInterval(), takenTimePoint, volume);
+			stock = group.add(this.getTimeViewInterval(), takenTimePoint, volume);
 		}
 		
+		
+		if (stock != null && stock instanceof StockImpl && !Double.isNaN(realTakenPrice)) {
+			Price takenPrice = ((StockImpl)stock).getTakenPrice(0);
+			if (takenPrice != null && takenPrice instanceof TakenPrice) ((TakenPrice)takenPrice).setReal(realTakenPrice);
+		}
+		return stock;
 	}
 
 	
-	public Stock addStock(String code, boolean buy, double refLeverage, double volume, Price price) {
-		return addStock(code, buy, refLeverage, volume, 0, price);
+	public Stock addStock(String code, boolean buy, double refLeverage, double volume, Price price, double realTakenPrice) {
+		return addStock(code, buy, refLeverage, volume, 0, price, realTakenPrice);
 	}
 	
 	
+	public Stock addStock(String code, boolean buy, double refLeverage, double volume, Price price) {
+		return addStock(code, buy, refLeverage, volume, 0, price, Double.NaN);
+	}
+
+	
+	public Stock addStock(String code, boolean buy, double volume, Price price, double realTakenPrice) {
+		return addStock(code, buy, Double.NaN, volume, 0, price, realTakenPrice);
+	}
+
+	
 	public Stock addStock(String code, boolean buy, double volume, Price price) {
-		return addStock(code, buy, Double.NaN, volume, 0, price);
+		return addStock(code, buy, Double.NaN, volume, 0, price, Double.NaN);
+	}
+
+	
+	public Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint, double realTakenPrice) {
+		return addStock(code, buy, refLeverage, volume, takenTimePoint, null, realTakenPrice);
 	}
 
 	
 	public Stock addStock(String code, boolean buy, double refLeverage, double volume, long takenTimePoint) {
-		return addStock(code, buy, refLeverage, volume, takenTimePoint, null);
+		return addStock(code, buy, refLeverage, volume, takenTimePoint, null, Double.NaN);
+	}
+
+	
+	public Stock addStock(String code, boolean buy, double volume, long takenTimePoint, double realTakenPrice) {
+		return addStock(code, buy, Double.NaN, volume, takenTimePoint, realTakenPrice);
 	}
 
 	
 	public Stock addStock(String code, boolean buy, double volume, long takenTimePoint) {
-		return addStock(code, buy, Double.NaN, volume, takenTimePoint);
+		return addStock(code, buy, Double.NaN, volume, takenTimePoint, Double.NaN);
 	}
 
 	
@@ -922,7 +947,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				long takenTimePoint = otherStock.getTakenTimePoint(0);
 				StockImpl thisStock = thisMarket.c(thisGroup.get(takenTimePoint));
 				if (thisStock == null) {
-					Stock added = thisMarket.addStock(code, buy, otherStock.getLeverage(), otherStock.getVolume(0, true), takenTimePoint);
+					Stock added = thisMarket.addStock(code, buy, otherStock.getLeverage(), otherStock.getVolume(0, true), takenTimePoint, otherStock.getRealTakenPrice(0));
 					thisStock = thisMarket.c(added);
 				}
 				else {
@@ -1030,7 +1055,8 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 			Stock added = market.addStock(placeStock.code(),
 				placeStock.isBuy(),
 				volume,
-				lastPrice.getTime());
+				lastPrice.getTime(),
+				placeStock.getRealTakenPrice(0));
 			if (added == null) continue;
 			added.setExtraInfo(placeStock);
 
@@ -1050,7 +1076,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		
 		double volume = stock.getVolume(market.getTimeViewInterval(), true);
 		if (watchMarket != null) {
-			Stock added = watchMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()));
+			Stock added = watchMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()), s.getRealTakenPrice(0));
 			if (added == null) return false;
 			added.setExtraInfo(stock);
 		}
@@ -1068,30 +1094,19 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (price == null) return false;
 		
 		double volume = stock.getVolume(market.getTimeViewInterval(), false);
-		if (price == null || volume == 0) return false;
-		
+		if (price == null || volume <= 0) return false;
+		StockImpl s = market.c(stock);
+		double realTakenPrice = s != null ? s.getRealTakenPrice(0) : Double.NaN; 
+				
 		price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL);
 		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
-		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
+		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime(), realTakenPrice);
 		if (added != null) {
 			added.setExtraInfo(stock);
 			return true;
 		}
 		else
 			return false;
-
-//		placeMarket.getStore().addPriceWithoutDuplicateTime(stock.code(), price);
-//		Stock added = placeMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, price.getTime());
-//		if (added != null) {
-//			placeMarket.getStore().get(added.code()).sync(market.getStore().get(added.code()), 10);
-//			price = added.getPrice(); 
-//			price.setTime(price.getTime() + StockProperty.TIME_UPDATE_PRICE_INTERVAL); //To avoid immediate placing.
-//			
-//			added.setExtraInfo(stock);
-//			return true;
-//		}
-//		else
-//			return false;
 	}
 	
 	
@@ -1099,15 +1114,28 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (stock == null || market == null || targetMarket == null || market == targetMarket) return false;
 		if (stock.isCommitted()) return false;
 		StockImpl s = market.c(stock); if (s == null) return false;
-		
 		double volume = stock.getVolume(market.getTimeViewInterval(), true);
-		if (targetMarket != null && volume > 0) {
-			Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()));
-			if (added == null) return false;
-			added.setExtraInfo(stock);
-		}
+		if (volume <= 0) return false;
+		
+		Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()), s.getRealTakenPrice(0));
+		if (added == null) return false;
+		added.setExtraInfo(stock);
 
 		return MarketImpl.remove(stock, market);
+	}
+	
+	
+	public static boolean move(Stock stock, MarketImpl market, MarketImpl targetMarket) {
+		if (stock == null || market == null || targetMarket == null || market == targetMarket) return false;
+		StockImpl s = market.c(stock); if (s == null) return false;
+		
+		double volume = stock.getVolume(market.getTimeViewInterval(), true);
+		Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()), s.getRealTakenPrice(0));
+		if (added == null) return false;
+		added.setExtraInfo(stock);
+
+		return MarketImpl.remove(stock, market);
+
 	}
 	
 	
@@ -1129,16 +1157,16 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 	
 	
-	public static boolean recover(Stock stock, MarketImpl m, MarketImpl targetMarket) {
-		if (m == null || targetMarket == null) return false;
-		StockImpl s = m.c(stock); if (s == null) return false;
+	public static boolean recover(Stock stock, MarketImpl market, MarketImpl targetMarket) {
+		if (market == null || targetMarket == null) return false;
+		StockImpl s = market.c(stock); if (s == null) return false;
 
-		double volume = stock.getVolume(m.getTimeViewInterval(), true);
-		Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(m.getTimeViewInterval()));
+		double volume = stock.getVolume(market.getTimeViewInterval(), true);
+		Stock added = targetMarket.addStock(stock.code(), stock.isBuy(), stock.getLeverage(), volume, s.getTakenTimePoint(market.getTimeViewInterval()), s.getRealTakenPrice(0));
 		if (added == null) return false;
 		added.setExtraInfo(stock);
 
-		return MarketImpl.remove(stock, m);
+		return MarketImpl.remove(stock, market);
 		
 	}
 	
@@ -1453,12 +1481,13 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		boolean buy = Boolean.parseBoolean(fields[1]);
 		double volume = Double.parseDouble(fields[2]);
 		long takenDate = Long.parseLong(fields[3]);
-		double stopLoss = Double.parseDouble(fields[4]);
-		double takeProfit = Double.parseDouble(fields[5]);
-		boolean committed = Boolean.parseBoolean(fields[6]);
-		long committed_date = Long.parseLong(fields[7]);
+		double realTakenPrice = Double.parseDouble(fields[4]);
+		double stopLoss = Double.parseDouble(fields[5]);
+		double takeProfit = Double.parseDouble(fields[6]);
+		boolean committed = Boolean.parseBoolean(fields[7]);
+		long committed_date = Long.parseLong(fields[8]);
 		
-		Stock stock = market.addStock(code, buy, volume, takenDate);
+		Stock stock = market.addStock(code, buy, volume, takenDate, realTakenPrice);
 		if (stock == null) return;
 		
 		stock.setCommitted(committed);
@@ -1482,16 +1511,17 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double highPrice = Double.parseDouble(fields[6]);
 		double altPrice = Double.parseDouble(fields[7]);
 		long priceDate = Long.parseLong(fields[8]);
-		double unitBias = Double.parseDouble(fields[9]);
-		double stopLoss = Double.parseDouble(fields[10]);
-		double takeProfit = Double.parseDouble(fields[11]);
-		boolean committed = Boolean.parseBoolean(fields[12]);
-		long committed_date = Long.parseLong(fields[13]);
+		double realTakenPrice = Double.parseDouble(fields[9]);
+		double unitBias = Double.parseDouble(fields[10]);
+		double stopLoss = Double.parseDouble(fields[11]);
+		double takeProfit = Double.parseDouble(fields[12]);
+		boolean committed = Boolean.parseBoolean(fields[13]);
+		long committed_date = Long.parseLong(fields[14]);
 		
 		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
 		p.setAlt(altPrice);
 
-		Stock stock = market.addStock(code, buy, leverage, volume, p);
+		Stock stock = market.addStock(code, buy, leverage, volume, p, realTakenPrice);
 		if (stock == null) return;
 		
 		stock.setUnitBias(unitBias);
@@ -1634,12 +1664,15 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				if (s == null) continue;
 				Price takenPrice = s.getTakenPrice(0);
 				if (takenPrice == null) continue;
+				double realPrice = Double.NaN;
+				if (takenPrice != null && takenPrice instanceof TakenPrice) realPrice = ((TakenPrice)takenPrice).queryReal();
 				StringBuffer buffer = new StringBuffer();
 				
 				buffer.append(stock.code() + ", ");
 				buffer.append(stock.isBuy() + ", ");
 				buffer.append(Util.format(stock.getVolume(0, true)) + ", ");
 				buffer.append(takenPrice.getTime() + ", ");
+				buffer.append((!Double.isNaN(realPrice) ?  Util.format(realPrice) : realPrice) + ", ");
 				buffer.append(Util.format(stock.getStopLoss()) + ", ");
 				buffer.append(Util.format(stock.getTakeProfit()) + ", ");
 				buffer.append(stock.isCommitted() + ", ");
@@ -1671,7 +1704,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(price.getHigh()) + ", ");
 				buffer.append(Util.format(price.getAlt()) + ", ");
 				buffer.append(s.getTakenTimePoint(0) + ", ");
-				
+				buffer.append(Double.NaN + ", ");
 				buffer.append(Util.format(stock.getUnitBias()) + ", ");
 				buffer.append(Util.format(stock.getStopLoss()) + ", ");
 				buffer.append(Util.format(stock.getTakeProfit()) + ", ");
