@@ -104,8 +104,8 @@ public abstract class StockDescription extends JDialog {
 			}
 			info.append("ROI (leverage): " + Util.format(group.getROIByLeverage(timeViewInterval)*100) + "%\n");
 			info.append("ROI: " + Util.format(group.getROI(timeViewInterval)*100) + "%\n");
-			info.append("Oscillate ratio: " + Util.format(group.calcOscillAbsRatio(timeViewInterval)*100) + "%\n");
-			info.append("Oscillate total: " + Util.format(group.calcOscillAbs(timeViewInterval)) + "\n");
+			info.append("Oscillate ratio: " + Util.format(group.calcOscillRatio(timeViewInterval)*100) + "%\n");
+			info.append("Oscillate total: " + Util.format(group.calcOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(group.getUnitBias()) + "\n");
 			
 			info.append("\n");
@@ -183,7 +183,7 @@ public abstract class StockDescription extends JDialog {
 			}
 			info.append("ROI (leverage): " + Util.format(stock.getROIByLeverage(timeViewInterval)*100) + "%\n");
 			info.append("ROI: " + Util.format(stock.getROI(timeViewInterval)*100) + "%\n");
-			info.append("Oscillate ratio: " + Util.format(s.calcOscillAbsRatio(timeViewInterval)*100) + "%\n");
+			info.append("Oscillate ratio: " + Util.format(s.calcOscillRatio(timeViewInterval)*100) + "%\n");
 			info.append("Oscillate: " + Util.format(s.getPriceOscill(timeViewInterval)) + "\n");
 			info.append("Unit bias (setting): " + Util.format(s.getUnitBias()) + "\n");
 			

@@ -1097,8 +1097,8 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(group.getProfit(timeViewInterval));
 			row.add(new Percentage(group.getROIByLeverage(timeViewInterval)));
 			row.add(new Percentage(group.getROI(timeViewInterval)));
-			row.add(new Percentage(group.calcOscillAbsRatio(timeViewInterval)));
-			row.add(group.calcOscillAbs(timeViewInterval));
+			row.add(new Percentage(group.calcOscillRatio(timeViewInterval)));
+			row.add(group.calcOscill(timeViewInterval));
 			row.add(group.calcBias(timeViewInterval));
 			
 			Triple tv = new Triple(Double.NaN, Double.NaN, Double.NaN);
@@ -1141,7 +1141,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			
 			row.add(new Percentage(stock.getROIByLeverage(timeViewInterval)));
 			row.add(new Percentage(stock.getROI(timeViewInterval)));
-			row.add(new Percentage(stock.calcOscillAbsRatio(timeViewInterval)));
+			row.add(new Percentage(stock.calcOscillRatio(timeViewInterval)));
 			row.add(stock.getPriceOscill(timeViewInterval));
 			row.add(found != null ? new Pair(found.estimatedUnitBias, stock.getUnitBias()) : new Pair(stock.getUnitBias(), stock.getUnitBias()));
 

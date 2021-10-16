@@ -57,17 +57,17 @@ public class TakenPrice implements Price {
 	}
 
 	
-	public double queryReal() {
+	protected double queryReal() {
 		return this.realPrice;
 	}
 	
 	
-	public void setReal(double realPrice) {
+	protected void setReal(double realPrice) {
 		this.realPrice = realPrice;
 	}
 	
 	
-	public void unsetReal() {
+	protected void unsetReal() {
 		this.realPrice = Double.NaN;
 	}
 	
@@ -144,7 +144,7 @@ public class TakenPrice implements Price {
 	
 	@Override
 	public boolean isValid() {
-		return price.isValid();
+		return price.isValid() ? true : !Double.isNaN(realPrice);
 	}
 
 	
@@ -198,6 +198,7 @@ public class TakenPrice implements Price {
 	public void applyFactor(double factor) {
 		price.applyFactor(factor);
 		extraPrice = extraPrice*factor;
+		if (!Double.isNaN(realPrice)) realPrice = realPrice*factor; 
 	}
 
 

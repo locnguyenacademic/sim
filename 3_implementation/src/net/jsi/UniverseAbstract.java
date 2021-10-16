@@ -118,11 +118,23 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 
 
 	@Override
-	public double calcOscillAbsRatio(long timeInterval) {
+	public double calcOscillRatio(long timeInterval) {
 		if (markets.size() == 0) return 0;
 		double oscillRatio = 0;
 		for (Market market : markets) {
-			oscillRatio += market.calcOscillAbsRatio(timeInterval);
+			oscillRatio += market.calcOscillRatio(timeInterval);
+		}
+		
+		return oscillRatio / markets.size();
+	}
+
+
+	@Override
+	public double calcOscillRatioAbs(long timeInterval) {
+		if (markets.size() == 0) return 0;
+		double oscillRatio = 0;
+		for (Market market : markets) {
+			oscillRatio += market.calcOscillRatioAbs(timeInterval);
 		}
 		
 		return oscillRatio / markets.size();

@@ -30,12 +30,6 @@ public class PriceImpl implements Price {
 	private long timePoint = System.currentTimeMillis();
 	
 	
-//	private double priceRatio = StockProperty.PRICE_RATIO;
-//	
-//	
-//	private Serializable tag = null;
-	
-	
 	public PriceImpl() {
 		
 	}

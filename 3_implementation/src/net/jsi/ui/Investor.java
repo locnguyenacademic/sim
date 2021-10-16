@@ -316,8 +316,8 @@ public class Investor extends JFrame implements MarketListener {
 		double surplus = balance != 0 ? profit / balance : 0;
 		//double roi = universe.getROI(timeViewInterval);
 		double lRoi = universe.getROIByLeverage(timeViewInterval);
-		//double totalBias = universe.calcTotalBias(timeViewInterval);
-		//double totalOscill = universe.calcTotalPriceOscill(timeViewInterval);
+		//double totalBias = universe.calcBias(timeViewInterval);
+		//double totalOscill = universe.calcOscillAbs(timeViewInterval);
 		double totalInvest = universe.calcInvestAmount(timeViewInterval);
 		
 		profit = profit < 0 ? profit : (totalInvest > profit ? profit : profit - totalInvest);
