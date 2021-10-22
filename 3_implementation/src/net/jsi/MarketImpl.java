@@ -1238,7 +1238,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 					continue;
 				}
 				else if (readInfoStart && !fields[0].equals(StockProperty.NOTCODE1)) {
-					if (fields.length > 7) marketName = fields[7];
+					if (fields.length > 8) marketName = fields[8];
 					break;
 				}
 			}

@@ -152,8 +152,7 @@ public class StockGroup extends StockAbstract implements Market {
 	public double calcInvestAmount(long timeInterval) {
 		double oscill = calcOscillAbs(timeInterval);
 		double minmaxDev = calcMinMaxDev(timeInterval);
-		double dev = minmaxDev > oscill ? minmaxDev : (oscill + minmaxDev) / 2;
-		return getFreeMargin(timeInterval) - Math.max(calcBias(timeInterval), dev);
+		return getFreeMargin(timeInterval) - Math.max(calcBias(timeInterval), Math.max(oscill, minmaxDev));
 	}
 
 
