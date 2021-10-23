@@ -117,4 +117,7 @@ public interface Universe extends Market, Serializable, Cloneable {
 	boolean sync(UniverseRemote remoteUniverse, long timeInterval, boolean removeRedundant);
 
 	
+	PricePool renamePricePool(String code, String newCode);
+
+	
 }

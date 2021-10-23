@@ -228,6 +228,29 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	protected void toggleFix(Stock stock) {
+		if (stock == null) stock = getSelectedStock();
+		StockImpl s = c(stock);
+		if (s == null) return;
+		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to " + (s.isFixedMargin() ? "unfix" : "fix") + " margin of " + s.code() + "?", "Fixing margin confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+
+		if (s.isFixedMargin())
+			s.fixMargin(false);
+		else {
+			String txtFixedMargin = JOptionPane.showInputDialog(this, "Enter fixed margin", Util.format(s.getMargin(0), Util.DECIMAL_PRECISION_LONG));
+			double fixedMargin = Double.NaN;
+			try {
+				fixedMargin = Double.parseDouble(txtFixedMargin);
+				s.setFixedUnitMargin(fixedMargin);
+			}
+			catch (Throwable e) {}
+		}
+
+		update();
+	}
+	
+	
 	protected void deleteWithConfirm() {
 		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to delete the stock (s)", "Removal confirmation", JOptionPane.YES_NO_OPTION);
 		if (answer == JOptionPane.YES_OPTION) delete();
@@ -563,6 +586,8 @@ public class MarketTable extends JTable implements MarketListener {
 		ctxMenu.add(miTake);
 		
 		if (stock != null) {
+			StockImpl s = c(stock);
+
 			JMenuItem miAddPrice = new JMenuItem("Add price");
 			miAddPrice.addActionListener( 
 				new ActionListener() {
@@ -605,6 +630,16 @@ public class MarketTable extends JTable implements MarketListener {
 					}
 				});
 			ctxMenu.add(miCommit);
+
+			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFix.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						toggleFix(stock);
+					}
+				});
+			ctxMenu.add(miFix);
 
 			JMenuItem miDelete = new JMenuItem("Delete");
 			miDelete.addActionListener( 
@@ -1352,8 +1387,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return "";
 			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
 				return "Infinity";
-			else
-				return Util.format(v1) + " / " + Util.format(v2);
+			else {
+				int d = Util.DECIMAL_PRECISION_SHORT;
+				return Util.format(v1, d) + " / " + Util.format(v2, d);
+			}
 		}
 
 		@Override
@@ -1384,8 +1421,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return "";
 			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
 				return "Infinity";
-			else
-				return Util.format(v1*100) + "% / " + Util.format(v2*100) + "%";
+			else {
+				int d = Util.DECIMAL_PRECISION_SHORT;
+				return Util.format(v1*100, d) + "% / " + Util.format(v2*100, d) + "%";
+			}
 		}
 
 	}
@@ -1406,8 +1445,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return "";
 			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
 				return "Infinity";
-			else
-				return Util.format(v1*100) + "% / " + Util.format(v2);
+			else {
+				int d = Util.DECIMAL_PRECISION_SHORT;
+				return Util.format(v1*100, d) + "% / " + Util.format(v2, d);
+			}
 		}
 
 	}
@@ -1435,8 +1476,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return "";
 			else if (Double.isInfinite(v1) || Double.isInfinite(v1) || Double.isInfinite(v3))
 				return "Infinity";
-			else
-				return Util.format(v1) + " / " + Util.format(v2) + " / " + Util.format(v3) + "";
+			else {
+				int d = Util.DECIMAL_PRECISION_SHORT;
+				return Util.format(v1, d) + " / " + Util.format(v2, d) + " / " + Util.format(v3, d) + "";
+			}
 		}
 
 		@Override
@@ -1747,6 +1790,7 @@ class MarketPanel extends JPanel implements MarketListener {
 		Market market = getMarket();
 		MarketImpl m = tblMarket.m();
 
+		int d = Util.DECIMAL_PRECISION_SHORT;
 		long timeViewInterval = market.getTimeViewInterval();
 		double balance = market.getBalance(timeViewInterval);
 		double margin = market.getMargin(timeViewInterval);
@@ -1768,18 +1812,18 @@ class MarketPanel extends JPanel implements MarketListener {
 			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()) + " last " + days + " days");
 		}
 		
-		lblBalance.setText("Balance: " + Util.format(balance, 2));
-		lblEquity.setText("Equity: " + Util.format(equity, 2));
-		lblMargin.setText("Margin: " + Util.format(margin, 2));
-		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin, 2));
-		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100, 2) + "%");
+		lblBalance.setText("Balance: " + Util.format(balance, d));
+		lblEquity.setText("Equity: " + Util.format(equity, d));
+		lblMargin.setText("Margin: " + Util.format(margin, d));
+		lblFreeMargin.setText("Free margin: " + Util.format(freeMargin, d));
+		lblMarginLevel.setText("Mar. level: " + Util.format((margin != 0 ? equity / margin : 0)*100, d) + "%");
 		
-		lblProfit.setText("Profit: " + Util.format(profit, 2));
-		lblSurplus.setText("Sur: " + Util.format(surplus*100, 2) + "%");
-		lblROI.setText("Lev.ROI: " + Util.format(lRoi*100, 2) + "%");
-		lblOscill.setText("Oscill: " + Util.format(oscill, 2));
-		lblBias.setText("Bias: " + Util.format(bias, 2) + " / " + Util.format(dev, 2));
-		lblEstInvest.setText("INVEST: " + Util.format(invest, 2) + " / " + Util.format(investRisky, 2));
+		lblProfit.setText("Profit: " + Util.format(profit, d));
+		lblSurplus.setText("Sur: " + Util.format(surplus*100, d) + "%");
+		lblROI.setText("Lev.ROI: " + Util.format(lRoi*100, d) + "%");
+		lblOscill.setText("Oscill: " + Util.format(oscill, d));
+		lblBias.setText("Bias: " + Util.format(bias, d) + " / " + Util.format(dev, d));
+		lblEstInvest.setText("INVEST: " + Util.format(invest, d) + " / " + Util.format(investRisky, d));
 	}
 
 

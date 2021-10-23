@@ -13,6 +13,7 @@ import net.jsi.EstimateStock;
 import net.jsi.Market;
 import net.jsi.MarketImpl;
 import net.jsi.Stock;
+import net.jsi.StockImpl;
 import net.jsi.StockProperty;
 import net.jsi.Util;
 
@@ -142,6 +143,8 @@ public class MarketTrashTable extends MarketTable {
 
 		
 		if (stock != null) {
+			StockImpl s = c(stock);
+
 			JMenuItem miRecover = new JMenuItem("Recover");
 			miRecover.addActionListener( 
 				new ActionListener() {
@@ -162,6 +165,16 @@ public class MarketTrashTable extends MarketTable {
 					}
 				});
 			ctxMenu.add(miCommit);
+
+			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFix.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						toggleFix(stock);
+					}
+				});
+			ctxMenu.add(miFix);
 
 			JMenuItem miDelete = new JMenuItem("Delete foreover");
 			miDelete.addActionListener( 

@@ -196,9 +196,38 @@ public class StockInfoStore implements Serializable, Cloneable {
 	}
 	
 	
+	public static PricePool renamePricePool(String code, String newCode) {
+		if (code == null || newCode == null) return null;
+		
+		if (pricePools.containsKey(newCode)) return null;
+		PricePool pricePool = getPricePool(code);
+		if (pricePool == null) return null;
+		if (!pricePool.rename(newCode)) return null;
+		pricePools.remove(code);
+		pricePools.put(newCode, pricePool);
+		
+		if (placePricePools.containsKey(newCode)) return pricePool;
+		PricePool placePricePool = getPlacePricePool(code);
+		if (placePricePool == null) return pricePool;
+		if (!placePricePool.rename(newCode)) return pricePool;
+		placePricePools.remove(code);
+		placePricePools.put(newCode, placePricePool);
+		
+		return pricePool;
+	}
+	
+
 	protected static PricePool removePricePool(String code) {
 		if (pricePools.containsKey(code))
 			return pricePools.remove(code);
+		else
+			return null;
+	}
+
+	
+	protected static PricePool getPlacePricePool(String code) {
+		if (placePricePools.containsKey(code))
+			return placePricePools.get(code);
 		else
 			return null;
 	}
@@ -214,5 +243,5 @@ public class StockInfoStore implements Serializable, Cloneable {
 		}
 	}
 
-
+	
 }

@@ -18,6 +18,9 @@ public class StockImpl extends StockAbstract {
 	private double volume = 0;
 	
 	
+	private double unitMargin = Double.NaN;
+	
+	
 	private TakenPrice takenPrice = null;
 	
 	
@@ -79,7 +82,7 @@ public class StockImpl extends StockAbstract {
 	
 	
 	private void setExtraForTakenPrice(TakenPrice takenPrice) {
-		if (buy) {
+		if (isBuy()) {
 
 		}
 		else {
@@ -193,10 +196,40 @@ public class StockImpl extends StockAbstract {
 
 	@Override
 	public double getMargin(long timeInterval) {
-		return getTakenValue(timeInterval) * getLeverage();
+		double takenValue = getTakenValue(timeInterval);
+		if (takenValue == 0)
+			return 0;
+		else if (Double.isNaN(unitMargin))
+			return takenValue * getLeverage();
+		else
+			return volume * unitMargin;
 	}
 	
 
+	public double getFixedUnitMargin() {
+		return unitMargin;
+	}
+	
+	
+	public void setFixedUnitMargin(double unitMargin) {
+		this.unitMargin = unitMargin;
+	}
+	
+	
+	public boolean isFixedMargin() {
+		return !Double.isNaN(unitMargin);
+	}
+	
+	
+	public void fixMargin(boolean fixed) {
+		if (fixed) {
+			if (Double.isNaN(this.unitMargin)) this.unitMargin = getMargin(0);
+		}
+		else if (!Double.isNaN(this.unitMargin))
+			this.unitMargin = Double.NaN;
+	}
+	
+	
 	/*
 	 * As a convention, stock price is bid price.
 	 */
@@ -220,7 +253,7 @@ public class StockImpl extends StockAbstract {
 		
 		double takenValue = getTakenValue(timeInterval);
 		double value = getValue(timeInterval);
-		return (buy ? value-takenValue : takenValue-value) - getProperty().spread - getFee(timeInterval);
+		return (isBuy() ? value-takenValue : takenValue-value) - getProperty().spread - getFee(timeInterval);
 	}
 	
 	
@@ -306,6 +339,8 @@ public class StockImpl extends StockAbstract {
 		setCommitted(stock.isCommitted());
 		setStopLoss(stock.getStopLoss());
 		setTakeProfit(stock.getTakeProfit());
+		
+		if (stock instanceof StockImpl) this.unitMargin = ((StockImpl)stock).unitMargin;
 	}
 
 

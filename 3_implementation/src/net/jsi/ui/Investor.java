@@ -310,6 +310,7 @@ public class Investor extends JFrame implements MarketListener {
 
 	
 	private void update() {
+		int d = Util.DECIMAL_PRECISION_SHORT;
 		long timeViewInterval = universe.getTimeViewInterval();
 		double balance = universe.getBalance(timeViewInterval);
 		double profit = universe.getProfit(timeViewInterval);
@@ -322,12 +323,12 @@ public class Investor extends JFrame implements MarketListener {
 		
 		profit = profit < 0 ? profit : (totalInvest > profit ? profit : profit - totalInvest);
 		
-		lblTotalProfit.setText("PROFIT: " + Util.format(profit, 2));
-		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100, 2) + "%");
-		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100, 2) + "%");
-		//lblTotalBias.setText("BIAS: " + Util.format(totalBias, 2));
-		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill, 2));
-		lblTotalHedge.setText("HEDGE: " + (totalInvest > 0 ? 0 : Util.format(-totalInvest, 2)));
+		lblTotalProfit.setText("PROFIT: " + Util.format(profit, d));
+		lblTotalSurplus.setText("SUR: " + Util.format(surplus*100, d) + "%");
+		lblTotalROI.setText("LEV.ROI: " + Util.format(lRoi*100, d) + "%");
+		//lblTotalBias.setText("BIAS: " + Util.format(totalBias, d));
+		//lblTotalOscill.setText("OSCILL: " + Util.format(totalOscill, d));
+		lblTotalHedge.setText("HEDGE: " + (totalInvest > 0 ? 0 : Util.format(-totalInvest, d)));
 		
 		curMarketPanel = getSelectedMarketPanel();
 		System.out.println("Current market updated: " + curMarketPanel.getMarket().getName());
@@ -379,6 +380,21 @@ public class Investor extends JFrame implements MarketListener {
 			});
 		mniSaveAs.setMnemonic('v');
 		mnFile.add(mniSaveAs);
+
+		if (remoteUniverse != null && !inServer) {
+			JMenuItem mniUpdateFromServer = new JMenuItem(
+				new AbstractAction("Update from server") {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						updateFromServer();
+					}
+				});
+			mniUpdateFromServer.setMnemonic('u');
+			mniUpdateFromServer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+			mnFile.add(mniUpdateFromServer);
+		}
 
 		mnFile.addSeparator();
 
@@ -634,6 +650,32 @@ public class Investor extends JFrame implements MarketListener {
 
 		mnTool.addSeparator();
 		
+		JMenuItem mniFixMargins = new JMenuItem(
+			new AbstractAction("Fix margins") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					fixMargins(true);
+				}
+			});
+		mniFixMargins.setMnemonic('f');
+		mnTool.add(mniFixMargins);
+
+		JMenuItem mniUnfixMargins = new JMenuItem(
+			new AbstractAction("Unfix margins") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					fixMargins(false);
+				}
+			});
+		mniUnfixMargins.setMnemonic('u');
+		mnTool.add(mniUnfixMargins);
+
+		mnTool.addSeparator();
+		
 		JMenuItem mniOption = new JMenuItem(
 			new AbstractAction("Option") {
 				private static final long serialVersionUID = 1L;
@@ -783,11 +825,24 @@ public class Investor extends JFrame implements MarketListener {
 	
 	
 	private void onSync() {
+		if (remoteUniverse == null || inServer) return;
 		try {
-			if (remoteUniverse != null && !inServer) remoteUniverse.sync(universe, 0);
+			synchronized (remoteUniverse) {remoteUniverse.sync(universe, 0);}
 		} catch (Exception e) {Util.trace(e);}
 	}
 
+	
+	private void updateFromServer() {
+		JOptionPane.showMessageDialog(this, "This function not implemented yet");
+
+		if (remoteUniverse == null || inServer) return;
+		try {
+			synchronized (remoteUniverse) {
+				
+			}
+		} catch (Exception e) {Util.trace(e);}
+	}
+	
 	
 	private void report() {
 		JOptionPane.showMessageDialog(this, "This function not implemented yet");
@@ -1214,6 +1269,7 @@ public class Investor extends JFrame implements MarketListener {
 		if (answer != JOptionPane.YES_OPTION) return;
 
 		MarketPanel[] mps = getMarketPanels();
+		if (mps.length == 0) return;
 		for (MarketPanel mp : mps) {
 			MarketImpl market = universe.c(mp.getMarket());
 			if (market == null) continue;
@@ -1234,6 +1290,18 @@ public class Investor extends JFrame implements MarketListener {
 		} catch (Exception e) {Util.trace(e);}
 	}
 
+	
+	private void fixMargins(boolean fixed) {
+		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to " + (fixed ? "fix" : "unfix") + " margins?", "Fixing margins confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+
+		MarketImpl m = getSelectedMarket();
+		if (m == null) return;
+		
+		m.fixMargin(fixed);
+		getSelectedMarketTable().update();
+	}
+	
 	
 	private Investor getInvestor() {
 		return this;

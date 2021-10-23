@@ -884,6 +884,8 @@ public class StockTaker extends JDialog {
 			if (!chkAddPrice.isSelected()) {
 				long takenTimePoint = ((Date)txtTakenDate.getValue()).getTime();
 				double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
+				if (group.get(takenTimePoint, takenPrice) != null) return;
+				
 				s.take(market.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
 				
 				if (chkLastDate.isSelected()) s.setPriceTimePoint(lastTime);
@@ -1567,6 +1569,8 @@ class StockSelector extends JDialog {
 			if (!Double.isNaN(leverage)) group.setLeverage(leverage);
 			
 			double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
+			if (group.get(takenTimePoint, takenPrice) != null) return;
+
 			s.take(m.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
 			
 			s.setCommitted(chkCommitted.isSelected());

@@ -727,6 +727,21 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		
 		return false;
 	}
+
+
+	@Override
+	public PricePool renamePricePool(String code, String newCode) {
+		return StockInfoStore.renamePricePool(code, newCode);
+	}
+
+
+	@SuppressWarnings("unused")
+	private void fixMargin(boolean fixed) {
+		for (Market market : markets) {
+			MarketImpl m = c(market);
+			if (m != null) m.fixMargin(fixed);
+		}
+	}
 	
 
 }

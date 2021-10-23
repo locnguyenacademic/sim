@@ -137,6 +137,12 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 
 
 	@Override
+	public synchronized boolean renamePricePool(String code, String newCode) throws RemoteException {
+		return universe.renamePricePool(code, newCode) != null;
+	}
+
+
+	@Override
 	public synchronized boolean export(int serverPort) throws RemoteException {
 		if (exported) return false;
 		try {

@@ -18,7 +18,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	private StockInfo info = null;
 	
 	
-	protected boolean buy = true;
+	private boolean buy = true;
 	
 	
 	public StockAbstract(String code, boolean buy) {

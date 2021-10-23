@@ -27,6 +27,13 @@ public class PricePool implements Serializable, Cloneable {
 		return code;
 	}
 
+	
+	protected boolean rename(String newCode) {
+		if (newCode == null) return false;
+		this.code = newCode;
+		return true;
+	}
+	
 
 	public int size() {
 		return prices.size();

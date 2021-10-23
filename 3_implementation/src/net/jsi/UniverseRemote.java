@@ -40,10 +40,14 @@ public interface UniverseRemote extends Remote {
 	boolean rename(String marketName, String newMarketName) throws RemoteException;
 
 	
+	boolean renamePricePool(String code, String newCode) throws RemoteException;
+
+	
 	boolean export(int serverPort) throws RemoteException;
 
 
 	boolean unexport() throws RemoteException;
 
 
+	
 }

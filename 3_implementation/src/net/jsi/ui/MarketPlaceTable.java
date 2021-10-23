@@ -301,6 +301,8 @@ public class MarketPlaceTable extends MarketTable {
 		ctxMenu.add(miTake);
 		
 		if (stock != null) {
+			StockImpl s = c(stock);
+
 			JMenuItem miAddPrice = new JMenuItem("Add price");
 			miAddPrice.addActionListener( 
 				new ActionListener() {
@@ -332,6 +334,16 @@ public class MarketPlaceTable extends MarketTable {
 			ctxMenu.add(miModify);
 			
 			ctxMenu.addSeparator();
+
+			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFix.addActionListener( 
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						toggleFix(stock);
+					}
+				});
+			ctxMenu.add(miFix);
 
 			JMenuItem miDelete = new JMenuItem("Delete");
 			miDelete.addActionListener( 

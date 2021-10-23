@@ -44,7 +44,16 @@ public final class Util {
 	public static String DATE_FORMAT = DATESIMPLE_FORMAT + " HH-mm-ss";
 			
 	
-	public static int DECIMAL_PRECISION = 5;
+	public final static int DECIMAL_PRECISION_SHORT = 3;
+
+	
+	public final static int DECIMAL_PRECISION_MEDIUM = DECIMAL_PRECISION_SHORT + 3;
+
+	
+	public final static int DECIMAL_PRECISION_LONG = DECIMAL_PRECISION_MEDIUM + 3;
+
+	
+	public static int DECIMAL_PRECISION = DECIMAL_PRECISION_MEDIUM;
 
 	
 	/**
@@ -212,8 +221,8 @@ public final class Util {
 	
 	public static AbstractFormatter getNumberFormatter() {
 		NumberFormat nf = NumberFormat.getInstance();
-		nf.setMinimumFractionDigits(2);
-		nf.setMaximumFractionDigits(DECIMAL_PRECISION);
+		nf.setMinimumFractionDigits(DECIMAL_PRECISION_SHORT);
+		nf.setMaximumFractionDigits(DECIMAL_PRECISION_LONG);
 		
 		NumberFormatter formatter = new NumberFormatter(nf);
 		formatter.setAllowsInvalid(false);

@@ -246,6 +246,21 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
+	public void fixMargin(boolean fixed) {
+		for (StockGroup group : groups) group.fixMargin(fixed);
+	}
+
+
+	protected double getCredit() {
+		return credit;
+	}
+	
+	
+	protected void setCredit(double credit) {
+		this.credit = credit;
+	}
+	
+	
 	@Override
 	public double getTakenValue(long timeInterval) {
 		double value = 0;
@@ -841,6 +856,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		this.setBalanceBase(market.getBalanceBase());
 		this.setBalanceBias(market.getBalanceBias());
 		this.setMarginFee(market.getMarginFee());
+		this.setCredit(market.getCredit());
 	}
 	
 	
@@ -957,7 +973,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				if (otherStock == null) continue;
 				
 				long takenTimePoint = otherStock.getTakenTimePoint(0);
-				StockImpl thisStock = thisMarket.c(thisGroup.get(takenTimePoint));
+				StockImpl thisStock = thisMarket.c(thisGroup.get(takenTimePoint, otherStock));
 				if (thisStock == null) {
 					Stock added = thisMarket.addStock(code, buy, otherStock.getLeverage(), otherStock.getVolume(0, true), takenTimePoint, otherStock.getRealTakenPrice(0));
 					thisStock = thisMarket.c(added);
@@ -1494,10 +1510,11 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double volume = Double.parseDouble(fields[2]);
 		long takenDate = Long.parseLong(fields[3]);
 		double realTakenPrice = Double.parseDouble(fields[4]);
-		double stopLoss = Double.parseDouble(fields[5]);
-		double takeProfit = Double.parseDouble(fields[6]);
-		boolean committed = Boolean.parseBoolean(fields[7]);
-		long committed_date = Long.parseLong(fields[8]);
+		double unitMargin = Double.parseDouble(fields[5]);
+		double stopLoss = Double.parseDouble(fields[6]);
+		double takeProfit = Double.parseDouble(fields[7]);
+		boolean committed = Boolean.parseBoolean(fields[8]);
+		long committed_date = Long.parseLong(fields[9]);
 		
 		Stock stock = market.addStock(code, buy, volume, takenDate, realTakenPrice);
 		if (stock == null) return;
@@ -1509,6 +1526,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (s != null) {
 			s.setStopLoss(stopLoss);
 			s.setTakeProfit(takeProfit);
+			s.setFixedUnitMargin(unitMargin);
 		}
 	}
 	
@@ -1524,11 +1542,12 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		double altPrice = Double.parseDouble(fields[7]);
 		long priceDate = Long.parseLong(fields[8]);
 		double realTakenPrice = Double.parseDouble(fields[9]);
-		double unitBias = Double.parseDouble(fields[10]);
-		double stopLoss = Double.parseDouble(fields[11]);
-		double takeProfit = Double.parseDouble(fields[12]);
-		boolean committed = Boolean.parseBoolean(fields[13]);
-		long committed_date = Long.parseLong(fields[14]);
+		double unitMargin = Double.parseDouble(fields[10]);
+		double unitBias = Double.parseDouble(fields[11]);
+		double stopLoss = Double.parseDouble(fields[12]);
+		double takeProfit = Double.parseDouble(fields[13]);
+		boolean committed = Boolean.parseBoolean(fields[14]);
+		long committed_date = Long.parseLong(fields[15]);
 		
 		Price p = market.newPrice(price, lowPrice, highPrice, priceDate);
 		p.setAlt(altPrice);
@@ -1543,6 +1562,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		if (s != null) {
 			s.setStopLoss(stopLoss);
 			s.setTakeProfit(takeProfit);
+			s.setFixedUnitMargin(unitMargin);
 		}
 	}
 
@@ -1558,7 +1578,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		try {
 			BufferedWriter writer = new BufferedWriter(out);
 			
-			String header = "code, buy, leverage, volume, taken_price, taken_date, price, low_price, high_price, alt_price, price_date, unit_bias, stop_loss, take_profit, committed, committed_date\n";
+			String header = "code, buy, leverage, volume, taken_price, taken_date, real_taken_price, margin, price, low_price, high_price, alt_price, price_date, unit_bias, stop_loss, take_profit, committed, committed_date\n";
 			writer.write(header);
 			
 			writer.write(StockProperty.NOTCODE1 + "\n");
@@ -1685,6 +1705,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(stock.getVolume(0, true)) + ", ");
 				buffer.append(takenPrice.getTime() + ", ");
 				buffer.append((!Double.isNaN(realPrice) ?  Util.format(realPrice) : realPrice) + ", ");
+				buffer.append((!Double.isNaN(s.getFixedUnitMargin()) ?  Util.format(s.getFixedUnitMargin()) : s.getFixedUnitMargin()) + ", ");
 				buffer.append(Util.format(stock.getStopLoss()) + ", ");
 				buffer.append(Util.format(stock.getTakeProfit()) + ", ");
 				buffer.append(stock.isCommitted() + ", ");
@@ -1717,6 +1738,7 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 				buffer.append(Util.format(price.getAlt()) + ", ");
 				buffer.append(s.getTakenTimePoint(0) + ", ");
 				buffer.append(Double.NaN + ", ");
+				buffer.append((!Double.isNaN(s.getFixedUnitMargin()) ?  Util.format(s.getFixedUnitMargin()) : s.getFixedUnitMargin()) + ", ");
 				buffer.append(Util.format(stock.getUnitBias()) + ", ");
 				buffer.append(Util.format(stock.getStopLoss()) + ", ");
 				buffer.append(Util.format(stock.getTakeProfit()) + ", ");

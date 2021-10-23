@@ -136,7 +136,9 @@ public class Test {
 //		System.out.println(Math.log(Float.MIN_VALUE));
 //		System.out.println(Math.log(2 + Float.MIN_VALUE));
 		
-		System.out.println(Double.parseDouble("" + Double.NaN));
+		double a = Double.NaN;
+		double b = Double.NaN;
+		System.out.println(a == b);
 
 	}
 

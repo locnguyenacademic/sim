@@ -85,6 +85,13 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 
+	protected void fixMargin(boolean fixed) {
+		for (Stock stock : stocks) {
+			if (stock instanceof StockImpl) ((StockImpl)stock).fixMargin(fixed);
+		}
+	}
+
+
 	@Override
 	public double getValue(long timeInterval) {
 		double profit = 0;
@@ -186,6 +193,46 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 
 		
+	protected Stock get(long takenTimePoint, Stock referredStock) {
+		if (referredStock == null) return get(takenTimePoint);
+		
+		for (int i = 0; i < stocks.size(); i++) {
+			Stock stock = stocks.get(i);
+			if (!stock.code().equals(referredStock.code()))
+				continue;
+			else if (stock.isBuy() != referredStock.isBuy())
+				continue;
+			else if (!(stock instanceof StockImpl))
+				continue;
+			else if (((StockImpl)stock).getTakenTimePoint(0) != takenTimePoint)
+				continue;
+			else if (!(referredStock instanceof StockImpl))
+				return stock;
+			else if (((StockImpl)stock).getAverageTakenPrice(0) == ((StockImpl)referredStock).getAverageTakenPrice(0))
+				return stock;
+		}
+		
+		return null;
+	}
+	
+	
+	public Stock get(long takenTimePoint, double takenPrice) {
+		if (Double.isNaN(takenPrice)) return get(takenTimePoint);
+		
+		for (int i = 0; i < stocks.size(); i++) {
+			Stock stock = stocks.get(i);
+			if (!(stock instanceof StockImpl))
+				continue;
+			else if (((StockImpl)stock).getTakenTimePoint(0) != takenTimePoint)
+				continue;
+			else if (((StockImpl)stock).getAverageTakenPrice(0) == takenPrice)
+				return stock;
+		}
+		
+		return null;
+	}
+	
+	
 	public int lookup(long timeInterval, long takenTimePoint) {
 		for (int i = 0; i < stocks.size(); i++) {
 			Stock stock = stocks.get(i);
@@ -231,9 +278,11 @@ public class StockGroup extends StockAbstract implements Market {
 	public Stock add(long timeInterval, long takenTimePoint, double volume) {
 		if (getPriceCount() == 0) return null;
 		StockImpl stock = (StockImpl) newStock(timeInterval, takenTimePoint, volume);
-		if (stock == null) return null;
-		
-		if (stocks.add(stock))
+		if (stock == null)
+			return null;
+		else if (get(takenTimePoint, stock.getAverageTakenPrice(0)) != null)
+			return null;
+		else if (stocks.add(stock))
 			return stock;
 		else
 			return null;
@@ -283,12 +332,6 @@ public class StockGroup extends StockAbstract implements Market {
 	}
 	
 	
-	@Override
-	public boolean isBuy() {
-		return buy;
-	}
-
-
 	@Override
 	public boolean isCommitted() {
 		if (stocks.size() == 0) return false;
