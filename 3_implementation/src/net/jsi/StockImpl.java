@@ -188,12 +188,18 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
+	@Override
 	public double getAverageTakenPrice(long timeInterval) {
 		Price takenPrice = getTakenPrice(timeInterval);
 		return takenPrice != null ? takenPrice.get() : 0;
 	}
 
 
+	public double getAverageTakenPriceByLeverage(long timeInterval) {
+		return getAverageTakenPrice(timeInterval) * getLeverage();
+	}
+	
+	
 	@Override
 	public double getMargin(long timeInterval) {
 		double takenValue = getTakenValue(timeInterval);

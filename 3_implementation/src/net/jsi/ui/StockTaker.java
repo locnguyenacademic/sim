@@ -280,6 +280,10 @@ public class StockTaker extends JDialog {
 		});
 		btnTakenPrice.setEnabled(update);
 		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
+		if (input != null) {
+			MarketImpl m = m(); StockImpl s = m != null ? m.c(input) : null;
+			btnTakenPrice.setVisible(s != null && !s.isFixedMargin());
+		}
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		if (update) right.add(paneTakenDate);
@@ -297,6 +301,10 @@ public class StockTaker extends JDialog {
 		});
 		btnTakenDate.setEnabled(update);
 		paneTakenDate.add(btnTakenDate, BorderLayout.EAST);
+		if (input != null) {
+			MarketImpl m = m(); StockImpl s = m != null ? m.c(input) : null;
+			btnTakenDate.setVisible(s != null && !s.isFixedMargin());
+		}
 
 		JPanel panePrice = new JPanel(new BorderLayout());
 		right.add(panePrice);
@@ -568,6 +576,18 @@ public class StockTaker extends JDialog {
 		mniSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
 		mnTool.add(mniSwitch);
 		
+		JMenuItem mniToggleFixMargin = new JMenuItem(
+			new AbstractAction("Toggle fix margin") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					toggleFixMargin();
+				}
+			});
+		mniToggleFixMargin.setMnemonic('f');
+		mnTool.add(mniToggleFixMargin);
+
 		return mnBar;
 	}
 
@@ -579,6 +599,18 @@ public class StockTaker extends JDialog {
 		this.setOutput(selector.getOutput());
 	}
 	
+	
+	protected void toggleFixMargin() {
+		MarketImpl m = m();
+		StockImpl s = m != null ? m.c(input) : null;
+		boolean ret = MarketTable.toggleFixMargin(s, this);
+		if (ret) {
+			btnTakenPrice.setVisible(!s.isFixedMargin());
+			btnTakenDate.setVisible(!s.isFixedMargin());
+			update();
+		}
+	}
+
 	
 	private MarketImpl m() {
 		Universe u = market.getNearestUniverse();
@@ -884,7 +916,8 @@ public class StockTaker extends JDialog {
 			if (!chkAddPrice.isSelected()) {
 				long takenTimePoint = ((Date)txtTakenDate.getValue()).getTime();
 				double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
-				if (group.get(takenTimePoint, takenPrice) != null) return;
+				Stock found = group.get(takenTimePoint, takenPrice);
+				if (found != null && found != s) return;
 				
 				s.take(market.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
 				
@@ -1147,6 +1180,10 @@ class StockSelector extends JDialog {
 		});
 		btnTakenPrice.setEnabled(update);
 		paneTakenPrice.add(btnTakenPrice, BorderLayout.EAST);
+		if (input != null) {
+			MarketImpl m = m(); StockImpl s = m != null ? m.c(input) : null;
+			btnTakenPrice.setVisible(s != null && !s.isFixedMargin());
+		}
 		
 		JPanel paneTakenDate = new JPanel(new BorderLayout());
 		right.add(paneTakenDate);
@@ -1163,6 +1200,10 @@ class StockSelector extends JDialog {
 			}
 		});
 		paneTakenDate.add(btnTakenDate, BorderLayout.EAST);
+		if (input != null) {
+			MarketImpl m = m(); StockImpl s = m != null ? m.c(input) : null;
+			btnTakenDate.setVisible(s != null && !s.isFixedMargin());
+		}
 
 		JPanel paneLowPrice = new JPanel(new BorderLayout());
 		right.add(paneLowPrice);
@@ -1332,6 +1373,18 @@ class StockSelector extends JDialog {
 		mniSwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
 		mnTool.add(mniSwitch);
 		
+		JMenuItem mniToggleFixMargin = new JMenuItem(
+			new AbstractAction("Toggle fix margin") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					toggleFixMargin();
+				}
+			});
+		mniToggleFixMargin.setMnemonic('f');
+		mnTool.add(mniToggleFixMargin);
+
 		return mnBar;
 	}
 
@@ -1343,6 +1396,18 @@ class StockSelector extends JDialog {
 		this.setOutput(taker.getOutput());
 	}
 	
+	
+	protected void toggleFixMargin() {
+		MarketImpl m = m();
+		StockImpl s = m != null ? m.c(input) : null;
+		boolean ret = MarketTable.toggleFixMargin(s, this);
+		if (ret) {
+			btnTakenPrice.setVisible(!s.isFixedMargin());
+			btnTakenDate.setVisible(!s.isFixedMargin());
+			update();
+		}
+	}
+
 	
 	private MarketImpl m() {
 		Universe u = market.getNearestUniverse();
@@ -1569,7 +1634,8 @@ class StockSelector extends JDialog {
 			if (!Double.isNaN(leverage)) group.setLeverage(leverage);
 			
 			double takenPrice = txtTakenPrice.getValue() instanceof Number ? ((Number)txtTakenPrice.getValue()).doubleValue() : Double.NaN;
-			if (group.get(takenTimePoint, takenPrice) != null) return;
+			Stock found = group.get(takenTimePoint, takenPrice);
+			if (found != null && found != s) return;
 
 			s.take(m.getTimeViewInterval(), takenTimePoint, !Double.isNaN(takenPrice) && takenPrice >= 0? takenPrice : Double.NaN);
 			

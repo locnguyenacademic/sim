@@ -108,6 +108,11 @@ public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneab
 	}
 
 	
+	public synchronized void saveBackup(File workingDir) {
+		universe.saveBackup(workingDir);
+	}
+
+	
 	@Override
 	public synchronized List<String> getMarketNames() throws RemoteException {
 		return universe.names();

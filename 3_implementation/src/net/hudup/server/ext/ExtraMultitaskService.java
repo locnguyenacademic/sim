@@ -97,10 +97,16 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 
 
 	protected void saveUniverseRemote() {
+		File workingDir = new File(StockProperty.WORKING_DIRECTORY);
 		synchronized (remoteUniverse) {
 			remoteUniverse.apply();
-			remoteUniverse.save(new File(StockProperty.WORKING_DIRECTORY));
+			remoteUniverse.save(workingDir);
 		}
+		
+		try {
+			remoteUniverse.saveBackup(workingDir);
+		}
+		catch (Throwable e) {}
 	}
 	
 	

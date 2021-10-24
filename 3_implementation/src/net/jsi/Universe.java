@@ -114,6 +114,9 @@ public interface Universe extends Market, Serializable, Cloneable {
 	boolean save(File workingDir);
 
 	
+	boolean saveBackup(File workingDir);
+
+	
 	boolean sync(UniverseRemote remoteUniverse, long timeInterval, boolean removeRedundant);
 
 	

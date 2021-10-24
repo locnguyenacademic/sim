@@ -170,7 +170,7 @@ public abstract class StockDescription extends JDialog {
 				info.append("Alternative price (often open price): " + Util.format(stock.getPrice().getAlt()) + "\n");
 			info.append("Stop loss: " + Util.format(s.getStopLoss()) + "\n");
 			info.append("Take profit: " + Util.format(s.getTakeProfit()) + "\n");
-			info.append("Margin: " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
+			info.append("Margin (" + (s != null && s.isFixedMargin() ? "fixed" : "not fixed") + "): " + Util.format(stock.getMargin(timeViewInterval)) + "\n");
 			info.append("Profit: " + Util.format(stock.getProfit(timeViewInterval)) + "\n");
 			double dividend = stock.getDividend(timeViewInterval);
 			if (dividend > 0) {

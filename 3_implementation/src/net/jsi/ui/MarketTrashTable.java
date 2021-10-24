@@ -166,15 +166,15 @@ public class MarketTrashTable extends MarketTable {
 				});
 			ctxMenu.add(miCommit);
 
-			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
-			miFix.addActionListener( 
+			JMenuItem miFixMargin = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFixMargin.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						toggleFix(stock);
+						toggleFixMargin(stock);
 					}
 				});
-			ctxMenu.add(miFix);
+			ctxMenu.add(miFixMargin);
 
 			JMenuItem miDelete = new JMenuItem("Delete foreover");
 			miDelete.addActionListener( 

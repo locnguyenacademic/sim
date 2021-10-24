@@ -228,26 +228,35 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
-	protected void toggleFix(Stock stock) {
+	protected void toggleFixMargin(Stock stock) {
 		if (stock == null) stock = getSelectedStock();
 		StockImpl s = c(stock);
-		if (s == null) return;
-		int answer= JOptionPane.showConfirmDialog(this, "Are you sure to " + (s.isFixedMargin() ? "unfix" : "fix") + " margin of " + s.code() + "?", "Fixing margin confirmation", JOptionPane.YES_NO_OPTION);
-		if (answer != JOptionPane.YES_OPTION) return;
-
-		if (s.isFixedMargin())
-			s.fixMargin(false);
+		boolean ret = toggleFixMargin(s, this);
+		if (ret) update();
+	}
+	
+	
+	public static boolean toggleFixMargin(StockImpl stock, Component comp) {
+		if (stock == null) return false;
+		int answer= JOptionPane.showConfirmDialog(comp, "Are you sure to " + (stock.isFixedMargin() ? "unfix" : "fix") + " margin of " + stock.code() + "?", "Fix/Unfix margin confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return false;
+		
+		if (stock.isFixedMargin())
+			stock.fixMargin(false);
 		else {
-			String txtFixedMargin = JOptionPane.showInputDialog(this, "Enter fixed margin", Util.format(s.getMargin(0), Util.DECIMAL_PRECISION_LONG));
+			String txtFixedMargin = JOptionPane.showInputDialog(comp, "Enter fixed unit margin", Util.format(stock.getAverageTakenPriceByLeverage(0), Util.DECIMAL_PRECISION_LONG));
 			double fixedMargin = Double.NaN;
 			try {
 				fixedMargin = Double.parseDouble(txtFixedMargin);
-				s.setFixedUnitMargin(fixedMargin);
+				stock.setFixedUnitMargin(fixedMargin);
 			}
-			catch (Throwable e) {}
+			catch (Throwable e) {
+				Util.trace(e);
+				return false;
+			}
 		}
-
-		update();
+		
+		return true;
 	}
 	
 	
@@ -631,15 +640,15 @@ public class MarketTable extends JTable implements MarketListener {
 				});
 			ctxMenu.add(miCommit);
 
-			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
-			miFix.addActionListener( 
+			JMenuItem miFixMargin = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFixMargin.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						toggleFix(stock);
+						toggleFixMargin(stock);
 					}
 				});
-			ctxMenu.add(miFix);
+			ctxMenu.add(miFixMargin);
 
 			JMenuItem miDelete = new JMenuItem("Delete");
 			miDelete.addActionListener( 

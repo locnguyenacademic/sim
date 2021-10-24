@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -669,8 +670,7 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	}
 
 
-	@Override
-	public boolean save(File workingDir) {
+	private boolean save0(File workingDir, boolean backup) {
 		if (workingDir.exists() && workingDir.isFile()) return false;
 		try {
 			if (!workingDir.exists()) {
@@ -688,7 +688,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 			if (market == null) continue;
 			
 			try {
-				File file = new File(workingDir, market.getName() + "." + StockProperty.JSI_EXT);
+				String fileName = market.getName() + "." + StockProperty.JSI_EXT;
+				if (backup) fileName += "." + Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+				File file = new File(workingDir, fileName);
 				FileWriter writer = new FileWriter(file);
 				ret = market.write(writer) && ret;
 				writer.close();
@@ -700,6 +702,18 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		}
 		
 		return ret;
+	}
+
+	
+	@Override
+	public boolean save(File workingDir) {
+		return save0(workingDir, false);
+	}
+
+
+	@Override
+	public boolean saveBackup(File workingDir) {
+		return save0(workingDir, true);
 	}
 
 

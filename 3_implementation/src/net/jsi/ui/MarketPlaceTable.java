@@ -155,6 +155,7 @@ public class MarketPlaceTable extends MarketTable {
 			super(market, input, update, parent);
 		}
 
+		@Override
 		protected void switchTaker() {
 			this.dispose();
 			PlaceStockTaker taker = new PlaceStockTaker(market, input, update, parent);
@@ -335,15 +336,15 @@ public class MarketPlaceTable extends MarketTable {
 			
 			ctxMenu.addSeparator();
 
-			JMenuItem miFix = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
-			miFix.addActionListener( 
+			JMenuItem miFixMargin = new JMenuItem(s != null && s.isFixedMargin() ? "Unfix margin" : "Fix margin");
+			miFixMargin.addActionListener( 
 				new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						toggleFix(stock);
+						toggleFixMargin(stock);
 					}
 				});
-			ctxMenu.add(miFix);
+			ctxMenu.add(miFixMargin);
 
 			JMenuItem miDelete = new JMenuItem("Delete");
 			miDelete.addActionListener( 
