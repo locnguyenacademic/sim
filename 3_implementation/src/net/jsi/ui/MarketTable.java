@@ -211,12 +211,28 @@ public class MarketTable extends JTable implements MarketListener {
 	
 	
 	protected void commit() {
+		List<Stock> committedStocks = Util.newList(0);
 		doTasksOnSelected(new Task() {
 			@Override
 			public boolean doOne(Stock stock) {
-				return commit0(stock);
+				boolean ret = commit0(stock);
+				if(stock.isCommitted()) committedStocks.add(stock);
+				return ret;
 			}
 		}, false);
+		
+		if (committedStocks.size() == 0) return;
+		MarketImpl m = m(); if (m == null) return;
+		int answer= JOptionPane.showConfirmDialog(this, "Would you like to remove committed stocks", "Removal confirmation", JOptionPane.YES_NO_OPTION);
+		if (answer != JOptionPane.YES_OPTION) return;
+		
+		double profitSum = 0;
+		long timeInterval = m.getTimeViewInterval();
+		for (Stock stock : committedStocks) {
+			double profit = stock.getProfit(timeInterval) + stock.getMargin(timeInterval);
+			if (moveStockToTrash(stock)) profitSum += profit;
+		}
+		m.setBalanceBase(m.getBalanceBase() + profitSum);
 	}
 
 	
@@ -281,6 +297,11 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 
 	
+	protected boolean moveStockToTrash(Stock stock) {
+		MarketImpl m = m(); if (m == null) return false;
+		return MarketImpl.move(stock, m, m.getTrashMarket());
+	}
+
 	protected Stock addPrice(Stock stock) {
 		AddPrice addPrice = new AddPrice(getMarket(), stock, this);
 		addPrice.setVisible(true);
@@ -1621,7 +1642,6 @@ class MarketPanel extends JPanel implements MarketListener {
 		setLayout(new BorderLayout());
 		
 		MarketPanel thisPanel = this;
-		MarketImpl m = tblMarket.m();
 
 		JPanel header = new JPanel(new BorderLayout());
 		add(header, BorderLayout.NORTH);
@@ -1630,8 +1650,6 @@ class MarketPanel extends JPanel implements MarketListener {
 		header.add(toolbar1, BorderLayout.WEST);
 		
 		lblStartTime = new JLabel();
-		if (m != null)
-			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()));
 		toolbar1.add(lblStartTime);
 
 		JPanel toolbar2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -1723,7 +1741,7 @@ class MarketPanel extends JPanel implements MarketListener {
 		JPanel paneMarketButtons2 = new JPanel();
 		paneMarket.add(paneMarketButtons2, BorderLayout.EAST);
 
-		chkShowCommit = new JCheckBox("Show/hide commit");
+		chkShowCommit = new JCheckBox();
 		chkShowCommit.setSelected(tblMarket.isShowCommit());
 		chkShowCommit.addItemListener(new ItemListener() {
 			@Override
@@ -1798,6 +1816,7 @@ class MarketPanel extends JPanel implements MarketListener {
 	protected void update() {
 		Market market = getMarket();
 		MarketImpl m = tblMarket.m();
+		try {chkShowCommit.setText("Show/hide commit (" + m.countText(chkShowCommit.isSelected()) + ")");} catch (Throwable ex) {}
 
 		int d = Util.DECIMAL_PRECISION_SHORT;
 		long timeViewInterval = market.getTimeViewInterval();
@@ -1817,8 +1836,15 @@ class MarketPanel extends JPanel implements MarketListener {
 		double investRisky = market.calcInvestAmountRisky(timeViewInterval);
 		
 		if (m != null) {
-			int days = (int) (m.getTimeViewInterval() / (1000*3600*24));
-			lblStartTime.setText(Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(new Date()) + " last " + days + " days");
+			int viewDays = (int) (m.getTimeViewInterval() / (1000*3600*24));
+			Date currentDate = new Date();
+			int days = (int) ((currentDate.getTime() - m.getTimeStartPoint()) / (1000*3600*24));
+			String txtDate = Util.formatSimple(new Date(m.getTimeStartPoint())) + " -- " + Util.formatSimple(currentDate) + " last ";
+			if (m.getTimeViewInterval() <= 0)
+				txtDate += days + " days";
+			else
+				txtDate += (viewDays <  days ? viewDays + "/" + days : days) + " days";
+			lblStartTime.setText(txtDate);
 		}
 		
 		lblBalance.setText("Balance: " + Util.format(balance, d));
@@ -1930,11 +1956,6 @@ class MarketPanel extends JPanel implements MarketListener {
 						return moveStockToTrash(stock);
 					}
 				}, true);
-			}
-
-			private boolean moveStockToTrash(Stock stock) {
-				MarketImpl m = m(); if (m == null) return false;
-				return MarketImpl.move(stock, m, m.getTrashMarket());
 			}
 
 			private void watch() {
@@ -2287,7 +2308,7 @@ class MarketDialog extends JDialog {
 
 
 
-class MarketSummary extends JDialog {
+class MarketSummary extends JDialog implements MarketListener {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -2311,7 +2332,7 @@ class MarketSummary extends JDialog {
 	private boolean isPressOK = false;
 
 	
-	public MarketSummary(Market market, MarketListener listener, Component component) {
+	public MarketSummary(Market market, MarketListener superListener, Component component) {
 		super(Util.getDialogForComponent(component), "Market summary", true);
 		this.market = market;
 		
@@ -2323,13 +2344,13 @@ class MarketSummary extends JDialog {
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
 		
-		tblMarket = createMarketTable(market, listener);
+		tblMarket = createMarketTable(market, superListener);
 		body.add(new JScrollPane(tblMarket), BorderLayout.CENTER);
 		
 		JPanel paneMarket = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		body.add(paneMarket, BorderLayout.SOUTH);
 		
-		chkShowCommit = new JCheckBox("Show/hide commit");
+		chkShowCommit = new JCheckBox();
 		chkShowCommit.setSelected(tblMarket.isShowCommit());
 		chkShowCommit.addItemListener(new ItemListener() {
 			@Override
@@ -2337,6 +2358,8 @@ class MarketSummary extends JDialog {
 				if (tblMarket.isShowCommit() != chkShowCommit.isSelected()) {
 					tblMarket.setShowCommit(chkShowCommit.isSelected());
 					tblMarket.update();
+					
+					try {chkShowCommit.setText("Show/hide commit (" + tblMarket.m().countText(chkShowCommit.isSelected()) + ")");} catch (Throwable ex) {}
 				}
 			}
 		});
@@ -2363,6 +2386,8 @@ class MarketSummary extends JDialog {
 			}
 		});
 		footer.add(btnCancel);
+		
+		update();
 	}
 	
 	
@@ -2376,8 +2401,21 @@ class MarketSummary extends JDialog {
 	}
 	
 	
-	protected MarketTable createMarketTable(Market market, MarketListener listener) {
-		return new MarketTable(market, true, listener);
+	protected MarketTable createMarketTable(Market market, MarketListener superListener) {
+		MarketTable tblMarket = new MarketTable(market, true, this);
+		tblMarket.getModel2().addMarketListener(superListener);
+		return tblMarket;
+	}
+	
+	
+	protected void update() {
+		try {chkShowCommit.setText("Show/hide commit (" + tblMarket.m().countText(chkShowCommit.isSelected()) + ")");} catch (Throwable ex) {}
+	}
+
+
+	@Override
+	public void notify(MarketEvent evt) {
+		update();
 	}
 	
 	

@@ -200,6 +200,27 @@ public class StockImpl extends StockAbstract {
 	}
 	
 	
+	/*
+	 * As a convention, stock price is bid price.
+	 */
+	private Price getTakenPricePrev(long timeInterval) {
+		if (takenPrice == null || timeInterval <= 0) return null;
+		
+		Price lastPrice = getPrice();
+		if (lastPrice == null || lastPrice.getTime() - takenPrice.getTime() <= timeInterval)
+			return null;
+		else
+			return takenPrice;
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private double getTakenValuePrev(long timeInterval) {
+		Price takenPrice = getTakenPricePrev(timeInterval);
+		return takenPrice != null ? volume * takenPrice.get() : 0;
+	}
+
+	
 	@Override
 	public double getMargin(long timeInterval) {
 		double takenValue = getTakenValue(timeInterval);

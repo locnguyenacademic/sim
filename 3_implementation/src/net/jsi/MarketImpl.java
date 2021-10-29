@@ -171,17 +171,33 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 	}
 
 	
+	private double sumOfNetMargins(long timeInterval) {
+		double margin = 0;
+		for (StockGroup group : groups) {
+			List<Stock> stocks = group.getStocks(timeInterval);
+			for (Stock stock : stocks) {
+				double profit = stock.getProfit(timeInterval);
+				margin += stock.getMargin(timeInterval) + (profit > 0 ? 0 : -profit);
+			}
+		}
+		
+		return margin;
+	}
+	
+	
 	private double getBalance0(long timeInterval) {
+		double balance = getBalanceBase();
+		if (timeInterval > 0) balance -= sumOfNetMargins(0) - sumOfNetMargins(timeInterval);
+		
 		double profit = 0;
 		for (StockGroup group : groups) {
 			List<Stock> stocks = group.getStocks(timeInterval);
 			for (Stock stock : stocks) {
-				if (stock.isCommitted())
-					profit += stock.getProfit(timeInterval) + stock.getMargin(timeInterval);
+				if (stock.isCommitted()) profit += stock.getProfit(timeInterval) + stock.getMargin(timeInterval);
 			}
 		}
 		
-		return getBalanceBase() + profit;
+		return balance + profit;
 	}
 
 	
@@ -918,6 +934,14 @@ public class MarketImpl extends MarketAbstract implements QueryEstimator {
 		return u != null ? u.getCreateStore(getName()) : null;
 	}
 
+	
+	public String countText(boolean showCommitted) {
+		List<Stock> stocks = getStocks(0);
+		int uncommittedCount = 0;
+		for (Stock stock : stocks) uncommittedCount += stock.isCommitted() ? 0 : 1;
+		return (showCommitted ? stocks.size() : uncommittedCount) + "/" + stocks.size() + " (" + size() + ")";
+	}
+	
 	
 	public void sortCodes() {
 		Collections.sort(groups, new Comparator<StockGroup>() {

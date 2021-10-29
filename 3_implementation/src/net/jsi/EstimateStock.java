@@ -13,9 +13,6 @@ public class EstimateStock implements Serializable, Cloneable {
 	public Stock stock = null;
 	
 	
-	//public double ratio = 0;
-	
-	
 	public double estimatedStopLoss = 0;
 	
 	

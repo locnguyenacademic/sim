@@ -156,12 +156,6 @@ public abstract class MarketAbstract implements Market {
 	}
 
 
-//	public StockInfoStore getStore() {
-//		Universe u = getNearestUniverse();
-//		return u != null ? u.getCreateStore(getName()) : null;
-//	}
-
-	
 	@Override
 	public Price newPrice(double price, double lowPrice, double highPrice, long time) {
 		Market superMarket = getSuperMarket();

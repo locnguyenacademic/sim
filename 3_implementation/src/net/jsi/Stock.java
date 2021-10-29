@@ -40,6 +40,9 @@ public interface Stock extends Estimator, Serializable, Cloneable {
 	double getMargin(long timeInterval);
 
 	
+//	double getMarginPrev(long timeInterval);
+
+		
 	double getValue(long timeInterval);
 
 		
