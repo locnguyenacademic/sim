@@ -229,6 +229,12 @@ public class RecTable extends JTable {
     }
 
 
+	@Override
+	public String getToolTipText(MouseEvent event) {
+		return super.getToolTipText(event);
+	}
+
+
 }
 
 

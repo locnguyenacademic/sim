@@ -4,14 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import net.jsi.EstimateStock;
@@ -42,7 +50,9 @@ public abstract class StockDescription extends JDialog {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(300, 400);
 		setLocationRelativeTo(Util.getDialogForComponent(component));
-		setLayout(new BorderLayout());
+	    setJMenuBar(createMenuBar());
+
+	    setLayout(new BorderLayout());
 		
 		JPanel body = new JPanel(new BorderLayout());
 		add(body, BorderLayout.CENTER);
@@ -215,6 +225,35 @@ public abstract class StockDescription extends JDialog {
 	
 	
 	protected abstract List<EstimateStock> getEstimateStocks();
+	
+	
+	private JMenuBar createMenuBar() {
+		JMenuBar mnBar = new JMenuBar();
+		
+		JMenu mnTool = new JMenu("Tool");
+		mnTool.setMnemonic('t');
+		mnBar.add(mnTool);
+
+		JMenuItem mniCalc = new JMenuItem(
+			new AbstractAction("Calculator") {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					calc();
+				}
+			});
+		mniCalc.setMnemonic('c');
+		mniCalc.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+		mnTool.add(mniCalc);
+		
+		return mnBar;
+	}
+
+
+	private void calc() {
+		JOptionPane.showMessageDialog(this, "This function not implemented yet", "Not implemented yet", JOptionPane.INFORMATION_MESSAGE);
+	}
 	
 	
 }

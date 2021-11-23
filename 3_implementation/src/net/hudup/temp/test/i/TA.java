@@ -3,8 +3,9 @@ package net.hudup.temp.test.i;
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
+import net.hudup.core.logistic.ForTest;
 
-public class TA extends NeighborCFExtItemBased {
+public class TA extends NeighborCFExtItemBased implements ForTest {
 
 
 	private static final long serialVersionUID = 1L;

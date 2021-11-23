@@ -888,6 +888,12 @@ public class MarketTable extends JTable implements MarketListener {
     }
 
 	
+	@Override
+	public String getToolTipText(MouseEvent event) {
+		return super.getToolTipText(event);
+	}
+
+
 	protected boolean open(Reader reader) {
         try {
         	boolean ret = m().read(reader);
