@@ -2142,10 +2142,17 @@ public abstract class NeighborCFExt extends NeighborCF {
 			
 			double C = Math.sqrt(0.5 + 0.5*Math.cos(phi1-phi2));
 			
-			double d1 = Math.exp(-Math.abs(v1-v2));
-			double ri = getColumnRating(id).mean();
-			double d2 = Math.exp(0.5 * (Math.abs(v1-ri)+Math.abs(v2-ri)));
-			double D = d1*d2;
+			double rj = getColumnRating(id).mean();
+			double D = Constants.UNUSED;
+			if ((v1-rj)*(v2-rj) >= 0) {
+				double d1 = Math.exp(-Math.abs(v1-v2));
+				double d2 = Math.exp(0.5 * (Math.abs(v1-rj)+Math.abs(v2-rj)));
+				D = d1*d2;
+			}
+			else {
+				double d1 = Math.exp(-Math.abs(v1-v2));
+				D = d1;
+			}
 			
 			res += C*D;
 		}
