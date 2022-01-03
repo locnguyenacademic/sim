@@ -24,6 +24,9 @@ import java.util.Set;
 public class MarketImpl extends MarketAbstract implements QueryEstimator {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 

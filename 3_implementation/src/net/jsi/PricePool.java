@@ -6,6 +6,9 @@ import java.util.List;
 public class PricePool implements Serializable, Cloneable {
 
 
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	
@@ -272,6 +275,9 @@ public class PricePool implements Serializable, Cloneable {
 
 	public static class TakenStockPrice implements Serializable, Cloneable {
 
+		/**
+		 * Serial version UID for serializable class.
+		 */
 		private static final long serialVersionUID = 1L;
 		
 		public TakenPrice takenPrice = null;

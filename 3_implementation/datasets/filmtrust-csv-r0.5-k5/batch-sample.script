@@ -1,0 +1,8 @@
+# Sample batch script
+
+
+algorithms=neighborcf_userbased_ext, neighborcf_itembased_ext
+
+trainingsets=datasets/filmtrust-csv-r0.5-k5/hdp_rating1.base#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating2.base#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating3.base#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating4.base#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating5.base#snapshot_parser#file
+
+testingsets=datasets/filmtrust-csv-r0.5-k5/hdp_rating1.test#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating2.test#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating3.test#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating4.test#snapshot_parser#file, datasets/filmtrust-csv-r0.5-k5/hdp_rating5.test#snapshot_parser#file

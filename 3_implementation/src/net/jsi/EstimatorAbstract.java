@@ -14,6 +14,9 @@ import java.util.List;
 public abstract class EstimatorAbstract implements Estimator {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	
@@ -486,6 +489,9 @@ public abstract class EstimatorAbstract implements Estimator {
 	protected static Estimator duplicate(Estimator estimator, Stock stock) {
 		return new EstimatorAbstract() {
 			
+			/**
+			 * Serial version UID for serializable class.
+			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override

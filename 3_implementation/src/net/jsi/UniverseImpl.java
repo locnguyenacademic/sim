@@ -3,6 +3,9 @@ package net.jsi;
 public class UniverseImpl extends UniverseAbstract {
 
 
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	

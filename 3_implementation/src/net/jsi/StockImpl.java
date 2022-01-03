@@ -12,6 +12,9 @@ import java.util.List;
 public class StockImpl extends StockAbstract {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	

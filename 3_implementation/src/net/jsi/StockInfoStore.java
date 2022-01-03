@@ -8,6 +8,9 @@ import java.util.Set;
 public class StockInfoStore implements Serializable, Cloneable {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	

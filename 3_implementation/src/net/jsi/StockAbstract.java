@@ -12,6 +12,9 @@ import java.util.List;
 public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 

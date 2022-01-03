@@ -9,6 +9,9 @@ import java.util.List;
 public class UniverseRemoteImpl implements UniverseRemote, Serializable, Cloneable {
 
 
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 

@@ -21,6 +21,9 @@ import java.util.Set;
 public abstract class UniverseAbstract extends MarketAbstract implements Universe {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	
@@ -291,6 +294,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 		Market superMarket = this;
 		MarketImpl market = new MarketImpl(name, leverage, unitBias) {
 
+			/**
+			 * Serial version UID for serializable class.
+			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override

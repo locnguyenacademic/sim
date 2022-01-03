@@ -95,12 +95,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Improved Jaccard (IJ).
-	 */
-	public static final String JACCARD_TYPE_IJ = "ij";
-
-	
-	/**
 	 * PSS type.
 	 */
 	protected static final String PSS_TYPE = "pss_type";
@@ -1915,50 +1909,37 @@ public abstract class NeighborCFExt extends NeighborCF {
 					D.add(id);
 			}
 			else {
-				double v1 = vRating1.isRated(id) ? vRating1.get(id).value : Constants.UNUSED;
-				double v2 = vRating2.isRated(id) ? vRating2.get(id).value : Constants.UNUSED;
-				if (Util.isUsed(v1)) {
-					if (Accuracy.isRelevant(v1, this.ratingMedian))
-						PO.add(id);
-					else
-						NO.add(id);
-				}
-				else if (Util.isUsed(v2)) {
-					if (Accuracy.isRelevant(v2, this.ratingMedian))
-						PO.add(id);
-					else
-						NO.add(id);
-				}
+				double v = vRating1.isRated(id) ? vRating1.get(id).value : Constants.UNUSED;
+				if (!Util.isUsed(v)) v = vRating2.get(id).value;
+				if (Accuracy.isRelevant(v, this.ratingMedian))
+					PO.add(id);
+				else
+					NO.add(id);
 			}
 		}
 		
 		double numerator = 0;
 		for (int id : PA) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE == null) continue;
-			numerator += PNE[0];
+			if (PNE != null) numerator += PNE[0];
 		}
 		for (int id : NA) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE == null) continue;
-			numerator += PNE[1];
+			if (PNE != null) numerator += PNE[1];
 		}
 		for (int id : D) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE == null) continue;
-			numerator += Math.sqrt(PNE[0]*PNE[1]);
+			if (PNE != null) numerator += Math.sqrt(PNE[0]*PNE[1]);
 		}
 
 		double denominator = numerator;
 		for (int id : PO) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE == null) continue;
-			denominator += Math.sqrt(PNE[0]*PNE[2]);
+			if (PNE != null) denominator += Math.sqrt(PNE[0]*PNE[2]);
 		}
 		for (int id : NO) {
 			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE == null) continue;
-			denominator += Math.sqrt(PNE[1]*PNE[2]);
+			if (PNE != null) denominator += Math.sqrt(PNE[1]*PNE[2]);
 		}
 		
 		return numerator / denominator;
@@ -2533,30 +2514,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 			@Override
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
-				if (key.equals(JACCARD_TYPE)) {
-					String jtype = getAsString(JACCARD_TYPE);
-					jtype = jtype == null ? JACCARD_TYPE_NORMAL : jtype;
-					List<String> jtypes = Util.newList();
-					jtypes.add(JACCARD_TYPE_DICE);
-					jtypes.add(JACCARD_TYPE_MULTI);
-					jtypes.add(JACCARD_TYPE_NORMAL);
-					jtypes.add(JACCARD_TYPE_PNCR);
-					jtypes.add(JACCARD_TYPE_RJ);
-					jtypes.add(JACCARD_TYPE_RATINGJ);
-					jtypes.add(JACCARD_TYPE_INDEXEDJ);
-					jtypes.add(JACCARD_TYPE_IJ);
-					Collections.sort(jtypes);
-					
-					return (Serializable) JOptionPane.showInputDialog(
-						comp, 
-						"Please choose one Jaccard type", 
-						"Choosing Jaccard type", 
-						JOptionPane.INFORMATION_MESSAGE, 
-						null, 
-						jtypes.toArray(new String[] {}), 
-						jtype);
-				}
-				else if (key.equals(ESIM_TYPE)) {
+				if (key.equals(ESIM_TYPE)) {
 					String type = getAsString(ESIM_TYPE);
 					type = type == null ? getDefaultMeasure() : type;
 					return (Serializable) JOptionPane.showInputDialog(

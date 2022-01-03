@@ -12,6 +12,9 @@ import java.util.List;
 public class StockGroup extends StockAbstract implements Market {
 
 	
+	/**
+	 * Serial version UID for serializable class.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	
@@ -292,6 +295,10 @@ public class StockGroup extends StockAbstract implements Market {
 	private Stock newStock(long timeInterval, long takenTimePoint, double volume) {
 		StockGroup group = this;
 		StockImpl stock = new StockImpl(code(), volume, isBuy()) {
+			
+			/**
+			 * Serial version UID for serializable class.
+			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
