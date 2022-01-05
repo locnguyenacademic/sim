@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="jsi" id="Project-1a6c" database="MySql" >
+	<comment><![CDATA[Database model for JSI lightweight software]]></comment>
+	<schema name="jsi" >
+		<table name="danh sách giá" prior="tbl" >
+			<column name="mã tài sản" type="text" jt="-1" mandatory="y" />
+			<column name="thời điểm" type="datetime" jt="93" mandatory="y" />
+			<column name="giá" type="real" jt="8" />
+			<column name="giá sàn" type="real" jt="8" />
+			<column name="giá trần" type="real" jt="8" />
+			<index name="pk_danh sách giá" unique="PRIMARY_KEY" >
+				<column name="mã tài sản" />
+				<column name="thời điểm" />
+			</index>
+			<index name="unq_danh sách giá_mã tài sản" unique="UNIQUE_KEY" >
+				<column name="mã tài sản" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="nhóm tài sản" prior="tbl" >
+			<column name="mã tài sản" type="text" jt="-1" mandatory="y" />
+			<column name="thời điểm" type="datetime" jt="93" mandatory="y" />
+			<column name="số lượng" type="int" jt="4" mandatory="y" />
+			<column name="thời điểm mua/bán" type="datetime" jt="93" mandatory="y" />
+			<column name="mã thị trường" type="text" jt="-1" mandatory="y" />
+			<index name="pk_nhóm tài sản" unique="PRIMARY_KEY" >
+				<column name="mã tài sản" />
+				<column name="thời điểm" />
+				<column name="số lượng" />
+				<column name="thời điểm mua/bán" />
+			</index>
+			<fk name="fk_nhóm tài sản_tài sản" to_schema="jsi" to_table="tài sản" >
+				<fk_column name="mã tài sản" pk="mã tài sản" />
+				<fk_column name="thời điểm" pk="thời điểm" />
+			</fk>
+			<fk name="fk_nhóm tài sản_thị trường" to_schema="jsi" to_table="thị trường" >
+				<fk_column name="mã thị trường" pk="mã thị trường" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="thị trường" prior="tbl" >
+			<column name="mã thị trường" type="text" jt="-1" mandatory="y" />
+			<index name="pk_thị trường_mã thị trường" unique="PRIMARY_KEY" >
+				<column name="mã thị trường" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="tài sản" >
+			<column name="mã tài sản" type="text" jt="-1" mandatory="y" />
+			<column name="thời điểm" prior="danh sách giá" type="datetime" jt="93" mandatory="y" />
+			<column name="mua/bán" type="binary" length="1" jt="-2" />
+			<column name="đòn bẩy" type="real" jt="8" />
+			<column name="thuộc tính" type="real" jt="8" />
+			<index name="pk_tài sản_mã tài sản" unique="PRIMARY_KEY" >
+				<column name="mã tài sản" />
+				<column name="thời điểm" />
+			</index>
+			<fk name="fk_tài sản_danh sách giá" to_schema="jsi" to_table="danh sách giá" >
+				<fk_column name="mã tài sản" pk="mã tài sản" />
+				<fk_column name="thời điểm" pk="thời điểm" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-1cad" show_relation="columns" >
+		<entity schema="jsi" name="danh sách giá" color="C1D8EE" x="256" y="48" />
+		<entity schema="jsi" name="nhóm tài sản" color="C1D8EE" x="48" y="240" />
+		<entity schema="jsi" name="thị trường" color="C1D8EE" x="256" y="208" />
+		<entity schema="jsi" name="tài sản" color="C1D8EE" x="48" y="48" >
+			<column name="mã tài sản" />
+			<column name="mua/bán" />
+			<column name="đòn bẩy" />
+			<column name="thời điểm" />
+		</entity>
+	</layout>
+</project>
