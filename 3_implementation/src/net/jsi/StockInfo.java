@@ -1,8 +1,22 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * This class represents stock information.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
 public class StockInfo implements Serializable, Cloneable {
 
 

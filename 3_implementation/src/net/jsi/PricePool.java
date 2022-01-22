@@ -1,8 +1,22 @@
+/**
+ * JSI: JAGGED STRATEGY INVESTMENT 
+ * (C) Copyright by Loc Nguyen's Academic Network
+ * Project homepage: jsi.locnguyen.net
+ * Email: ng_phloc@yahoo.com
+ * Phone: +84-975250362
+ */
 package net.jsi;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Price pool is essentially a series of prices according to time points.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
 public class PricePool implements Serializable, Cloneable {
 
 
@@ -12,25 +26,47 @@ public class PricePool implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	
+	/**
+	 * Code of stock.
+	 */
 	protected String code = StockProperty.NONAME;
 
 	
+	/**
+	 * List of prices.
+	 */
 	protected List<Price> prices = Util.newList(0);
 	
 	
+	/**
+	 * Unit bias is the bias for a volume of stock.
+	 */
 	protected double unitBias = StockProperty.UNIT_BIAS;
 	
 	
+	/**
+	 * Constructor with stock code.
+	 * @param code stock code.
+	 */
 	public PricePool(String code) {
 		this.code = code;
 	}
 
 	
+	/**
+	 * Getting code.
+	 * @return stock code.
+	 */
 	public String code() {
 		return code;
 	}
 
 	
+	/**
+	 * Renaming stock code.
+	 * @param newCode new stock code.
+	 * @return whether renaming is successful.
+	 */
 	protected boolean rename(String newCode) {
 		if (newCode == null) return false;
 		this.code = newCode;
@@ -38,16 +74,30 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 
+	/**
+	 * Getting size of prices list.
+	 * @return size of prices list.
+	 */
 	public int size() {
 		return prices.size();
 	}
 	
 	
+	/**
+	 * Getting price by index.
+	 * @param index specified index.
+	 * @return price at specified index.
+	 */
 	public Price getByIndex(int index) {
 		return prices.get(index);
 	}
 	
 	
+	/**
+	 * Finding price by time point.
+	 * @param timePoint specified time point
+	 * @return index of the price at specified time point.
+	 */
 	public int lookup(long timePoint) {
 		int n = prices.size();
 		for (int i = n - 1; i >= 0 ; i--) {
@@ -59,17 +109,32 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Checking if containing the specified price.
+	 * @param price specified price.
+	 * @return whether containing the specified price.
+	 */
 	public boolean contains(Price price) {
 		return prices.contains(price);
 	}
 	
 	
+	/**
+	 * Getting price by specified time point.
+	 * @param timePoint specified time point.
+	 * @return price at specified time point.
+	 */
 	public Price getByTimePoint(long timePoint) {
 		int index = lookup(timePoint);
 		return index >= 0 ? getByIndex(index) : null;
 	}
 	
 	
+	/**
+	 * Getting prices list in given time interval.
+	 * @param timeInterval time interval in miliseconds.
+	 * @return prices list in given time interval.
+	 */
 	public List<Price> gets(long timeInterval) {
 		if (timeInterval <= 0) return prices;
 		
@@ -91,6 +156,10 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Getting last price which is current price.
+	 * @return last price which is current price.
+	 */
 	public Price getLast() {
 		if (prices.size() == 0)
 			return null;
@@ -99,6 +168,12 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 
+	/**
+	 * Getting price by time point and time interval.
+	 * @param timeInterval specified time interval.
+	 * @param timePoint specified time point.
+	 * @return price at specified time point and in time interval.
+	 */
 	public Price get(long timeInterval, long timePoint) {
 		Price lastPrice = getLast();
 		if (lastPrice == null) return null;
@@ -124,11 +199,22 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
+	/**
+	 * Getting the first price in specified time interval.
+	 * @param timeInterval specified time interval.
+	 * @return the first price in specified time interval.
+	 */
 	protected Price getWithin(long timeInterval) {
 		return getWithin(prices, timeInterval);
 	}
 
 	
+	/**
+	 * Getting the first price in specified prices list and specified time interval.
+	 * @param prices specified prices list.
+	 * @param timeInterval specified time interval.
+	 * @return the first price in specified prices list and specified time interval.
+	 */
 	protected static Price getWithin(List<Price> prices, long timeInterval) {
 		if (prices == null || prices.size() == 0) return null;
 		if (timeInterval <= 0) return prices.get(0);
@@ -144,6 +230,11 @@ public class PricePool implements Serializable, Cloneable {
 	}
 
 	
+	/**
+	 * Getting the price around the specified time point.
+	 * @param timePoint specified time point.
+	 * @return the price around the specified time point.
+	 */
 	protected Price getAround(long timePoint) {
 		if (prices.size() == 0 || timePoint < 0) return null;
 		if (timePoint == 0) return prices.get(0);
@@ -158,6 +249,10 @@ public class PricePool implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Getting the internal price list.
+	 * @return the internal price list {@link #prices}.
+	 */
 	public List<Price> getInternals() {
 		return prices;
 	}

@@ -9,6 +9,13 @@ package net.jsi;
 
 import java.util.Date;
 
+/**
+ * This is the default implement of price.
+ * 
+ * @author Loc Nguyen
+ * @version 1.0
+ *
+ */
 public class PriceImpl implements Price {
 
 	
@@ -18,26 +25,51 @@ public class PriceImpl implements Price {
 	private static final long serialVersionUID = 1L;
 
 
+	/**
+	 * Default price.
+	 */
 	private double price = 0;
 	
 	
+	/**
+	 * Bottom price.
+	 */
 	private double lowPrice = 0;
 	
 	
+	/**
+	 * Top price.
+	 */
 	private double highPrice = 0;
 	
 	
+	/**
+	 * Alternative price, which is often open price.
+	 */
 	private double altPrice = 0;
 
 	
+	/**
+	 * Time point of price.
+	 */
 	private long timePoint = System.currentTimeMillis();
 	
 	
+	/**
+	 * Default constructor.
+	 */
 	public PriceImpl() {
 		
 	}
 	
 	
+	/**
+	 * Constructor with essential information.
+	 * @param price default price.
+	 * @param lowPrice bottom price.
+	 * @param highPrice top price.
+	 * @param timePoint time point of price.
+	 */
 	public PriceImpl(double price, double lowPrice, double highPrice, long timePoint) {
 		this.price = price;
 		this.lowPrice = lowPrice;
@@ -147,6 +179,7 @@ public class PriceImpl implements Price {
 	}
 
 
+	@Override
 	public boolean checkRefEquals(Price price) {
 		if (price == null)
 			return false;
@@ -166,7 +199,4 @@ public class PriceImpl implements Price {
 	}
 
 
-	
-	
-	
 }

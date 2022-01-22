@@ -538,18 +538,30 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Parsing text to this property.
+	 * @param text specified text. The text includes lines.
+	 */
 	public void parseText(String text) {
 		Map<String, Object> properties = fromText(text);
 		parseText(properties);
 	}
 
 	
+	/**
+	 * Parsing the map of text to this property.
+	 * @param texts specified map of texts.
+	 */
 	public void parseText(Collection<String> texts) {
 		Map<String, Object> properties = fromText(texts);
 		parseText(properties);
 	}
 
 	
+	/**
+	 * Parsing map of objects to this property.
+	 * @param properties map of objects.
+	 */
 	private void parseText(Map<String, Object> properties) {
 		Set<String> keys = properties.keySet();
 		moreProperties.clear();
@@ -588,6 +600,10 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Converting additional properties to text.
+	 * @return text converted from addition properties.
+	 */
 	public String getMorePropertiesText() {
 		Set<String> defaultKeys = getDefaultPropertiesKeys();
 		Map<String, Object> properties = Util.newMap(0);
@@ -600,6 +616,10 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Setting additional properties from specified text.
+	 * @param propertiesText specified text.
+	 */
 	public void setMorePropertiesText(String propertiesText) {
 		Set<String> defaultKeys = getDefaultPropertiesKeys();
 		Map<String, Object> properties = fromText(propertiesText);
@@ -611,6 +631,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Converting map of object into text.
+	 * @param properties map of objects as properties.
+	 * @return text converted from map of objects.
+	 */
 	protected static String toText(Map<String, Object> properties) {
 		StringBuffer buffer = new StringBuffer();
 		Set<String> keys = properties.keySet();
@@ -645,6 +670,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Parsing text to map of objects.
+	 * @param text specified text. The text includes lines.
+	 * @return map of parsed objects.
+	 */
 	protected static Map<String, Object> fromText(String text) {
 		Map<String, Object> properties = Util.newMap(0);
 		if (text == null) return properties;
@@ -654,6 +684,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Parsing map of texts to map of objects.
+	 * @param texts specified map of texts.
+	 * @return map of parsed object.
+	 */
 	protected static Map<String, Object> fromText(Collection<String> texts) {
 		Map<String, Object> properties = Util.newMap(0);
 		if (texts == null) return properties;
@@ -707,6 +742,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 
 	
+	/**
+	 * Parsing text into integer.
+	 * @param s specified text.
+	 * @return integer parsed from text.
+	 */
 	private static int parseInt(String s) {
 		try {
 			return Integer.parseInt(s);
@@ -717,6 +757,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Parsing text into long number.
+	 * @param s specified text.
+	 * @return long number parsed from text.
+	 */
 	private static long parseLong(String s) {
 		try {
 			return Long.parseLong(s);
@@ -727,11 +772,22 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 
 
+	/**
+	 * Create key from stock code and buy/sell indicator.
+	 * @param code stock code.
+	 * @param buy buy/sell indicator.
+	 * @return key created from stock code and buy/sell indicator.
+	 */
 	public static String keyOf(String code, boolean buy) {
 		return code != null ? code + PAIR_SEP + buy : null;
 	}
 	
 	
+	/**
+	 * Getting stock code from key.
+	 * @param key specified key.
+	 * @return stock code from key.
+	 */
 	@SuppressWarnings("unused")
 	private static String codeOf(String key) {
 		if (key == null) return null;
@@ -743,6 +799,11 @@ public class StockProperty implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Getting buy/sell indicator from key.
+	 * @param key specified key.
+	 * @return buy/sell indicator from key.
+	 */
 	@SuppressWarnings("unused")
 	private static boolean buyOf(String key) {
 		if (key == null) return true;
