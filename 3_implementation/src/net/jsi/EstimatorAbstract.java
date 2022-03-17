@@ -29,7 +29,7 @@ public abstract class EstimatorAbstract implements Estimator {
 		double roi = getROI(timeInterval);;
 		
 		List<Price> prices = getPrices(timeInterval);
-		Price price = PricePool.getWithin(prices, timeInterval);
+		Price price = PricePool.getFirstWithin(prices, timeInterval);
 		if (price == null) return roi;
 		
 		Price lastPrice = prices.get(prices.size() -  1);

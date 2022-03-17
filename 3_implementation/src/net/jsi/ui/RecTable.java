@@ -331,7 +331,7 @@ class RecTableModel extends DefaultTableModel {
 
 	protected double getROI(String code, long timeInterval) {
 		StockInfo info = m().getStore().get(code);
-		Price price = info != null ? info.getPriceWithin(timeInterval) : null;
+		Price price = info != null ? info.getFirstPriceWithin(timeInterval) : null;
 		if (price == null)
 			return 0;
 		else

@@ -152,7 +152,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public double getPriceOscill(long timeInterval) {
-		Price price = info.getPriceWithin(timeInterval);
+		Price price = info.getFirstPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
 		else
@@ -172,7 +172,7 @@ public abstract class StockAbstract extends EstimatorAbstract implements Stock {
 	
 	@Override
 	public double calcOscillRatio(long timeInterval) {
-		Price price = info.getPriceWithin(timeInterval);
+		Price price = info.getFirstPriceWithin(timeInterval);
 		if (price == null)
 			return 0;
 		else

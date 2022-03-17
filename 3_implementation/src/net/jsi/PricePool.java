@@ -33,7 +33,7 @@ public class PricePool implements Serializable, Cloneable {
 
 	
 	/**
-	 * List of prices.
+	 * List of prices sorted according to time points.
 	 */
 	protected List<Price> prices = Util.newList(0);
 	
@@ -204,29 +204,34 @@ public class PricePool implements Serializable, Cloneable {
 	 * @param timeInterval specified time interval.
 	 * @return the first price in specified time interval.
 	 */
-	protected Price getWithin(long timeInterval) {
-		return getWithin(prices, timeInterval);
+	protected Price getFirstWithin(long timeInterval) {
+		return getFirstWithin(prices, timeInterval);
 	}
 
 	
 	/**
-	 * Getting the first price in specified prices list and specified time interval.
-	 * @param prices specified prices list.
+	 * Getting the first price in time-sorted prices list and specified time interval.
+	 * @param sortedPrices time-sorted prices list.
 	 * @param timeInterval specified time interval.
 	 * @return the first price in specified prices list and specified time interval.
 	 */
-	protected static Price getWithin(List<Price> prices, long timeInterval) {
-		if (prices == null || prices.size() == 0) return null;
-		if (timeInterval <= 0) return prices.get(0);
+	protected static Price getFirstWithin(List<Price> sortedPrices, long timeInterval) {
+		if (sortedPrices == null || sortedPrices.size() == 0) return null;
+		if (timeInterval <= 0) return sortedPrices.get(0);
 
-		Price lastPrice = prices.get(prices.size() - 1);
-		int n = prices.size();
-		for (int i = n - 1; i >= 0 ; i--) {
-			Price price = prices.get(i);
-			if (lastPrice.getTime() - price.getTime() >= timeInterval) return price;
+		int n = sortedPrices.size();
+		Price lastPrice = sortedPrices.get(n - 1);
+		if (n == 1) return lastPrice;
+		Price withinPrice = null;
+		for (int i = n - 2; i >= 0 ; i--) {
+			Price price = sortedPrices.get(i);
+			if (lastPrice.getTime() - price.getTime() <= timeInterval)
+				withinPrice = price;
+			else if (withinPrice != null)
+				return withinPrice;
 		}
 		
-		return prices.get(0);
+		return withinPrice != null ? withinPrice : lastPrice;
 	}
 
 	
