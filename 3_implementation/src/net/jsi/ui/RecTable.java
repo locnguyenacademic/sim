@@ -452,7 +452,7 @@ class RecTableModel extends DefaultTableModel {
 		row.add(investBy);
 		row.add(code);
 		row.add(getCategory(code));
-		row.add(new MarketTableModel.Percentage(0));
+		row.add(new MarketTableModel.Percentage(0, Util.DECIMAL_PRECISION_SHORT));
 		double leverage = info.getLeverage() != 0 ? 1.0/info.getLeverage() : 0;
 		row.add(leverage);
 		row.add(info.getLastPrice().get());

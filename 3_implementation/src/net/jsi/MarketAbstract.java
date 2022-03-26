@@ -61,7 +61,8 @@ public abstract class MarketAbstract implements Market {
 	public double calcInvestAmount(long timeInterval) {
 		double oscill = calcOscillAbs(timeInterval);
 		double minmaxDev = calcMinMaxDev(timeInterval);
-		return getFreeMargin(timeInterval) - Math.max(calcBias(timeInterval), Math.max(oscill, minmaxDev));
+		double om = Math.max(calcBias(timeInterval), Math.max(oscill, minmaxDev));
+		return getFreeMargin(timeInterval) - Math.max(om, getMargin(timeInterval));
 	}
 
 

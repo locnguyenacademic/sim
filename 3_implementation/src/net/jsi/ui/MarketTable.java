@@ -8,6 +8,7 @@
 package net.jsi.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -52,6 +53,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -73,6 +75,12 @@ public class MarketTable extends JTable implements MarketListener {
 
 	
 	private static final long serialVersionUID = 1L;
+
+	
+	/**
+	 * Highlight cell renderer.
+	 */
+	private RedmarkCellRenderer redmarkCellRenderer = new RedmarkCellRenderer();
 
 	
 	public MarketTable(Market market, boolean group, MarketListener listener) {
@@ -445,7 +453,7 @@ public class MarketTable extends JTable implements MarketListener {
 		int selectedRow = getSelectedRow();
 		if (selectedRow < 0) return false;
 		
-		Stock stock = getModel2().getStock(selectedRow);
+		Stock stock = getModel2().getStock(convertRowIndexToModel(selectedRow));
 		String tfUnitBiasText = JOptionPane.showInputDialog(this, "Enter time frame unit bias", stock.getUnitBias());
 		double tfUnitBias = Double.NaN;
 		try {
@@ -457,7 +465,7 @@ public class MarketTable extends JTable implements MarketListener {
 			return false;
 		}
 		
-		return getModel2().resetUnitBiasByTimeFrame(selectedRow, tfUnitBias);
+		return getModel2().resetUnitBiasByTimeFrame(convertRowIndexToModel(selectedRow), tfUnitBias);
 		
 	}
 	
@@ -867,6 +875,8 @@ public class MarketTable extends JTable implements MarketListener {
 			TableCellRenderer renderer = getDefaultRenderer(value.getClass());
 			if(renderer == null)
 				return super.getCellRenderer(row, column);
+			else if (getModel2().isGroup() ? column == 7 : column == 11) //Leverage ROI cell
+				return redmarkCellRenderer;
 			else
 				return renderer;
 		}
@@ -945,6 +955,46 @@ public class MarketTable extends JTable implements MarketListener {
 	}
 	
 	
+	/**
+	 * This class represents highlight cell renderer according to pool.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 */
+	private class RedmarkCellRenderer extends DefaultTableCellRenderer {
+
+		/**
+		 * Serial version UID for serializable class.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Default background color.
+		 */
+		private Color defaultBackgroundColor = null;
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			defaultBackgroundColor = defaultBackgroundColor != null ? defaultBackgroundColor : comp.getBackground();
+			
+			MarketImpl m = m();
+			if (m == null) return comp;
+			Stock stock = getModel2().getStock(convertRowIndexToModel(row));
+			if (stock == null) return comp;
+			
+			double lroi = stock.getROIByLeverage(m.getTimeViewInterval());
+			if (lroi <= -1)
+				comp.setBackground(new Color(255, 0, 0));
+			else
+				comp.setBackground(defaultBackgroundColor);
+			return comp;
+		}
+		
+		
+	}
+	
+
 }
 
 
@@ -1158,17 +1208,18 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 		
 		if (stock instanceof StockGroup) { 
 			StockGroup group = (StockGroup)stock;
+			double margin = group.getMargin(timeViewInterval);
 			
 			row.add(group);
 			row.add(group.isBuy());
 			row.add(group.getLeverage() != 0 ? 1.0/group.getLeverage() : 0);
 			row.add(group.getVolume(timeViewInterval, false));
 			row.add(group.getTakenValue(timeViewInterval));
-			row.add(group.getMargin(timeViewInterval));
+			row.add(margin);
 			row.add(group.getProfit(timeViewInterval));
-			row.add(new Percentage(group.getROIByLeverage(timeViewInterval)));
-			row.add(new Percentage(group.getROI(timeViewInterval)));
-			row.add(new Percentage(group.calcOscillRatio(timeViewInterval)));
+			row.add(new Percentage(group.getROIByLeverage(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
+			row.add(new Percentage(group.getROI(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
+			row.add(new Percentage(group.calcOscillRatio(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
 			row.add(group.calcOscill(timeViewInterval));
 			row.add(group.calcBias(timeViewInterval));
 			
@@ -1182,8 +1233,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			}
 			row.add(tv);
 			
-			row.add(stock.getDividend(timeViewInterval));
-			row.add(new Time(stock.getDividendTimePoint(timeViewInterval)));
+			double div = group.getDividend(timeViewInterval);
+			row.add(new PairValuePercentage(div, margin != 0 ? div/margin : 0));
+			row.add(new Time(group.getDividendTimePoint(timeViewInterval)));
 
 			row.add(stock.getCategory());
 			row.add(estimator);
@@ -1210,9 +1262,9 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			row.add(stock.getProfit(timeViewInterval));
 			row.add(stock.isCommitted());
 			
-			row.add(new Percentage(stock.getROIByLeverage(timeViewInterval)));
-			row.add(new Percentage(stock.getROI(timeViewInterval)));
-			row.add(new Percentage(stock.calcOscillRatio(timeViewInterval)));
+			row.add(new Percentage(stock.getROIByLeverage(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
+			row.add(new Percentage(stock.getROI(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
+			row.add(new Percentage(stock.calcOscillRatio(timeViewInterval), Util.DECIMAL_PRECISION_SHORT));
 			row.add(stock.getPriceOscill(timeViewInterval));
 			row.add(found != null ? new Pair(found.estimatedUnitBias, stock.getUnitBias()) : new Pair(stock.getUnitBias(), stock.getUnitBias()));
 
@@ -1326,9 +1378,7 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 
 	
 	@Override
-	public void tableChanged(TableModelEvent e) {
-
-	}
+	public void tableChanged(TableModelEvent e) { }
 	
 
 	public void addMarketListener(MarketListener listener) {
@@ -1371,14 +1421,27 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 
 
+	/**
+	 * This class represents the percentage value.
+	 * @author Loc Nguyen
+	 * @version 1.0
+	 *
+	 */
 	protected static class Percentage implements Serializable, Cloneable, Comparable<Percentage> {
 
 		private static final long serialVersionUID = 1L;
 		
 		protected double v = 0;
 		
-		public Percentage(double v) {
+		protected int formatDecimal = 0;
+		
+		public Percentage(double v, int formatDecimal) {
 			this.v = v;
+			this.formatDecimal = formatDecimal;
+		}
+
+		public Percentage(double v) {
+			this(v, 0);
 		}
 
 		@Override
@@ -1397,8 +1460,10 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 				return "";
 			else if (Double.isInfinite(v))
 				return "Infinity";
-			else
+			else if (formatDecimal <= 0)
 				return Util.format(v*100) + "%";
+			else
+				return Util.format(v*100, formatDecimal) + "%";
 		}
 
 	}
@@ -1442,7 +1507,6 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	}
 	
 	
-	@Deprecated
 	protected static class PairPercentage extends Pair {
 
 		private static final long serialVersionUID = 1L;
@@ -1467,11 +1531,11 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 	
 	
 	@Deprecated
-	protected static class PairPercentageSemi extends PairPercentage {
+	protected static class PairPercentageValue extends PairPercentage {
 
 		private static final long serialVersionUID = 1L;
 		
-		public PairPercentageSemi(double v1, double v2) {
+		public PairPercentageValue(double v1, double v2) {
 			super(v1, v2);
 		}
 
@@ -1484,6 +1548,29 @@ class MarketTableModel extends DefaultTableModel implements MarketListener, Tabl
 			else {
 				int d = Util.DECIMAL_PRECISION_SHORT;
 				return Util.format(v1*100, d) + "% / " + Util.format(v2, d);
+			}
+		}
+
+	}
+
+	
+	protected static class PairValuePercentage extends PairPercentage {
+
+		private static final long serialVersionUID = 1L;
+		
+		public PairValuePercentage(double v1, double v2) {
+			super(v1, v2);
+		}
+
+		@Override
+		public String toString() {
+			if (Double.isNaN(v1) || Double.isNaN(v1))
+				return "";
+			else if (Double.isInfinite(v1) || Double.isInfinite(v1))
+				return "Infinity";
+			else {
+				int d = Util.DECIMAL_PRECISION_SHORT;
+				return Util.format(v1, d) + " / " + Util.format(v2*100, d) + "%";
 			}
 		}
 
