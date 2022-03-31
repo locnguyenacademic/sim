@@ -972,11 +972,17 @@ public class MarketTable extends JTable implements MarketListener {
 		 */
 		private Color defaultBackgroundColor = null;
 		
+		/**
+		 * Default selected background color.
+		 */
+		private Color defaultSelectedBackgroundColor = null;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			defaultBackgroundColor = defaultBackgroundColor != null ? defaultBackgroundColor : comp.getBackground();
+			defaultBackgroundColor = defaultBackgroundColor != null ? defaultBackgroundColor : table.getBackground();
+			defaultSelectedBackgroundColor = defaultSelectedBackgroundColor != null ? defaultSelectedBackgroundColor : table.getSelectionBackground();
 			
 			MarketImpl m = m();
 			if (m == null) return comp;
@@ -984,13 +990,20 @@ public class MarketTable extends JTable implements MarketListener {
 			if (stock == null) return comp;
 			
 			double lroi = stock.getROIByLeverage(m.getTimeViewInterval());
-			if (lroi <= -1)
-				comp.setBackground(new Color(255, 0, 0));
-			else
-				comp.setBackground(defaultBackgroundColor);
+			if (lroi <= -1) {
+				if (!isSelected)
+					comp.setBackground(new Color(255, 0, 0));
+				else
+					comp.setBackground(new Color(200, 0, 200));
+			}
+			else {
+				if (!isSelected)
+					comp.setBackground(defaultBackgroundColor);
+				else
+					comp.setBackground(defaultSelectedBackgroundColor);
+			}
 			return comp;
 		}
-		
 		
 	}
 	
