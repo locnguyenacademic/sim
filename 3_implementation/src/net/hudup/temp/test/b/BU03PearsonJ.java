@@ -1,6 +1,7 @@
 package net.hudup.temp.test.b;
 
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,6 +29,14 @@ public class BU03PearsonJ extends NeighborCFExtUserBased implements ForTest {
 		return "BU03.PearsonJ";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(PEARSON_TYPE, PEARSON_TYPE_JACCARD);
+		return config;
+	}
+	
 	
 }
 

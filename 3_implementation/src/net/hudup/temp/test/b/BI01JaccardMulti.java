@@ -1,6 +1,7 @@
 package net.hudup.temp.test.b;
 
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,6 +29,14 @@ public class BI01JaccardMulti extends NeighborCFExtItemBased implements ForTest 
 		return "BI01.JaccardMulti";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(JACCARD_TYPE, JACCARD_TYPE_MULTI);
+		return config;
+	}
+	
 	
 }
 

@@ -1,6 +1,7 @@
 package net.hudup.temp.test.b;
 
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,5 +29,13 @@ public class BI06MPIP extends NeighborCFExtItemBased implements ForTest {
 		return "BI06.MPIP";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(PIP_TYPE, PIP_TYPE_MPIP);
+		return config;
+	}
+	
 	
 }

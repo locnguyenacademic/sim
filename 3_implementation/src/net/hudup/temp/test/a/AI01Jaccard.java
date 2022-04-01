@@ -1,6 +1,8 @@
 package net.hudup.temp.test.a;
 
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
+import net.hudup.core.alg.cf.nb.Measure;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,5 +30,13 @@ public class AI01Jaccard extends NeighborCFExtItemBased implements ForTest {
 		return "AI01.Jaccard";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.JACCARD);
+		return config;
+	}
+	
 	
 }

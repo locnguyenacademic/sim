@@ -905,7 +905,10 @@ public class StockTaker extends JDialog {
 			output = input;
 		else {
 			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), price, Double.NaN);
-			if (output == null) return;
+			if (output == null) {
+				JOptionPane.showMessageDialog(this, "Unable to add", "Unable to add", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 		
 		StockImpl s = m.c(output); if (s == null) return;
@@ -1531,6 +1534,7 @@ class StockSelector extends JDialog {
 			txtLeverage.setValue(leverage == 0 ? 0 : 1.0 / leverage);
 			
 			txtTakenPrice.setValue(group != null ? group.getPrice().get() : 1.0);
+			txtTakenDate.setValue(group != null ? new Date(group.getPriceTimePoint()) : new Date());
 
 			txtUnitBias.setValue(unitBias);
 			
@@ -1623,7 +1627,10 @@ class StockSelector extends JDialog {
 		}
 		else {
 			output = m.addStock(code, chkBuy.isSelected(), leverage, ((Number)txtVolume.getValue()).doubleValue(), takenTimePoint, Double.NaN);
-			if (output == null) return;
+			if (output == null) {
+				JOptionPane.showMessageDialog(this, "Unable to add", "Unable to add", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 		
 		StockImpl s = m.c(output); if (s == null) return;

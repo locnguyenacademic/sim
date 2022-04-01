@@ -20,7 +20,7 @@ public class BU03CPC extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return cosineNormal(vRating1, vRating2, profile1, profile2);
+		return cpc(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
@@ -33,7 +33,7 @@ public class BU03CPC extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
-		config.put(COSINE_NORMALIZED_FIELD, true);
+		config.put(PEARSON_TYPE, PEARSON_TYPE_CPC);
 		return config;
 	}
 	

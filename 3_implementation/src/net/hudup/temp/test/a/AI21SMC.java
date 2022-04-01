@@ -19,7 +19,7 @@ public class AI21SMC extends NeighborCFExtItemBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return smcc(vRating1, vRating2, profile1, profile2);
+		return smc(vRating1, vRating2, profile1, profile2);
 	}
 
 	

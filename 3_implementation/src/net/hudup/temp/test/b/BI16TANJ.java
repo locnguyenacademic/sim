@@ -34,6 +34,7 @@ public class BI16TANJ extends NeighborCFExtItemBased implements ForTest {
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(TA_NORMALIZED_FIELD, true);
+		config.put(TA_TYPE, TA_TYPE_JACCARD);
 		return config;
 	}
 

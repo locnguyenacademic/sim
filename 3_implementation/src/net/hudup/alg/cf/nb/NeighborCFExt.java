@@ -1396,7 +1396,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		String stype = config.getAsString(HSMD_TYPE);
 		if (stype.equals(HSMD_TYPE_NORMAL))
 			return hsmdNormal(vRating1, vRating2, profile1, profile2);
-		else if (stype.equals(PIP_TYPE_MPIP))
+		else if (stype.equals(HSMD_TYPE_JACCARD))
 			return hsmdj(vRating1, vRating2, profile1, profile2);
 		else
 			return hsmdNormal(vRating1, vRating2, profile1, profile2);

@@ -1,6 +1,7 @@
 package net.hudup.temp.test.b;
 
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,5 +29,13 @@ public class BU02COJ extends NeighborCFExtUserBased implements ForTest {
 		return "BU02.COJ";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(COSINE_TYPE, COSINE_TYPE_JACCARD_LIKE);
+		return config;
+	}
+	
 	
 }

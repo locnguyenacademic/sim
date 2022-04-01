@@ -1,6 +1,7 @@
 package net.hudup.temp.test.b;
 
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,6 +29,14 @@ public class BU01JacLMH extends NeighborCFExtUserBased implements ForTest {
 		return "BU01.JacLMH";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(JACCARD_TYPE, JACCARD_TYPE_INDEXEDJ);
+		return config;
+	}
+	
 	
 }
 
