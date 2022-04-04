@@ -1,6 +1,8 @@
 package net.hudup.temp.test.a;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,5 +30,13 @@ public class AU02Cosine extends NeighborCFExtUserBased implements ForTest {
 		return "AU02.Cosine";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.COSINE);
+		return config;
+	}
+	
 	
 }

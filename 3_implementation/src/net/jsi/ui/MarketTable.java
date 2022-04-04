@@ -875,8 +875,19 @@ public class MarketTable extends JTable implements MarketListener {
 			TableCellRenderer renderer = getDefaultRenderer(value.getClass());
 			if(renderer == null)
 				return super.getCellRenderer(row, column);
-			else if (getModel2().isGroup() ? column == 7 : column == 11) //Leverage ROI cell
-				return redmarkCellRenderer;
+			else if (getModel2().isGroup() ? column == 7 : column == 11) {//Leverage ROI cell
+				try {
+					Stock stock = (Stock) getValueAt(row, 0);
+					if (stock.isCommitted())
+						return renderer;
+					else
+						return redmarkCellRenderer;
+				}
+				catch (Exception e) {
+					Util.trace(e);
+				}
+				return renderer;
+			}
 			else
 				return renderer;
 		}

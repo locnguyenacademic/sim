@@ -1,7 +1,7 @@
 package net.hudup.temp.test.a;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
-import net.hudup.core.alg.cf.nb.Measure;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;

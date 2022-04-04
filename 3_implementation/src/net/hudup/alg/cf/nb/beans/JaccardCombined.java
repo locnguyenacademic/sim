@@ -14,9 +14,9 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.Util;
-import net.hudup.core.alg.cf.nb.Measure;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;

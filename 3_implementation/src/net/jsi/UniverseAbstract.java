@@ -509,7 +509,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	public long getTimeViewInterval() {
 		long maxInterval = 0;
 		for (Market market : markets) {
-			maxInterval = Math.max(maxInterval,  market.getTimeViewInterval());
+			long timeViewInterval = market.getTimeViewInterval();
+			if (timeViewInterval == 0) return 0;
+			maxInterval = Math.max(maxInterval,  timeViewInterval);
 		}
 		this.timeViewInterval = maxInterval;
 		return maxInterval;
@@ -530,7 +532,9 @@ public abstract class UniverseAbstract extends MarketAbstract implements Univers
 	public long getTimeValidInterval() {
 		long maxInterval = 0;
 		for (Market market : markets) {
-			maxInterval = Math.max(maxInterval,  market.getTimeValidInterval());
+			long timeValidInterval = market.getTimeValidInterval();
+			if (timeValidInterval == 0) return 0;
+			maxInterval = Math.max(maxInterval,  timeValidInterval);
 		}
 		this.timeValidInterval = maxInterval;
 		return maxInterval;

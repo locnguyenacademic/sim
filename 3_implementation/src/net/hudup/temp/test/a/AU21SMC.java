@@ -1,6 +1,8 @@
 package net.hudup.temp.test.a;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -28,5 +30,13 @@ public class AU21SMC extends NeighborCFExtUserBased implements ForTest {
 		return "AU21.SMC";
 	}
 
+	
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.SMC);
+		return config;
+	}
+	
 	
 }

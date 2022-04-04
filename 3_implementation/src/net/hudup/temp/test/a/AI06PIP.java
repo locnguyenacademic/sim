@@ -1,6 +1,8 @@
 package net.hudup.temp.test.a;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtItemBased;
+import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
@@ -29,5 +31,13 @@ public class AI06PIP extends NeighborCFExtItemBased implements ForTest {
 	}
 
 
+	@Override
+	public DataConfig createDefaultConfig() {
+		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.PIP);
+		return config;
+	}
+	
+	
 }
 

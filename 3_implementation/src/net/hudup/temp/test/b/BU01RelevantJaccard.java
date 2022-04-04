@@ -1,5 +1,6 @@
 package net.hudup.temp.test.b;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
@@ -33,6 +34,7 @@ public class BU01RelevantJaccard extends NeighborCFExtUserBased implements ForTe
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.JACCARD);
 		config.put(JACCARD_TYPE, JACCARD_TYPE_RJ);
 		return config;
 	}

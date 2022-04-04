@@ -1,5 +1,6 @@
 package net.hudup.temp.test.b;
 
+import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.DataConfig;
 import net.hudup.core.data.Profile;
@@ -33,6 +34,7 @@ public class BU22ESim2 extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
+		config.put(MEASURE, Measure.ESIM);
 		config.put(ESIM_TYPE, ESIM_TYPE_ESIM2);
 		return config;
 	}
