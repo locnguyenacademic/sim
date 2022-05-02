@@ -67,15 +67,15 @@ public class MultitaskServer extends ExtendedServer {
 
 
 	/**
-	 * Getting remote universe.
-	 * @return remote universe.
+	 * Getting remote JSI universe.
+	 * @return remote JSI universe.
 	 */
-	private UniverseRemote getUniverseRemote() {
+	private UniverseRemote getJSIUniverseRemote() {
 		try {
 			if (extraService == null || !(extraService instanceof ExtraMultitaskService))
 				return null;
 			else
-				return ((ExtraMultitaskService)extraService).getUniverseRemote();
+				return ((ExtraMultitaskService)extraService).getJSIUniverseRemote();
 		}
 		catch (Exception e) {
 			LogUtil.trace(e);
@@ -86,16 +86,16 @@ public class MultitaskServer extends ExtendedServer {
 	
 	
 	/**
-	 * Getting universe.
-	 * @return universe.
+	 * Getting JSI universe.
+	 * @return JSI universe.
 	 */
-	private Universe getUniverse() {
+	private Universe getJSIUniverse() {
 		try {
-			UniverseRemote remoteUniverse = getUniverseRemote();
-			if (remoteUniverse == null)
+			UniverseRemote jsiUniverseRemote = getJSIUniverseRemote();
+			if (jsiUniverseRemote == null)
 				return null;
-			else if (remoteUniverse instanceof UniverseRemoteImpl)
-				return ((UniverseRemoteImpl)remoteUniverse).getUniverse();
+			else if (jsiUniverseRemote instanceof UniverseRemoteImpl)
+				return ((UniverseRemoteImpl)jsiUniverseRemote).getUniverse();
 			else
 				return null;
 		}
@@ -112,7 +112,7 @@ public class MultitaskServer extends ExtendedServer {
 		
 		if (extraService != null && extraService instanceof ExtraMultitaskService) {
 			try {
-				((ExtraMultitaskService)extraService).saveUniverseRemote();
+				((ExtraMultitaskService)extraService).saveJSIUniverse();
 				LogUtil.info("Server timer internal tasks: Applying and saving universe.");
 			}
 			catch (Throwable e) {LogUtil.trace(e);}
@@ -142,7 +142,7 @@ public class MultitaskServer extends ExtendedServer {
 			if (extraService != null && extraService instanceof ExtraServiceAbstract)
 				((ExtraServiceAbstract)extraService).setAccount(account, password, getPrivileges(account, password));
 			
-			return getThisServer().getUniverseRemote();
+			return getThisServer().getJSIUniverseRemote();
 		}
 		
 	}
@@ -185,10 +185,10 @@ public class MultitaskServer extends ExtendedServer {
 									UniverseRemote remoteUniverse = null;
 									Universe universe = null;
 									if (connectInfo.bindUri == null)
-										universe = getUniverse();
+										universe = getJSIUniverse();
 									else {
 										universe = new UniverseImpl();
-										remoteUniverse = getUniverseRemote();
+										remoteUniverse = getJSIUniverseRemote();
 									}
 
 									if (universe != null) new Investor(universe, remoteUniverse, connectInfo.bindUri == null).setVisible(true);

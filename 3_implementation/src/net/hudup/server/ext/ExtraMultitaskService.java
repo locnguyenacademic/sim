@@ -28,9 +28,9 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 
 
 	/**
-	 * Remote universe.
+	 * Remote JSI universe.
 	 */
-	protected UniverseRemoteImpl remoteUniverse = null;
+	protected UniverseRemoteImpl jsiUniverseRemote = null;
 	
 	
 	/**
@@ -43,11 +43,11 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 	
 
 	/**
-	 * Getting remote universe.
-	 * @return remote universe.
+	 * Getting remote JSI universe.
+	 * @return remote JSI universe.
 	 */
-	public UniverseRemote getUniverseRemote() {
-		return remoteUniverse;
+	public UniverseRemote getJSIUniverseRemote() {
+		return jsiUniverseRemote;
 	}
 
 
@@ -60,7 +60,7 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 			LogUtil.trace(e);
 		}
 		
-		remoteUniverse = new UniverseRemoteImpl(new UniverseImpl()) {
+		jsiUniverseRemote = new UniverseRemoteImpl(new UniverseImpl()) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -68,8 +68,8 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 				return getThisService().isAdminAccount();
 			}
 		};
-		remoteUniverse.open(new File(StockProperty.WORKING_DIRECTORY));
-		remoteUniverse.export(server.getPort());
+		jsiUniverseRemote.open(new File(StockProperty.WORKING_DIRECTORY));
+		jsiUniverseRemote.export(server.getPort());
 
 		return true;
 	}
@@ -86,25 +86,28 @@ public class ExtraMultitaskService extends ExtraServiceAbstract {
 	
 	@Override
 	public void close() throws Exception {
-		if (remoteUniverse != null) {
-			synchronized (remoteUniverse) {
-				saveUniverseRemote();
-				remoteUniverse.unexport();
+		if (jsiUniverseRemote != null) {
+			synchronized (jsiUniverseRemote) {
+				saveJSIUniverse();
+				jsiUniverseRemote.unexport();
 			}
 		}
-		remoteUniverse = null;
+		jsiUniverseRemote = null;
 	}
 
 
-	protected void saveUniverseRemote() {
+	/**
+	 * Saving JSI universe.
+	 */
+	protected void saveJSIUniverse() {
 		File workingDir = new File(StockProperty.WORKING_DIRECTORY);
-		synchronized (remoteUniverse) {
-			remoteUniverse.apply();
-			remoteUniverse.save(workingDir);
+		synchronized (jsiUniverseRemote) {
+			jsiUniverseRemote.apply();
+			jsiUniverseRemote.save(workingDir);
 		}
 		
 		try {
-			remoteUniverse.saveBackup(workingDir);
+			jsiUniverseRemote.saveBackup(workingDir);
 		}
 		catch (Throwable e) {}
 	}
