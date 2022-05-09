@@ -3,6 +3,7 @@ package net.jsi;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+@Deprecated
 public interface UniverseRemoteGetter extends Remote {
 	
 

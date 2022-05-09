@@ -63,6 +63,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
+import net.hudup.core.client.ExtraGateway;
 import net.jsi.Market;
 import net.jsi.MarketAbstract;
 import net.jsi.MarketImpl;
@@ -73,7 +74,6 @@ import net.jsi.StockProperty;
 import net.jsi.Universe;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemote;
-import net.jsi.UniverseRemoteGetter;
 import net.jsi.Util;
 
 public class Investor extends JFrame implements MarketListener {
@@ -1664,8 +1664,8 @@ public class Investor extends JFrame implements MarketListener {
 				UniverseRemote remoteUniverse = null;
 				try {
 					Remote extraGateway = Naming.lookup(uri);
-					if (extraGateway != null && extraGateway instanceof UniverseRemoteGetter)
-						remoteUniverse = ((UniverseRemoteGetter)extraGateway).getUniverseRemote(username, password);
+					if (extraGateway != null && extraGateway instanceof ExtraGateway)
+						remoteUniverse = (UniverseRemote) (((ExtraGateway)extraGateway).getTaskRemoteObject(username, password, "JSI"));
 				}
 				catch (Exception ex) {ex.printStackTrace();}
 				
