@@ -11,7 +11,7 @@ import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import net.hudup.core.TaskAbstract;
+import net.hudup.core.AppAbstract;
 import net.hudup.core.client.ConnectInfo;
 import net.hudup.core.client.PowerServer;
 import net.jsi.StockProperty;
@@ -22,13 +22,13 @@ import net.jsi.UniverseRemoteImpl;
 import net.jsi.ui.Investor;
 
 /**
- * This class represents JSI task.
+ * This class represents JSI application.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class JSITask extends TaskAbstract {
+public class JSIApp extends AppAbstract {
 
 	
 	/**
@@ -46,15 +46,17 @@ public class JSITask extends TaskAbstract {
 	/**
 	 * Remote JSI universe.
 	 */
-	protected UniverseRemoteImpl jsiUniverseRemote = null;
+	protected UniverseRemote jsiUniverseRemote = null;
 
 	
 	/**
-	 * Constructor with server.
+	 * Constructor with server, application creator, and remote universe.
 	 * @param server power server.
+	 * @param jsiAppor application creator.
+	 * @param jsiUniverseRemote remote JSI universe.
 	 */
-	public JSITask(PowerServer server, JSITasker jsiTasker, UniverseRemoteImpl jsiUniverseRemote) {
-		super(jsiTasker);
+	public JSIApp(PowerServer server, JSIAppor jsiAppor, UniverseRemote jsiUniverseRemote) {
+		super(jsiAppor);
 		this.server = server;
 		this.jsiUniverseRemote = jsiUniverseRemote;
 	}
@@ -67,33 +69,33 @@ public class JSITask extends TaskAbstract {
 
 	
 	/**
-	 * Getting JSI tasker.
-	 * @return JSI tasker.
+	 * Getting JSI application creator.
+	 * @return JSI application creator.
 	 */
-	private JSITasker getJSITasker() {
-		return (JSITasker)tasker;
+	private JSIAppor getJSIAppor() {
+		return (JSIAppor)appor;
 	}
 	
 	
 	@Override
 	public boolean discard() throws RemoteException {
-		JSITasker jsiTasker = getJSITasker();
-		if (jsiTasker == null || this != jsiTasker.jsiTask)
+		JSIAppor jsiAppor = getJSIAppor();
+		if (jsiAppor == null || this != jsiAppor.jsiApp)
 			return discard0();
 		else
-			return jsiTasker.discard(this);
+			return jsiAppor.discard(this);
 	}
 
 	
 	/**
-	 * Discard this JSI task.
+	 * Discard this JSI application.
 	 * @return true if discarding is successful.
 	 */
 	protected boolean discard0() {
 		if (jsiUniverseRemote == null) return false;
 		
 		synchronized (jsiUniverseRemote) {
-			saveJSIUniverse();
+			saveJSIUniverseLocal();
 			try {
 				jsiUniverseRemote.unexport();
 			} catch (Throwable e) {net.jsi.Util.trace(e);}
@@ -105,8 +107,8 @@ public class JSITask extends TaskAbstract {
 	
 	
 	@Override
-	public boolean serverDo() throws RemoteException {
-		saveJSIUniverse();
+	public boolean serverTask() throws RemoteException {
+		saveJSIUniverseLocal();
 		return true;
 	}
 
@@ -142,15 +144,18 @@ public class JSITask extends TaskAbstract {
 	/**
 	 * Saving JSI universe.
 	 */
-	private void saveJSIUniverse() {
+	private void saveJSIUniverseLocal() {
 		File workingDir = new File(StockProperty.WORKING_DIRECTORY);
 		synchronized (jsiUniverseRemote) {
-			jsiUniverseRemote.apply();
-			jsiUniverseRemote.save(workingDir);
+			if (jsiUniverseRemote instanceof UniverseRemoteImpl) {
+				((UniverseRemoteImpl)jsiUniverseRemote).apply();
+				((UniverseRemoteImpl)jsiUniverseRemote).save(workingDir);
+			}
 		}
 		
 		try {
-			jsiUniverseRemote.saveBackup(workingDir);
+			if (jsiUniverseRemote instanceof UniverseRemoteImpl)
+				((UniverseRemoteImpl)jsiUniverseRemote).saveBackup(workingDir);
 		}
 		catch (Throwable e) {}
 	}

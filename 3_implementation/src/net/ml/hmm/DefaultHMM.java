@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Random;
 
-import net.hudup.core.logistic.LogUtil;
 import net.ml.hmm.HMMDoEvent.Type;
 
 /**
@@ -1123,7 +1122,7 @@ public class DefaultHMM implements Serializable, Cloneable, AutoCloseable {
 					notifyAll();
 					try {
 						wait();
-					} catch (Exception e) {LogUtil.trace(e);}
+					} catch (Exception e) {Util.trace(e);}
 				}
 			}
 		}

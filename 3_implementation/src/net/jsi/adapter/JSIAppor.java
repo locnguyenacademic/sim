@@ -9,39 +9,45 @@ package net.jsi.adapter;
 
 import java.io.File;
 
-import net.hudup.core.Task;
-import net.hudup.core.Tasker;
+import net.hudup.core.App;
+import net.hudup.core.Appor;
 import net.hudup.core.client.PowerServer;
 import net.jsi.StockProperty;
 import net.jsi.UniverseImpl;
 import net.jsi.UniverseRemoteImpl;
 
 /**
- * This class represents a JSI tasker.
+ * This class represents a JSI application creator.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class JSITasker implements Tasker {
+public class JSIAppor implements Appor {
 
 	
 	/**
-	 * Tasker name.
+	 * Serial version UID for serializable class.
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
+	 * JSI application creator name.
 	 */
 	public final static String JSI = "JSI";
 	
 	
 	/**
-	 * Internal JSI task.
+	 * Internal JSI application.
 	 */
-	protected JSITask jsiTask = null;
+	protected JSIApp jsiApp = null;
 	
 	
 	/**
-	 * Default JSI tasker.
+	 * Default JSI application.
 	 */
-	public JSITasker() {
+	public JSIAppor() {
 
 	}
 
@@ -53,11 +59,13 @@ public class JSITasker implements Tasker {
 
 	
 	@Override
-	public Task create(PowerServer server) {
-		if (jsiTask != null) return jsiTask;
+	public App create(PowerServer server) {
+		if (jsiApp != null) return jsiApp;
 		
 		if (server == null) return null;
 		try {
+//			UniverseRemoteImpl jsiUniverseRemote = new UniverseRemoteForAppor(new UniverseImpl());
+			
 			UniverseRemoteImpl jsiUniverseRemote = new UniverseRemoteImpl(new UniverseImpl()) {
 				private static final long serialVersionUID = 1L;
 	
@@ -69,7 +77,7 @@ public class JSITasker implements Tasker {
 			jsiUniverseRemote.open(new File(StockProperty.WORKING_DIRECTORY));
 			jsiUniverseRemote.export(server.getPort());
 			
-			return (jsiTask = new JSITask(server, this, jsiUniverseRemote));
+			return (jsiApp = new JSIApp(server, this, jsiUniverseRemote));
 		} catch (Throwable e) {net.jsi.Util.trace(e);}
 		
 		return null;
@@ -77,19 +85,34 @@ public class JSITasker implements Tasker {
 
 	
 	/**
-	 * Discarding JSI task.
-	 * @param jsiTask specified JSI task.
+	 * Discarding JSI application.
+	 * @param jsiApp specified JSI application.
 	 * @return true if discarding is successful.
 	 */
-	protected boolean discard(JSITask jsiTask) {
-		if (jsiTask == null)
+	protected boolean discard(JSIApp jsiApp) {
+		if (jsiApp == null)
 			return false;
 		else {
-			boolean discarded = jsiTask.discard0();
-			this.jsiTask = jsiTask == this.jsiTask ? null : this.jsiTask;
+			boolean discarded = jsiApp.discard0();
+			this.jsiApp = jsiApp == this.jsiApp ? null : this.jsiApp;
 			return discarded;
 		}
 	}
 	
 	
 }
+
+
+//class UniverseRemoteImplEx extends UniverseRemoteImpl {
+//
+//	public UniverseRemoteImplEx(Universe universe) {
+//		super(universe);
+//		// TODO Auto-generated constructor stub
+//	}
+//	
+//	@Override
+//	protected boolean isAdminAccount() {
+//		return true;
+//	}
+//
+//}

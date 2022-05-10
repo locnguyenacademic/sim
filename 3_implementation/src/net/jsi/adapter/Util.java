@@ -7,10 +7,15 @@
  */
 package net.jsi.adapter;
 
+import java.rmi.Naming;
+import java.rmi.Remote;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
+import net.hudup.core.client.ExtraGateway;
+import net.jsi.UniverseRemote;
 
 /**
  * This is utility class to provide static utility methods. It is also adapter to other libraries.
@@ -67,4 +72,28 @@ public final class Util {
 	}
 
 
+	/**
+	 * Getting remote universe.
+	 * @param host host.
+	 * @param port port.
+	 * @param account account.
+	 * @param password password.
+	 * @return remote universe.
+	 */
+	public static UniverseRemote getUniverseRemote(String host, int port, String account, String password) {
+		String uri = "rmi://" + host;
+		uri = port < 1 ? uri + "/" + "extragateway" : uri + ":" + port + "/" + "extragateway";
+		
+		UniverseRemote remoteUniverse = null;
+		try {
+			Remote extraGateway = Naming.lookup(uri);
+			if (extraGateway != null && extraGateway instanceof ExtraGateway)
+				remoteUniverse = (UniverseRemote) (((ExtraGateway)extraGateway).getAppRemoteObject(account, password, "JSI"));
+		}
+		catch (Exception e) {net.jsi.Util.trace(e);}
+		
+		return remoteUniverse;
+	}
+	
+	
 }

@@ -467,7 +467,7 @@
 	</target>
 
 
-	<target name="jar-ml" depends="compile" description="Create machine learning package including hidden Markov model (ml)">
+	<target name="jar-ml" depends="compile" description="Create machine learning (ML) package">
 		<mkdir dir="${archive.home}"/>
 		<antcall target="clean-archive" />
 
@@ -584,7 +584,7 @@
 		<then>
 			<jar destfile="${archive.home}/${product}-jsi.jar">
 	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
-				<zipfileset includes="net/hudup/core/client/**" src="${hudup.jar}"/>
+				<!--<zipfileset includes="net/hudup/core/**" src="${hudup.jar}"/>-->
 				<!--
 	    		<restrict>
 	     			<name name="**"/>
@@ -611,7 +611,7 @@
 
 			<jar destfile="${archive.home}/${product}-jsi.jar">
 	    		<fileset dir="${bin.home}" includes="net/jsi/**"/>
-				<zipfileset includes="net/hudup/core/client/**" src="${hudup.jar}"/>
+				<!--<zipfileset includes="net/hudup/core/**" src="${hudup.jar}"/>-->
 
 				<manifest>
 					<attribute name="Main-Class" value="net.jsi.ui.Investor"/>
