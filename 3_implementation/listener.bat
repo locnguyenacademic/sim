@@ -1,3 +1,5 @@
+set EXTRA_CLASSPATH=./hudup-listener.jar
+
 call .\env.bat
 
 @echo off
@@ -14,4 +16,5 @@ goto end
 goto end
 
 :end
+
 @echo on

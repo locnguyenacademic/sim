@@ -1,3 +1,5 @@
+set EXTRA_CLASSPATH=./jsi.jar;./sim-jsi.jar
+
 call .\env.bat
 
-%JAVA_CMD%;./hudup-core.jar;./hudup.jar;./jsi.jar;./sim-jsi.jar net.jsi.ui.Investor
+%JAVA_CMD% net.jsi.ui.Investor

@@ -1,3 +1,5 @@
+EXTRA_CLASSPATH=./hudup-listener.jar
+
 . env.sh
 
 if [ "$1" == "service" ]

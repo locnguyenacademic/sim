@@ -31,7 +31,6 @@ public final class FactoryImpl implements Factory {
 	
 	@Override
 	public Bnet createNetwork() {
-		// TODO Auto-generated method stub
 		return new BNetworkWrapper();
 	}
 
@@ -59,7 +58,6 @@ public final class FactoryImpl implements Factory {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void addRootNodes(Bnode... rootNodes) {
-			// TODO Auto-generated method stub
 			for (Bnode node : rootNodes) {
 				bayesNet.addNode(((BNodeWrapper)node).bayesNode);
 			}
@@ -68,14 +66,12 @@ public final class FactoryImpl implements Factory {
 
 		@Override
 		public List<Bnode> getRootNodes() {
-			// TODO Auto-generated method stub
 			List<BayesNode> rootNodes = bayesNet.getNodes();
 			return BNodeWrapper.toNodeList(rootNodes);
 		}
 
 		@Override
 		public void load(InputStream in) throws IOException {
-			// TODO Auto-generated method stub
 			XMLBIFReader reader = new XMLBIFReader(in);
 			bayesNet = reader.read();
 			reader.close();
@@ -83,7 +79,6 @@ public final class FactoryImpl implements Factory {
 
 		@Override
 		public void save(OutputStream out) throws IOException {
-			// TODO Auto-generated method stub
 			XMLBIFWriter writer = new XMLBIFWriter(out);
 			writer.write(bayesNet);
 			writer.close();
@@ -91,7 +86,6 @@ public final class FactoryImpl implements Factory {
 
 		@Override
 		public Bnode newNode(String nodeName) {
-			// TODO Auto-generated method stub
 			return new BNodeWrapper(nodeName);
 		}
 
@@ -130,13 +124,11 @@ public final class FactoryImpl implements Factory {
 		
 		@Override
 		public String getName() {
-			// TODO Auto-generated method stub
 			return bayesNode.getName();
 		}
 
 		@Override
 		public void setParents(Bnode... parentNodes) {
-			// TODO Auto-generated method stub
 			List<BayesNode> nodeList = Util.newList();
 			for (Bnode node : parentNodes) {
 				nodeList.add(((BNodeWrapper)node).bayesNode);
@@ -146,14 +138,12 @@ public final class FactoryImpl implements Factory {
 
 		@Override
 		public List<Bnode> getParents() {
-			// TODO Auto-generated method stub
 			List<BayesNode> parentNodes = bayesNode.getParents();
 			return toNodeList(parentNodes);
 		}
 
 		@Override
 		public List<Bnode> getChildren() {
-			// TODO Auto-generated method stub
 			List<BayesNode> childNodes = bayesNode.getChildren();
 			return toNodeList(childNodes);
 		}
@@ -175,13 +165,11 @@ public final class FactoryImpl implements Factory {
 		
 		@Override
 		public void setProbs(double... cpt) {
-			// TODO Auto-generated method stub
 			bayesNode.setProbabilities(cpt);
 		}
 
 		@Override
 		public double[] getProbs() {
-			// TODO Auto-generated method stub
 			return bayesNode.getProbabilities();
 		}
 		
