@@ -143,4 +143,10 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	public static final String PMD = "pmd";
 
 	
+	/**
+	 * STB measure.
+	 */
+	public static final String STB = "stb";
+
+
 }

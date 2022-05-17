@@ -60,8 +60,6 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * <br>
  * Ali Amer and Loc Nguyen contributed quasi-TfIdf measure. Quasi-TfIdf measure is an extension of HSMD measure and the ideology of TF and IDF.<br>
  * <br>
- * Shunpan Liang, Lin Ma, and Fuyong Yuan contributed improved Jaccard (IJ) measure.<br>
- * <br>
  * Sujoy Bag, Sri Krishna Kumar, and Manoj Kumar Tiwari contributed relevant Jaccard (RJ) measure.<br>
  * <br>
  * Mubbashir Ayub1, Mustansar Ali Ghazanfar1, Tasawer Khan1, Asjad Saleem contributed rating Jaccard measure.
@@ -79,6 +77,8 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * Jiangzhou Deng, Yong Wang, Junpeng Guo, Yongheng Deng, Jerry Gao, and Younghee Park contributed Kullback–Leibler divergence measure (KL).<br>
  * <br>
  * Yitong Meng, Xinyan Dai, Xiao Yan, James Cheng, Weiwen Liu, Jun Guo, Benben Liao, and Guangyong Chen contributed Preference Mover Distance (PMD) measure.<br>
+ * <br>
+ * Ali Amer contributed STB measure.<br>
  * <br>
  * 
  * @author Loc Nguyen
@@ -416,6 +416,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.SM);
 		mSet.add(Measure.KL);
 		mSet.add(Measure.PMD);
+		mSet.add(Measure.STB);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -520,6 +521,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return sm(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.KL))
 			return kl(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.STB))
+			return stb(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -1868,124 +1871,6 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 	
 	
-	@Override
-	protected double jaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
-		String jtype = config.getAsString(JACCARD_TYPE);
-		if (jtype.equals(JACCARD_TYPE_IJ))
-			return jaccardImproved(vRating1, vRating2, profile1, profile2);
-		else
-			return super.jaccard(vRating1, vRating2, profile1, profile2);
-	}
-
-
-	/**
-	 * Calculating the improved Jaccard (IJ) measure between two pairs.
-	 * Shunpan Liang, Lin Ma, and Fuyong YuanShunpan Liang, Lin Ma, and Fuyong Yuan developed the improved Jaccard (IJ) measure. Loc Nguyen implements it.
-	 * The first pair includes the first rating vector and the first profile.
-	 * The second pair includes the second rating vector and the second profile.
-	 * 
-	 * @param vRating1 first rating vector.
-	 * @param vRating2 second rating vector.
-	 * @param profile1 first profile.
-	 * @param profile2 second profile.
-	 * @return Improved Jaccard (IJ) measure between both two rating vectors and profiles.
-	 * @author Shunpan Liang, Lin Ma, Fuyong Yuan
-	 */
-	protected double jaccardImproved(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
-		Set<Integer> PA = Util.newSet(), NA = Util.newSet(), D = Util.newSet(), PO = Util.newSet(), NO = Util.newSet();
-		Set<Integer> ids = unionFieldIds(vRating1, vRating2);
-		if (ids.size() == 0) return Constants.UNUSED;
-		
-		for (int id : ids) {
-			if (vRating1.isRated(id) && vRating2.isRated(id)) {
-				double v1 = vRating1.get(id).value;
-				double v2 = vRating2.get(id).value;
-				if (Accuracy.isRelevant(v1, this.ratingMedian) && Accuracy.isRelevant(v2, this.ratingMedian))
-					PA.add(id);
-				else if ((!Accuracy.isRelevant(v1, this.ratingMedian)) && (!Accuracy.isRelevant(v2, this.ratingMedian)))
-					NA.add(id);
-				else
-					D.add(id);
-			}
-			else {
-				double v = vRating1.isRated(id) ? vRating1.get(id).value : Constants.UNUSED;
-				if (!Util.isUsed(v)) v = vRating2.get(id).value;
-				if (Accuracy.isRelevant(v, this.ratingMedian))
-					PO.add(id);
-				else
-					NO.add(id);
-			}
-		}
-		
-		double numerator = 0;
-		for (int id : PA) {
-			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE != null) numerator += PNE[0];
-		}
-		for (int id : NA) {
-			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE != null) numerator += PNE[1];
-		}
-		for (int id : D) {
-			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE != null) numerator += Math.sqrt(PNE[0]*PNE[1]);
-		}
-
-		double denominator = numerator;
-		for (int id : PO) {
-			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE != null) denominator += Math.sqrt(PNE[0]*PNE[2]);
-		}
-		for (int id : NO) {
-			double[] PNE = improvedJaccardCalcSingularities(id);
-			if (PNE != null) denominator += Math.sqrt(PNE[1]*PNE[2]);
-		}
-		
-		return numerator / denominator;
-	}
-
-	
-	/**
-	 * Calculating singularities for improved Jaccard measure given column identifier.
-	 * The improved Jaccard measure was developed by Shunpan Liang, Lin Ma, Fuyong Yuan.
-	 * @param columnId given column identifier.
-	 * @return singularities for improved Jaccard measure.
-	 * @author Shunpan Liang, Lin Ma, Fuyong Yuan
-	 */
-	protected double[] improvedJaccardCalcSingularities(int columnId) {
-		Task task = new Task() {
-			
-			@Override
-			public Object perform(Object...params) {
-				RatingVector columnVector = getColumnRating(columnId);
-				if (columnVector == null || columnVector.size() == 0)
-					return null;
-				
-				Set<Integer> columnIds = getColumnIds();
-				double total = columnIds.size();
-				if (total == 0) return null;
-				int P = 0, N = 0, E = 0;
-				for (int columnId : columnIds) {
-					if (columnVector.isRated(columnId)) {
-						double rating = columnVector.get(columnId).value;
-						if (Accuracy.isRelevant(rating, ratingMedian))
-							P++;
-						else
-							N++;
-					}
-					else
-						E++;
-				}
-				
-				return new double[] {1.0-(double)P/total, 1.0-(double)N/total, 1.0-(double)E/total};
-			}
-		};
-		
-		return (double[])cacheTask(columnId, this.valueCache, task);
-	}
-
-	
 	/**
 	 * Calculating the ESim measure between two pairs.
 	 * Ali Amer developed the ESim measure. Loc Nguyen implements it.
@@ -2378,8 +2263,52 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return Preference Mover Distance (PMD) measure between both two rating vectors and profiles.
 	 * @author Yitong Meng, Xinyan Dai, Xiao Yan, James Cheng, Weiwen Liu, Jun Guo, Benben Liao, Guangyong Chen
 	 */
+	@Deprecated
 	protected double pmd(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		return Constants.UNUSED;
+	}
+
+	
+	/**
+	 * Calculating the STB measure between two pairs. STB measure is developed by Ali Amer, and implemented by Loc Nguyen.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer
+	 * @return STB measure between both two rating vectors and profiles.
+	 */
+	protected double stb(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
+		
+		double X1 = 0, X2 = 0, Y1 = 0, Y2 = 0, Z1 = 0, Z2 = 0;
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			
+			if (rated1 && rated2) {
+				double value1 = vRating1.get(fieldId).value;
+				double value2 = vRating2.get(fieldId).value;
+				X1 += value1; X2 += value2;
+				Z1 += value1; Z2 += value2;
+			}
+			else if (rated1) {
+				double value1 = vRating1.get(fieldId).value;
+				X1 += value1;
+				Y1 += value1;
+				Z1 += value1;
+			}
+			else if (rated2) {
+				double value2 = vRating2.get(fieldId).value;
+				X2 += value2;
+				Y2 += value2;
+				Z2 += value2;
+			}
+		}
+		
+		return (X1+X2) * (Z1+Z2-Y1-Y2) / (Z1+Z2);
 	}
 
 	

@@ -14,7 +14,6 @@ import net.hudup.alg.cf.nb.Measure;
 import net.hudup.alg.cf.nb.NeighborCFExtUserBased;
 import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
-import net.hudup.core.logistic.NextUpdate;
 
 /**
  * Preference Mover Distance (PMD).
@@ -23,7 +22,7 @@ import net.hudup.core.logistic.NextUpdate;
  * @version 1.0
  *
  */
-@NextUpdate
+@Deprecated
 public class PMD extends NeighborCFExtUserBased {
 
 	

@@ -10,7 +10,7 @@ package net.jsi.adapter;
 import java.io.File;
 
 import net.hudup.core.App;
-import net.hudup.core.Appor;
+import net.hudup.core.ApporAbstract;
 import net.hudup.core.client.PowerServer;
 import net.jsi.StockProperty;
 import net.jsi.UniverseImpl;
@@ -23,7 +23,7 @@ import net.jsi.UniverseRemoteImpl;
  * @version 1.0
  *
  */
-public class JSIAppor implements Appor {
+public class JSIAppor extends ApporAbstract {
 
 	
 	/**
@@ -36,12 +36,6 @@ public class JSIAppor implements Appor {
 	 * JSI application creator name.
 	 */
 	public final static String JSI = "JSI";
-	
-	
-	/**
-	 * Internal JSI application.
-	 */
-	protected JSIApp jsiApp = null;
 	
 	
 	/**
@@ -60,7 +54,7 @@ public class JSIAppor implements Appor {
 	
 	@Override
 	public App create(PowerServer server) {
-		if (jsiApp != null) return jsiApp;
+		if (app != null) return app;
 		
 		if (server == null) return null;
 		try {
@@ -77,28 +71,12 @@ public class JSIAppor implements Appor {
 			jsiUniverseRemote.open(new File(StockProperty.WORKING_DIRECTORY));
 			jsiUniverseRemote.export(server.getPort());
 			
-			return (jsiApp = new JSIApp(server, this, jsiUniverseRemote));
+			return (app = new JSIApp(server, this, jsiUniverseRemote));
 		} catch (Throwable e) {net.jsi.Util.trace(e);}
 		
 		return null;
 	}
 
-	
-	/**
-	 * Discarding JSI application.
-	 * @param jsiApp specified JSI application.
-	 * @return true if discarding is successful.
-	 */
-	protected boolean discard(JSIApp jsiApp) {
-		if (jsiApp == null)
-			return false;
-		else {
-			boolean discarded = jsiApp.discard0();
-			this.jsiApp = jsiApp == this.jsiApp ? null : this.jsiApp;
-			return discarded;
-		}
-	}
-	
 	
 }
 

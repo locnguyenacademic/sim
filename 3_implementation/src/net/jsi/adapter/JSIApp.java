@@ -68,29 +68,7 @@ public class JSIApp extends AppAbstract {
 	}
 
 	
-	/**
-	 * Getting JSI application creator.
-	 * @return JSI application creator.
-	 */
-	private JSIAppor getJSIAppor() {
-		return (JSIAppor)appor;
-	}
-	
-	
 	@Override
-	public boolean discard() throws RemoteException {
-		JSIAppor jsiAppor = getJSIAppor();
-		if (jsiAppor == null || this != jsiAppor.jsiApp)
-			return discard0();
-		else
-			return jsiAppor.discard(this);
-	}
-
-	
-	/**
-	 * Discard this JSI application.
-	 * @return true if discarding is successful.
-	 */
 	protected boolean discard0() {
 		if (jsiUniverseRemote == null) return false;
 		
