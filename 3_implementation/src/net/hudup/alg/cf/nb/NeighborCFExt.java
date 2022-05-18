@@ -2432,6 +2432,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(MMD_TYPE, MMD_TYPE_NORMAL);
 		tempConfig.put(TA_TYPE, TA_TYPE_NORMAL);
 		tempConfig.put(HSMD_TYPE, HSMD_TYPE_NORMAL);
+		tempConfig.put(QUASI_TFIDF_TYPE, QUASI_TFIDF_TYPE_NORMAL);
 		tempConfig.put(KL_TYPE, KL_TYPE_NORMAL);
 
 		DataConfig config = new DataConfig() {

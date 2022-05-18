@@ -21,7 +21,7 @@ public class BU14QTIJ extends NeighborCFExtUserBased implements ForTest {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return quasiTfIdf(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
+		return quasiTfIdfJaccard(vRating1, vRating2, profile1, profile2) * jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -35,6 +35,7 @@ public class BU14QTIJ extends NeighborCFExtUserBased implements ForTest {
 	public DataConfig createDefaultConfig() {
 		DataConfig config = super.createDefaultConfig();
 		config.put(MEASURE, Measure.QUASI_TFIDF);
+		config.put(QUASI_TFIDF_TYPE, QUASI_TFIDF_TYPE_JACCARD);
 		return config;
 	}
 	
