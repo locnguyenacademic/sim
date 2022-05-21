@@ -905,17 +905,34 @@ public abstract class NeighborCFExt extends NeighborCF {
 		if (common.size() == 0) return Constants.UNUSED;
 		
 		double sum = 0;
+		int n = 0;
 		for (int id : common) {
 			double v1 = vRating1.get(id).value;
-			int r1 = bins.get(v1);
+			int r1 = Integer.MAX_VALUE;
+			if (bins.containsKey(v1))
+				r1 = bins.get(v1);
+			else {
+				double v11 = (int)(v1 + 0.5);
+				if (bins.containsKey(v11)) r1 = bins.get(v11);
+			}
+			
 			double v2 = vRating2.get(id).value;
-			int r2 = bins.get(v2);
+			int r2 = Integer.MAX_VALUE;
+			if (bins.containsKey(v2))
+				r2 = bins.get(v2);
+			else {
+				double v22 = (int)(v2 + 0.5);
+				if (bins.containsKey(v22)) r2 = bins.get(v22);
+			}
+
+			if (r1 == Integer.MAX_VALUE || r2 == Integer.MAX_VALUE) continue;
 			
 			int d = r1 - r2;
 			sum += d*d;
+			n++;
 		}
 		
-		double n = common.size();
+		if (n == 0) return Constants.UNUSED;
 		return 1.0 - 6*sum/(n*(n*n-1));
 	}
 	
