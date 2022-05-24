@@ -29,7 +29,6 @@ import net.hudup.core.logistic.DSUtil;
 import net.hudup.core.logistic.Inspector;
 import net.hudup.core.logistic.NextUpdate;
 import net.hudup.core.logistic.Vector2;
-import net.hudup.core.parser.TextParserUtil;
 import net.hudup.data.DocumentVector;
 import net.hudup.evaluate.ui.EvaluateGUI;
 
@@ -113,15 +112,15 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * Value bins.
+	 * Value bins count.
 	 */
-	protected static final String VALUE_BINS_FIELD = "value_bins";
+	protected static final String VALUE_BINS_COUNT_FIELD = "value_bins_count";
 
 	
 	/**
-	 * Default value bins.
+	 * Default value bins count.
 	 */
-	protected static final String VALUE_BINS_DEFAULT = "1, 2, 3, 4, 5";
+	protected static final int VALUE_BINS_COUNT_DEFAULT = 5;
 
 	
 	/**
@@ -349,7 +348,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	/**
 	 * Rank bins.
 	 */
-	protected Map<Double, Integer> rankBins = Util.newMap();
+	protected Map<Integer, Double> rankBins = Util.newMap();
 	
 	
 	/**
@@ -426,8 +425,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 
 	/**
-	 * Checking whether the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_FIELD}).
-	 * @return true if the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_FIELD}). Otherwise, return false.
+	 * Checking whether the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_COUNT_FIELD}).
+	 * @return true if the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_COUNT_FIELD}). Otherwise, return false.
 	 */
 	public boolean requireDiscreteRatingBins() {
 		return requireDiscreteRatingBins(getMeasure());
@@ -435,9 +434,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	
 	
 	/**
-	 * Given specified measure, checking whether the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_FIELD}).
+	 * Given specified measure, checking whether the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_COUNT_FIELD}).
 	 * @param measure specified measure.
-	 * @return true if the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_FIELD}). Otherwise, return false.
+	 * @return true if the similarity measure requires to declare discrete bins in configuration ({@link #VALUE_BINS_COUNT_FIELD}). Otherwise, return false.
 	 */
 	protected boolean requireDiscreteRatingBins(String measure) {
 		if (measure == null)
@@ -532,7 +531,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	protected void updateConfig(String measure) {
 		if (measure == null) return;
 		
-		config.addReadOnly(VALUE_BINS_FIELD);
+		config.addReadOnly(VALUE_BINS_COUNT_FIELD);
 		config.addReadOnly(COSINE_NORMALIZED_FIELD);
 		config.addReadOnly(COSINE_WEIGHTED_FIELD);
 		config.addReadOnly(COSINE_RA_FIELD);
@@ -572,7 +571,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.removeReadOnly(BCF_TYPE);
 		}
 		else if (measure.equals(Measure.SRC)) {
-			config.removeReadOnly(VALUE_BINS_FIELD);
+			config.removeReadOnly(VALUE_BINS_COUNT_FIELD);
 		}
 		else if (measure.equals(Measure.PIP)) {
 			config.removeReadOnly(PIP_TYPE);
@@ -580,7 +579,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		else if (measure.equals(Measure.PC)) {
 		}
 		else if (measure.equals(Measure.MMD)) {
-			config.removeReadOnly(VALUE_BINS_FIELD);
+			config.removeReadOnly(VALUE_BINS_COUNT_FIELD);
 			config.removeReadOnly(MMD_TYPE);
 		}
 		else if (measure.equals(Measure.FENG)) {
@@ -897,9 +896,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 */
 	protected double src(RatingVector vRating1, RatingVector vRating2,
 			Profile profile1, Profile profile2) {
-		Map<Double, Integer> bins = rankBins;
-		if (bins.isEmpty())
-			bins = extractRankBins(vRating1, vRating2);
+		Map<Integer, Double> bins = rankBins;
+		if (bins.isEmpty()) bins = extractRankBins(vRating1, vRating2);
 
 		Set<Integer> common = commonFieldIds(vRating1, vRating2);
 		if (common.size() == 0) return Constants.UNUSED;
@@ -907,25 +905,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double sum = 0;
 		int n = 0;
 		for (int id : common) {
-			double v1 = vRating1.get(id).value;
-			int r1 = Integer.MAX_VALUE;
-			if (bins.containsKey(v1))
-				r1 = bins.get(v1);
-			else {
-				double v11 = (int)(v1 + 0.5);
-				if (bins.containsKey(v11)) r1 = bins.get(v11);
-			}
-			
-			double v2 = vRating2.get(id).value;
-			int r2 = Integer.MAX_VALUE;
-			if (bins.containsKey(v2))
-				r2 = bins.get(v2);
-			else {
-				double v22 = (int)(v2 + 0.5);
-				if (bins.containsKey(v22)) r2 = bins.get(v22);
-			}
-
-			if (r1 == Integer.MAX_VALUE || r2 == Integer.MAX_VALUE) continue;
+			int r1 = findClosestRankOfValue(vRating1.get(id).value, bins);
+			int r2 = findClosestRankOfValue(vRating2.get(id).value, bins);
+			if (r1 < 0 || r2 < 0) continue;
 			
 			int d = r1 - r2;
 			sum += d*d;
@@ -2344,19 +2326,41 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Finding closest rank of given value.
+	 * @param value given value.
+	 * @param rankBins rank bins.
+	 * @return closest rank of given value.
+	 */
+	protected static int findClosestRankOfValue(double value, Map<Integer, Double> rankBins) {
+		Set<Integer> ranks = rankBins.keySet();
+		int closestRank = -1;
+		double minBias = Double.MAX_VALUE;
+		for (int rank : ranks) {
+			double rankValue = rankBins.get(rank);
+			double bias = Math.abs(value - rankValue);
+			if (bias < minBias) {
+				closestRank = rank;
+				minBias = bias;
+			}
+		}
+		
+		return closestRank;
+	}
+	
+	
+	/**
 	 * Converting value bins into rank bins.
 	 * @param valueBins value bins
 	 * @return rank bins.
 	 */
-	protected static Map<Double, Integer> convertValueBinsToRankBins(List<Double> valueBins) {
-		if (valueBins == null || valueBins.size() == 0)
-			return Util.newMap();
+	protected static Map<Integer, Double> convertValueBinsToRankBins(List<Double> valueBins) {
+		if (valueBins == null || valueBins.size() == 0) return Util.newMap();
 		
 		Collections.sort(valueBins);
-		Map<Double, Integer> rankBins = Util.newMap();
+		Map<Integer, Double> rankBins = Util.newMap();
 		int n = valueBins.size();
 		for (int i = 0; i < n; i++) {
-			rankBins.put(valueBins.get(i), n-i);
+			rankBins.put(n-i, valueBins.get(i));
 		}
 		
 		return rankBins;
@@ -2396,7 +2400,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param vRating2 second rating vector.
 	 * @return Extracted rank bins from two specified rating vectors.
 	 */
-	protected static Map<Double, Integer> extractRankBins(RatingVector vRating1, RatingVector vRating2) {
+	protected static Map<Integer, Double> extractRankBins(RatingVector vRating1, RatingVector vRating2) {
 		List<Double> valueBins = extractValueBins(vRating1, vRating2);
 		return convertValueBinsToRankBins(valueBins);
 	}
@@ -2407,13 +2411,21 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @return extracted value bins from configuration.
 	 */
 	protected List<Double> extractConfigValueBins() {
-		if (!getConfig().containsKey(VALUE_BINS_FIELD))
-			return Util.newList();
+		if (!getConfig().containsKey(VALUE_BINS_COUNT_FIELD)) return Util.newList();
+		int binsCount = getConfig().getAsInt(VALUE_BINS_COUNT_FIELD);
+		if (binsCount < 2) return Util.newList();
+		double min = getMinRating(), max = getMaxRating();
+		double interval = (max - min) / (double)(binsCount-1);
+		if (interval <= 0) return Util.newList();
 		
-		return TextParserUtil.parseListByClass(
-				getConfig().getAsString(VALUE_BINS_FIELD),
-				Double.class,
-				",");
+		List<Double> binsList = Util.newList();
+		double v = min;
+		while (v <= max) {
+			binsList.add(v);
+			v += interval;
+		}
+		
+		return binsList;
 	}
 	
 	
@@ -2421,7 +2433,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * Extracting rank bins from configuration.
 	 * @return extracted SRC rank bins from configuration.
 	 */
-	protected Map<Double, Integer> extractConfigRankBins() {
+	protected Map<Integer, Double> extractConfigRankBins() {
 		List<Double> valueBins = extractConfigValueBins();
 		return convertValueBinsToRankBins(valueBins);
 	}
@@ -2436,7 +2448,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	@Override
 	public DataConfig createDefaultConfig() {
 		DataConfig tempConfig = super.createDefaultConfig();
-		tempConfig.put(VALUE_BINS_FIELD, VALUE_BINS_DEFAULT);
+		tempConfig.put(VALUE_BINS_COUNT_FIELD, VALUE_BINS_COUNT_DEFAULT);
 		tempConfig.put(BCF_MEDIAN_MODE_FIELD, BCF_MEDIAN_MODE_DEFAULT);
 		tempConfig.put(MU_ALPHA_FIELD, MU_ALPHA_DEFAULT);
 		tempConfig.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);

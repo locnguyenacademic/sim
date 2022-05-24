@@ -74,7 +74,7 @@ public abstract class NeighborCFExt2 extends NeighborCFExt {
 	protected void updateConfig(String measure) {
 		if (measure == null) return;
 		
-		config.addReadOnly(VALUE_BINS_FIELD);
+		config.addReadOnly(VALUE_BINS_COUNT_FIELD);
 		config.addReadOnly(COSINE_NORMALIZED_FIELD);
 		config.addReadOnly(COSINE_WEIGHTED_FIELD);
 		config.addReadOnly(PEARSON_WEIGHTED_FIELD);

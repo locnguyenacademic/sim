@@ -68,7 +68,7 @@ public class BCF extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
-		config.remove(VALUE_BINS_FIELD);
+		config.remove(VALUE_BINS_COUNT_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(COSINE_WEIGHTED_FIELD);
 		config.remove(COSINE_RA_FIELD);
