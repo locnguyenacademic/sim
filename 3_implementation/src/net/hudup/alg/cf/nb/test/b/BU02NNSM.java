@@ -7,6 +7,7 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 import net.hudup.core.logistic.ForTest;
 
+@Deprecated
 public class BU02NNSM extends NeighborCFExtUserBased implements ForTest {
 
 	
@@ -27,7 +28,7 @@ public class BU02NNSM extends NeighborCFExtUserBased implements ForTest {
 	
 	@Override
 	public String getName() {
-		return "BU02.NNSM";
+		return "BU02.NNSMCo";
 	}
 
 	
