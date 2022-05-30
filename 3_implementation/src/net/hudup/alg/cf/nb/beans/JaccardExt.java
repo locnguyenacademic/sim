@@ -16,13 +16,13 @@ import net.hudup.core.data.Profile;
 import net.hudup.core.data.RatingVector;
 
 /**
- * MMD measure.
+ * Extended Jaccard measure.
  * 
  * @author Loc Nguyen
  * @version 1.0
  *
  */
-public class MMD extends NeighborCFExtUserBased {
+public class JaccardExt extends NeighborCFExtUserBased {
 
 	
 	/**
@@ -34,7 +34,7 @@ public class MMD extends NeighborCFExtUserBased {
 	/**
 	 * Default constructor.
 	 */
-	public MMD() {
+	public JaccardExt() {
 
 	}
 
@@ -53,7 +53,7 @@ public class MMD extends NeighborCFExtUserBased {
 
 	@Override
 	protected String getDefaultMeasure() {
-		return Measure.MMD;
+		return Measure.JACCARD_EXT;
 	}
 
 
@@ -68,6 +68,7 @@ public class MMD extends NeighborCFExtUserBased {
 		super.updateConfig(measure);
 		
 		config.remove(MEASURE);
+		config.remove(VALUE_BINS_COUNT_FIELD);
 		config.remove(COSINE_NORMALIZED_FIELD);
 		config.remove(COSINE_WEIGHTED_FIELD);
 		config.remove(COSINE_RA_FIELD);
@@ -84,7 +85,6 @@ public class MMD extends NeighborCFExtUserBased {
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
 		config.remove(ESIM_TYPE);
 		config.remove(JACCARD_TYPE);
-		config.remove(JACCARD_EXT_TYPE);
 		config.remove(COSINE_TYPE);
 		config.remove(PEARSON_TYPE);
 		config.remove(MSD_TYPE);
@@ -92,6 +92,7 @@ public class MMD extends NeighborCFExtUserBased {
 		config.remove(PSS_TYPE);
 		config.remove(BCF_TYPE);
 		config.remove(PIP_TYPE);
+		config.remove(MMD_TYPE);
 		config.remove(TA_TYPE);
 		config.remove(HSMD_TYPE);
 		config.remove(QUASI_TFIDF_TYPE);
@@ -104,7 +105,7 @@ public class MMD extends NeighborCFExtUserBased {
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1,
 			Profile profile2, Object... params) {
-		return mmd(vRating1, vRating2, profile1, profile2);
+		return jaccardExt(vRating1, vRating2, profile1, profile2);
 	}
 
 	
@@ -114,7 +115,7 @@ public class MMD extends NeighborCFExtUserBased {
 		if (name != null && !name.isEmpty())
 			return name;
 		else
-			return "neighborcf_mmd";
+			return "neighborcf_jaccard_ext";
 	}
 
 

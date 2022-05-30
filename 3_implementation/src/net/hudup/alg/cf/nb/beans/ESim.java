@@ -84,6 +84,7 @@ public class ESim extends NeighborCFExtUserBased {
 		config.remove(RATINGJ_THRESHOLD_FIELD);
 		config.remove(INDEXEDJ_INTERVALS_FIELD);
 		config.remove(JACCARD_TYPE);
+		config.remove(JACCARD_EXT_TYPE);
 		config.remove(COSINE_TYPE);
 		config.remove(PEARSON_TYPE);
 		config.remove(MSD_TYPE);

@@ -18,6 +18,12 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	
 	
 	/**
+	 * Name of extended Jaccard measure.
+	 */
+	public static final String JACCARD_EXT = "jaccard_ext";
+
+	
+	/**
 	 * PSS measure.
 	 */
 	public static final String PSS = "pss";

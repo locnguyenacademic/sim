@@ -94,6 +94,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Extended Jaccard type.
+	 */
+	protected static final String JACCARD_EXT_TYPE = "jaccard_ext_type";
+
+	
+	/**
+	 * EDS Jaccard.
+	 */
+	public static final String JACCARD_EXT_TYPE_DUAL = "dual";
+
+	
+	/**
 	 * PSS type.
 	 */
 	protected static final String PSS_TYPE = "pss_type";
@@ -394,6 +406,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		List<String> measures = super.getMainMeasures();
 		Set<String> mSet = Util.newSet();
 		mSet.addAll(measures);
+		mSet.add(Measure.JACCARD_EXT);
 		mSet.add(Measure.PSS);
 		mSet.add(Measure.BCF);
 		mSet.add(Measure.SRC);
@@ -474,7 +487,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	@Override
 	protected double sim0(String measure, RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2, Object...params) {
-		if (measure.equals(Measure.PSS))
+		if (measure.equals(Measure.JACCARD_EXT))
+			return jaccardExt(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.PSS))
 			return pss(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.BCF))
 			return bcf(vRating1, vRating2, profile1, profile2);
@@ -548,6 +563,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		config.addReadOnly(ESIM_TYPE);
 		config.addReadOnly(JACCARD_TYPE);
+		config.addReadOnly(JACCARD_EXT_TYPE);
 		config.addReadOnly(COSINE_TYPE);
 		config.addReadOnly(PEARSON_TYPE);
 		config.addReadOnly(MSD_TYPE);
@@ -563,7 +579,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.addReadOnly(IPWR_BETA_FIELD);
 		config.addReadOnly(KL_TYPE);
 		
-		if (measure.equals(Measure.PSS)) {
+		if (measure.equals(Measure.JACCARD_EXT)) {
+			config.removeReadOnly(JACCARD_EXT_TYPE);
+		}
+		else if (measure.equals(Measure.PSS)) {
 			config.removeReadOnly(PSS_TYPE);
 		}
 		else if (measure.equals(Measure.BCF)) {
@@ -627,6 +646,60 @@ public abstract class NeighborCFExt extends NeighborCF {
 	}
 
 
+	/**
+	 * Calculating the extended Jaccard measure between two pairs.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return extended Jaccard measure between both two rating vectors and profiles.
+	 */
+	protected double jaccardExt(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		String jexttype = config.getAsString(JACCARD_EXT_TYPE);
+		if (jexttype.equals(JACCARD_EXT_TYPE_DUAL))
+			return jaccardExtDual(vRating1, vRating2, profile1, profile2);
+		else
+			return jaccardNormal(vRating1, vRating2, profile1, profile2);
+	}
+	
+	
+	/**
+	 * Calculating the EDS Jaccard measure between two pairs.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return EDS measure between both two rating vectors and profiles.
+	 */
+	protected double jaccardExtDual(RatingVector vRating1, RatingVector vRating2,
+			Profile profile1, Profile profile2) {
+		Set<Integer> set1 = vRating1.fieldIds(true);
+		Set<Integer> set2 = vRating2.fieldIds(true);
+		Set<Integer> union = Util.newSet(); union.addAll(set1); union.addAll(set2);
+		if (union.size() == 0) return Constants.UNUSED;
+
+		set1.clear();
+		set2.clear();
+		for (int fieldId : union) {
+			if (vRating1.isRated(fieldId)) {
+				double v1 = vRating1.get(fieldId).value;
+				if (Accuracy.isRelevant(v1, this.ratingMedian)) set1.add(fieldId);
+			}
+			if (vRating2.isRated(fieldId)) {
+				double v2 = vRating2.get(fieldId).value;
+				if (Accuracy.isRelevant(v2, this.ratingMedian)) set2.add(fieldId);
+			}
+		}
+		Set<Integer> common = Util.newSet(); common.addAll(set1); common.retainAll(set2);
+		if (common.size() == union.size()) return 1;
+		
+		double a = common.size();
+		double b = set1.size() + set2.size() - a;
+		double N = union.size();
+		return 0.5 * (a/b + (N-b)/(N-a));
+	}
+
+	
 	/**
 	 * Calculating the PSS measure between two pairs. PSS measure is developed by Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu, and implemented by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
@@ -2454,6 +2527,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
 		tempConfig.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
 		tempConfig.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
+		tempConfig.put(JACCARD_EXT_TYPE, JACCARD_EXT_TYPE_DUAL);
 		tempConfig.put(ESIM_TYPE, ESIM_TYPE_ESIM);
 		tempConfig.put(PSS_TYPE, PSS_TYPE_NORMAL);
 		tempConfig.put(BCF_TYPE, BCF_TYPE_NORMAL);
@@ -2473,7 +2547,24 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 			@Override
 			public Serializable userEdit(Component comp, String key, Serializable defaultValue) {
-				if (key.equals(ESIM_TYPE)) {
+				if (key.equals(JACCARD_EXT_TYPE)) {
+					String jexttype = getAsString(JACCARD_EXT_TYPE);
+					jexttype = jexttype == null ? JACCARD_EXT_TYPE_DUAL : jexttype;
+					List<String> jexttypes = Util.newList();
+					jexttypes.add(JACCARD_EXT_TYPE_DUAL);
+					Collections.sort(jexttypes);
+					
+					return (Serializable) JOptionPane.showInputDialog(
+						comp, 
+						"Please choose one extended Jaccard type", 
+						"Choosing Jaccard type", 
+						JOptionPane.INFORMATION_MESSAGE, 
+						null, 
+						jexttypes.toArray(new String[] {}), 
+						jexttype);
+
+				}
+				else if (key.equals(ESIM_TYPE)) {
 					String type = getAsString(ESIM_TYPE);
 					type = type == null ? getDefaultMeasure() : type;
 					return (Serializable) JOptionPane.showInputDialog(
