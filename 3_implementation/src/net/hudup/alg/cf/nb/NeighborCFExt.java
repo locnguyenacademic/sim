@@ -100,9 +100,15 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
-	 * EDS Jaccard.
+	 * Dual Jaccard.
 	 */
 	public static final String JACCARD_EXT_TYPE_DUAL = "dual";
+
+	
+	/**
+	 * EDS Jaccard.
+	 */
+	public static final String JACCARD_EXT_TYPE_EDS = "eds";
 
 	
 	/**
@@ -658,26 +664,31 @@ public abstract class NeighborCFExt extends NeighborCF {
 		String jexttype = config.getAsString(JACCARD_EXT_TYPE);
 		if (jexttype.equals(JACCARD_EXT_TYPE_DUAL))
 			return jaccardExtDual(vRating1, vRating2, profile1, profile2);
+		else if (jexttype.equals(JACCARD_EXT_TYPE_EDS))
+			return jaccardExtEDS(vRating1, vRating2, profile1, profile2);
 		else
 			return jaccardNormal(vRating1, vRating2, profile1, profile2);
 	}
 	
 	
 	/**
-	 * Calculating the EDS Jaccard measure between two pairs.
+	 * Calculating the dual Jaccard measure between two pairs.
 	 * @param vRating1 first rating vector.
 	 * @param vRating2 second rating vector.
 	 * @param profile1 first profile.
 	 * @param profile2 second profile.
-	 * @return EDS measure between both two rating vectors and profiles.
+	 * @return dual Jaccard measure between both two rating vectors and profiles.
 	 */
-	protected double jaccardExtDual(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
+	protected double jaccardExtDual(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		Set<Integer> set1 = vRating1.fieldIds(true);
 		Set<Integer> set2 = vRating2.fieldIds(true);
+		Set<Integer> common = Util.newSet(); common.addAll(set1); common.retainAll(set2);
 		Set<Integer> union = Util.newSet(); union.addAll(set1); union.addAll(set2);
-		if (union.size() == 0) return Constants.UNUSED;
-
+		
+		double n = common.size(), N = union.size();
+		if (N == 0) return Constants.UNUSED;
+		double concernCoeff = 0.5 * n / N;
+		
 		set1.clear();
 		set2.clear();
 		for (int fieldId : union) {
@@ -690,15 +701,37 @@ public abstract class NeighborCFExt extends NeighborCF {
 				if (Accuracy.isRelevant(v2, this.ratingMedian)) set2.add(fieldId);
 			}
 		}
-		Set<Integer> common = Util.newSet(); common.addAll(set1); common.retainAll(set2);
-		if (common.size() == union.size()) return 1;
+		common.clear(); common.addAll(set1); common.retainAll(set2);
 		
 		double a = common.size();
 		double b = set1.size() + set2.size() - a;
-		double N = union.size();
-		return 0.5 * (a/b + (N-b)/(N-a));
+		if (a == 0 || b == 0)  return concernCoeff;
+		return concernCoeff * (a/b + (N-b)/(N-a));
 	}
 
+	
+	/**
+	 * Calculating the EDS Jaccard measure between two pairs.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer
+	 * @return EDS Jaccard measure between both two rating vectors and profiles.
+	 */
+	protected double jaccardExtEDS(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> union = getColumnIds();
+		
+		int n = 0;
+		for (int fieldId : union) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			if (rated1 == rated2) n += 2;
+		}
+		
+		return (double)n / (2.0*union.size());
+	}
+	
 	
 	/**
 	 * Calculating the PSS measure between two pairs. PSS measure is developed by Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu, and implemented by Loc Nguyen.
