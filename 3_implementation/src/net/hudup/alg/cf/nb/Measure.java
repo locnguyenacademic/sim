@@ -155,4 +155,16 @@ public class Measure extends net.hudup.core.alg.cf.nb.Measure {
 	public static final String STB = "stb";
 
 
+	/**
+	 * Singularity measure.
+	 */
+	public static final String SINGULARITY = "singularity";
+
+
+	/**
+	 * CLAG measure.
+	 */
+	public static final String CLAG = "clag";
+
+
 }

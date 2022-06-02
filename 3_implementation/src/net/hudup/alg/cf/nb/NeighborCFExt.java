@@ -79,6 +79,9 @@ import net.hudup.evaluate.ui.EvaluateGUI;
  * <br>
  * Ali Amer contributed STB measure.<br>
  * <br>
+ * <br>
+ * Qibing Jin, Yue Zhang, Wu Cai, and Yuming Zhang contributed Singularity measure and CLAG.<br>
+ * <br>
  * 
  * @author Loc Nguyen
  * @version 1.0
@@ -435,6 +438,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		mSet.add(Measure.KL);
 		mSet.add(Measure.PMD);
 		mSet.add(Measure.STB);
+		mSet.add(Measure.SINGULARITY);
+		mSet.add(Measure.CLAG);
 		
 		measures.clear();
 		measures.addAll(mSet);
@@ -543,6 +548,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return kl(vRating1, vRating2, profile1, profile2);
 		else if (measure.equals(Measure.STB))
 			return stb(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.SINGULARITY))
+			return singularity(vRating1, vRating2, profile1, profile2);
+		else if (measure.equals(Measure.CLAG))
+			return clag(vRating1, vRating2, profile1, profile2);
 		else
 			return super.sim0(measure, vRating1, vRating2, profile1, profile2, params);
 	}
@@ -645,6 +654,12 @@ public abstract class NeighborCFExt extends NeighborCF {
 			config.removeReadOnly(KL_TYPE);
 		}
 		else if (measure.equals(Measure.PMD)) {
+		}
+		else if (measure.equals(Measure.STB)) {
+		}
+		else if (measure.equals(Measure.SINGULARITY)) {
+		}
+		else if (measure.equals(Measure.CLAG)) {
 		}
 		else {
 			super.updateConfig(measure);
@@ -2414,6 +2429,130 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		
 		return (X1+X2) * (Z1+Z2-Y1-Y2) / (Z1+Z2);
+	}
+
+	
+	/**
+	 * Calculating the Singularity measure between two pairs. Singularity measure is developed by Qibing Jin, Yue Zhang, Wu Cai, and Yuming Zhang, and implemented by Loc Nguyen.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Qibing Jin, Yue Zhang, Wu Cai, Yuming Zhang
+	 * @return Singularity measure between both two rating vectors and profiles.
+	 */
+	protected double singularity(RatingVector vRating1, RatingVector vRating2,Profile profile1, Profile profile2) {
+		Set<Integer> PA = Util.newSet(), NA = Util.newSet(), D = Util.newSet();
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
+		
+		for (int id : common) {
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			if (Accuracy.isRelevant(v1, this.ratingMedian) && Accuracy.isRelevant(v2, this.ratingMedian))
+				PA.add(id);
+			else if ((!Accuracy.isRelevant(v1, this.ratingMedian)) && (!Accuracy.isRelevant(v2, this.ratingMedian)))
+				NA.add(id);
+			else
+				D.add(id);
+		}
+		
+		double lp = 0;
+		for (int id : PA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+			
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			double d = Math.exp(-Math.abs(v1 - v2));
+			lp += PNE[0] * PNE[0] * (1 - 1/(1+d));
+		}
+		if (PA.size() > 0) lp = lp / PA.size();
+		
+		double ln = 0;
+		for (int id : NA) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			double d = Math.exp(-Math.abs(v1 - v2));
+			ln += PNE[1] * PNE[1] * (1 - 1/(1+d));
+		}
+		if (NA.size() > 0) ln = ln / NA.size();
+		
+		double m1 = vRating1.mean(), m2 = vRating2.mean();
+		double ld = 0;
+		for (int id : D) {
+			double[] PNE = improvedJaccardCalcSingularities(id);
+			if (PNE == null) continue;
+
+			double v1 = vRating1.get(id).value;
+			double v2 = vRating2.get(id).value;
+			double d = Math.exp(-Math.abs(v1-m1)*Math.abs(v2-m2));
+			ld += PNE[0] * PNE[1] * (1 - 1/(1+d));
+		}
+		if (D.size() > 0) ld = ld / D.size();
+
+		return (lp + ln + ld) / 3.0;
+	}
+
+	
+	/**
+	 * Calculating the CLAG measure between two pairs. CLAG measure is developed by Qibing Jin, Yue Zhang, Wu Cai, and Yuming Zhang, and implemented by Loc Nguyen.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Qibing Jin, Yue Zhang, Wu Cai, Yuming Zhang
+	 * @return Singularity measure between both two rating vectors and profiles.
+	 */
+	protected double clag(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		double singular = singularity(vRating1, vRating2, profile1, profile2);
+		double global = 1.0 - Math.exp(-jaccardNormal(vRating1, vRating2, profile1, profile2));
+		double freqSim = binFreqSim(vRating1, vRating2, profile1, profile2);
+		return singular * global * freqSim;
+	}
+
+	
+	/**
+	 * Calculating the bin frequency similarity. This measure is developed by Qibing Jin, Yue Zhang, Wu Cai, and Yuming Zhang, and implemented by Loc Nguyen.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Qibing Jin, Yue Zhang, Wu Cai, Yuming Zhang
+	 * @return the bin frequency similarity.
+	 */
+	protected double binFreqSim(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Map<Integer, Double> bins = rankBins;
+		if (bins.isEmpty()) bins = extractRankBins(vRating1, vRating2);
+		if (bins.size() == 0) return Constants.UNUSED;
+
+		Map<Integer, Double> c1 = Util.newMap(bins.size());
+		Map<Integer, Double> c2 = Util.newMap(bins.size());
+		Set<Integer> binKeys = bins.keySet();
+		for (int binKey : binKeys) {
+			c1.put(binKey, Double.valueOf(0));
+			c2.put(binKey, Double.valueOf(0));
+		}
+		
+		Set<Integer> common = commonFieldIds(vRating1, vRating2);
+		if (common.size() == 0) return Constants.UNUSED;
+		for (int id : common) {
+			int r1 = findClosestRankOfValue(vRating1.get(id).value, bins);
+			if (r1 >= 0) c1.put(r1, c1.get(r1) + 1);
+			
+			int r2 = findClosestRankOfValue(vRating2.get(id).value, bins);
+			if (r2 >= 0) c2.put(r2, c2.get(r2) + 1);
+		}
+
+		double binSum = 0;
+		for (int binKey : binKeys) {
+			binSum += Math.sqrt(c1.get(binKey)*c2.get(binKey));
+		}
+		
+		return binSum;
 	}
 
 	
