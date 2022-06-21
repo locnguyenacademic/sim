@@ -44,6 +44,7 @@ public class PSOImpl extends PSOAbstract<Double> {
 		config.put(PSOSetting.INERTIAL_WEIGHT_FIELD, PSOSetting.INERTIAL_WEIGHT_DEFAULT);
 		config.put(PSOSetting.CONSTRICT_WEIGHT_FIELD, PSOSetting.CONSTRICT_WEIGHT_DEFAULT);
 		config.put(PSOSetting.CONSTRICT_WEIGHT_PROB_MODE_FIELD, PSOSetting.CONSTRICT_WEIGHT_PROB_MODE_DEFAULT);
+		config.put(PSOSetting.CONSTRICT_WEIGHT_PROB_ACC_FIELD, PSOSetting.CONSTRICT_WEIGHT_PROB_ACC_DEFAULT);
 		config.put(PSOSetting.NEIGHBORS_FDR_MODE_FIELD, PSOSetting.NEIGHBORS_FDR_MODE_DEFAULT);
 		config.put(PSOSetting.NEIGHBORS_FDR_THRESHOLD_FIELD, PSOSetting.NEIGHBORS_FDR_THRESHOLD_DEFAULT);
 	}
@@ -133,9 +134,12 @@ public class PSOImpl extends PSOAbstract<Double> {
 		if (optimizer == null || optimizer.bestPosition == null) return constrictWeight;
 		
 		RandomDataGenerator rnd = new RandomDataGenerator();
+		double acc = config.getAsReal(PSOSetting.CONSTRICT_WEIGHT_PROB_ACC_FIELD);
+		acc = Double.isNaN(acc) ? 1 : acc;
+		acc = acc < 1 ? 1 : acc;
 		for (int i = 0; i < n; i++) {
 			double mean = (targetParticle.bestPosition.getValueAsReal(i) + optimizer.bestPosition.getValueAsReal(i)) / 2.0;
-			double deviate = Math.abs(targetParticle.bestPosition.getValueAsReal(i) - optimizer.bestPosition.getValueAsReal(i));
+			double deviate = Math.abs(targetParticle.bestPosition.getValueAsReal(i) - optimizer.bestPosition.getValueAsReal(i)) / acc;
 			double variance = deviate * deviate;
 			
 			double w = Double.NaN;

@@ -135,6 +135,18 @@ public class PSOSetting<T> implements Cloneable, Serializable {
 
 	
 	/**
+	 * Probabilistic constriction weight accelerator.
+	 */
+	public final static String CONSTRICT_WEIGHT_PROB_ACC_FIELD = "pso_weight_constrict_prob_acc";
+
+	
+	/**
+	 * Default value for probabilistic constriction weight accelerator.
+	 */
+	public final static double CONSTRICT_WEIGHT_PROB_ACC_DEFAULT = 1;
+
+	
+	/**
 	 * Fitness distance ratio mode.
 	 */
 	public final static String NEIGHBORS_FDR_MODE_FIELD = "neighbors_fdr_mode";

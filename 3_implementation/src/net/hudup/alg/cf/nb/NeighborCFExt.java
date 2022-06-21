@@ -277,6 +277,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * TA average mode.
+	 */
+	protected static final String TA_EVEN_FIELD = "ta_even";
+
+	
+	/**
+	 * Default TA average mode.
+	 */
+	protected static final boolean TA_EVEN_DEFAULT = false;
+
+	
+	/**
 	 * HSMD type.
 	 */
 	protected static final String HSMD_TYPE = "hsmd_type";
@@ -477,8 +489,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 		String measure = getMeasure();
 		if (measure == null)
 			return true;
-		else if (measure.equals(Measure.TA))
-			return false;
+//		else if (measure.equals(Measure.TA))
+//			return false;
 		else
 			return true;
 	}
@@ -574,6 +586,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		config.addReadOnly(SMTP_LAMBDA_FIELD);
 		config.addReadOnly(SMTP_GENERAL_VAR_FIELD);
 		config.addReadOnly(TA_NORMALIZED_FIELD);
+		config.addReadOnly(TA_EVEN_FIELD);
 		config.addReadOnly(RATINGJ_THRESHOLD_FIELD);
 		config.addReadOnly(INDEXEDJ_INTERVALS_FIELD);
 		config.addReadOnly(ESIM_TYPE);
@@ -637,6 +650,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		}
 		else if (measure.equals(Measure.TA)) {
 			config.removeReadOnly(TA_NORMALIZED_FIELD);
+			config.removeReadOnly(TA_EVEN_FIELD);
 			config.removeReadOnly(TA_TYPE);
 		}
 		else if (measure.equals(Measure.COCO)) {
@@ -1772,18 +1786,19 @@ public abstract class NeighborCFExt extends NeighborCF {
 		double b = v2.module();
 		if (a == 0 || b == 0) return Constants.UNUSED;
 		
+		boolean even = getConfig().getAsBoolean(TA_EVEN_FIELD);
 		double p = v1.product(v2);
-		if (p >= 0) {
-			if (a < b)
-				return p*p / (a*b*b*b);
-			else
-				return p*p / (a*a*a*b);
-		}
-		else {
+		if (p < 0 || even) {
 			if (a < b)
 				return p / (b*b);
 			else
 				return p / (a*a);
+		}
+		else {
+			if (a < b)
+				return p*p / (a*b*b*b);
+			else
+				return p*p / (a*a*a*b);
 		}
 	}
 
@@ -2699,6 +2714,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 		tempConfig.put(SMTP_LAMBDA_FIELD, SMTP_LAMBDA_DEFAULT);
 		tempConfig.put(SMTP_GENERAL_VAR_FIELD, SMTP_GENERAL_VAR_DEFAULT);
 		tempConfig.put(TA_NORMALIZED_FIELD, TA_NORMALIZED_DEFAULT);
+		tempConfig.put(TA_EVEN_FIELD, TA_EVEN_DEFAULT);
 		tempConfig.put(JACCARD_EXT_TYPE, JACCARD_EXT_TYPE_DUAL);
 		tempConfig.put(ESIM_TYPE, ESIM_TYPE_ESIM);
 		tempConfig.put(PSS_TYPE, PSS_TYPE_NORMAL);
