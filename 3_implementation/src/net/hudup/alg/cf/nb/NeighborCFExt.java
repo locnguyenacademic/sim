@@ -133,6 +133,18 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * NHSM-SMD replace built-in Jaccard by SMD.
+	 */
+	protected static final String PSS_TYPE_NHSM_SMD = "nhsm_smd";
+
+	
+	/**
+	 * NHSM-Amer replace built-in Jaccard by Amer.
+	 */
+	protected static final String PSS_TYPE_NHSM_Amer = "nhsm_amer";
+
+	
+	/**
 	 * Value bins count.
 	 */
 	protected static final String VALUE_BINS_COUNT_FIELD = "value_bins_count";
@@ -780,6 +792,10 @@ public abstract class NeighborCFExt extends NeighborCF {
 			return pssNormal(vRating1, vRating2, profile1, profile2);
 		else if (ttype.equals(PSS_TYPE_NHSM))
 			return nhsm(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(PSS_TYPE_NHSM_SMD))
+			return nhsmSMD(vRating1, vRating2, profile1, profile2);
+		else if (ttype.equals(PSS_TYPE_NHSM_Amer))
+			return nhsmAmer(vRating1, vRating2, profile1, profile2);
 		else
 			return pssNormal(vRating1, vRating2, profile1, profile2);
 	}
@@ -845,14 +861,43 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @author Haifeng Liu, Zheng Hu, Ahmad Mian, Hui Tian, Xuzhen Zhu.
 	 * @return NHSM measure between both two rating vectors and profiles.
 	 */
-	protected double nhsm(RatingVector vRating1, RatingVector vRating2,
-			Profile profile1, Profile profile2) {
+	protected double nhsm(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
 		double urp = urp(vRating1, vRating2, profile1, profile2);
 		double jaccard = jaccardMulti(vRating1, vRating2, profile1, profile2);
 		return pssNormal(vRating1, vRating2, profile1, profile2) * jaccard * urp;
 	}
 
 
+	/**
+	 * Calculating the NHSM-SMD measure is combination of NHSM and SMD.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return NHSM measure between both two rating vectors and profiles.
+	 */
+	protected double nhsmSMD(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		double smd = smd(vRating1, vRating2, profile1, profile2);
+		return pssNormal(vRating1, vRating2, profile1, profile2) * smd * urp;
+	}
+
+	
+	/**
+	 * Calculating the NHSM-Amer measure is combination of NHSM and Amer.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @return NHSM-Amer measure between both two rating vectors and profiles.
+	 */
+	protected double nhsmAmer(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		double urp = urp(vRating1, vRating2, profile1, profile2);
+		double amer = amer(vRating1, vRating2, profile1, profile2);
+		return pssNormal(vRating1, vRating2, profile1, profile2) * amer * urp;
+	}
+
+	
 	/**
 	 * Calculate the Bhattacharyya measure from specified rating vectors. BC measure is modified by Bidyut Kr. Patra, Raimo Launonen, Ville Ollikainen, Sukumar Nandi, and implemented by Loc Nguyen.
 	 * @param vRating1 first rating vector.
@@ -2770,6 +2815,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 					List<String> ttypes = Util.newList();
 					ttypes.add(PSS_TYPE_NORMAL);
 					ttypes.add(PSS_TYPE_NHSM);
+					ttypes.add(PSS_TYPE_NHSM_SMD);
+					ttypes.add(PSS_TYPE_NHSM_Amer);
 					Collections.sort(ttypes);
 					
 					return (Serializable) JOptionPane.showInputDialog(
