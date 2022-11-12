@@ -1,5 +1,7 @@
 package net.temp;
 
+import net.hudup.core.logistic.MathUtil;
+
 /**
  * This is temporal testing class.
  * 
@@ -13,7 +15,6 @@ public class Test {
 	
 //	@Override
 //	protected Object expectation(Object currentParameter, Object... info) throws Exception {
-//		// TODO Auto-generated method stub
 //		@SuppressWarnings("unchecked")
 //		List<ExchangedParameter> parameters = (List<ExchangedParameter>)currentParameter;
 //		@SuppressWarnings("unchecked")
@@ -97,7 +98,6 @@ public class Test {
 	 * @throws Exception if any error raises.
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 //		RegressionEvaluator.main(args);
 //		double a = Double.MAX_VALUE;
 //		System.out.println(net.hudup.regression.em.ExchangedParameter.normalPDF(0, 0, 0));
@@ -136,9 +136,7 @@ public class Test {
 //		System.out.println(Math.log(Float.MIN_VALUE));
 //		System.out.println(Math.log(2 + Float.MIN_VALUE));
 		
-		double a = Double.NaN;
-		double b = Double.NaN;
-		System.out.println(a == b);
+		System.out.println(MathUtil.format(0001000.4543623627));
 
 	}
 
