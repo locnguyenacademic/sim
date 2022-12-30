@@ -1,3 +1,19 @@
 call .\env.bat
 
-%JAVA_CMD% net.hudup.Starter %1
+@echo off
+
+if "%1" == "service" goto service
+goto normal
+
+:service
+start %JAVAW_CMD% net.hudup.Starter %1 %2 %3 %4
+goto end
+
+:normal
+%JAVA_CMD% net.hudup.Starter %1 %2 %3 %4
+goto end
+
+:end
+
+@echo on
+
