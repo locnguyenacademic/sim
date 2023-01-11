@@ -1,0 +1,215 @@
+General evaluation
+
+  BU19.KLAdvanced
+    Exact recall = 0.9395
+    Hudup recall = 0.9603
+    MAE.recommend = 0.6271
+    MSE.recommend = 0.6858
+    R.recommend = 0.1879
+    Setup time = 0
+    Speed = 0.1046
+
+
+Dataset evaluation
+
+  Dataset "1"
+    BU19.KLAdvanced
+      Exact recall = 0.938
+      Hudup recall = 0.9597
+      MAE.recommend = 0.6268
+      MSE.recommend = 0.6906
+      R.recommend = 0.189
+      Setup time = 0
+      Speed = 0.094
+
+  Dataset "2"
+    BU19.KLAdvanced
+      Exact recall = 0.944
+      Hudup recall = 0.9611
+      MAE.recommend = 0.6323
+      MSE.recommend = 0.7003
+      R.recommend = 0.1863
+      Setup time = 0
+      Speed = 0.1036
+
+  Dataset "3"
+    BU19.KLAdvanced
+      Exact recall = 0.9402
+      Hudup recall = 0.9642
+      MAE.recommend = 0.6245
+      MSE.recommend = 0.6787
+      R.recommend = 0.2222
+      Setup time = 0
+      Speed = 0.1069
+
+  Dataset "4"
+    BU19.KLAdvanced
+      Exact recall = 0.9371
+      Hudup recall = 0.9583
+      MAE.recommend = 0.622
+      MSE.recommend = 0.6741
+      R.recommend = 0.1628
+      Setup time = 0
+      Speed = 0.1086
+
+  Dataset "5"
+    BU19.KLAdvanced
+      Exact recall = 0.9383
+      Hudup recall = 0.958
+      MAE.recommend = 0.6301
+      MSE.recommend = 0.6852
+      R.recommend = 0.1794
+      Setup time = 0
+      Speed = 0.1101
+
+
+Exact recall evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.938
+    Dataset "2" got 0.944
+    Dataset "3" got 0.9402
+    Dataset "4" got 0.9371
+    Dataset "5" got 0.9383
+
+
+Hudup recall evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.9597
+    Dataset "2" got 0.9611
+    Dataset "3" got 0.9642
+    Dataset "4" got 0.9583
+    Dataset "5" got 0.958
+
+
+MAE.recommend evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.6268
+    Dataset "2" got 0.6323
+    Dataset "3" got 0.6245
+    Dataset "4" got 0.622
+    Dataset "5" got 0.6301
+
+
+MSE.recommend evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.6906
+    Dataset "2" got 0.7003
+    Dataset "3" got 0.6787
+    Dataset "4" got 0.6741
+    Dataset "5" got 0.6852
+
+
+R.recommend evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.189
+    Dataset "2" got 0.1863
+    Dataset "3" got 0.2222
+    Dataset "4" got 0.1628
+    Dataset "5" got 0.1794
+
+
+Setup time evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0
+    Dataset "2" got 0
+    Dataset "3" got 0
+    Dataset "4" got 0
+    Dataset "5" got 0
+
+
+Speed evaluation
+
+  BU19.KLAdvanced
+    Dataset "1" got 0.094
+    Dataset "2" got 0.1036
+    Dataset "3" got 0.1069
+    Dataset "4" got 0.1086
+    Dataset "5" got 0.1101
+
+
+Evaluation information
+  Total records: 6695
+  Evaluated records: 6695
+  Evaluation percentage: 100.0%
+  Elapsed time: 0 hours 11 minutes 44 seconds
+  Started date: 2023-01-09 18-57-57
+  Ended date: 2023-01-09 19-09-42
+
+
+Algorithm parameters
+
+  BU19.KLAdvanced
+    minmax_rating_bound=true
+    msd_fraction=false
+    esim_type=esim
+    jaccard_indexedj_intervals=3
+    minmax_rating_reconfigure=false
+    cosine_ra=false
+    ipwr_beta=0.5
+    ta_type=ta
+    jaccard_ext_type=dual
+    similarity_threshold=NaN
+    recommend_reversed=false
+    ipwr_alpha=0.5
+    pearson_type=pearson
+    value_bins_count=5
+    bcf_type=bcf
+    alg_support_cache=true
+    cosine_normalized=false
+    pss_type=pss
+    triangle_type=triangle
+    cosine_type=cosine
+    smtp_lambda=0.5
+    pip_type=pip
+    pearson_ra=false
+    delay_unsetup=false
+    hsmd_type=hsmd
+    qti_type=qti
+    mmd_type=mmd
+    knn=100
+    jaccard_ratingj_threshold=0.1
+    ta_even=false
+    kl_type=kl
+    recommend_fast=true
+    measure=kl
+    hybrid=false
+    pearson_weighted=false
+    cosine_weighted=false
+    ta_normalized=false
+    mu_alpha=0.5
+    msd_type=msd
+    entropy_support=false
+    bcf_median=true
+    jaccard_type=normal
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  BU19.KLAdvanced
+    Dataset "1" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended user-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended user-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/d:/todo/working/projects/sim/3_implementation/datasets/filmtrust-csv-r0.3-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/d:/todo/working/projects/sim/3_implementation/datasets/filmtrust-csv-r0.3-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/d:/todo/working/projects/sim/3_implementation/datasets/filmtrust-csv-r0.3-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/d:/todo/working/projects/sim/3_implementation/datasets/filmtrust-csv-r0.3-k5/hdp_rating4.test"
+  Testing dataset "5" has path "file:/d:/todo/working/projects/sim/3_implementation/datasets/filmtrust-csv-r0.3-k5/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 15.0.1+9-18, Java HotSpot(TM) 64-Bit Server VM version 15.0.1+9-18, Class version 59.0, Vendor "Oracle Corporation" at https://java.oracle.com/, Home "C:\Program Files\Java\jdk-15.0.1"
+  OS: Windows 10, amd64, version 10.0
+  Network: Local address is 192.168.1.6
+  Memory (VM): Allocated memory = 234MB, Free memory = 120.66MB, Max memory = 966MB
+  CPU: Intel64 Family 6 Model 122 Stepping 8, GenuineIntel, AMD64, the number of processors is 4
+  Directory: Current working directory is "d:\todo\working\projects\sim\3_implementation"

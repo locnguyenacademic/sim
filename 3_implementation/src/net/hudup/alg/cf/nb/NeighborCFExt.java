@@ -1773,6 +1773,92 @@ public abstract class NeighborCFExt extends NeighborCF {
 
 	
 	/**
+	 * Calculating the quasi-Tf + Jaccard measure between two pairs. Quasi-Tf measure is developed by Ali Amer and Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer, Loc Nguyen.
+	 * @return Quasi-Tf + Jaccard measure between both two rating vectors.
+	 */
+	protected double quasiTfJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
+		
+		double X = 0, Y = 0, U = 0, V = 0;
+		int commonCount = 0;
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			
+			if (rated1) {
+				double value1 = vRating1.get(fieldId).value;
+				U += value1;
+				if (rated2) {
+					X += value1;
+					commonCount ++;
+				}
+			}
+			
+			if (rated2) {
+				double value2 = vRating2.get(fieldId).value;
+				V += value2;
+				if (rated1) Y += value2;
+			}
+		}
+		
+		double N = U * V;
+		double jac = (double)commonCount / (double)fieldIds.size();
+		return ((X*Y)*jac/N);
+	}
+
+	
+	/**
+	 * Calculating the quasi-Idf + Jaccard measure between two pairs. Quasi-Idf measure is developed by Ali Amer and Loc Nguyen.
+	 * The first pair includes the first rating vector and the first profile.
+	 * The second pair includes the second rating vector and the second profile.
+	 * @param vRating1 first rating vector.
+	 * @param vRating2 second rating vector.
+	 * @param profile1 first profile.
+	 * @param profile2 second profile.
+	 * @author Ali Amer, Loc Nguyen.
+	 * @return Quasi-Idf + Jaccard measure between both two rating vectors.
+	 */
+	protected double quasiIdfJaccard(RatingVector vRating1, RatingVector vRating2, Profile profile1, Profile profile2) {
+		Set<Integer> fieldIds = unionFieldIds(vRating1, vRating2);
+		if (fieldIds.size() == 0) return Constants.UNUSED;
+		
+		double X = 0, Y = 0, U = 0, V = 0;
+		int commonCount = 0;
+		for (int fieldId : fieldIds) {
+			boolean rated1 = vRating1.isRated(fieldId);
+			boolean rated2 = vRating2.isRated(fieldId);
+			
+			if (rated1) {
+				double value1 = vRating1.get(fieldId).value;
+				U += value1;
+				if (rated2)
+					commonCount ++;
+				else if (!rated2)
+					X += value1;
+			}
+			
+			if (rated2) {
+				double value2 = vRating2.get(fieldId).value;
+				V += value2;
+				if (!rated1) Y += value2;
+			}
+		}
+		
+		double N = U * V;
+		double jac = (double)commonCount / (double)fieldIds.size();
+		return (1.0 - (X*Y)*(1.0-jac)/N);
+	}
+
+	
+	/**
 	 * Calculating the TA (triangle area) measure between two pairs. TA is developed by Loc Nguyen.
 	 * The first pair includes the first rating vector and the first profile.
 	 * The second pair includes the second rating vector and the second profile.
