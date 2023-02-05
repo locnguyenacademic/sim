@@ -1961,6 +1961,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param fieldIds2 set 1 of field identifiers.
 	 * @return circle dot product of two rating vectors given two sets of field identifiers.
 	 */
+	@Deprecated
 	private double circleDotProduct0(RatingVector vRating1, RatingVector vRating2, Set<Integer> fieldIds1, Set<Integer> fieldIds2) {
 		double product = 0;
 		for (int fieldId1 : fieldIds1) {
@@ -1984,7 +1985,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param fieldIds2 set 1 of field identifiers.
 	 * @return circle dot product of two rating vectors given two sets of field identifiers.
 	 */
-	protected double circleDotProduct(RatingVector vRating1, RatingVector vRating2, Set<Integer> fieldIds1, Set<Integer> fieldIds2) {
+	@Deprecated
+	private double circleDotProduct(RatingVector vRating1, RatingVector vRating2, Set<Integer> fieldIds1, Set<Integer> fieldIds2) {
 		double product = 0;
 		for (int fieldId1 : fieldIds1) {
 			if (!vRating1.isRated(fieldId1)) continue;
@@ -2008,7 +2010,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param vRating2 rating vector 1.
 	 * @return circle dot product of two rating vectors.
 	 */
-	protected double circleDotProduct(RatingVector vRating1, RatingVector vRating2) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private double circleDotProduct(RatingVector vRating1, RatingVector vRating2) {
 		return circleDotProduct0(vRating1, vRating2,
 				vRating1.fieldIds(true), vRating2.fieldIds(true));
 	}
@@ -2020,6 +2024,7 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param fieldIds given field identifiers.
 	 * @return circle dot length of specified rating vector given field identifiers.
 	 */
+	@Deprecated
 	private double circleLength0(RatingVector vRating, Set<Integer> fieldIds) {
 		double length = 0;
 		for (int fieldId : fieldIds) {
@@ -2037,7 +2042,8 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param fieldIds given field identifiers.
 	 * @return circle length of specified rating vector given field identifiers.
 	 */
-	protected double circleLength(RatingVector vRating, Set<Integer> fieldIds) {
+	@Deprecated
+	private double circleLength(RatingVector vRating, Set<Integer> fieldIds) {
 		double length = 0;
 		for (int fieldId : fieldIds) {
 			if (!vRating.isRated(fieldId)) continue;
@@ -2055,7 +2061,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param vRating specified rating vector.
 	 * @return circle length of specified rating vector.
 	 */
-	protected double circleLength(RatingVector vRating) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private double circleLength(RatingVector vRating) {
 		return circleLength0(vRating, vRating.fieldIds(true));
 	}
 
@@ -2068,7 +2076,9 @@ public abstract class NeighborCFExt extends NeighborCF {
 	 * @param fieldIds2 set 1 of field identifiers.
 	 * @return coco measure of two rating vectors given two sets of field identifiers.
 	 */
-	protected double coco(RatingVector vRating1, RatingVector vRating2, Set<Integer> fieldIds1, Set<Integer> fieldIds2) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private double coco(RatingVector vRating1, RatingVector vRating2, Set<Integer> fieldIds1, Set<Integer> fieldIds2) {
 		return circleDotProduct(vRating1, vRating2, fieldIds1, fieldIds2) /
 				(circleLength(vRating1, fieldIds1)*circleLength(vRating2, fieldIds2));
 	}
