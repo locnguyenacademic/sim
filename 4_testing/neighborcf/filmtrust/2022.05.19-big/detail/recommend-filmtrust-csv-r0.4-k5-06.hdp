@@ -1,0 +1,452 @@
+General evaluation
+
+  BI03.IPC
+    Exact recall = 0.9564
+    Exact recall 2 = 0.7186
+    Hudup recall = 0.9376
+    MAE.recommend = 0.5946
+    MSE.recommend = 0.6273
+    Precision.recommend = 0.0062
+    R.recommend = 0.2156
+    Recall.recommend = 0.9033
+    Setup time = 0
+    Speed = 0.2972
+
+  BI03.IPWR
+    Exact recall = 0.9502
+    Exact recall 2 = 0.4125
+    Hudup recall = 0.9316
+    MAE.recommend = 0.5872
+    MSE.recommend = 0.598
+    Precision.recommend = 0.0106
+    R.recommend = 0.2239
+    Recall.recommend = 0.8847
+    Setup time = 0
+    Speed = 0.3291
+
+
+Dataset evaluation
+
+  Dataset "1"
+    BI03.IPC
+      Exact recall = 0.9552
+      Exact recall 2 = 0.7198
+      Hudup recall = 0.9386
+      MAE.recommend = 0.597
+      MSE.recommend = 0.6359
+      Precision.recommend = 0.0063
+      R.recommend = 0.2107
+      Recall.recommend = 0.9033
+      Setup time = 0
+      Speed = 0.2803
+    BI03.IPWR
+      Exact recall = 0.9493
+      Exact recall 2 = 0.4221
+      Hudup recall = 0.9329
+      MAE.recommend = 0.5884
+      MSE.recommend = 0.6086
+      Precision.recommend = 0.0105
+      R.recommend = 0.2185
+      Recall.recommend = 0.8856
+      Setup time = 0
+      Speed = 0.323
+
+  Dataset "2"
+    BI03.IPC
+      Exact recall = 0.9602
+      Exact recall 2 = 0.7137
+      Hudup recall = 0.9442
+      MAE.recommend = 0.5928
+      MSE.recommend = 0.615
+      Precision.recommend = 0.0063
+      R.recommend = 0.2322
+      Recall.recommend = 0.902
+      Setup time = 0
+      Speed = 0.3016
+    BI03.IPWR
+      Exact recall = 0.9543
+      Exact recall 2 = 0.421
+      Hudup recall = 0.9384
+      MAE.recommend = 0.5865
+      MSE.recommend = 0.5883
+      Precision.recommend = 0.0105
+      R.recommend = 0.238
+      Recall.recommend = 0.8832
+      Setup time = 0
+      Speed = 0.3295
+
+  Dataset "3"
+    BI03.IPC
+      Exact recall = 0.9526
+      Exact recall 2 = 0.7161
+      Hudup recall = 0.9341
+      MAE.recommend = 0.5832
+      MSE.recommend = 0.6071
+      Precision.recommend = 0.0062
+      R.recommend = 0.1978
+      Recall.recommend = 0.8971
+      Setup time = 0
+      Speed = 0.2929
+    BI03.IPWR
+      Exact recall = 0.9445
+      Exact recall 2 = 0.4042
+      Hudup recall = 0.9263
+      MAE.recommend = 0.5768
+      MSE.recommend = 0.5766
+      Precision.recommend = 0.0107
+      R.recommend = 0.2173
+      Recall.recommend = 0.8782
+      Setup time = 0
+      Speed = 0.3203
+
+  Dataset "4"
+    BI03.IPC
+      Exact recall = 0.9537
+      Exact recall 2 = 0.718
+      Hudup recall = 0.9338
+      MAE.recommend = 0.6018
+      MSE.recommend = 0.6461
+      Precision.recommend = 0.0061
+      R.recommend = 0.2024
+      Recall.recommend = 0.9061
+      Setup time = 0
+      Speed = 0.3054
+    BI03.IPWR
+      Exact recall = 0.9478
+      Exact recall 2 = 0.4039
+      Hudup recall = 0.9281
+      MAE.recommend = 0.593
+      MSE.recommend = 0.6121
+      Precision.recommend = 0.0107
+      R.recommend = 0.2137
+      Recall.recommend = 0.8872
+      Setup time = 0
+      Speed = 0.3352
+
+  Dataset "5"
+    BI03.IPC
+      Exact recall = 0.9601
+      Exact recall 2 = 0.7253
+      Hudup recall = 0.9373
+      MAE.recommend = 0.5983
+      MSE.recommend = 0.6323
+      Precision.recommend = 0.0062
+      R.recommend = 0.2347
+      Recall.recommend = 0.908
+      Setup time = 0
+      Speed = 0.3057
+    BI03.IPWR
+      Exact recall = 0.9549
+      Exact recall 2 = 0.4115
+      Hudup recall = 0.9322
+      MAE.recommend = 0.5911
+      MSE.recommend = 0.6043
+      Precision.recommend = 0.0106
+      R.recommend = 0.2319
+      Recall.recommend = 0.8893
+      Setup time = 0
+      Speed = 0.3377
+
+
+Exact recall evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.9552
+    Dataset "2" got 0.9602
+    Dataset "3" got 0.9526
+    Dataset "4" got 0.9537
+    Dataset "5" got 0.9601
+
+  BI03.IPWR
+    Dataset "1" got 0.9493
+    Dataset "2" got 0.9543
+    Dataset "3" got 0.9445
+    Dataset "4" got 0.9478
+    Dataset "5" got 0.9549
+
+
+Exact recall 2 evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.7198
+    Dataset "2" got 0.7137
+    Dataset "3" got 0.7161
+    Dataset "4" got 0.718
+    Dataset "5" got 0.7253
+
+  BI03.IPWR
+    Dataset "1" got 0.4221
+    Dataset "2" got 0.421
+    Dataset "3" got 0.4042
+    Dataset "4" got 0.4039
+    Dataset "5" got 0.4115
+
+
+Hudup recall evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.9386
+    Dataset "2" got 0.9442
+    Dataset "3" got 0.9341
+    Dataset "4" got 0.9338
+    Dataset "5" got 0.9373
+
+  BI03.IPWR
+    Dataset "1" got 0.9329
+    Dataset "2" got 0.9384
+    Dataset "3" got 0.9263
+    Dataset "4" got 0.9281
+    Dataset "5" got 0.9322
+
+
+MAE.recommend evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.597
+    Dataset "2" got 0.5928
+    Dataset "3" got 0.5832
+    Dataset "4" got 0.6018
+    Dataset "5" got 0.5983
+
+  BI03.IPWR
+    Dataset "1" got 0.5884
+    Dataset "2" got 0.5865
+    Dataset "3" got 0.5768
+    Dataset "4" got 0.593
+    Dataset "5" got 0.5911
+
+
+MSE.recommend evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.6359
+    Dataset "2" got 0.615
+    Dataset "3" got 0.6071
+    Dataset "4" got 0.6461
+    Dataset "5" got 0.6323
+
+  BI03.IPWR
+    Dataset "1" got 0.6086
+    Dataset "2" got 0.5883
+    Dataset "3" got 0.5766
+    Dataset "4" got 0.6121
+    Dataset "5" got 0.6043
+
+
+Precision.recommend evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.0063
+    Dataset "2" got 0.0063
+    Dataset "3" got 0.0062
+    Dataset "4" got 0.0061
+    Dataset "5" got 0.0062
+
+  BI03.IPWR
+    Dataset "1" got 0.0105
+    Dataset "2" got 0.0105
+    Dataset "3" got 0.0107
+    Dataset "4" got 0.0107
+    Dataset "5" got 0.0106
+
+
+R.recommend evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.2107
+    Dataset "2" got 0.2322
+    Dataset "3" got 0.1978
+    Dataset "4" got 0.2024
+    Dataset "5" got 0.2347
+
+  BI03.IPWR
+    Dataset "1" got 0.2185
+    Dataset "2" got 0.238
+    Dataset "3" got 0.2173
+    Dataset "4" got 0.2137
+    Dataset "5" got 0.2319
+
+
+Recall.recommend evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.9033
+    Dataset "2" got 0.902
+    Dataset "3" got 0.8971
+    Dataset "4" got 0.9061
+    Dataset "5" got 0.908
+
+  BI03.IPWR
+    Dataset "1" got 0.8856
+    Dataset "2" got 0.8832
+    Dataset "3" got 0.8782
+    Dataset "4" got 0.8872
+    Dataset "5" got 0.8893
+
+
+Setup time evaluation
+
+  BI03.IPC
+    Dataset "1" got 0
+    Dataset "2" got 0
+    Dataset "3" got 0
+    Dataset "4" got 0
+    Dataset "5" got 0
+
+  BI03.IPWR
+    Dataset "1" got 0
+    Dataset "2" got 0
+    Dataset "3" got 0
+    Dataset "4" got 0
+    Dataset "5" got 0
+
+
+Speed evaluation
+
+  BI03.IPC
+    Dataset "1" got 0.2803
+    Dataset "2" got 0.3016
+    Dataset "3" got 0.2929
+    Dataset "4" got 0.3054
+    Dataset "5" got 0.3057
+
+  BI03.IPWR
+    Dataset "1" got 0.323
+    Dataset "2" got 0.3295
+    Dataset "3" got 0.3203
+    Dataset "4" got 0.3352
+    Dataset "5" got 0.3377
+
+
+Evaluation information
+  Total records: 13878
+  Evaluated records: 13878
+  Evaluation percentage: 100.0%
+  Elapsed time: 1 hours 42 minutes 10 seconds
+  Started date: 2023-03-26 22-12-01
+  Ended date: 2023-03-26 23-54-11
+
+
+Algorithm parameters
+
+  BI03.IPC
+    minmax_rating_bound=true
+    msd_fraction=false
+    esim_type=esim
+    jaccard_indexedj_intervals=3
+    minmax_rating_reconfigure=false
+    cosine_ra=false
+    ipwr_beta=0.5
+    ta_type=ta
+    jaccard_ext_type=dual
+    similarity_threshold=NaN
+    recommend_reversed=false
+    ipwr_alpha=0.5
+    pearson_type=ipc
+    value_bins_count=5
+    bcf_type=bcf
+    alg_support_cache=true
+    cosine_normalized=false
+    pss_type=pss
+    triangle_type=triangle
+    cosine_type=cosine
+    smtp_lambda=0.5
+    pip_type=pip
+    pearson_ra=false
+    delay_unsetup=false
+    hsmd_type=hsmd
+    qti_type=qti
+    mmd_type=mmd
+    knn=100
+    jaccard_ratingj_threshold=0.1
+    ta_even=false
+    kl_type=kl
+    recommend_fast=true
+    measure=pearson
+    hybrid=false
+    pearson_weighted=false
+    cosine_weighted=false
+    ta_normalized=false
+    mu_alpha=0.5
+    msd_type=msd
+    entropy_support=false
+    bcf_median=true
+    jaccard_type=normal
+    smtp_general_var=false
+
+  BI03.IPWR
+    minmax_rating_bound=true
+    msd_fraction=false
+    esim_type=esim
+    jaccard_indexedj_intervals=3
+    minmax_rating_reconfigure=false
+    cosine_ra=false
+    ipwr_beta=0.5
+    ta_type=ta
+    jaccard_ext_type=dual
+    similarity_threshold=NaN
+    recommend_reversed=false
+    ipwr_alpha=0.5
+    pearson_type=pearson
+    value_bins_count=5
+    bcf_type=bcf
+    alg_support_cache=true
+    cosine_normalized=false
+    pss_type=pss
+    triangle_type=triangle
+    cosine_type=cosine
+    smtp_lambda=0.5
+    pip_type=pip
+    pearson_ra=false
+    delay_unsetup=false
+    hsmd_type=hsmd
+    qti_type=qti
+    mmd_type=mmd
+    knn=100
+    jaccard_ratingj_threshold=0.1
+    ta_even=false
+    kl_type=kl
+    recommend_fast=true
+    measure=ipwr
+    hybrid=false
+    pearson_weighted=false
+    cosine_weighted=false
+    ta_normalized=false
+    mu_alpha=0.5
+    msd_type=msd
+    entropy_support=false
+    bcf_median=true
+    jaccard_type=normal
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  BI03.IPC
+    Dataset "1" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended item-based nearest neighbors collaborative filtering algorithm
+
+  BI03.IPWR
+    Dataset "1" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended item-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.4-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.4-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.4-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.4-k5/hdp_rating4.test"
+  Testing dataset "5" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.4-k5/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 15.0.2+7-27, Java HotSpot(TM) 64-Bit Server VM version 15.0.2+7-27, Class version 59.0, Vendor "Oracle Corporation" at https://java.oracle.com/, Home "C:\Program Files\Java\jdk-15.0.2"
+  OS: Windows 10, amd64, version 10.0
+  Network: Local address is 192.168.0.116
+  Memory (VM): Allocated memory = 1108MB, Free memory = 492.28MB, Max memory = 8128MB
+  CPU: Intel64 Family 6 Model 158 Stepping 10, GenuineIntel, AMD64, the number of processors is 12
+  Directory: Current working directory is "G:\My Drive\todeploy\working\projects\sim"

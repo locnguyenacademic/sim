@@ -1,0 +1,263 @@
+General evaluation
+
+  AI18.Entropy
+    Exact recall = 0.9197
+    Exact recall 2 = 0.4797
+    Hudup recall = 0.9057
+    MAE.recommend = 0.5968
+    MSE.recommend = 0.6223
+    Precision.recommend = 0.0158
+    R.recommend = 0.2061
+    Recall.recommend = 0.8761
+    Setup time = 0
+    Speed = 0.1736
+
+
+Dataset evaluation
+
+  Dataset "1"
+    AI18.Entropy
+      Exact recall = 0.9144
+      Exact recall 2 = 0.4725
+      Hudup recall = 0.8986
+      MAE.recommend = 0.5997
+      MSE.recommend = 0.6254
+      Precision.recommend = 0.016
+      R.recommend = 0.2073
+      Recall.recommend = 0.8715
+      Setup time = 0
+      Speed = 0.1828
+
+  Dataset "2"
+    AI18.Entropy
+      Exact recall = 0.9317
+      Exact recall 2 = 0.474
+      Hudup recall = 0.9188
+      MAE.recommend = 0.5963
+      MSE.recommend = 0.6201
+      Precision.recommend = 0.016
+      R.recommend = 0.2052
+      Recall.recommend = 0.8796
+      Setup time = 0
+      Speed = 0.1828
+
+  Dataset "3"
+    AI18.Entropy
+      Exact recall = 0.9134
+      Exact recall 2 = 0.4851
+      Hudup recall = 0.9008
+      MAE.recommend = 0.5969
+      MSE.recommend = 0.6212
+      Precision.recommend = 0.0155
+      R.recommend = 0.2015
+      Recall.recommend = 0.8762
+      Setup time = 0
+      Speed = 0.1661
+
+  Dataset "4"
+    AI18.Entropy
+      Exact recall = 0.9166
+      Exact recall 2 = 0.4868
+      Hudup recall = 0.9039
+      MAE.recommend = 0.5934
+      MSE.recommend = 0.6185
+      Precision.recommend = 0.0156
+      R.recommend = 0.2018
+      Recall.recommend = 0.8799
+      Setup time = 0
+      Speed = 0.1672
+
+  Dataset "5"
+    AI18.Entropy
+      Exact recall = 0.9225
+      Exact recall 2 = 0.4802
+      Hudup recall = 0.9065
+      MAE.recommend = 0.5976
+      MSE.recommend = 0.6264
+      Precision.recommend = 0.0158
+      R.recommend = 0.2148
+      Recall.recommend = 0.8731
+      Setup time = 0
+      Speed = 0.1693
+
+
+Exact recall evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.9144
+    Dataset "2" got 0.9317
+    Dataset "3" got 0.9134
+    Dataset "4" got 0.9166
+    Dataset "5" got 0.9225
+
+
+Exact recall 2 evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.4725
+    Dataset "2" got 0.474
+    Dataset "3" got 0.4851
+    Dataset "4" got 0.4868
+    Dataset "5" got 0.4802
+
+
+Hudup recall evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.8986
+    Dataset "2" got 0.9188
+    Dataset "3" got 0.9008
+    Dataset "4" got 0.9039
+    Dataset "5" got 0.9065
+
+
+MAE.recommend evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.5997
+    Dataset "2" got 0.5963
+    Dataset "3" got 0.5969
+    Dataset "4" got 0.5934
+    Dataset "5" got 0.5976
+
+
+MSE.recommend evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.6254
+    Dataset "2" got 0.6201
+    Dataset "3" got 0.6212
+    Dataset "4" got 0.6185
+    Dataset "5" got 0.6264
+
+
+Precision.recommend evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.016
+    Dataset "2" got 0.016
+    Dataset "3" got 0.0155
+    Dataset "4" got 0.0156
+    Dataset "5" got 0.0158
+
+
+R.recommend evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.2073
+    Dataset "2" got 0.2052
+    Dataset "3" got 0.2015
+    Dataset "4" got 0.2018
+    Dataset "5" got 0.2148
+
+
+Recall.recommend evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.8715
+    Dataset "2" got 0.8796
+    Dataset "3" got 0.8762
+    Dataset "4" got 0.8799
+    Dataset "5" got 0.8731
+
+
+Setup time evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0
+    Dataset "2" got 0
+    Dataset "3" got 0
+    Dataset "4" got 0
+    Dataset "5" got 0
+
+
+Speed evaluation
+
+  AI18.Entropy
+    Dataset "1" got 0.1828
+    Dataset "2" got 0.1828
+    Dataset "3" got 0.1661
+    Dataset "4" got 0.1672
+    Dataset "5" got 0.1693
+
+
+Evaluation information
+  Total records: 7234
+  Evaluated records: 7234
+  Evaluation percentage: 100.0%
+  Elapsed time: 0 hours 36 minutes 40 seconds
+  Started date: 2023-03-28 09-46-33
+  Ended date: 2023-03-28 10-23-12
+
+
+Algorithm parameters
+
+  AI18.Entropy
+    minmax_rating_bound=true
+    msd_fraction=false
+    esim_type=esim
+    jaccard_indexedj_intervals=3
+    minmax_rating_reconfigure=false
+    cosine_ra=false
+    ipwr_beta=0.5
+    ta_type=ta
+    jaccard_ext_type=dual
+    similarity_threshold=NaN
+    recommend_reversed=false
+    ipwr_alpha=0.5
+    pearson_type=pearson
+    value_bins_count=5
+    bcf_type=bcf
+    alg_support_cache=true
+    cosine_normalized=false
+    pss_type=pss
+    triangle_type=triangle
+    cosine_type=cosine
+    smtp_lambda=0.5
+    pip_type=pip
+    pearson_ra=false
+    delay_unsetup=false
+    hsmd_type=hsmd
+    qti_type=qti
+    mmd_type=mmd
+    knn=100
+    jaccard_ratingj_threshold=0.1
+    ta_even=false
+    kl_type=kl
+    recommend_fast=true
+    measure=cosine
+    hybrid=false
+    pearson_weighted=false
+    cosine_weighted=false
+    ta_normalized=false
+    mu_alpha=0.5
+    msd_type=msd
+    entropy_support=true
+    bcf_median=true
+    jaccard_type=normal
+    smtp_general_var=false
+
+
+Algorithm descriptions
+
+  AI18.Entropy
+    Dataset "1" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "2" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "3" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "4" got Extended item-based nearest neighbors collaborative filtering algorithm
+    Dataset "5" got Extended item-based nearest neighbors collaborative filtering algorithm
+
+
+Note
+  Testing dataset "1" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.6-k5/hdp_rating1.test"
+  Testing dataset "2" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.6-k5/hdp_rating2.test"
+  Testing dataset "3" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.6-k5/hdp_rating3.test"
+  Testing dataset "4" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.6-k5/hdp_rating4.test"
+  Testing dataset "5" has path "file:/G:/My%20Drive/todeploy/working/projects/sim/datasets/filmtrust-csv-r0.6-k5/hdp_rating5.test"
+
+  Java: Java(TM) SE Runtime Environment version 15.0.2+7-27, Java HotSpot(TM) 64-Bit Server VM version 15.0.2+7-27, Class version 59.0, Vendor "Oracle Corporation" at https://java.oracle.com/, Home "C:\Program Files\Java\jdk-15.0.2"
+  OS: Windows 10, amd64, version 10.0
+  Network: Local address is 192.168.1.6
+  Memory (VM): Allocated memory = 1157MB, Free memory = 739.68MB, Max memory = 2026MB
+  CPU: Intel64 Family 6 Model 60 Stepping 3, GenuineIntel, AMD64, the number of processors is 4
+  Directory: Current working directory is "G:\My Drive\todeploy\working\projects\sim"
