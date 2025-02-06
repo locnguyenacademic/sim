@@ -1,1153 +1,229 @@
 General evaluation
 
-  BI01.Dice
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6111
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7468
-    MSE.recommend = 0.975
-    Precision.recommend = 0.0288
-    R.recommend = 0.1436
-    Recall.recommend = 0.7066
-    Setup time = 0
-    Speed = 1.0944
-
-  BI01.IJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6108
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7458
-    MSE.recommend = 0.972
-    Precision.recommend = 0.0288
-    R.recommend = 0.1442
-    Recall.recommend = 0.707
-    Setup time = 0
-    Speed = 1.1491
-
-  BI01.JacDual
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6102
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7547
-    MSE.recommend = 0.9953
-    Precision.recommend = 0.0287
-    R.recommend = 0.1428
-    Recall.recommend = 0.7042
-    Setup time = 0
-    Speed = 1.0612
-
-  BI01.JacEDS
-    Exact recall = 0.9777
-    Exact recall 2 = 0.6665
-    Hudup recall = 0.9759
-    MAE.recommend = 0.7257
-    MSE.recommend = 0.9061
-    Precision.recommend = 0.0275
-    R.recommend = 0.18
-    Recall.recommend = 0.7363
-    Setup time = 0
-    Speed = 1.1792
-
-  BI01.JacLMH
-    Exact recall = 0.9803
-    Exact recall 2 = 0.59
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7634
-    MSE.recommend = 1.0095
-    Precision.recommend = 0.0287
-    R.recommend = 0.1451
-    Recall.recommend = 0.6818
-    Setup time = 0
-    Speed = 1.0419
-
-  BI01.JacRA
-    Exact recall = 0.9803
-    Exact recall 2 = 0.611
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7457
-    MSE.recommend = 0.9721
-    Precision.recommend = 0.0287
-    R.recommend = 0.1429
-    Recall.recommend = 0.7056
-    Setup time = 0
-    Speed = 1.0491
-
-  BI01.JaccardMulti
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6111
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7506
-    MSE.recommend = 0.9841
-    Precision.recommend = 0.0287
-    R.recommend = 0.142
-    Recall.recommend = 0.7061
-    Setup time = 0
-    Speed = 1.037
-
-  BI01.PNCR
-    Exact recall = 0.9777
-    Exact recall 2 = 0.6662
-    Hudup recall = 0.9759
-    MAE.recommend = 0.7224
-    MSE.recommend = 0.8984
-    Precision.recommend = 0.0275
-    R.recommend = 0.1801
-    Recall.recommend = 0.7361
-    Setup time = 0
-    Speed = 1.0269
-
-  BI01.RatingJaccard
-    Exact recall = 0.9803
-    Exact recall 2 = 0.5996
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7705
-    MSE.recommend = 1.03
-    Precision.recommend = 0.0286
-    R.recommend = 0.1439
-    Recall.recommend = 0.6906
-    Setup time = 0
-    Speed = 1.0117
-
-  BI01.RelevantJaccard
-    Exact recall = 0.9803
+  AI01.Jaccard
+    Exact recall = 0.9807
     Exact recall 2 = 0.6107
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7454
-    MSE.recommend = 0.9709
+    Hudup recall = 0.9789
+    MAE.recommend = 0.747
+    MSE.recommend = 0.9754
     Precision.recommend = 0.0288
-    R.recommend = 0.1443
-    Recall.recommend = 0.7068
-    Setup time = 0
-    Speed = 0.998
-
-  BI02.COD
-    Exact recall = 0.9737
-    Exact recall 2 = 0.2636
-    Hudup recall = 0.9719
-    MAE.recommend = 0.787
-    MSE.recommend = 1.0658
-    Precision.recommend = 0.0561
-    R.recommend = 0.115
-    Recall.recommend = 0.5953
-    Setup time = 0
-    Speed = 0.946
-
-  BI02.COJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6096
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7465
-    MSE.recommend = 0.9724
-    Precision.recommend = 0.0286
-    R.recommend = 0.1412
-    Recall.recommend = 0.7022
-    Setup time = 0
-    Speed = 0.9957
-
-  BI02.CosineJ
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2714
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7281
-    MSE.recommend = 0.9232
-    Precision.recommend = 0.0555
-    R.recommend = 0.1557
-    Recall.recommend = 0.6074
-    Setup time = 0
-    Speed = 0.9514
-
-  BI03.CPC
-    Exact recall = 0.9712
-    Exact recall 2 = 0.2068
-    Hudup recall = 0.9694
-    MAE.recommend = 0.7511
-    MSE.recommend = 0.9791
-    Precision.recommend = 0.0652
-    R.recommend = 0.1168
-    Recall.recommend = 0.5431
-    Setup time = 0
-    Speed = 0.9433
-
-  BI03.IPC
-    Exact recall = 0.9753
-    Exact recall 2 = 0.5938
-    Hudup recall = 0.9735
-    MAE.recommend = 0.7828
-    MSE.recommend = 1.0819
-    Precision.recommend = 0.0288
-    R.recommend = 0.1286
-    Recall.recommend = 0.6874
-    Setup time = 0
-    Speed = 1.0214
-
-  BI03.IPWR
-    Exact recall = 0.97
-    Exact recall 2 = 0.3436
-    Hudup recall = 0.9682
-    MAE.recommend = 0.6963
-    MSE.recommend = 0.8336
-    Precision.recommend = 0.047
-    R.recommend = 0.1986
-    Recall.recommend = 0.6505
-    Setup time = 0
-    Speed = 1.0546
-
-  BI03.PC
-    Exact recall = 0.8832
-    Exact recall 2 = 0.2509
-    Hudup recall = 0.8816
-    MAE.recommend = 0.7875
-    MSE.recommend = 1.0676
-    Precision.recommend = 0.0579
-    R.recommend = 0.1156
-    Recall.recommend = 0.5964
-    Setup time = 0
-    Speed = 0.9669
-
-  BI03.PearsonJ
-    Exact recall = 0.9717
-    Exact recall 2 = 0.1654
-    Hudup recall = 0.9698
-    MAE.recommend = 0.7794
-    MSE.recommend = 1.0459
-    Precision.recommend = 0.0795
-    R.recommend = 0.1214
-    Recall.recommend = 0.5297
-    Setup time = 0
-    Speed = 0.9567
-
-  BI03.SPC
-    Exact recall = 0.9717
-    Exact recall 2 = 0.1656
-    Hudup recall = 0.9698
-    MAE.recommend = 0.7771
-    MSE.recommend = 1.0394
-    Precision.recommend = 0.0796
-    R.recommend = 0.1227
-    Recall.recommend = 0.5308
-    Setup time = 0
-    Speed = 0.9582
-
-  BI03.WPC
-    Exact recall = 0.9717
-    Exact recall 2 = 0.1655
-    Hudup recall = 0.9698
-    MAE.recommend = 0.7766
-    MSE.recommend = 1.0385
-    Precision.recommend = 0.0796
-    R.recommend = 0.1233
-    Recall.recommend = 0.5306
+    R.recommend = 0.1429
+    Recall.recommend = 0.7055
     Setup time = 0.0001
-    Speed = 0.9529
+    Speed = 1.3067
 
-  BI04.MSDJ
-    Exact recall = 0.9718
-    Exact recall 2 = 0.2715
-    Hudup recall = 0.97
-    MAE.recommend = 0.7269
-    MSE.recommend = 0.9199
-    Precision.recommend = 0.0555
-    R.recommend = 0.1547
+  AI02.Cosine
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2716
+    Hudup recall = 0.9694
+    MAE.recommend = 0.7261
+    MSE.recommend = 0.9176
+    Precision.recommend = 0.0556
+    R.recommend = 0.1541
     Recall.recommend = 0.6072
     Setup time = 0
-    Speed = 0.9433
+    Speed = 0.9287
 
-  BI06.MPIP
-    Exact recall = 0.9699
+  AI03.Pearson
+    Exact recall = 0.9728
+    Exact recall 2 = 0.166
+    Hudup recall = 0.971
+    MAE.recommend = 0.7776
+    MSE.recommend = 1.041
+    Precision.recommend = 0.0794
+    R.recommend = 0.1223
+    Recall.recommend = 0.5301
+    Setup time = 0
+    Speed = 0.9104
+
+  AI04.MSD
+    Exact recall = 0.9723
+    Exact recall 2 = 0.2717
+    Hudup recall = 0.9706
+    MAE.recommend = 0.7251
+    MSE.recommend = 0.915
+    Precision.recommend = 0.0556
+    R.recommend = 0.1534
+    Recall.recommend = 0.6071
+    Setup time = 0
+    Speed = 1.0094
+
+  AI05.SRC
+    Exact recall = 0.9524
+    Exact recall 2 = 0.0094
+    Hudup recall = 0.9506
+    MAE.recommend = 0.8345
+    MSE.recommend = 1.205
+    Precision.recommend = 0.0668
+    R.recommend = 0.0777
+    Recall.recommend = 0.0257
+    Setup time = 0
+    Speed = 0.9712
+
+  AI06.PIP
+    Exact recall = 0.9714
     Exact recall 2 = 0.2709
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7301
-    MSE.recommend = 0.9291
-    Precision.recommend = 0.0552
-    R.recommend = 0.1532
-    Recall.recommend = 0.6029
-    Setup time = 0.0001
-    Speed = 0.933
-
-  BI07.NHMS
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2714
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7303
-    MSE.recommend = 0.9308
-    Precision.recommend = 0.0553
-    R.recommend = 0.1518
-    Recall.recommend = 0.6047
-    Setup time = 0.0001
-    Speed = 0.9694
-
-  BI07.NHMS.Amer
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2712
-    Hudup recall = 0.9681
-    MAE.recommend = 0.73
-    MSE.recommend = 0.9309
-    Precision.recommend = 0.0552
-    R.recommend = 0.1529
-    Recall.recommend = 0.6032
-    Setup time = 0
-    Speed = 0.9763
-
-  BI07.NHMS.SMD
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2712
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7287
-    MSE.recommend = 0.9275
-    Precision.recommend = 0.0553
-    R.recommend = 0.1543
-    Recall.recommend = 0.6041
-    Setup time = 0
-    Speed = 0.9793
-
-  BI07.PSSJ
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2708
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7298
-    MSE.recommend = 0.9285
-    Precision.recommend = 0.0553
-    R.recommend = 0.1537
-    Recall.recommend = 0.6028
-    Setup time = 0
-    Speed = 0.9405
-
-  BI08.BCFJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6065
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7241
-    MSE.recommend = 0.9144
-    Precision.recommend = 0.0291
-    R.recommend = 0.1635
-    Recall.recommend = 0.7102
-    Setup time = 0
-    Speed = 1.0357
-
-  BI09.CjacMD
-    Exact recall = 0.9731
-    Exact recall 2 = 0.2674
-    Hudup recall = 0.9713
-    MAE.recommend = 0.7902
-    MSE.recommend = 1.0841
+    Hudup recall = 0.9697
+    MAE.recommend = 0.7328
+    MSE.recommend = 0.9356
     Precision.recommend = 0.0551
-    R.recommend = 0.1083
-    Recall.recommend = 0.5937
+    R.recommend = 0.1492
+    Recall.recommend = 0.6007
     Setup time = 0
-    Speed = 0.9714
+    Speed = 0.9305
 
-  BI10.TMJ
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2714
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7274
-    MSE.recommend = 0.9216
-    Precision.recommend = 0.0555
-    R.recommend = 0.156
-    Recall.recommend = 0.6074
+  AI07.PSS
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2712
+    Hudup recall = 0.9694
+    MAE.recommend = 0.727
+    MSE.recommend = 0.9207
+    Precision.recommend = 0.0554
+    R.recommend = 0.1526
+    Recall.recommend = 0.6039
     Setup time = 0
-    Speed = 0.9373
+    Speed = 0.8997
 
-  BI14.Amer
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6113
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7463
-    MSE.recommend = 0.9737
-    Precision.recommend = 0.0287
-    R.recommend = 0.1427
-    Recall.recommend = 0.7064
-    Setup time = 0
-    Speed = 0.9837
-
-  BI14.AmerJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6111
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7518
-    MSE.recommend = 0.9884
-    Precision.recommend = 0.0286
-    R.recommend = 0.1411
-    Recall.recommend = 0.7037
-    Setup time = 0
-    Speed = 0.9945
-
-  BI14.HSMD
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6331
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7587
-    MSE.recommend = 1.002
-    Precision.recommend = 0.0279
-    R.recommend = 0.1415
-    Recall.recommend = 0.7097
-    Setup time = 0
-    Speed = 0.9891
-
-  BI14.HSMDJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6104
-    Hudup recall = 0.9785
-    MAE.recommend = 0.751
-    MSE.recommend = 0.9847
-    Precision.recommend = 0.0286
-    R.recommend = 0.1408
-    Recall.recommend = 0.7024
-    Setup time = 0
-    Speed = 0.9919
-
-  BI14.QTI
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6088
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7561
-    MSE.recommend = 0.9963
-    Precision.recommend = 0.0284
-    R.recommend = 0.1375
-    Recall.recommend = 0.695
+  AI08.BCF
+    Exact recall = 0.9807
+    Exact recall 2 = 0.5864
+    Hudup recall = 0.9789
+    MAE.recommend = 0.7258
+    MSE.recommend = 0.9193
+    Precision.recommend = 0.0296
+    R.recommend = 0.1612
+    Recall.recommend = 0.6972
     Setup time = 0
     Speed = 0.9803
 
-  BI14.QTIJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6087
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7671
-    MSE.recommend = 1.0266
-    Precision.recommend = 0.0282
-    R.recommend = 0.1356
-    Recall.recommend = 0.6902
+  AI09.MMD
+    Exact recall = 0.9805
+    Exact recall 2 = 0.6303
+    Hudup recall = 0.9787
+    MAE.recommend = 0.8618
+    MSE.recommend = 1.2595
+    Precision.recommend = 0.0275
+    R.recommend = 0.1612
+    Recall.recommend = 0.6965
     Setup time = 0
-    Speed = 0.9906
+    Speed = 0.9759
 
-  BI14.SMDJ
-    Exact recall = 0.9803
-    Exact recall 2 = 0.6109
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7526
-    MSE.recommend = 0.9904
-    Precision.recommend = 0.0286
-    R.recommend = 0.1419
-    Recall.recommend = 0.7038
-    Setup time = 0
-    Speed = 0.9919
-
-  BI15.NNSMJ
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2696
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7399
-    MSE.recommend = 0.9538
-    Precision.recommend = 0.055
-    R.recommend = 0.1486
-    Recall.recommend = 0.5969
-    Setup time = 0
-    Speed = 0.9375
-
-  BI16.TAEven
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2708
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7249
-    MSE.recommend = 0.914
+  AI10.Triangle
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2717
+    Hudup recall = 0.9694
+    MAE.recommend = 0.7257
+    MSE.recommend = 0.9166
     Precision.recommend = 0.0556
-    R.recommend = 0.1565
-    Recall.recommend = 0.6067
-    Setup time = 0
-    Speed = 0.9275
-
-  BI16.TAJ
-    Exact recall = 0.9699
-    Exact recall 2 = 0.2712
-    Hudup recall = 0.9681
-    MAE.recommend = 0.7265
-    MSE.recommend = 0.9188
-    Precision.recommend = 0.0555
-    R.recommend = 0.1552
-    Recall.recommend = 0.6064
-    Setup time = 0
-    Speed = 0.9357
-
-  BI16.TAN
-    Exact recall = 0.9712
-    Exact recall 2 = 0.2065
-    Hudup recall = 0.9694
-    MAE.recommend = 0.7531
-    MSE.recommend = 0.9854
-    Precision.recommend = 0.0651
-    R.recommend = 0.1157
-    Recall.recommend = 0.5413
-    Setup time = 0
-    Speed = 0.9147
-
-  BI16.TANJ
-    Exact recall = 0.9712
-    Exact recall 2 = 0.2063
-    Hudup recall = 0.9694
-    MAE.recommend = 0.7537
-    MSE.recommend = 0.9868
-    Precision.recommend = 0.065
-    R.recommend = 0.1156
-    Recall.recommend = 0.5403
-    Setup time = 0
-    Speed = 0.9254
-
-  BI17.RAPearson
-    Exact recall = 0.9717
-    Exact recall 2 = 0.1646
-    Hudup recall = 0.9698
-    MAE.recommend = 0.784
-    MSE.recommend = 1.0606
-    Precision.recommend = 0.0794
-    R.recommend = 0.1186
-    Recall.recommend = 0.526
-    Setup time = 0
-    Speed = 0.9225
-
-  BI18.EntropyPearson
-    Exact recall = 0.9716
-    Exact recall 2 = 0.1655
-    Hudup recall = 0.9698
-    MAE.recommend = 0.7791
-    MSE.recommend = 1.0444
-    Precision.recommend = 0.0796
-    R.recommend = 0.1213
-    Recall.recommend = 0.5304
-    Setup time = 0
-    Speed = 0.9241
-
-  BI19.KLAdvanced
-    Exact recall = 0.2978
-    Exact recall 2 = 0.0981
-    Hudup recall = 0.2972
-    MAE.recommend = 0.8766
-    MSE.recommend = 1.322
-    Precision.recommend = 0.0219
-    R.recommend = 0.105
-    Recall.recommend = 0.1288
-    Setup time = 0
-    Speed = 0.9414
-
-  BI22.ESim2
-    Exact recall = 0.9778
-    Exact recall 2 = 0.5758
-    Hudup recall = 0.976
-    MAE.recommend = 0.7213
-    MSE.recommend = 0.8918
-    Precision.recommend = 0.0296
-    R.recommend = 0.1823
-    Recall.recommend = 0.6862
-    Setup time = 0
-    Speed = 0.9784
-
-  BI22.ESim3
-    Exact recall = 0.9803
-    Exact recall 2 = 0.522
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7389
-    MSE.recommend = 0.9527
-    Precision.recommend = 0.0309
-    R.recommend = 0.1431
-    Recall.recommend = 0.6488
-    Setup time = 0
-    Speed = 0.964
-
-  BI22.ZSim
-    Exact recall = 0.9803
-    Exact recall 2 = 0.5218
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7439
-    MSE.recommend = 0.9661
-    Precision.recommend = 0.0308
-    R.recommend = 0.1417
-    Recall.recommend = 0.6461
-    Setup time = 0
-    Speed = 0.9632
-
-  BI30.CLAG
-    Exact recall = 0.9738
-    Exact recall 2 = 0.2586
-    Hudup recall = 0.972
-    MAE.recommend = 0.7485
-    MSE.recommend = 0.9737
-    Precision.recommend = 0.0567
-    R.recommend = 0.1451
-    Recall.recommend = 0.591
-    Setup time = 0
-    Speed = 0.9417
-
-  BU01.Dice
-    Exact recall = 0.9757
-    Exact recall 2 = 0.3123
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7432
-    MSE.recommend = 0.9576
-    Precision.recommend = 0.0445
-    R.recommend = 0.1138
-    Recall.recommend = 0.5596
-    Setup time = 0
-    Speed = 0.8569
-
-  BU01.IJ
-    Exact recall = 0.9757
-    Exact recall 2 = 0.3195
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7418
-    MSE.recommend = 0.955
-    Precision.recommend = 0.0443
-    R.recommend = 0.1182
-    Recall.recommend = 0.5691
-    Setup time = 0
-    Speed = 0.8633
-
-  BU01.JacDual
-    Exact recall = 0.9757
-    Exact recall 2 = 0.3232
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7515
-    MSE.recommend = 0.9805
-    Precision.recommend = 0.0435
-    R.recommend = 0.1158
-    Recall.recommend = 0.5659
-    Setup time = 0
-    Speed = 0.8604
-
-  BU01.JacEDS
-    Exact recall = 0.9776
-    Exact recall 2 = 0.0315
-    Hudup recall = 0.9757
-    MAE.recommend = 0.7684
-    MSE.recommend = 0.9779
-    Precision.recommend = 0.0965
-    R.recommend = 0.0462
-    Recall.recommend = 0.1224
-    Setup time = 0
-    Speed = 0.9045
-
-  BU01.JacLMH
-    Exact recall = 0.9361
-    Exact recall 2 = 0.2915
-    Hudup recall = 0.9343
-    MAE.recommend = 0.7413
-    MSE.recommend = 0.9492
-    Precision.recommend = 0.0458
-    R.recommend = 0.1092
-    Recall.recommend = 0.541
-    Setup time = 0
-    Speed = 0.856
-
-  BU01.JacRA
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3157
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7415
-    MSE.recommend = 0.953
-    Precision.recommend = 0.0445
-    R.recommend = 0.1144
-    Recall.recommend = 0.5651
-    Setup time = 0
-    Speed = 0.8579
-
-  BU01.JaccardMulti
-    Exact recall = 0.9757
-    Exact recall 2 = 0.289
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7586
-    MSE.recommend = 0.9972
-    Precision.recommend = 0.0395
-    R.recommend = 0.1043
-    Recall.recommend = 0.459
-    Setup time = 0
-    Speed = 0.8668
-
-  BU01.PNCR
-    Exact recall = 0.9793
-    Exact recall 2 = 0.3085
-    Hudup recall = 0.9775
-    MAE.recommend = 0.7421
-    MSE.recommend = 0.9554
-    Precision.recommend = 0.0453
-    R.recommend = 0.1171
-    Recall.recommend = 0.5619
-    Setup time = 0
-    Speed = 0.8539
-
-  BU01.RatingJaccard
-    Exact recall = 0.9553
-    Exact recall 2 = 0.2803
-    Hudup recall = 0.9535
-    MAE.recommend = 0.7412
-    MSE.recommend = 0.9437
-    Precision.recommend = 0.0469
-    R.recommend = 0.0973
-    Recall.recommend = 0.5309
-    Setup time = 0
-    Speed = 0.8561
-
-  BU01.RelevantJaccard
-    Exact recall = 0.9757
-    Exact recall 2 = 0.3518
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7373
-    MSE.recommend = 0.947
-    Precision.recommend = 0.0429
-    R.recommend = 0.1267
+    R.recommend = 0.1542
     Recall.recommend = 0.6073
     Setup time = 0
-    Speed = 0.8576
+    Speed = 0.8885
 
-  BU02.COD
-    Exact recall = 0.9693
-    Exact recall 2 = 0.2705
-    Hudup recall = 0.9675
-    MAE.recommend = 0.7941
-    MSE.recommend = 1.0749
-    Precision.recommend = 0.0472
-    R.recommend = -0.0047
-    Recall.recommend = 0.5147
+  AI11.Feng
+    Exact recall = 0.9807
+    Exact recall 2 = 0.6098
+    Hudup recall = 0.9789
+    MAE.recommend = 0.7448
+    MSE.recommend = 0.9699
+    Precision.recommend = 0.0287
+    R.recommend = 0.1417
+    Recall.recommend = 0.7025
     Setup time = 0
-    Speed = 0.5823
+    Speed = 0.9893
 
-  BU02.COJ
-    Exact recall = 0.9757
-    Exact recall 2 = 0.3158
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7469
-    MSE.recommend = 0.9679
-    Precision.recommend = 0.0426
-    R.recommend = 0.1164
-    Recall.recommend = 0.5419
+  AI12.Mu
+    Exact recall = 0.9727
+    Exact recall 2 = 0.1661
+    Hudup recall = 0.9709
+    MAE.recommend = 0.7507
+    MSE.recommend = 0.9775
+    Precision.recommend = 0.0795
+    R.recommend = 0.1258
+    Recall.recommend = 0.5306
     Setup time = 0
-    Speed = 0.8566
+    Speed = 0.9574
 
-  BU02.CosineJ
+  AI13.SMTP
+    Exact recall = 0.9645
+    Exact recall 2 = 0.1811
+    Hudup recall = 0.9627
+    MAE.recommend = 0.7299
+    MSE.recommend = 0.929
+    Precision.recommend = 0.0678
+    R.recommend = 0.1493
+    Recall.recommend = 0.4937
+    Setup time = 0
+    Speed = 0.8794
+
+  AI14.SMD
+    Exact recall = 0.9807
+    Exact recall 2 = 0.6107
+    Hudup recall = 0.9789
+    MAE.recommend = 0.7468
+    MSE.recommend = 0.9748
+    Precision.recommend = 0.0288
+    R.recommend = 0.1429
+    Recall.recommend = 0.7056
+    Setup time = 0
+    Speed = 0.949
+
+  AI15.NNSM
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2704
+    Hudup recall = 0.9694
+    MAE.recommend = 0.7328
+    MSE.recommend = 0.9356
+    Precision.recommend = 0.0551
+    R.recommend = 0.1482
+    Recall.recommend = 0.5997
+    Setup time = 0
+    Speed = 0.8846
+
+  AI16.TA
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2715
+    Hudup recall = 0.9694
+    MAE.recommend = 0.7249
+    MSE.recommend = 0.9144
+    Precision.recommend = 0.0555
+    R.recommend = 0.1539
+    Recall.recommend = 0.6063
+    Setup time = 0
+    Speed = 0.8806
+
+  AI17.RA
+    Exact recall = 0.9712
+    Exact recall 2 = 0.2709
+    Hudup recall = 0.9694
+    MAE.recommend = 0.7321
+    MSE.recommend = 0.9342
+    Precision.recommend = 0.0553
+    R.recommend = 0.1518
+    Recall.recommend = 0.6031
+    Setup time = 0
+    Speed = 0.8771
+
+  AI18.Entropy
     Exact recall = 0.9714
-    Exact recall 2 = 0.2409
+    Exact recall 2 = 0.2716
     Hudup recall = 0.9696
-    MAE.recommend = 0.7407
-    MSE.recommend = 0.9494
-    Precision.recommend = 0.0547
-    R.recommend = 0.1165
-    Recall.recommend = 0.5307
+    MAE.recommend = 0.727
+    MSE.recommend = 0.9199
+    Precision.recommend = 0.0556
+    R.recommend = 0.1534
+    Recall.recommend = 0.6069
     Setup time = 0
-    Speed = 0.5846
+    Speed = 0.8704
 
-  BU03.CPC
-    Exact recall = 0.9447
-    Exact recall 2 = 0.2236
-    Hudup recall = 0.9429
-    MAE.recommend = 0.7533
-    MSE.recommend = 0.9823
+  AI19.KL
+    Exact recall = 0.9823
+    Exact recall 2 = 0.2128
+    Hudup recall = 0.9804
+    MAE.recommend = 0.7689
+    MSE.recommend = 1.0077
     Precision.recommend = 0.0542
-    R.recommend = 0.0846
-    Recall.recommend = 0.4903
+    R.recommend = 0.1851
+    Recall.recommend = 0.4581
     Setup time = 0
-    Speed = 0.5667
-
-  BU03.IPC
-    Exact recall = 0.9643
-    Exact recall 2 = 0.3063
-    Hudup recall = 0.9625
-    MAE.recommend = 0.7512
-    MSE.recommend = 0.9779
-    Precision.recommend = 0.0451
-    R.recommend = 0.1088
-    Recall.recommend = 0.5571
-    Setup time = 0
-    Speed = 0.8675
-
-  BU03.IPWR
-    Exact recall = 0.9234
-    Exact recall 2 = 0.289
-    Hudup recall = 0.9217
-    MAE.recommend = 0.7391
-    MSE.recommend = 0.9481
-    Precision.recommend = 0.0479
-    R.recommend = 0.1255
-    Recall.recommend = 0.5635
-    Setup time = 0
-    Speed = 0.8513
-
-  BU03.PC
-    Exact recall = 0.9689
-    Exact recall 2 = 0.1749
-    Hudup recall = 0.9671
-    MAE.recommend = 0.8177
-    MSE.recommend = 1.1235
-    Precision.recommend = 0.0689
-    R.recommend = -0.0259
-    Recall.recommend = 0.4854
-    Setup time = 0
-    Speed = 0.275
-
-  BU03.PearsonJ
-    Exact recall = 0.8832
-    Exact recall 2 = 0.2623
-    Hudup recall = 0.8815
-    MAE.recommend = 0.7649
-    MSE.recommend = 1.0011
-    Precision.recommend = 0.0496
-    R.recommend = 0.0386
-    Recall.recommend = 0.5343
-    Setup time = 0
-    Speed = 0.5819
-
-  BU03.SPC
-    Exact recall = 0.8832
-    Exact recall 2 = 0.2588
-    Hudup recall = 0.8815
-    MAE.recommend = 0.7625
-    MSE.recommend = 0.9962
-    Precision.recommend = 0.0499
-    R.recommend = 0.044
-    Recall.recommend = 0.5298
-    Setup time = 0
-    Speed = 0.581
-
-  BU03.WPC
-    Exact recall = 0.8832
-    Exact recall 2 = 0.261
-    Hudup recall = 0.8815
-    MAE.recommend = 0.7574
-    MSE.recommend = 0.9843
-    Precision.recommend = 0.0511
-    R.recommend = 0.0483
-    Recall.recommend = 0.5478
-    Setup time = 0
-    Speed = 0.5798
-
-  BU04.MSDJ
-    Exact recall = 0.9719
-    Exact recall 2 = 0.2442
-    Hudup recall = 0.9701
-    MAE.recommend = 0.7396
-    MSE.recommend = 0.9467
-    Precision.recommend = 0.0545
-    R.recommend = 0.117
-    Recall.recommend = 0.536
-    Setup time = 0
-    Speed = 0.5823
-
-  BU06.MPIP
-    Exact recall = 0.9715
-    Exact recall 2 = 0.2776
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7386
-    MSE.recommend = 0.9504
-    Precision.recommend = 0.0514
-    R.recommend = 0.1275
-    Recall.recommend = 0.5745
-    Setup time = 0
-    Speed = 0.5833
-
-  BU07.NHMS
-    Exact recall = 0.9714
-    Exact recall 2 = 0.2463
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7453
-    MSE.recommend = 0.9623
-    Precision.recommend = 0.0524
-    R.recommend = 0.1156
-    Recall.recommend = 0.5202
-    Setup time = 0
-    Speed = 0.5903
-
-  BU07.NHMS.Amer
-    Exact recall = 0.9715
-    Exact recall 2 = 0.2665
-    Hudup recall = 0.9696
-    MAE.recommend = 0.741
-    MSE.recommend = 0.9536
-    Precision.recommend = 0.0525
-    R.recommend = 0.1204
-    Recall.recommend = 0.5637
-    Setup time = 0
-    Speed = 0.5935
-
-  BU07.NHMS.SMD
-    Exact recall = 0.9714
-    Exact recall 2 = 0.2655
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7405
-    MSE.recommend = 0.9524
-    Precision.recommend = 0.0528
-    R.recommend = 0.1211
-    Recall.recommend = 0.5645
-    Setup time = 0
-    Speed = 0.5903
-
-  BU07.PSSJ
-    Exact recall = 0.9714
-    Exact recall 2 = 0.2635
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7416
-    MSE.recommend = 0.9541
-    Precision.recommend = 0.0529
-    R.recommend = 0.1203
-    Recall.recommend = 0.5616
-    Setup time = 0
-    Speed = 0.5855
-
-  BU08.BCFJ
-    Exact recall = 0.979
-    Exact recall 2 = 0.5447
-    Hudup recall = 0.9771
-    MAE.recommend = 0.7402
-    MSE.recommend = 0.9589
-    Precision.recommend = 0.0302
-    R.recommend = 0.1483
-    Recall.recommend = 0.6617
-    Setup time = 0
-    Speed = 0.9981
-
-  BU09.CjacMD
-    Exact recall = 0.972
-    Exact recall 2 = 0.2647
-    Hudup recall = 0.9702
-    MAE.recommend = 0.7974
-    MSE.recommend = 1.0812
-    Precision.recommend = 0.048
-    R.recommend = -0.0033
-    Recall.recommend = 0.5114
-    Setup time = 0
-    Speed = 0.5859
-
-  BU10.TMJ
-    Exact recall = 0.9714
-    Exact recall 2 = 0.2418
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7407
-    MSE.recommend = 0.9495
-    Precision.recommend = 0.0547
-    R.recommend = 0.1168
-    Recall.recommend = 0.5324
-    Setup time = 0
-    Speed = 0.5798
-
-  BU14.Amer
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3159
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7424
-    MSE.recommend = 0.9552
-    Precision.recommend = 0.0444
-    R.recommend = 0.1136
-    Recall.recommend = 0.5641
-    Setup time = 0
-    Speed = 0.8519
-
-  BU14.AmerJ
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3129
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7473
-    MSE.recommend = 0.9668
-    Precision.recommend = 0.0444
-    R.recommend = 0.1092
-    Recall.recommend = 0.5594
-    Setup time = 0
-    Speed = 0.8554
-
-  BU14.HSMD
-    Exact recall = 0.9803
-    Exact recall 2 = 0.5125
-    Hudup recall = 0.9785
-    MAE.recommend = 0.7745
-    MSE.recommend = 1.0448
-    Precision.recommend = 0.0257
-    R.recommend = 0.0603
-    Recall.recommend = 0.5288
-    Setup time = 0
-    Speed = 0.8999
-
-  BU14.HSMDJ
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3091
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7513
-    MSE.recommend = 0.9777
-    Precision.recommend = 0.0429
-    R.recommend = 0.1103
-    Recall.recommend = 0.5331
-    Setup time = 0
-    Speed = 0.8568
-
-  BU14.QTI
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3101
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7573
-    MSE.recommend = 0.9935
-    Precision.recommend = 0.0418
-    R.recommend = 0.1084
-    Recall.recommend = 0.5213
-    Setup time = 0
-    Speed = 0.855
-
-  BU14.QTIJ
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3088
-    Hudup recall = 0.9739
-    MAE.recommend = 0.761
-    MSE.recommend = 1.0012
-    Precision.recommend = 0.043
-    R.recommend = 0.104
-    Recall.recommend = 0.534
-    Setup time = 0
-    Speed = 0.8548
-
-  BU14.SMDJ
-    Exact recall = 0.9758
-    Exact recall 2 = 0.3115
-    Hudup recall = 0.9739
-    MAE.recommend = 0.7481
-    MSE.recommend = 0.9691
-    Precision.recommend = 0.0444
-    R.recommend = 0.1087
-    Recall.recommend = 0.5563
-    Setup time = 0
-    Speed = 0.8564
-
-  BU15.NNSMJ
-    Exact recall = 0.9715
-    Exact recall 2 = 0.2425
-    Hudup recall = 0.9696
-    MAE.recommend = 0.75
-    MSE.recommend = 0.9718
-    Precision.recommend = 0.0544
-    R.recommend = 0.1087
-    Recall.recommend = 0.5316
-    Setup time = 0.0001
-    Speed = 0.5812
-
-  BU16.TAEven
-    Exact recall = 0.9714
-    Exact recall 2 = 0.2708
-    Hudup recall = 0.9696
-    MAE.recommend = 0.7368
-    MSE.recommend = 0.9435
-    Precision.recommend = 0.0507
-    R.recommend = 0.1277
-    Recall.recommend = 0.5527
-    Setup time = 0
-    Speed = 0.5904
-
-  BU16.TAJ
-    Exact recall = 0.9715
-    Exact recall 2 = 0.2458
-    Hudup recall = 0.9696
-    MAE.recommend = 0.739
-    MSE.recommend = 0.9452
-    Precision.recommend = 0.0544
-    R.recommend = 0.1176
-    Recall.recommend = 0.5387
-    Setup time = 0
-    Speed = 0.5899
-
-  BU16.TAN
-    Exact recall = 0.9447
-    Exact recall 2 = 0.2266
-    Hudup recall = 0.9429
-    MAE.recommend = 0.7513
-    MSE.recommend = 0.9786
-    Precision.recommend = 0.0549
-    R.recommend = 0.0854
-    Recall.recommend = 0.5033
-    Setup time = 0
-    Speed = 0.5724
-
-  BU16.TANJ
-    Exact recall = 0.9447
-    Exact recall 2 = 0.2241
-    Hudup recall = 0.9429
-    MAE.recommend = 0.7505
-    MSE.recommend = 0.9745
-    Precision.recommend = 0.056
-    R.recommend = 0.0805
-    Recall.recommend = 0.5076
-    Setup time = 0
-    Speed = 0.5791
-
-  BU17.RAPearson
-    Exact recall = 0.8832
-    Exact recall 2 = 0.2599
-    Hudup recall = 0.8815
-    MAE.recommend = 0.7666
-    MSE.recommend = 1.0085
-    Precision.recommend = 0.0506
-    R.recommend = 0.0479
-    Recall.recommend = 0.5399
-    Setup time = 0
-    Speed = 0.5853
-
-  BU18.EntropyPearson
-    Exact recall = 0.8828
-    Exact recall 2 = 0.2596
-    Hudup recall = 0.8812
-    MAE.recommend = 0.7661
-    MSE.recommend = 1.0054
-    Precision.recommend = 0.0492
-    R.recommend = 0.0407
-    Recall.recommend = 0.5247
-    Setup time = 0
-    Speed = 0.5863
-
-  BU19.KLAdvanced
-    Exact recall = 0.0367
-    Exact recall 2 = 0.0141
-    Hudup recall = 0.0366
-    MAE.recommend = 1.0154
-    MSE.recommend = 1.9163
-    Precision.recommend = 0.064
-    R.recommend = 0.0085
-    Recall.recommend = 0.0576
-    Setup time = 0
-    Speed = 0.5455
-
-  BU22.ESim2
-    Exact recall = 0.9799
-    Exact recall 2 = 0.4355
-    Hudup recall = 0.9781
-    MAE.recommend = 0.795
-    MSE.recommend = 1.1153
-    Precision.recommend = 0.0168
-    R.recommend = 0.1343
-    Recall.recommend = 0.2948
-    Setup time = 0
-    Speed = 0.8981
-
-  BU22.ESim3
-    Exact recall = 0.9598
-    Exact recall 2 = 0.3123
-    Hudup recall = 0.958
-    MAE.recommend = 0.7534
-    MSE.recommend = 0.9864
-    Precision.recommend = 0.0405
-    R.recommend = 0.1191
-    Recall.recommend = 0.5102
-    Setup time = 0
-    Speed = 0.8618
-
-  BU22.ZSim
-    Exact recall = 0.9599
-    Exact recall 2 = 0.3073
-    Hudup recall = 0.9581
-    MAE.recommend = 0.7523
-    MSE.recommend = 0.9799
-    Precision.recommend = 0.0428
-    R.recommend = 0.113
-    Recall.recommend = 0.5312
-    Setup time = 0
-    Speed = 0.8597
-
-  BU30.CLAG
-    Exact recall = 0.9574
-    Exact recall 2 = 0.2904
-    Hudup recall = 0.9556
-    MAE.recommend = 0.7435
-    MSE.recommend = 0.9537
-    Precision.recommend = 0.0489
-    R.recommend = 0.1107
-    Recall.recommend = 0.5731
-    Setup time = 0
-    Speed = 0.5914
+    Speed = 6.3732
