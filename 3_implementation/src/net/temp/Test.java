@@ -1,7 +1,5 @@
 package net.temp;
 
-import net.hudup.core.logistic.MathUtil;
-
 /**
  * This is temporal testing class.
  * 
@@ -90,55 +88,6 @@ public class Test {
 //		
 //		return stats;
 //	}
-
-	
-	/**
-	 * Main method.
-	 * @param args argument parameter.
-	 * @throws Exception if any error raises.
-	 */
-	public static void main(String[] args) throws Exception {
-//		RegressionEvaluator.main(args);
-//		double a = Double.MAX_VALUE;
-//		System.out.println(net.hudup.regression.em.ExchangedParameter.normalPDF(0, 0, 0));
-		
-		
-//		DocumentVector d1 = new DocumentVector(new double[] {1, 0, 1});
-//		DocumentVector d2 = new DocumentVector(new double[] {0, 1, 0});
-//		System.out.println("SMTP of <1, 0, 1> and <1, 1, 0> is " + 
-//				d1.smtp(d2, 0, new double[] {1, 1, 1}));
-
-		
-//		List<double[]> alphas = Util.newList(2);
-//		alphas.add(new double[] {0, 1});
-//		alphas.add(new double[] {1, -1});
-//		List<Double> probs = Util.newList(2);
-//		probs.add(0.5);
-//		probs.add(0.5);
-//		List<Double> variances = Util.newList(2);
-//		variances.add(0.001);
-//		variances.add(0.001);
-//		
-//		LargeStatistics stats = RMAbstract.generate2DRegressiveGaussianDataWithXIntervals(alphas, probs, variances, 1000);
-//		UriAssoc uriAssoc = Util.getFactory().createUriAssoc(xURI.create(new File(".")));
-//		Writer writer = uriAssoc.getWriter(xURI.create(new File("/a.csv")), false);
-//		stats.save(writer, -1);
-//		writer.close();
-		
-//		//NormalDistribution n = new NormalDistribution(0, 0);
-//		System.out.println(Float.MIN_VALUE);
-//		System.out.println(ExchangedParameter.normalPDF(0, 0, Double.MIN_VALUE));
-//		System.out.println(ExchangedParameter.normalPDF(0, 0, 0));
-//		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
-//		System.out.println(ExchangedParameter.normalPDF(100, 100, 0));
-//		System.out.println(1.0 / Float.MIN_VALUE);
-		
-//		System.out.println(Math.log(Float.MIN_VALUE));
-//		System.out.println(Math.log(2 + Float.MIN_VALUE));
-		
-		System.out.println(MathUtil.format(0001000.4543623627));
-
-	}
 
 	
 }
