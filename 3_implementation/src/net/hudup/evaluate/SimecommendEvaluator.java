@@ -48,4 +48,15 @@ public class SimecommendEvaluator extends RecommendEvaluator {
 	}
 
 	
+//	/**
+//	 * The main method to start evaluator.
+//	 * @param args The argument parameter of main method. It contains command line arguments.
+//	 * @throws Exception if there is any error.
+//	 */
+//	public static void main(String[] args) throws Exception {
+//		String regressEvClassName = SimecommendEvaluator.class.getName();
+//		new Evaluator().run(new String[] {regressEvClassName});
+//	}
+
+
 }
